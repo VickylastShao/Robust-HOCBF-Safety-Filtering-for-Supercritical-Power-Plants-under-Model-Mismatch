@@ -1,0 +1,103 @@
+\documentclass[final,5p,times,twocolumn]{elsarticle}
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{bm}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[numbers]{natbib}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calH}{\mathcal{H}}
+\newcommand{\Deltaf}{\Delta f}
+\newcommand{\Deltafj}[1]{\Delta f_{#1}}
+\newcommand{\Deltag}{\Delta g}
+\newcommand{\epsilonKappa}{\kappa_\epsilon}
+\newcommand{\sigmatotal}{\sigma_{\mathrm{total}}}
+\newcommand{\sigmaGP}{\sigma_{\mathrm{GP}}}
+\newcommand{\sigmaGPj}[1]{\sigma_{\mathrm{GP},#1}}
+\newcommand{\fhat}{\hat{f}}
+\newcommand{\muGP}{\mu_{\mathrm{GP}}}
+\newcommand{\muGPj}[1]{\mu_{\mathrm{GP},#1}}
+\newcommand{\Ahat}{\hat{A}_0}
+\newcommand{\bhat}{\hat{b}_0}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\journal{Journal of Process Control}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Robust High-Order Control Barrier Function Safety Filtering for Supercritical Power Plant Control under Model Mismatch}
+
+\author[1]{Zhuang~Shao}\corref{cor1}\fnref{fn1}
+\author[2]{Lijun~Lei}
+\author[3]{Peng~Wang}
+\author[2]{Liang~Zheng}
+\author[2]{Jie~Zhou}
+
+\cortext[cor1]{Corresponding author.}
+\ead{shaozhuang@crpower.com.cn}
+\fntext[fn1]{ORCID: 0000-0003-2496-0797}
+
+\address[1]{China Resources Power Technology Research Institute Co., Ltd., Shenzhen 518000, Guangdong Province, China}
+\address[2]{Rundian Energy Science and Technology Co., Ltd., Zhengzhou 450052, Henan Province, China}
+\address[3]{North China University of Water Resources and Electric Power, Zhengzhou 450046, Henan Province, China}
+
+\begin{abstract}
+Supercritical power plants must satisfy hard constraints on steam pressure, enthalpy, and power output under model mismatch from coal quality variation, heat exchanger fouling, and equipment degradation. This paper introduces a Robust High-Order Control Barrier Function (Robust HOCBF) safety filter for energy process control. The filter combines Gaussian process (GP) mean correction of the drift dynamics with compositional uncertainty propagation through the HOCBF $\psi$-chain, yielding a per-constraint, relative-degree-aware robustness margin $\epsilon(x)$. For continuous-time control-affine systems with a fixed, scenario-calibrated GP, known relative degree, $\Delta g = 0$, and $\kappa_\epsilon = 1$, the tightened constraint provides a high-probability forward-invariance certificate (Theorem~1). The guarantee is policy-agnostic: any Lipschitz-continuous upstream controller receives the same safety certificate. On a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics, the nominal HOCBF suffers $>95\%$ constraint violation under model mismatch. The Robust HOCBF achieves no observed CBF violations across nominal operation and six static perturbation scenarios (5 seeds $\times$ 50 episodes $\times$ 500 steps; 95\% episode-level Wilson upper bound $1.46\%$), with per-step QP solve latency of ${\sim}25$\,ms (approximately $10\times$ faster than NMPC). The filter intervenes proportionally to the perturbation magnitude. Deployment limitations---scenario-specific GP calibration, the $\Delta g = 0$ assumption, and one-sided QP infeasibility diagnostics---are explicitly characterized.
+\end{abstract}
+
+\begin{keyword}
+Control barrier functions \sep Gaussian processes \sep safety filter \sep model mismatch \sep supercritical power plant \sep process control
+\end{keyword}
+
+\end{frontmatter}
+
+\input{sections_jpc/intro}
+\input{sections_jpc/related_work}
+\input{sections_jpc/problem_formulation}
+\input{sections_jpc/robust_hocbf}
+\input{sections_jpc/safety_certificate}
+\input{sections_jpc/ccs_benchmark}
+\input{sections_jpc/results}
+\input{sections_jpc/deployment}
+\input{sections_jpc/conclusion}
+
+\section*{Declarations}
+
+\noindent\textbf{Declaration of competing interest:} The author declares no competing interests.
+
+\noindent\textbf{Funding:} This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+\noindent\textbf{CRediT author statement:} Zhuang Shao: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Visualization, Writing -- original draft, Writing -- review \& editing. Lijun Lei: Resources, Supervision, Project administration. Peng Wang: Formal analysis, Writing -- review \& editing. Liang Zheng: Resources, Supervision. Jie Zhou: Investigation, Data curation.
+
+\noindent\textbf{Data and code availability:} The complete source code, experiment scripts, and reproduction instructions are provided in the Supplementary Material and will be released under a permissive open-source license with a Zenodo DOI upon acceptance.
+
+\noindent\textbf{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process:} During the preparation of this work, the author used AI-assisted tools for language polishing and manuscript formatting. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content of the publication.
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+\end{document}

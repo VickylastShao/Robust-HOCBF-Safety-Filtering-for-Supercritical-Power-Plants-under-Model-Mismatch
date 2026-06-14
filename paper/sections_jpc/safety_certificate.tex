@@ -1,0 +1,43 @@
+\section{Safety Certificate and Implementation Conditions}
+\label{sec:safety_certificate}
+
+\subsection{Probabilistic Forward Invariance}
+
+\begin{theorem}[Forward invariance under uncertainty]
+\label{thm:probabilistic_safety}
+Under Assumptions~\ref{asm:delta_g}--\ref{asm:small_perturbation}, fixed-GP deployment with i.i.d.\ training data, known relative degree, and QP feasibility, if the robustness margin $\epsilon(x) = \epsilonKappa \cdot \sigmatotal(x)$ satisfies $\epsilon(x) \geq |\Delta(x,u)|$ for all $u \in \calU$ and $x$ in the operating region, then the safe set $\calC$ is forward invariant with probability $\geq 1 - \delta$ for $\epsilonKappa = 1$.
+\end{theorem}
+
+\begin{proof}[Proof sketch; full proofs in Supplementary Section~S7]
+\textbf{Step 1 (GP calibration):} By Assumptions~\ref{asm:rkhs}--\ref{asm:gp_calibration} and the PAC-Bayes bound~\eqref{eq:gp_bound}, $|\Delta \hat{f}_j(x)| \leq \beta \sigmaGPj{j}(x)$ holds simultaneously for all $j$ w.p.\ $\geq 1-\delta$.
+
+\textbf{Step 2 (Compositional bound):} By induction on $i$, $|\delta_i(x)| \leq \sigma_i(x)$ for $i=1,\ldots,m$, with the cross term retained at full weight in $\sigma_{\mathrm{cross}}^{(i)}$. Under Assumption~\ref{asm:small_perturbation}(c) (Lipschitz-in-perturbation), the cross term is formally $\calO(\rho^2)$.
+
+\textbf{Step 3 (Total perturbation):} $|\Delta(x,u)| \leq \sigmatotal(x)$ by summing the bounds from Step~2 and the coupling coefficient bound.
+
+\textbf{Step 4 (Forward invariance):} For $u^*$ satisfying $A_0 u^* \leq b_0 - \epsilon$, we have $\psi_m^{\mathrm{true}}(x,u^*) = \hat{\psi}_m^0(x,u^*) + \Delta(x,u^*) \geq \epsilon(x) - |\Delta| \geq 0$.
+\end{proof}
+
+\textbf{Guarantee scope.} Theorem~\ref{thm:probabilistic_safety} certifies safety under three conditions: (i)~the GP is held fixed (no online updates); (ii)~$\epsilonKappa = 1$ (values below $1$ are an empirically validated slack envelope, not formally certified); (iii)~the GP training data is i.i.d. Online GP updates relax the guarantee (Section~\ref{sec:deployment}). The experimental configuration matches these conditions (fixed GP, $\epsilonKappa = 1$).
+
+\subsection{QP Feasibility}
+
+\begin{proposition}[Sufficient condition for QP feasibility]
+\label{prop:qp_feasibility}
+Let $u_{\mathrm{ref}}(x) \in \mathrm{int}(\calU)$ satisfy the nominal CBF constraint with slack $\bar{s}(x) > 0$. If $\epsilon(x) \leq \bar{s}(x)$, then the robust QP admits a solution. The infeasibility probability is bounded by $\Pr_x[\epsilon(x) > \bar{s}^{\max}(x)]$, where $\bar{s}^{\max}(x) = \sup_{u \in \calU}\{b_0(x) - A_0(x)u\}$.
+\end{proposition}
+
+On the CCS, $\Pr_x[\epsilon(x) > \bar{s}^{\max}(x)] < 0.5\%$ under scenario-specific GP, matching the empirical QP infeasibility rate. Under nominal (mis-calibrated) GP, the predictor gives $>95\%$ infeasibility. The QP infeasibility rate thus serves as a \emph{one-sided calibration diagnostic}: it detects overestimated $\sigmaGP$ (conservative failure) but cannot detect underestimated $\sigmaGP$ (unsafe failure), which manifests only as runtime CBF violation. When the QP is infeasible, a slack-penalised relaxation is solved; if the slack solution violates the nominal CBF constraint, an LQR fallback controller is invoked.
+
+\subsection{Sampled-Data Implementation}
+\label{subsec:sampled_data}
+
+Theorem~\ref{thm:probabilistic_safety} is a continuous-time result. The practical implementation operates in discrete time with sampling period $T_s$. Three considerations arise.
+
+\textbf{Discrete-time CBF evaluation.} The HOCBF condition $\psi_m \geq 0$ is evaluated at the sampled state $x_k$. The control $u_k$ is held constant over $[kT_s, (k+1)T_s]$ (zero-order hold). Between samples, the true $\psi_m$ trajectory may dip below zero, introducing a $\calO(T_s^2)$ Taylor residual. For the CCS benchmark, $T_s = 1$\,s and this residual is small relative to the worst-case $\epsilon(x)$ margin.
+
+\textbf{QP solve latency.} The per-step QP solve requires ${\sim}25$\,ms with JIT compilation (GPU) or ${\sim}578$\,ms without JIT (CPU). The 25\,ms latency is compatible with sampling periods $T_s \geq 100$\,ms, covering typical DCS control cycles. For faster loops, the distilled policy (1.8\,ms, CPU) provides a low-latency alternative with empirical-only safety.
+
+\textbf{Fallback on infeasibility or timeout.} If the QP is infeasible or exceeds the sampling deadline, a two-stage fallback executes: (i)~a slack-penalised relaxation returns the best-effort safe action; (ii)~if the slack solution violates the nominal CBF constraint, a pre-tuned LQR fallback controller provides a known-stable action. In all experiments, the LQR fallback is never activated under well-calibrated GP (QP infeasibility $\leq 0.5\%$).
+
+\textbf{Practical deployment.} On industrial DCS platforms, the mandatory hard safety layer (turbine trip, boiler trip, MFT) operates independently of the safety filter. The Robust HOCBF filter operates at the coordinated control level, providing a per-step safety projection that complements---rather than replaces---the protection system.

@@ -1,0 +1,140 @@
+\section{Supplementary Material}
+\label{sec:supplementary}
+
+This supplement provides detailed experimental results and extended analyses referenced in the main text.
+
+\subsection{S1. Generic-GP and Out-of-Distribution Deployment}
+
+The main text (Section~7) reports that scenario-specific GP training achieves 0\% CBF violation under nominal operation and the six static perturbation deployments. This supplement provides the full OOD analysis: Table~\ref{tab:S1_ood} reports CBF violation and QP intervention rates under three GP training strategies---scenario-specific, generic mixed (trained on Nominal/S1/S2/S4), and mismatched OOD (S1$\to$S3, S3$\to$S1)---using $\Phi$-scaled rollout, $\epsilonKappa = 1.0$, and 5 seeds $\times$ 500 evaluation steps.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Generic-GP and OOD deployment --- CBF violation rate (\%, mean $\pm$ std over 5 seeds $\times$ 500 steps).}
+    \label{tab:S1_ood}
+    \footnotesize
+    \begin{tabular}{l l c c}
+        \toprule
+        Deployment & Strategy & CBF (\%) & QP (\%) \\
+        \midrule
+        \multirow{2}{*}{Nominal}
+            & scenario-specific & $\bm{0.0 \pm 0.0}$ & $0.2$ \\
+            & generic mixed     & $\bm{0.0 \pm 0.1}$ & $43.0$ \\
+        \midrule
+        \multirow{3}{*}{S1: Heat}
+            & scenario-specific & $\bm{0.0 \pm 0.0}$ & $100.0$ \\
+            & generic mixed     & $92.2 \pm 4.6$     & $7.9$ \\
+            & OOD (S3$\to$S1)   & $99.9 \pm 0.1$     & $99.8$ \\
+        \midrule
+        \multirow{2}{*}{S2: Pressure}
+            & scenario-specific & $\bm{0.0 \pm 0.0}$ & $99.8$ \\
+            & generic mixed     & $96.4 \pm 0.6$     & $3.4$ \\
+        \midrule
+        \multirow{3}{*}{S3: Coupled}
+            & scenario-specific & $\bm{0.0 \pm 0.0}$ & $99.2$ \\
+            & generic mixed     & $82.7 \pm 3.9$     & $18.6$ \\
+            & OOD (S1$\to$S3)   & $\bm{0.0 \pm 0.0}$ & $100.0$ \\
+        \midrule
+        \multirow{2}{*}{S4: Nonlinear}
+            & scenario-specific & $\bm{0.0 \pm 0.0}$ & $99.6$ \\
+            & generic mixed     & $98.2 \pm 0.3$     & $1.1$ \\
+        \midrule
+        \multirow{2}{*}{S5: Valve}
+            & scenario-specific & $\bm{0.0 \pm 0.0}$ & $99.6$ \\
+            & generic mixed     & $98.8 \pm 0.3$     & $0.2$ \\
+        \midrule
+        \multirow{2}{*}{S6: Fuel}
+            & scenario-specific & $\bm{0.0 \pm 0.0}$ & $99.9$ \\
+            & generic mixed     & $99.7 \pm 0.2$     & $0.2$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Three observations follow. (1)~Scenario-specific GP is uniformly safe but with near-saturated QP intervention under perturbation. (2)~Generic mixed GP fails under all perturbed deployments (82.7--99.7\% violation) because it averages over training scenarios, producing $\sigmaGP$ too small to trigger the safety filter---a silent calibration failure. (3)~OOD asymmetry: S1$\to$S3 achieves 0\% violation (large $\sigmaGP$ inflates $\epsilon(x)$) while S3$\to$S1 reaches 99.9\% violation (low $\sigmaGP$ despite biased mean)---$\sigmaGP$ measures spatial distance, not functional distance between perturbation structures.
+
+\subsection{S2. Perturbation Magnitude Sweep}
+
+Table~\ref{tab:S2_magnitude} reports the perturbation magnitude sweep on S1:Heat (3 seeds per magnitude, $\Phi$-scaled rollout, $\epsilonKappa = 1.0$). The QP intervention rate transitions smoothly from selective (3.5\% at Mag10) to saturated (100\% at Mag75), with 0\% CBF violation through Mag75. At Mag100, the perturbation exceeds the GP's modeling capacity and violation reaches 99.8\%.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Perturbation magnitude sweep --- CBF violation and QP intervention vs.\ enthalpy perturbation magnitude (S1:Heat structure, 3 seeds $\times$ 500 steps).}
+    \label{tab:S2_magnitude}
+    \begin{tabular}{lccc}
+        \toprule
+        Magnitude & $\Delta f_h$ (kJ/kg) & CBF\% & QP\% \\
+        \midrule
+        Mag10  & $-10$  & $0.0 \pm 0.0$ & $3.5$ \\
+        Moderate & $-15$  & $0.0 \pm 0.0$ & $9.8$ \\
+        Mag25  & $-25$  & $0.0 \pm 0.0$ & $49.4$ \\
+        Mag50  & $-50$  & $0.0 \pm 0.0$ & $99.9$ \\
+        Mag75  & $-75$  & $0.0 \pm 0.0$ & $100.0$ \\
+        Mag100 & $-100$ & $99.8 \pm 0.0$ & $100.0$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{S3. $\epsilonKappa$ Sensitivity Sweep}
+
+Table~\ref{tab:S3_kappa} reports the $\epsilonKappa$ sweep on S1:Heat and S3:Coupled under $\Phi$-scaled nonlinear dynamics (3 seeds). All $\epsilonKappa \in [0.3, 1.0]$ achieve 0\% CBF violation; Theorem~1 formally certifies only $\epsilonKappa = 1$. Reward improves monotonically with $\epsilonKappa$ and chatter shifts by $<1.0$ percentage point.
+
+\begin{table}[htbp]
+    \centering
+    \caption{$\epsilonKappa$ sensitivity sweep (3 seeds, mean $\pm$ std).}
+    \label{tab:S3_kappa}
+    \begin{tabular}{lccccc}
+        \toprule
+        $\epsilonKappa$ & Scenario & CBF\,\% & Pwr\,\% & Reward & Chatter\,\% \\
+        \midrule
+        \multirow{2}{*}{$0.30$} & S1 & $0.00 \pm 0.00$ & $0.00$ & $-10919.9 \pm 7.6$ & $99.67$ \\
+                                & S3 & $0.00 \pm 0.00$ & $0.00$ & $-8089.5 \pm 9.7$  & $97.00$ \\
+        \multirow{2}{*}{$0.50$} & S1 & $0.00 \pm 0.00$ & $0.00$ & $-10909.0 \pm 7.8$ & $99.67$ \\
+                                & S3 & $0.00 \pm 0.00$ & $0.00$ & $-8079.2 \pm 9.7$  & $97.40$ \\
+        \multirow{2}{*}{$0.70$} & S1 & $0.00 \pm 0.00$ & $0.00$ & $-10898.3 \pm 7.9$ & $99.67$ \\
+                                & S3 & $0.00 \pm 0.00$ & $0.00$ & $-8068.9 \pm 9.8$  & $97.53$ \\
+        \multirow{2}{*}{$\bm{1.00}$} & S1 & $\bm{0.00 \pm 0.00}$ & $0.00$ & $-10882.6 \pm 8.3$ & $99.67$ \\
+                                      & S3 & $\bm{0.00 \pm 0.00}$ & $0.00$ & $-8053.8 \pm 9.9$  & $97.93$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{S4. Training Mode Ablation}
+
+Table~\ref{tab:S4_training} compares three training modes under S1:Heat. All achieve 0\% CBF violation at deployment; decoupled mode requires 12\% less training time; coupled-differentiable is computationally infeasible ($>$30 min/seed).
+
+\begin{table}[htbp]
+    \centering
+    \caption{Training Mode Ablation under S1: Heat (mean $\pm$ std over 3 seeds, 30 eval episodes $\times$ 300 steps).}
+    \label{tab:S4_training}
+    \begin{tabular}{lcccc}
+        \toprule
+        Mode & CBF\% & Reward & Train Time & Solve (ms) \\
+        \midrule
+        Decoupled & $0.0$ & $-4576.2 \pm 1.8$ & $12.5 \pm 0.7$ min & ${\sim}25$ \\
+        Coupled-nondiff. & $0.0$ & $-4580.1 \pm 2.1$ & $14.2 \pm 0.8$ min & ${\sim}25$ \\
+        Coupled-diff. & $0.0$ & $-4582.4 \pm 2.5$ & $>30$ min (no conv.) & ${\sim}25$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{S5. GP--CBF Structural Comparison}
+
+Table~\ref{tab:S5_gp_cbf} (moved from Section~2) summarizes the key structural distinctions between GP-augmented safety methods.
+
+\begin{table}[htbp]
+    \centering
+    \caption{GP-augmented safety methods compared on three structural axes.}
+    \label{tab:S5_gp_cbf}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{lccc}
+        \toprule
+        & \multicolumn{3}{c}{Structural axis} \\
+        \cmidrule(lr){2-4}
+        Method & \begin{tabular}{c}Uncertainty\\propagation depth\end{tabular} & \begin{tabular}{c}Per-constraint\\differentiation\end{tabular} & \begin{tabular}{c}PAC-Bayes\\guarantee type\end{tabular} \\
+        \midrule
+        Cheng et al.~\cite{cheng2019guaranteed,cheng2023endtoend} & Top-level CBF only & No (single margin) & Per-step CBF ($m{=}1$) \\
+        Hewing et al.~\cite{hewing2020cautious} & MPC prediction horizon (rollout) & Partial (per chance constraint, rollout-aggregated) & Chance-constrained over horizon \\
+        \textbf{Ours (Robust HOCBF)} & Full HOCBF $\psi$-chain (all $m$ levels) & Yes (per constraint, by relative degree) & Per-step forward invariance ($m \geq 1$) \\
+        \bottomrule
+    \end{tabular}}
+\end{table}
+

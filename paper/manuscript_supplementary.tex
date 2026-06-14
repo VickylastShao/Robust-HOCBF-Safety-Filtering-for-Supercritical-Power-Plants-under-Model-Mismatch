@@ -1,0 +1,74 @@
+\documentclass[review]{elsarticle}
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{bm}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\Deltaf}{\Delta f}
+\newcommand{\Deltafj}[1]{\Delta f_{#1}}
+\newcommand{\Deltag}{\Delta g}
+\newcommand{\epsilonKappa}{\kappa_\epsilon}
+\newcommand{\sigmatotal}{\sigma_{\mathrm{total}}}
+\newcommand{\sigmaGP}{\sigma_{\mathrm{GP}}}
+\newcommand{\sigmaGPj}[1]{\sigma_{\mathrm{GP},#1}}
+\newcommand{\fhat}{\hat{f}}
+\newcommand{\muGP}{\mu_{\mathrm{GP}}}
+\newcommand{\muGPj}[1]{\mu_{\mathrm{GP},#1}}
+\newcommand{\Ahat}{\hat{A}_0}
+\newcommand{\bhat}{\hat{b}_0}
+\newcommand{\Ahatact}{\hat{A}_{0,\mathrm{act}}}
+\newcommand{\bhatact}{\hat{b}_{0,\mathrm{act}}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calH}{\mathcal{H}}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+
+\journal{Journal of Process Control}
+
+% Supplementary table/figure numbering
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\begin{document}
+
+\begin{frontmatter}
+\title{Supplementary Material for\\ ``Robust High-Order Control Barrier Function Safety Filtering for Supercritical Power Plant Control under Model Mismatch''}
+
+\author[1]{Zhuang~Shao}\corref{cor1}
+\author[2]{Lijun~Lei}
+\author[3]{Peng~Wang}
+\author[2]{Liang~Zheng}
+\author[2]{Jie~Zhou}
+
+\cortext[cor1]{Corresponding author: \href{mailto:shaozhuang@crpower.com.cn}{shaozhuang@crpower.com.cn}}
+
+\address[1]{China Resources Power Technology Research Institute Co., Ltd., Shenzhen 518000, Guangdong Province, China}
+\address[2]{Rundian Energy Science and Technology Co., Ltd., Zhengzhou 450052, Henan Province, China}
+\address[3]{North China University of Water Resources and Electric Power, Zhengzhou 450046, Henan Province, China}
+
+\end{frontmatter}
+
+\input{sections/supplementary}
+\input{sections/triple_integrator_appendix}
+\input{sections_jpc/appendix_proofs}
+
+\bibliographystyle{elsarticle-harv}
+\bibliography{refs}
+
+\end{document}
