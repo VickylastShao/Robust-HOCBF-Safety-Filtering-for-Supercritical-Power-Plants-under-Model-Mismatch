@@ -1,0 +1,263 @@
+{
+  "ppo_hocbf_s1_heat": {
+    "intervention_rate_mean": 0.0,
+    "intervention_rate_std": 0.0,
+    "physical_violation_rate_mean": 0.9819999999999999,
+    "physical_violation_rate_std": 0.006782329983125274,
+    "cbf_violation_rate_mean": 0.9819999999999999,
+    "cbf_violation_rate_std": 0.006782329983125274,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.9819999999999999,
+        "physical_violation_rate_std": 0.006782329983125274,
+        "cbf_violation_rate_mean": 0.9819999999999999,
+        "cbf_violation_rate_std": 0.006782329983125274
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 718.3058786392212
+  },
+  "ppo_gp_hocbf_s1_heat": {
+    "intervention_rate_mean": 0.027000000000000003,
+    "intervention_rate_std": 0.006403124237432849,
+    "physical_violation_rate_mean": 0.9819999999999999,
+    "physical_violation_rate_std": 0.006782329983125274,
+    "cbf_violation_rate_mean": 0.9819999999999999,
+    "cbf_violation_rate_std": 0.006782329983125274,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.9819999999999999,
+        "physical_violation_rate_std": 0.006782329983125274,
+        "cbf_violation_rate_mean": 0.9819999999999999,
+        "cbf_violation_rate_std": 0.006782329983125274
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 715.8338351249695
+  },
+  "ppo_rhocbf_s1_heat": {
+    "intervention_rate_mean": 0.9824999999999999,
+    "intervention_rate_std": 0.00642261628933257,
+    "physical_violation_rate_mean": 0.0,
+    "physical_violation_rate_std": 0.0,
+    "cbf_violation_rate_mean": 0.0,
+    "cbf_violation_rate_std": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 718.3553965091705
+  },
+  "rocbf_net_s1_heat": {
+    "intervention_rate_mean": 0.9815000000000002,
+    "intervention_rate_std": 0.010965856099730664,
+    "physical_violation_rate_mean": 0.0,
+    "physical_violation_rate_std": 0.0,
+    "cbf_violation_rate_mean": 0.0,
+    "cbf_violation_rate_std": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 730.4064545631409
+  },
+  "ppo_hocbf_s2_pressure": {
+    "intervention_rate_mean": 0.0,
+    "intervention_rate_std": 0.0,
+    "physical_violation_rate_mean": 0.9559999999999998,
+    "physical_violation_rate_std": 0.016248076809271917,
+    "cbf_violation_rate_mean": 0.0,
+    "cbf_violation_rate_std": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.9559999999999998,
+        "physical_violation_rate_std": 0.016248076809271917,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 750.1051228046417
+  },
+  "ppo_rhocbf_s2_pressure": {
+    "intervention_rate_mean": 0.0,
+    "intervention_rate_std": 0.0,
+    "physical_violation_rate_mean": 0.9559999999999998,
+    "physical_violation_rate_std": 0.016248076809271917,
+    "cbf_violation_rate_mean": 0.0,
+    "cbf_violation_rate_std": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.9559999999999998,
+        "physical_violation_rate_std": 0.016248076809271917,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 752.5239353179932
+  },
+  "rocbf_net_s2_pressure": {
+    "intervention_rate_mean": 0.0015,
+    "intervention_rate_std": 0.0032015621187164245,
+    "physical_violation_rate_mean": 0.95,
+    "physical_violation_rate_std": 0.02037154878746334,
+    "cbf_violation_rate_mean": 0.0,
+    "cbf_violation_rate_std": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.95,
+        "physical_violation_rate_std": 0.02037154878746334,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 759.9122321605682
+  },
+  "ppo_rhocbf_nominal": {
+    "intervention_rate_mean": 0.0,
+    "intervention_rate_std": 0.0,
+    "physical_violation_rate_mean": 0.0,
+    "physical_violation_rate_std": 0.0,
+    "cbf_violation_rate_mean": 0.0,
+    "cbf_violation_rate_std": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 707.5990748405457
+  },
+  "rocbf_net_nominal": {
+    "intervention_rate_mean": 0.0015,
+    "intervention_rate_std": 0.0032015621187164245,
+    "physical_violation_rate_mean": 0.0,
+    "physical_violation_rate_std": 0.0,
+    "cbf_violation_rate_mean": 0.0,
+    "cbf_violation_rate_std": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "enthalpy": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      },
+      "power": {
+        "physical_violation_rate_mean": 0.0,
+        "physical_violation_rate_std": 0.0,
+        "cbf_violation_rate_mean": 0.0,
+        "cbf_violation_rate_std": 0.0
+      }
+    },
+    "train_time_s": 713.5399694442749
+  }
+}

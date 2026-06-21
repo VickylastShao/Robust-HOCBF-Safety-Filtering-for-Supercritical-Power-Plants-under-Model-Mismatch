@@ -1,11 +1,11 @@
-\section{Supplementary Material}
+\section*{Supplemental Material}
 \label{sec:supplementary}
 
-This supplement provides detailed experimental results and extended analyses referenced in the main text.
+\textit{Reference numbers in this Supplemental Material follow the numbering of the main manuscript.}
 
-\subsection{S1. Generic-GP and Out-of-Distribution Deployment}
+\section{Generic-GP and Out-of-Distribution Deployment}
 
-The main text (Section~7) reports that scenario-specific GP training achieves 0\% CBF violation under nominal operation and the six static perturbation deployments. This supplement provides the full OOD analysis: Table~\ref{tab:S1_ood} reports CBF violation and QP intervention rates under three GP training strategies---scenario-specific, generic mixed (trained on Nominal/S1/S2/S4), and mismatched OOD (S1$\to$S3, S3$\to$S1)---using $\Phi$-scaled rollout, $\epsilonKappa = 1.0$, and 5 seeds $\times$ 500 evaluation steps.
+The main manuscript (Section~4) reports that scenario-specific GP training achieves 0\% CBF violation under nominal operation and the six static perturbation deployments. This supplement provides the full OOD analysis: Table~\ref{tab:S1_ood} reports CBF violation and QP intervention rates under three GP training strategies---scenario-specific, generic mixed (trained on Nominal/S1/S2/S4), and mismatched OOD (S1$\to$S3, S3$\to$S1)---using $\Phi$-scaled rollout, $\epsilonKappa = 1.0$, and 5 seeds $\times$ 500 evaluation steps.
 
 \begin{table}[htbp]
     \centering
@@ -51,7 +51,7 @@ The main text (Section~7) reports that scenario-specific GP training achieves 0\
 
 Three observations follow. (1)~Scenario-specific GP is uniformly safe but with near-saturated QP intervention under perturbation. (2)~Generic mixed GP fails under all perturbed deployments (82.7--99.7\% violation) because it averages over training scenarios, producing $\sigmaGP$ too small to trigger the safety filter---a silent calibration failure. (3)~OOD asymmetry: S1$\to$S3 achieves 0\% violation (large $\sigmaGP$ inflates $\epsilon(x)$) while S3$\to$S1 reaches 99.9\% violation (low $\sigmaGP$ despite biased mean)---$\sigmaGP$ measures spatial distance, not functional distance between perturbation structures.
 
-\subsection{S2. Perturbation Magnitude Sweep}
+\section{Perturbation Magnitude Sweep}
 
 Table~\ref{tab:S2_magnitude} reports the perturbation magnitude sweep on S1:Heat (3 seeds per magnitude, $\Phi$-scaled rollout, $\epsilonKappa = 1.0$). The QP intervention rate transitions smoothly from selective (3.5\% at Mag10) to saturated (100\% at Mag75), with 0\% CBF violation through Mag75. At Mag100, the perturbation exceeds the GP's modeling capacity and violation reaches 99.8\%.
 
@@ -73,7 +73,7 @@ Table~\ref{tab:S2_magnitude} reports the perturbation magnitude sweep on S1:Heat
     \end{tabular}
 \end{table}
 
-\subsection{S3. $\epsilonKappa$ Sensitivity Sweep}
+\section{$\epsilonKappa$ Sensitivity Sweep}
 
 Table~\ref{tab:S3_kappa} reports the $\epsilonKappa$ sweep on S1:Heat and S3:Coupled under $\Phi$-scaled nonlinear dynamics (3 seeds). All $\epsilonKappa \in [0.3, 1.0]$ achieve 0\% CBF violation; Theorem~1 formally certifies only $\epsilonKappa = 1$. Reward improves monotonically with $\epsilonKappa$ and chatter shifts by $<1.0$ percentage point.
 
@@ -97,7 +97,7 @@ Table~\ref{tab:S3_kappa} reports the $\epsilonKappa$ sweep on S1:Heat and S3:Cou
     \end{tabular}
 \end{table}
 
-\subsection{S4. Training Mode Ablation}
+\section{Training Mode Ablation}
 
 Table~\ref{tab:S4_training} compares three training modes under S1:Heat. All achieve 0\% CBF violation at deployment; decoupled mode requires 12\% less training time; coupled-differentiable is computationally infeasible ($>$30 min/seed).
 
@@ -116,7 +116,18 @@ Table~\ref{tab:S4_training} compares three training modes under S1:Heat. All ach
     \end{tabular}
 \end{table}
 
-\subsection{S5. GP--CBF Structural Comparison}
+\section{Computation Time Analysis}
+
+Per-step filter latency is a critical metric for real-time industrial deployment. Figure~\ref{fig:comp_time} compares the per-step computation time of the Robust HOCBF filter (PPO forward pass + GP inference + QP solve, GPU, JIT-compiled) against the implemented SLSQP-based NMPC baseline (CPU, $N{=}5$ horizon). The filter provides per-step rather than horizon-based safety evaluation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/Figure_5.pdf}
+    \caption{Per-step computation time comparison (log scale). PPO+GP+QP with JIT compilation (GPU): ${\sim}25$\,ms (p95: 27\,ms); NMPC (CPU, SLSQP, $N{=}5$ horizon): 254\,ms average.}
+    \label{fig:comp_time}
+\end{figure}
+
+\section{GP--CBF Structural Comparison}
 
 Table~\ref{tab:S5_gp_cbf} (moved from Section~2) summarizes the key structural distinctions between GP-augmented safety methods.
 
@@ -129,12 +140,83 @@ Table~\ref{tab:S5_gp_cbf} (moved from Section~2) summarizes the key structural d
         \toprule
         & \multicolumn{3}{c}{Structural axis} \\
         \cmidrule(lr){2-4}
-        Method & \begin{tabular}{c}Uncertainty\\propagation depth\end{tabular} & \begin{tabular}{c}Per-constraint\\differentiation\end{tabular} & \begin{tabular}{c}PAC-Bayes\\guarantee type\end{tabular} \\
+        Method & \begin{tabular}{c}Uncertainty\\propagation depth\end{tabular} & \begin{tabular}{c}Per-constraint\\differentiation\end{tabular} & \begin{tabular}{c}GP-UCB\\guarantee type\end{tabular} \\
         \midrule
-        Cheng et al.~\cite{cheng2019guaranteed,cheng2023endtoend} & Top-level CBF only & No (single margin) & Per-step CBF ($m{=}1$) \\
-        Hewing et al.~\cite{hewing2020cautious} & MPC prediction horizon (rollout) & Partial (per chance constraint, rollout-aggregated) & Chance-constrained over horizon \\
+        Cheng et al.\ (2019) & Top-level CBF only & No (single margin) & Per-step CBF ($m{=}1$) \\
+        Hewing et al.\ (2020) & MPC prediction horizon (rollout) & Partial (per chance constraint, rollout-aggregated) & Chance-constrained over horizon \\
         \textbf{Ours (Robust HOCBF)} & Full HOCBF $\psi$-chain (all $m$ levels) & Yes (per constraint, by relative degree) & Per-step forward invariance ($m \geq 1$) \\
         \bottomrule
     \end{tabular}}
 \end{table}
 
+\section{PPO-Lagrangian Baseline Results}
+
+PPO-Lagrangian uses dual descent on a cost constraint to penalize unsafe behavior during training, providing a constrained-RL baseline. Table~\ref{tab:S6_ppo_lagr} reports its CBF violation rates on the available Phase~4 conditions. PPO-Lagrangian achieves substantially lower violation rates than the nominal PPO-HOCBF ($>95\%$ under perturbation) but does not achieve the zero-violation performance of PPO-RHOCBF ($0\%$ across all static scenarios). The Lagrangian penalty mechanism provides partial safety through reward shaping but cannot guarantee constraint satisfaction under model mismatch---the dual variable tracks average constraint cost, not worst-case per-step forward invariance.
+
+\begin{table}[htbp]
+    \centering
+    \caption{PPO-Lagrangian CBF Violation Rate (\%) under $\Phi$-Scaled Nonlinear Dynamics (mean $\pm$ std over 5 seeds, 50 eval episodes $\times$ 500 steps).}
+    \label{tab:S6_ppo_lagr}
+    \begin{tabular}{lccccc}
+        \toprule
+        Method & Nom. & S1: Heat & S2: Press. & S3: Coupled & S4: Nonlin. \\
+        \midrule
+        PPO-Lagrangian & $0.14 \pm 0.12$ & $1.27 \pm 0.93$ & $1.04 \pm 0.39$ & $0.47 \pm 0.15$ & $0.75 \pm 0.31$ \\
+        PPO-HOCBF & $0.0$ & $100.0$ & $99.9$ & $99.9$ & $99.9$ \\
+        \textbf{PPO-RHOCBF} & $\mathbf{0.0}$ & $\mathbf{0.0}$ & $\mathbf{0.0}$ & $\mathbf{0.0}$ & $\mathbf{0.0}$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+PPO-Lagrangian with 200 training episodes $\times$ 200 steps per episode converges to dual-variable equilibrium but the dual descent mechanism does not provide per-step forward invariance certification. S5 (Valve) and S6 (Fuel) are 5th-order scenarios not included in the Phase~4 experimental configuration; PPO-Lagrangian was not evaluated on these conditions.
+
+\section{Load-Following Performance}
+
+Load following tests the control system's ability to track an AGC (Automatic Generation Control) power schedule while maintaining safety constraints. The schedule ramps between 750\,MW and 1000\,MW at 5\,MW/min with 20\,MW regulation amplitude and 300\,s regulation period. Table~\ref{tab:S7_load_following} reports CBF violation rates under this dynamic reference trajectory.
+
+\begin{table}[htbp]
+    \centering
+    \caption{CBF Violation Rate (\%) under Load-Following AGC Schedule (mean $\pm$ std over 5 seeds, 50 episodes $\times$ 500 steps).}
+    \label{tab:S7_load_following}
+    \begin{tabular}{lc}
+        \toprule
+        Method & CBF Viol.\% \\
+        \midrule
+        PPO (no safety)       & $0.05 \pm 0.09$ \\
+        PPO-Lagrangian        & $0.05 \pm 0.09$ \\
+        PPO-CBF ($m{=}1$, incorrect) & $0.70 \pm 0.36$ \\
+        PPO-HOCBF (correct $m$)     & $0.26 \pm 0.12$ \\
+        \textbf{PPO-RHOCBF}          & $\mathbf{0.11 \pm 0.05}$ \\
+        \textbf{RoCBF-Net}           & $\mathbf{0.14 \pm 0.19}$ \\
+        NMPC ($N{=}5$, offset-free)  & $0.00 \pm 0.00$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Under load following, the nominal dynamics are exact ($\Deltaf = 0$) and the CBF constraints are only challenged by the reference trajectory changes, not by model mismatch. NMPC achieves $0\%$ violation because its offset-free disturbance estimator converges quickly on the exact model. PPO-RHOCBF and RoCBF-Net maintain near-zero violation with the fixed scenario-specific GP providing a small robustness margin. The low violation rates across all methods confirm that load following is a less challenging condition than persistent model mismatch.
+
+\section{GP Calibration Diagnostics}
+
+The Robust HOCBF's forward invariance guarantee (Theorem~1) relies on the GP-UCB confidence bound $|\Delta \hat{f}_j(x)| \leq \beta \sigma_{\mathrm{GP},j}(x)$ holding uniformly over the operating region. Table~\ref{tab:S8_gp_calib} reports the empirical validation of this assumption: for each of the six static perturbation scenarios, a scenario-specific GP is trained on $N_{\mathrm{train}} = 500$ transitions and evaluated on $N_{\mathrm{held}} = 200$ held-out transitions across 3 independent training seeds. The GP-UCB $\beta$ factor is computed from the maximum information gain $\gamma_N$ via the Srinivas et al.\ (2010) bound $\beta = \sqrt{2(\gamma_N + 1 + \log(n_d/\delta))}$ with $\delta = 0.01$, targeting $\geq 99\%$ per-dimension nominal coverage.
+
+\begin{table}[htbp]
+    \centering
+    \caption{GP calibration diagnostics: empirical coverage of $\beta\sigma_{\mathrm{GP}}$ intervals on held-out validation data ($N_{\mathrm{train}}=500$, $N_{\mathrm{held}}=200$, 3 GP training seeds, $\delta=0.01$, nominal per-dimension coverage $\geq 99\%$). Coverage computed as fraction of held-out residual errors satisfying $|\Delta \hat{f}_j| \leq \beta \sigma_{\mathrm{GP},j}$. $\bar{\sigma}_{\mathrm{GP}}$ is the mean GP uncertainty across all held-out points.}
+    \label{tab:S8_gp_calib}
+    \footnotesize
+    \begin{tabular}{lcccl}
+        \toprule
+        Scenario & \multicolumn{3}{c}{Empirical coverage (\%, mean $\pm$ std)} & Mean & Mean \\
+                 & $r_B$ (fuel) & $p_m$ (press.) & $h_m$ (enthalpy) & cov.\% & $\bar{\sigma}_{\mathrm{GP}}$ \\
+        \midrule
+        S1: Heat      & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0 & 0.10 \\
+        S2: Pressure  & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0 & 0.14 \\
+        S3: Coupled   & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0 & 0.10 \\
+        S4: Nonlinear & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0 & 0.10 \\
+        S5: Valve     & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0 & 0.10 \\
+        S6: Fuel      & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0$\pm$0.0 & 100.0 & 0.10 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Across all six scenarios and three dimensions (18 dimension--scenario pairs), the empirical coverage is 100\% in every case---the theoretical $\beta$ bound is conservative in practice. The GP-UCB $\beta$ values range from $\beta \approx 5.3$--$5.8$ for S4--S6 (where the uncertainty structure is smooth and well-captured by the Mat\'{e}rn-5/2 kernel) to $\beta \approx 31.8$--$52.1$ for S1--S3 (where the perturbation structure produces larger information gain $\gamma_N$). The mean GP uncertainty $\bar{\sigma}_{\mathrm{GP}}$ is at or near the $\sigma_{\mathrm{floor}} = 0.01$ floor for most dimensions, indicating that the GP learns the residual structure well from the training data; the pressure dimension under S2 (pressure oscillation) shows elevated $\bar{\sigma}_{\mathrm{GP}} = 0.23$, reflecting the larger residual magnitude of this perturbation on the pressure channel. This calibration confirms that the GP-UCB confidence intervals are empirically valid and that the compositional $\epsilon(x)$ propagation through the $\psi$-chain (Theorem~1) operates on a sound uncertainty basis.

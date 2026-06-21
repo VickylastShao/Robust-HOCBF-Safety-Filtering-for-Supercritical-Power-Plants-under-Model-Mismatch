@@ -1,44 +1,44 @@
-\subsection{S7. Proofs of Theoretical Results}
+\section{Proofs of Theoretical Results}
 \label{sec:appendix_proofs}
 
-\subsection{Lemma S1: Residual Gradient Bound}
+\subsection{Residual Gradient Bound}
 
 \begin{lemma}[Residual gradient bound]
 \label{lem:residual_gradient}
-Let $\delta_i = \psi_i - \hat{\psi}_i^0$ with $\delta_0 \equiv 0$. Under Assumption~\ref{asm:small_perturbation}(b,c) and smoothness of $\hat{f}$ on the compact operating region $\calX_{\mathrm{op}}$, $\|\nabla_x \delta_i(x)\| \leq G_\delta^{(i)}$ for all $x \in \calX_{\mathrm{op}}$, with
+Let $\delta_i = \psi_i - \hat{\psi}_i^0$ with $\delta_0 \equiv 0$. Under the smoothness and gradient boundedness conditions stated in Theorem~1 of the main manuscript and smoothness of $\hat{f}$ on the compact operating region $\calX_{\mathrm{op}}$, $\|\nabla_x \delta_i(x)\| \leq G_\delta^{(i)}$ for all $x \in \calX_{\mathrm{op}}$, with
 \begin{align}
     G_\delta^{(0)} &= 0, \nonumber\\
     G_\delta^{(i)} &= H_\psi^{(i-1)} \|\Delta \hat{f}\|_\infty + G_\psi^{(i-1)} G_f + (L_{\hat f,i} + k_i) G_\delta^{(i-1)} + H_\delta^{(i-1)}\|\Delta\hat f\|_\infty + G_\delta^{(i-1)} G_f
     \label{eq:G_delta_recursive_app}
 \end{align}
-where $H_\psi^{(i-1)} = \sup_x \|\nabla_x^2 \hat{\psi}_{i-1}^0\|_{\mathrm{op}}$, $G_\psi^{(i-1)} = \sup_x \|\nabla_x \hat{\psi}_{i-1}^0\|$, and $G_f$ is the gradient bound from Assumption~\ref{asm:small_perturbation}(c).
+where $H_\psi^{(i-1)} = \sup_x \|\nabla_x^2 \hat{\psi}_{i-1}^0\|_{\mathrm{op}}$, $G_\psi^{(i-1)} = \sup_x \|\nabla_x \hat{\psi}_{i-1}^0\|$, and $G_f$ is the gradient bound from the gradient boundedness condition of Theorem~1 of the main manuscript.
 \end{lemma}
 
 \begin{proof}
 Differentiate $\delta_i$ term by term: $\delta_i = L_{\Delta\hat f}\hat\psi_{i-1}^0 + (L_{\hat f}+k_i)\delta_{i-1} + L_{\Delta\hat f}\delta_{i-1}$.
 \begin{enumerate}
-    \item[(i)] $\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0) = \nabla_x^2\hat\psi_{i-1}^0 \Delta\hat f + (\nabla_x\Delta\hat f)^\top \nabla_x\hat\psi_{i-1}^0$. By Cauchy-Schwarz and Assumption~\ref{asm:small_perturbation}(c): $\|\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0)\| \leq H_\psi^{(i-1)}\|\Delta\hat f\|_\infty + G_\psi^{(i-1)} G_f$.
+    \item[(i)] $\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0) = \nabla_x^2\hat\psi_{i-1}^0 \Delta\hat f + (\nabla_x\Delta\hat f)^\top \nabla_x\hat\psi_{i-1}^0$. By Cauchy-Schwarz and the gradient boundedness condition of Theorem~1 of the main manuscript: $\|\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0)\| \leq H_\psi^{(i-1)}\|\Delta\hat f\|_\infty + G_\psi^{(i-1)} G_f$.
     \item[(ii)] $\nabla_x((L_{\hat f}+k_i)\delta_{i-1})$ contributes $(L_{\hat f,i} + k_i) G_\delta^{(i-1)}$.
     \item[(iii)] $\nabla_x(L_{\Delta\hat f}\delta_{i-1}) = \nabla_x^2\delta_{i-1} \Delta\hat f + (\nabla_x\Delta\hat f)^\top \nabla_x\delta_{i-1}$, bounded by $H_\delta^{(i-1)}\|\Delta\hat f\|_\infty + G_\delta^{(i-1)} G_f$.
 \end{enumerate}
-Summing yields~\eqref{eq:G_delta_recursive_app}. Under Assumption~\ref{asm:small_perturbation}(c), $G_f = L_{\hat{f}}\|\Delta\hat f\|_\infty = \calO(\|\Delta\hat f\|)$. By induction, $G_\delta^{(i)} = \calO(\|\Delta\hat f\|)$ at every level, so $|L_{\Delta\hat f}\delta_{i-1}| \leq G_\delta^{(i-1)}\|\Delta\hat f\| = \calO(\|\Delta\hat f\|^2) = \calO(\rho^2)$.
+Summing yields~Eq.~(S1). Under the gradient boundedness condition of Theorem~1 of the main manuscript, $G_f = L_{\hat{f}}\|\Delta\hat f\|_\infty = \calO(\|\Delta\hat f\|)$. By induction, $G_\delta^{(i)} = \calO(\|\Delta\hat f\|)$ at every level, so $|L_{\Delta\hat f}\delta_{i-1}| \leq G_\delta^{(i-1)}\|\Delta\hat f\| = \calO(\|\Delta\hat f\|^2) = \calO(\rho^2)$.
 \end{proof}
 
 \subsection{Full Proof of Theorem~1}
 
 \begin{proof}[Proof of Theorem~1]
-\textbf{Step 1 (GP calibration).} By Assumptions~\ref{asm:rkhs}--\ref{asm:gp_calibration} and the PAC-Bayes concentration~\cite{srinivas2010gp}, $|\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \cdot \sigmaGPj{j}(x)$ for all $x \in \calX$ holds with probability $\geq 1 - \delta/n$ per dimension. By union bound over $j = 1,\ldots,n$, this holds simultaneously with probability $\geq 1 - \delta$. Condition on this event.
+\textbf{Step 1 (GP calibration).} By the RKHS boundedness and GP calibration conditions stated in Theorem~1 of the main manuscript and the GP-UCB concentration inequality of Srinivas et al.\ [4], $|\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \cdot \sigmaGPj{j}(x)$ for all $x \in \calX$ holds with probability $\geq 1 - \delta/n$ per dimension. By union bound over $j = 1,\ldots,n$, this holds simultaneously with probability $\geq 1 - \delta$. Condition on this event.
 
 \textbf{Step 2 (Compositional bound).} We show $|\delta_i(x)| \leq \sigma_i(x)$ by induction on $i$.
 \begin{itemize}
     \item \emph{Base case ($i=1$):} $\delta_1 = \sum_j (\partial h/\partial x_j) \Delta \hat{f}_j$. By Step~1 and triangle inequality, $|\delta_1| \leq \beta \sum_j |\partial h/\partial x_j| \sigmaGPj{j} = \sigma_1$.
-    \item \emph{Inductive step ($i \geq 2$):} Assume $|\delta_{i-1}| \leq \sigma_{i-1}$. From~\eqref{eq:delta_recursive}: $|\delta_i| \leq |L_{\Delta \hat{f}} \hat{\psi}_{i-1}^0| + (|L_{\fhat}|_{\mathrm{op}} + k_i)|\delta_{i-1}| + |L_{\Delta \hat{f}} \delta_{i-1}|$. Term 1 bounded identically to base case; Term 2 bounded by induction hypothesis; Term 3 bounded using Lemma~\ref{lem:residual_gradient}: $|L_{\Delta \hat{f}} \delta_{i-1}| \leq G_\delta^{(i-1)} \beta \|\sigmaGP\|_2 = \sigma_{\mathrm{cross}}^{(i)}$. Summing: $|\delta_i| \leq \sigma_i$.
+    \item \emph{Inductive step ($i \geq 2$):} Assume $|\delta_{i-1}| \leq \sigma_{i-1}$. From~Eq.~(5) of the main text: $|\delta_i| \leq |L_{\Delta \hat{f}} \hat{\psi}_{i-1}^0| + (|L_{\fhat}|_{\mathrm{op}} + k_i)|\delta_{i-1}| + |L_{\Delta \hat{f}} \delta_{i-1}|$. Term 1 bounded identically to base case; Term 2 bounded by induction hypothesis; Term 3 bounded using Lemma~S1: $|L_{\Delta \hat{f}} \delta_{i-1}| \leq G_\delta^{(i-1)} \beta \|\sigmaGP\|_2 = \sigma_{\mathrm{cross}}^{(i)}$. Summing: $|\delta_i| \leq \sigma_i$.
 \end{itemize}
-The cross term is retained at full weight. Under Assumption~\ref{asm:small_perturbation}(c), it is formally $\calO(\rho^2)$.
+The cross term is retained at full weight. Under the gradient boundedness condition of Theorem~1 of the main manuscript, it is formally $\calO(\rho^2)$.
 
-\textbf{Step 3 (Total perturbation).} Combining the inductive bounds from Step~2 with the coupling-coefficient bound~\eqref{eq:sigma_ctrl_app} yields $|\Delta(x,u)| \leq \sigma_m(x) + \sum_{j=1}^{m-1} c_j \sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) = \sigmatotal(x)$. For $\epsilonKappa = 1$, $\epsilon(x) = \sigmatotal(x)$, hence $|\Delta(x,u)| \leq \epsilon(x)$.
+\textbf{Step 3 (Total perturbation).} Combining the inductive bounds from Step~2 with the coupling-coefficient bound~Eq.~(S2) yields $|\Delta(x,u)| \leq \sigma_m(x) + \sum_{j=1}^{m-1} c_j \sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) = \sigmatotal(x)$. For $\epsilonKappa = 1$, $\epsilon(x) = \sigmatotal(x)$, hence $|\Delta(x,u)| \leq \epsilon(x)$.
 
-\textbf{Step 4 (Forward invariance).} For $u^*$ satisfying $A_0 u^* \leq b_0 - \epsilon$: $\psi_m^{\mathrm{true}}(x,u^*) = \hat{\psi}_m^0(x,u^*) + \Delta(x,u^*) \geq \epsilon(x) - |\Delta(x,u^*)| \geq 0$. By Theorem~2 of~\cite{xiao2021hocbf}, the safe set $\calC$ is forward invariant.
+\textbf{Step 4 (Forward invariance).} For $u^*$ satisfying $A_0 u^* \leq b_0 - \epsilon$: $\psi_m^{\mathrm{true}}(x,u^*) = \hat{\psi}_m^0(x,u^*) + \Delta(x,u^*) \geq \epsilon(x) - |\Delta(x,u^*)| \geq 0$. By Theorem~2 of~Xiao et al.\ [2], the safe set $\calC$ is forward invariant.
 \end{proof}
 
 \subsection{Coupling Coefficient Gap Bound}
@@ -49,10 +49,3 @@ The coupling coefficient gap is bounded by:
     \label{eq:sigma_ctrl_app}
 \end{equation}
 where $u_{\max} = \sup_{u \in \calU} \|u\|$. On the CCS, $\sigma_{\mathrm{ctrl}} / \sigmatotal < 0.15$ for both constraints.
-
-\subsection{Online GP Structural Degradation Envelope}
-
-\begin{remark}[Structural envelope for online GP]
-\label{rmk:online_gp_app}
-When the GP is updated online, the i.i.d.\ assumption is violated. Assuming Lipschitz continuity of the posterior with respect to hyperparameters and an online confidence sequence framework~\cite{abbasi2012online}, the per-step margin obeys $\epsilon_{k+1}(x) \leq \epsilon_k(x) + C_{\sigma} \|\theta_{k+1}^{\mathrm{GP}} - \theta_k^{\mathrm{GP}}\| + C_{\beta} \sqrt{\ln(k+1)/(k+1)}$. Constants $C_\sigma, C_\beta$ are not operationally computed; the practical safeguard is the $\epsilon$-floor regularization.
-\end{remark}

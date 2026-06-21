@@ -1,0 +1,930 @@
+{
+  "nonlinear": {
+    "seed_0": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.03,
+        "epsilon_mean": 19.85086521446705,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9795359625220299,
+          "max": 3.42647385597229,
+          "std": 0.6637133071389946
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.045,
+        "epsilon_mean": 0.9795359373092651,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9795359625220299,
+          "max": 3.42647385597229,
+          "std": 0.6637133071389946
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.015,
+        "epsilon_mean": 3.42647385597229,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9795359625220299,
+          "max": 3.42647385597229,
+          "std": 0.6637133071389946
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.1335,
+        "cbf_violation_rate": 0.4115,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.9795359625220299,
+          "max": 3.42647385597229,
+          "std": 0.6637133071389946
+        }
+      }
+    },
+    "seed_1": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.03,
+        "epsilon_mean": 19.62211928665638,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9579205136299134,
+          "max": 3.700054883956909,
+          "std": 0.6755426738497889
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.045,
+        "epsilon_mean": 0.957920491695404,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9579205136299134,
+          "max": 3.700054883956909,
+          "std": 0.6755426738497889
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.015,
+        "epsilon_mean": 3.700054883956909,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9579205136299134,
+          "max": 3.700054883956909,
+          "std": 0.6755426738497889
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.133,
+        "cbf_violation_rate": 0.412,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.9579205136299134,
+          "max": 3.700054883956909,
+          "std": 0.6755426738497889
+        }
+      }
+    },
+    "seed_2": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.035,
+        "epsilon_mean": 20.840843698978425,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9025878529846668,
+          "max": 3.213395118713379,
+          "std": 0.6137623676102184
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.05,
+        "epsilon_mean": 0.9025878310203552,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9025878529846668,
+          "max": 3.213395118713379,
+          "std": 0.6137623676102184
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.015,
+        "epsilon_mean": 3.213395118713379,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9025878529846668,
+          "max": 3.213395118713379,
+          "std": 0.6137623676102184
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.136,
+        "cbf_violation_rate": 0.4125,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.9025878529846668,
+          "max": 3.213395118713379,
+          "std": 0.6137623676102184
+        }
+      }
+    },
+    "seed_3": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.035,
+        "epsilon_mean": 25.448736029267312,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.8689323481842876,
+          "max": 3.589860439300537,
+          "std": 0.679090788745879
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.05,
+        "epsilon_mean": 0.8689323663711548,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.8689323481842876,
+          "max": 3.589860439300537,
+          "std": 0.679090788745879
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.015,
+        "epsilon_mean": 3.589860439300537,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.8689323481842876,
+          "max": 3.589860439300537,
+          "std": 0.679090788745879
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.1335,
+        "cbf_violation_rate": 0.4135,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.8689323481842876,
+          "max": 3.589860439300537,
+          "std": 0.679090788745879
+        }
+      }
+    },
+    "seed_4": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.035,
+        "epsilon_mean": 22.252664021253587,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9272119420543313,
+          "max": 3.0222558975219727,
+          "std": 0.5916110393463108
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.045,
+        "epsilon_mean": 0.9272119402885437,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9272119420543313,
+          "max": 3.0222558975219727,
+          "std": 0.5916110393463108
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.015,
+        "epsilon_mean": 3.0222558975219727,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.9272119420543313,
+          "max": 3.0222558975219727,
+          "std": 0.5916110393463108
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.1355,
+        "cbf_violation_rate": 0.412,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.9272119420543313,
+          "max": 3.0222558975219727,
+          "std": 0.5916110393463108
+        }
+      }
+    }
+  },
+  "coupled": {
+    "seed_0": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 30.51637339711189,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5965827533602714,
+          "max": 7.819051265716553,
+          "std": 1.4844877993764256
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5965827703475952,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5965827533602714,
+          "max": 7.819051265716553,
+          "std": 1.4844877993764256
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 7.819051265716553,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5965827533602714,
+          "max": 7.819051265716553,
+          "std": 1.4844877993764256
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.5965827533602714,
+          "max": 7.819051265716553,
+          "std": 1.4844877993764256
+        }
+      }
+    },
+    "seed_1": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 32.02381161332131,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5812190695852042,
+          "max": 7.131480693817139,
+          "std": 1.4644253377528882
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5812190771102905,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5812190695852042,
+          "max": 7.131480693817139,
+          "std": 1.4644253377528882
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 7.131480693817139,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5812190695852042,
+          "max": 7.131480693817139,
+          "std": 1.4644253377528882
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.5812190695852042,
+          "max": 7.131480693817139,
+          "std": 1.4644253377528882
+        }
+      }
+    },
+    "seed_2": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 25.617061708569526,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5527182654291392,
+          "max": 6.848067283630371,
+          "std": 1.3489451852431675
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5527182817459106,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5527182654291392,
+          "max": 6.848067283630371,
+          "std": 1.3489451852431675
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 6.848067283630371,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5527182654291392,
+          "max": 6.848067283630371,
+          "std": 1.3489451852431675
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.5527182654291392,
+          "max": 6.848067283630371,
+          "std": 1.3489451852431675
+        }
+      }
+    },
+    "seed_3": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 29.652221910357476,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5411102357208728,
+          "max": 8.213156700134277,
+          "std": 1.607277377447158
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5411102771759033,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5411102357208728,
+          "max": 8.213156700134277,
+          "std": 1.607277377447158
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 8.213156700134277,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5411102357208728,
+          "max": 8.213156700134277,
+          "std": 1.607277377447158
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.5411102357208728,
+          "max": 8.213156700134277,
+          "std": 1.607277377447158
+        }
+      }
+    },
+    "seed_4": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 24.206681879162787,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5013715659230948,
+          "max": 6.995232582092285,
+          "std": 1.2586222197109065
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5013716220855713,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5013715659230948,
+          "max": 6.995232582092285,
+          "std": 1.2586222197109065
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 6.995232582092285,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5013715659230948,
+          "max": 6.995232582092285,
+          "std": 1.2586222197109065
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.5013715659230948,
+          "max": 6.995232582092285,
+          "std": 1.2586222197109065
+        }
+      }
+    }
+  },
+  "damping": {
+    "seed_0": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.8954844981431962,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.770721639893949,
+          "max": 1.9576765298843384,
+          "std": 0.42482297127620605
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.7707216143608093,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.770721639893949,
+          "max": 1.9576765298843384,
+          "std": 0.42482297127620605
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.9576765298843384,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.770721639893949,
+          "max": 1.9576765298843384,
+          "std": 0.42482297127620605
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.770721639893949,
+          "max": 1.9576765298843384,
+          "std": 0.42482297127620605
+        }
+      }
+    },
+    "seed_1": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.894772087931633,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.7430576201155782,
+          "max": 1.9619274139404297,
+          "std": 0.4261358151387895
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.7430576086044312,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.7430576201155782,
+          "max": 1.9619274139404297,
+          "std": 0.4261358151387895
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.9619274139404297,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.7430576201155782,
+          "max": 1.9619274139404297,
+          "std": 0.4261358151387895
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.7430576201155782,
+          "max": 1.9619274139404297,
+          "std": 0.4261358151387895
+        }
+      }
+    },
+    "seed_2": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.8950020635128022,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.701339789301157,
+          "max": 1.915701985359192,
+          "std": 0.38835808360177226
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.7013397812843323,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.701339789301157,
+          "max": 1.915701985359192,
+          "std": 0.38835808360177226
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.915701985359192,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.701339789301157,
+          "max": 1.915701985359192,
+          "std": 0.38835808360177226
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.701339789301157,
+          "max": 1.915701985359192,
+          "std": 0.38835808360177226
+        }
+      }
+    },
+    "seed_3": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.896481397151947,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.6509111858457327,
+          "max": 1.886314034461975,
+          "std": 0.37224201729782636
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.6509112119674683,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.6509111858457327,
+          "max": 1.886314034461975,
+          "std": 0.37224201729782636
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.886314034461975,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.6509111858457327,
+          "max": 1.886314034461975,
+          "std": 0.37224201729782636
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.6509111858457327,
+          "max": 1.886314034461975,
+          "std": 0.37224201729782636
+        }
+      }
+    },
+    "seed_4": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.8961103183031083,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.7532933111935854,
+          "max": 1.7764291763305664,
+          "std": 0.43036853701628663
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.7532933354377747,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.7532933111935854,
+          "max": 1.7764291763305664,
+          "std": 0.43036853701628663
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.7764291763305664,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 0.7532933111935854,
+          "max": 1.7764291763305664,
+          "std": 0.43036853701628663
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 0.7532933111935854,
+          "max": 1.7764291763305664,
+          "std": 0.43036853701628663
+        }
+      }
+    }
+  },
+  "periodic": {
+    "seed_0": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 34.35053927719593,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.596557008743286,
+          "max": 7.818933486938477,
+          "std": 1.4844394019389453
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5965570211410522,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.596557008743286,
+          "max": 7.818933486938477,
+          "std": 1.4844394019389453
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 7.818933486938477,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.596557008743286,
+          "max": 7.818933486938477,
+          "std": 1.4844394019389453
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.596557008743286,
+          "max": 7.818933486938477,
+          "std": 1.4844394019389453
+        }
+      }
+    },
+    "seed_1": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 32.95196521818638,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.581194993659854,
+          "max": 7.131480693817139,
+          "std": 1.4643844482155763
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5811949968338013,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.581194993659854,
+          "max": 7.131480693817139,
+          "std": 1.4643844482155763
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 7.131480693817139,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.581194993659854,
+          "max": 7.131480693817139,
+          "std": 1.4643844482155763
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.581194993659854,
+          "max": 7.131480693817139,
+          "std": 1.4643844482155763
+        }
+      }
+    },
+    "seed_2": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 25.76565325796604,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.55270403675735,
+          "max": 6.847995758056641,
+          "std": 1.3489213891774934
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.552704095840454,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.55270403675735,
+          "max": 6.847995758056641,
+          "std": 1.3489213891774934
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 6.847995758056641,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.55270403675735,
+          "max": 6.847995758056641,
+          "std": 1.3489213891774934
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.55270403675735,
+          "max": 6.847995758056641,
+          "std": 1.3489213891774934
+        }
+      }
+    },
+    "seed_3": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 30.65795404613018,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5410899176895618,
+          "max": 8.21300983428955,
+          "std": 1.6072361274724098
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5410898923873901,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5410899176895618,
+          "max": 8.21300983428955,
+          "std": 1.6072361274724098
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 8.21300983428955,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5410899176895618,
+          "max": 8.21300983428955,
+          "std": 1.6072361274724098
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.5410899176895618,
+          "max": 8.21300983428955,
+          "std": 1.6072361274724098
+        }
+      }
+    },
+    "seed_4": {
+      "compositional": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 25.136206468939783,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5013513454645873,
+          "max": 6.99505615234375,
+          "std": 1.2585769867719265
+        }
+      },
+      "constant_mean": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 1.5013513565063477,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5013513454645873,
+          "max": 6.99505615234375,
+          "std": 1.2585769867719265
+        }
+      },
+      "constant_max": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 6.99505615234375,
+        "qp_infeasible_rate": 1.0,
+        "epsilon_stats": {
+          "mean": 1.5013513454645873,
+          "max": 6.99505615234375,
+          "std": 1.2585769867719265
+        }
+      },
+      "no_epsilon": {
+        "violation_rate": 0.0,
+        "cbf_violation_rate": 0.0,
+        "epsilon_mean": 0.0,
+        "qp_infeasible_rate": 0.0,
+        "epsilon_stats": {
+          "mean": 1.5013513454645873,
+          "max": 6.99505615234375,
+          "std": 1.2585769867719265
+        }
+      }
+    }
+  }
+}

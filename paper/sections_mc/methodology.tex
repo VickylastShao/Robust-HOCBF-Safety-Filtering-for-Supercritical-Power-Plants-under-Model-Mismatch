@@ -1,0 +1,74 @@
+\section{Robust HOCBF with GP Uncertainty Propagation}
+
+\subsection{Problem Formulation}
+
+Consider a control-affine system with model mismatch:
+\begin{equation}
+    \dot{x} = \underbrace{f_0(x) + g_0(x)u}_{\text{nominal}} + \underbrace{\Deltaf(x)}_{\text{residual}}, \quad x \in \R^n, \; u \in \calU \subset \R^m
+    \label{eq:true}
+\end{equation}
+where $\Deltaf$ represents unmodeled dynamics, parameter drift, and external disturbances. We assume the input matrix is known ($\Delta g = 0$), as actuator characteristics are typically well-characterized in industrial settings. For scenarios where actuator degradation primarily affects process variables through reduced throughput (e.g., valve fouling reducing steam extraction efficiency) rather than through changes in actuator gain, the dominant effect is captured by $\Deltaf$; the benchmark models actuator degradation scenarios (S5) in this form.
+
+For a constraint $h(x) \geq 0$ with relative degree $m$, the HOCBF $\psi$-chain is:
+\begin{equation}
+    \psi_0 = h(x), \quad \psi_i = \dot{\psi}_{i-1} + \alpha_i(\psi_{i-1}), \;\; i=1,\ldots,m
+    \label{eq:psi}
+\end{equation}
+With linear $\alpha_i(r) = k_i r$, the constraint $A_0(x)u \leq b_0(x)$ enforces forward invariance when the model is exact.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/Figure_1.pdf}
+    \caption{Safety filtering architecture. The upstream controller (LQR, MPC, PID, or learned policy) proposes an action $u_{\mathrm{prop}}$; the Robust HOCBF QP filter evaluates it against current plant measurements and the calibrated GP residual model, projecting to the nearest certified-safe action $u^*$ that satisfies all six CBF inequality constraints on pressure, enthalpy, and power. The filter is controller-agnostic and operates as an independent measurement-and-control safety layer.}
+    \label{fig:architecture}
+\end{figure}
+
+\subsection{GP Residual Model}
+
+Each component of $\Deltaf_j$ is modeled as an independent GP with Mat\'{e}rn-5/2 kernel. Given $N$ training points, the posterior provides mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The GP-UCB bound guarantees:
+\begin{equation}
+    |\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \sigma_{\mathrm{GP},j}(x), \quad \text{w.p.} \geq 1-\delta/n
+    \label{eq:gp_bound}
+\end{equation}
+with $\beta = \sqrt{2(\gamma_N + 1 + \ln(n/\delta))}$ and maximum information gain $\gamma_N$~\cite{srinivas2010gp}.
+
+We define the mean-corrected drift $\fhat = f_0 + \muGP$ and posterior residual $\Delta \hat{f} = \Deltaf - \muGP$.
+
+\subsection{Compositional Robustness Margin}
+
+The perturbation at level $i$ is $\delta_i = \psi_i - \hat{\psi}_i^0$, satisfying:
+\begin{align}
+    \delta_1 &= L_{\Delta\hat{f}}h \label{eq:d1}\\
+    \delta_i &= L_{\Delta\hat{f}}\hat{\psi}_{i-1}^0 + (L_{\fhat}+k_i)\delta_{i-1} + L_{\Delta\hat{f}}\delta_{i-1}, \; i\geq 2 \label{eq:di}
+\end{align}
+
+The compositional robustness margin is constructed via:
+\begin{align}
+    \sigma_1(x) &= \beta \sum_j |\partial h/\partial x_j| \sigmaGPj{j}(x) \label{eq:s1}\\
+    \sigma_i(x) &= \beta \sum_j |\partial \hat{\psi}_{i-1}^0/\partial x_j| \sigmaGPj{j}(x) + (\|L_{\fhat}\|_{\mathrm{op}} + k_i)\sigma_{i-1}(x) + \sigma_{\mathrm{cross}}^{(i)}(x) \label{eq:si}\\
+    \sigmatotal(x) &= \sigma_m(x) + \sum_{j=1}^{m-1} c_j\sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) \label{eq:st}
+\end{align}
+where $\|L_{\fhat}\|_{\mathrm{op}}$ is the operator norm (spectral norm of the Jacobian $\partial \fhat / \partial x$ evaluated at the equilibrium operating point), $\sigma_{\mathrm{cross}}^{(i)}(x)$ bounds the cross term $|L_{\Delta\hat{f}}\delta_{i-1}|$ via Lemma~S1, and $c_j = \prod_{i=j+1}^{m-1} (\|L_{\fhat}\|_{\mathrm{op}} + k_i)$ are the chain coupling weights. The robust HOCBF constraint is $A_0(x)u \leq b_0(x) - \epsilonKappa\cdot\sigmatotal(x)$.
+
+\begin{theorem}[Probabilistic forward invariance]
+\label{thm:1}
+Suppose that the input matrix is exact ($\Delta g = 0$), each GP residual component satisfies the RKHS boundedness condition required by the GP-UCB confidence bound, the GP posterior is calibrated on fixed i.i.d.\ training data, the relative degree is known, the perturbation is sufficiently small and Lipschitz-in-perturbation, and the robust QP is feasible. For $\epsilonKappa = 1$, if $\epsilon(x) \geq |\Delta(x,u)|$ for all admissible $u$, then $\calC$ is forward invariant with probability at least $1-\delta$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+\textbf{Step 1 (GP calibration):} By the RKHS boundedness and GP calibration conditions together with~\eqref{eq:gp_bound}, $|\Delta\hat{f}_j| \leq \beta\sigmaGPj{j}$ holds with probability $\geq 1-\delta/n$ per dimension; by union bound over the $n$ state dimensions, this holds simultaneously with probability $\geq 1-\delta$.
+
+\textbf{Step 2 (Compositional bound):} By induction, $|\delta_i| \leq \sigma_i$. The cross term $\sigma_{\mathrm{cross}}^{(i)}$ is bounded via Lemma~S1 (Appendix): $|L_{\Delta\hat{f}}\delta_{i-1}| \leq G_\delta^{(i-1)} \beta\|\sigma_{\mathrm{GP}}\|_2$.
+
+\textbf{Step 3:} $|\Delta(x,u)| \leq \sigmatotal(x) = \epsilon(x)$ for $\epsilonKappa=1$.
+
+\textbf{Step 4 (Forward invariance):} For $u^*$ satisfying $A_0 u^* \leq b_0 - \epsilon$, $\psi_m^{\mathrm{true}} \geq 0$ for the constraint corresponding to Theorem~\ref{thm:1}. Across all $K=6$ CBF constraints simultaneously, the union bound gives $\geq 1-K\delta = \bm{94\%}$ at $\delta=0.01$, while each individual constraint retains its $\geq 99\%$ guarantee (Theorem~\ref{thm:1}). This $94\%$ bound is conservative: the six constraints form three complementary pairs---pressure high/low, enthalpy high/low, power high/low. Since upper and lower bounds on the same scalar process variable cannot be simultaneously active (requiring $x_j \geq x_j^{\max}$ and $x_j \leq x_j^{\min}$ with $x_j^{\min} < x_j^{\max}$, a measure-zero intersection), at most one constraint from each pair can be binding at any time. The effective constraint count is therefore $K_{\mathrm{eff}} = 3$, yielding a simultaneous guarantee of $\geq 1-3\delta = \bm{97\%}$ for the active constraint set at $\delta=0.01$.
+\end{proof}
+
+\subsection{Data-Driven vs. Floor-Driven $\epsilon(x)$}
+
+The GP posterior includes a regularization floor $\sigma_{\mathrm{floor}}=10^{-4}$. Under constant perturbations, $\sigmaGP$ is near-uniform and $\epsilon(x)$ is approximately constant per constraint. Under state-dependent perturbations (S3: Coupled), $\sigmaGP$ becomes heterogeneous and $\epsilon(x)$ is genuinely state-dependent. The $\sigma$-chain structure serves both regimes.
+
+\subsection{Sampled-Data Implementation}
+
+Theorem~\ref{thm:1} is a continuous-time result. The practical implementation uses discrete sampling ($T_s = 1$\,s, zero-order hold). The full safety-filter pipeline latency is ${\sim}25$\,ms (GPU, JIT-compiled, including PPO forward pass, GP inference, and QP solve). When the QP is infeasible, a slack-penalised relaxation with LQR fallback is invoked. Inter-sample constraint satisfaction is empirically verified (Section~\ref{sec:exp}). We do not claim a formal discrete-time invariance theorem.

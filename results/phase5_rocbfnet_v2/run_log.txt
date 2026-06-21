@@ -1,0 +1,14 @@
+已终止
+ERROR conda.cli.main_run:execute(142): `conda run python3 experiments/phase5/run_rocbfnet_v2.py` failed. (See above for error)
+Phase 5 v2: methods=['rocbf_net', 'ppo_rhocbf'], conditions=['nominal', 's1_heat', 's2_pressure', 's3_coupled', 's4_nonlinear', 'load_following'], seeds=[0, 1, 2]
+Output: results/phase5_rocbfnet_v2
+Config: use_mean_correction=True, scenario-specific GP
+
+
+============================================================
+  rocbf_net | nominal | seed=0
+============================================================
+  [rocbf_net|nominal|seed=0] Ep 50: r=-451.8
+  [rocbf_net|nominal|seed=0] Ep 100: r=-539.6
+  [rocbf_net|nominal|seed=0] Ep 150: r=-578.8
+  [rocbf_net|nominal|seed=0] Ep 200: r=-526.7

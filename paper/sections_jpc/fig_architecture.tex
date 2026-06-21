@@ -1,38 +1,6 @@
-\begin{figure}[htbp]
+\begin{figure*}[t]
     \centering
-    \begin{tikzpicture}[
-        node distance=1.6cm,
-        box/.style={rectangle, draw=black, fill=blue!10, minimum width=2.8cm, minimum height=0.8cm, align=center, font=\small},
-        gpbox/.style={rectangle, draw=black, fill=green!10, minimum width=2.6cm, minimum height=0.8cm, align=center, font=\small},
-        qpbox/.style={rectangle, draw=black, fill=red!10, minimum width=2.8cm, minimum height=0.8cm, align=center, font=\small},
-        plantbox/.style={rectangle, draw=black, fill=yellow!15, minimum width=3.2cm, minimum height=1.0cm, align=center, font=\small},
-        arrow/.style={->, >=stealth, thick}
-    ]
-        % Upstream controller
-        \node[box] (controller) {Upstream Controller\\(LQR, MPC, PPO, PID)};
-
-        % QP safety filter
-        \node[qpbox, right=of controller] (qp) {Robust HOCBF-QP\\Safety Filter\\$\min\|u-u_{\mathrm{prop}}\|$ s.t.\\$A_0u \le b_0-\epsilon(x)$};
-
-        % Plant
-        \node[plantbox, right=of qp] (plant) {Supercritical\\Boiler-Turbine\\Process};
-
-        % GP
-        \node[gpbox, below=of plant] (gp) {GP Residual Model\\$\mu_{\mathrm{GP}}(x), \sigma_{\mathrm{GP}}(x)$};
-
-        % Epsilon
-        \node[gpbox, below=of qp, xshift=-1cm, minimum width=1.8cm] (epsilon) {$\epsilon(x)$\\$\sigma$-chain};
-
-        % Arrows
-        \draw[arrow] (controller) -- (qp) node[midway, above] {$u_{\mathrm{prop}}$};
-        \draw[arrow] (qp) -- (plant) node[midway, above] {$u^*$};
-        \draw[arrow] (plant.east) -- ++(0.6,0) |- (gp.east) node[near end, right] {$x_{k+1}$};
-        \draw[arrow] (gp.west) -- ++(-0.6,0) |- (epsilon.west);
-        \draw[arrow] (epsilon.north) -- (qp.south);
-
-        % Labels
-        \node[font=\footnotesize, below=0.3cm of epsilon, text width=3cm, align=center] {Compositional\\uncertainty\\propagation};
-    \end{tikzpicture}
+    \includegraphics[width=0.92\textwidth]{figures/Figure_1.pdf}
     \caption{Process-control-oriented architecture of the Robust HOCBF safety filter. An upstream controller (LQR, MPC, PPO, or classical) proposes an action $u_{\mathrm{prop}}$; the Robust HOCBF-QP projects it to the nearest safe action $u^*$ satisfying $A_0 u \le b_0 - \epsilon(x)$. A GP residual model learns the drift mismatch $\Delta f$ from process data and supplies mean correction $\mu_{\mathrm{GP}}$ and per-dimension posterior variance $\sigma_{\mathrm{GP}}$ to the compositional $\sigma$-chain, which computes the per-constraint, relative-degree-aware robustness margin $\epsilon(x)$.}
     \label{fig:architecture}
-\end{figure}
+\end{figure*}

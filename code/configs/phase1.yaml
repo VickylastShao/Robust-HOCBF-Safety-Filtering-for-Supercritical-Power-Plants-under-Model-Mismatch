@@ -1,0 +1,36 @@
+phase: 1
+name: "Theoretical Foundation — Double Integrator Validation"
+
+environment:
+  type: "double_integrator"
+  dt: 0.01
+  u_max: 5.0
+  horizon: 500
+  keepout_radius: 1.0
+
+hocbf:
+  relative_degree: 2
+  k_gains: [2.0, 2.0]
+
+ppo:
+  hidden_dim: 64
+  lr: 3.0e-4
+  clip_eps: 0.2
+  gamma: 0.99
+  lam: 0.95
+  epochs: 4
+  minibatch_size: 64
+  entropy_coef: 0.01
+  value_coef: 0.5
+
+training:
+  n_episodes: 500
+  n_steps: 500
+  eval_every: 50
+  n_eval_episodes: 10
+  seed: 42
+
+exit_criteria:
+  violation_rate: 0.0
+  reward_ratio: 0.9
+  gradient_fd_error: 1.0e-4

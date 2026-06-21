@@ -1,0 +1,77 @@
+{
+  "seed_0": {
+    "decoupled": {
+      "violation_rate": 0.003444444444444444,
+      "cbf_violation_rate": 0.0,
+      "reward": -1075.2419494887192,
+      "solve_time_ms": 2.5681706635643615,
+      "train_time": 792.8567614555359,
+      "final_reward": -1026.5610869011282
+    },
+    "coupled_nondiff": {
+      "violation_rate": 0.003444444444444444,
+      "cbf_violation_rate": 0.0,
+      "reward": -1075.2881383091212,
+      "solve_time_ms": 2.518038211235156,
+      "train_time": 888.8681600093842,
+      "final_reward": -719.003010467887
+    },
+    "distilled": {
+      "violation_rate": 0.0012222222222222222,
+      "cbf_violation_rate": 0.0,
+      "reward": -964.486511766569,
+      "solve_time_ms": 1.783074921902476,
+      "distill_time": 7.468818187713623
+    }
+  },
+  "seed_1": {
+    "decoupled": {
+      "violation_rate": 0.003,
+      "cbf_violation_rate": 0.0,
+      "reward": -1060.3734349141519,
+      "solve_time_ms": 2.5161728011185507,
+      "train_time": 795.3625662326813,
+      "final_reward": -1018.98617138803
+    },
+    "coupled_nondiff": {
+      "violation_rate": 0.003111111111111111,
+      "cbf_violation_rate": 0.0,
+      "reward": -1060.417997015516,
+      "solve_time_ms": 2.5245850280237696,
+      "train_time": 894.0953726768494,
+      "final_reward": -712.2270760023594
+    },
+    "distilled": {
+      "violation_rate": 0.00011111111111111112,
+      "cbf_violation_rate": 0.0,
+      "reward": -928.7829335613176,
+      "solve_time_ms": 1.7881281265678506,
+      "distill_time": 3.2499780654907227
+    }
+  },
+  "seed_2": {
+    "decoupled": {
+      "violation_rate": 0.0027777777777777766,
+      "cbf_violation_rate": 0.0,
+      "reward": -1065.9417987644672,
+      "solve_time_ms": 2.536861584832271,
+      "train_time": 796.6300263404846,
+      "final_reward": -1023.9536236518621
+    },
+    "coupled_nondiff": {
+      "violation_rate": 0.0027777777777777766,
+      "cbf_violation_rate": 0.0,
+      "reward": -1065.9910756856202,
+      "solve_time_ms": 2.5247453404073084,
+      "train_time": 895.1442170143127,
+      "final_reward": -718.5603044801951
+    },
+    "distilled": {
+      "violation_rate": 0.0006666666666666666,
+      "cbf_violation_rate": 0.0,
+      "reward": -1023.9668139086609,
+      "solve_time_ms": 1.7886301551479846,
+      "distill_time": 3.2657995223999023
+    }
+  }
+}

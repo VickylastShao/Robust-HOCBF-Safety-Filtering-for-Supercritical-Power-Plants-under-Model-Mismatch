@@ -24,7 +24,7 @@ $^{3}$North China University of Water Resources and Electric Power, Zhengzhou 45
 
 We submit the enclosed manuscript for consideration at the Journal of Process Control. The paper introduces a Robust High-Order Control Barrier Function (Robust HOCBF) safety filter that combines Gaussian process mean correction with compositional uncertainty propagation through the HOCBF $\psi$-chain, providing a per-constraint, relative-degree-aware safety certificate for energy process control under model mismatch.
 
-The contribution is a process-control-oriented safety filter: the GP-corrected drift reduces the residual perturbation, and a recursive $\sigma$-chain certifies the remaining uncertainty through a formal PAC-Bayes forward-invariance guarantee. The filter is policy-agnostic---compatible with LQR, MPC, or learned upstream controllers---and is validated on a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics and six CBF-enforceable constraints.
+The contribution is a process-control-oriented safety filter: the GP-corrected drift reduces the residual perturbation, and a recursive $\sigma$-chain certifies the remaining uncertainty through a GP confidence-bound-based high-probability forward-invariance guarantee. The filter is policy-agnostic---compatible with LQR, MPC, or learned upstream controllers---and is validated on a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics and six CBF-enforceable constraints.
 
 \textbf{Fit with Journal of Process Control.} The manuscript addresses constraint satisfaction in energy process control under model mismatch, a core concern of the journal's scope. The Robust HOCBF filter is proposed as a complement to existing process control techniques (MPC, offset-free MPC, disturbance-observer-based control). The paper includes process-control-specific content: IAE performance metrics, sampled-data implementation analysis, QP feasibility diagnostics, deployment decision guidance, and discussion of practical limitations including scenario-specific GP calibration and the $\Delta g = 0$ assumption.
 
@@ -32,25 +32,29 @@ The contribution is a process-control-oriented safety filter: the GP-corrected d
 \begin{enumerate}
   \item Compositional GP uncertainty propagation through the HOCBF $\psi$-chain, yielding a per-constraint, relative-degree-aware robustness margin with a formal high-probability safety certificate (Theorem~1).
   \item Process-control-oriented safety certification with sampled-data implementation analysis, QP feasibility conditions, and one-sided diagnostic characterization.
-  \item Validation on a 5th-order supercritical boiler-turbine benchmark: nominal HOCBF fails catastrophically ($>95\%$ violation) under model mismatch; the Robust HOCBF achieves no observed CBF violations across six static perturbation scenarios with per-step QP latency ${\sim}25$\,ms (10$\times$ faster than NMPC).
+  \item Validation on a 5th-order supercritical boiler-turbine benchmark: nominal HOCBF fails catastrophically ($>95\%$ violation) under model mismatch; the Robust HOCBF achieves no observed CBF violations across six static perturbation scenarios with per-step QP latency ${\sim}25$\,ms (10$\times$ faster than the implemented SLSQP-based NMPC baseline).
 \end{enumerate}
 
 \textbf{Conflicts of interest.} The authors declare no competing interests. The manuscript has not been published elsewhere and is not under simultaneous consideration by any other journal.
 
 \textbf{Suggested reviewers:}
 \begin{itemize}
+  \item Prof.\ Melanie N.\ Zeilinger, ETH Zurich, \href{mailto:mzeilinger@ethz.ch}{mzeilinger@ethz.ch} (safe learning-based control, GP-MPC)
+  \item Prof.\ Lukas Hewing, University of Oxford, \href{mailto:lukas.hewing@eng.ox.ac.uk}{lukas.hewing@eng.ox.ac.uk} (cautious MPC, GP for control)
   \item Jianxin Zhou, Southeast University, \href{mailto:zjx@seu.edu.cn}{zjx@seu.edu.cn}
   \item Zhenlong Wu, Zhengzhou University, \href{mailto:wuzhenlong2020@zzu.edu.cn}{wuzhenlong2020@zzu.edu.cn}
   \item Cong Yu, Jianghan University, \href{mailto:congy@jhun.edu.cn}{congy@jhun.edu.cn}
-  \item Hui Gu, \href{mailto:guhuini@126.com}{guhuini@126.com}
+  \item Hui Gu, Nanjing Institute of Technology, \href{mailto:gh@njit.edu.cn}{gh@njit.edu.cn}
 \end{itemize}
 
 \vspace{1em}
 \noindent We thank you for your time and consideration, and look forward to the reviewers' feedback.
 
 \vspace{1em}
-\noindent Sincerely,\\
+\begin{flushright}
+Sincerely,\\[1em]
 Zhuang~Shao (on behalf of all authors)\\
 \href{mailto:shaozhuang@crpower.com.cn}{shaozhuang@crpower.com.cn}
+\end{flushright}
 
 \end{document}

@@ -1,0 +1,51 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{hyperref}
+
+\begin{document}
+
+\noindent\textbf{To:} The Editor-in-Chief\\
+Measurement and Control\\[1em]
+
+\noindent\textbf{From:}\\
+Zhuang~Shao$^{1,*}$, Lijun~Lei$^{2}$, Peng~Wang$^{3}$, Liang~Zheng$^{2}$, Jie~Zhou$^{2}\\[0.5em]
+$^{1}$China Resources Power Technology Research Institute Co., Ltd., Shenzhen 518000, China\\
+$^{2}$Rundian Energy Science and Technology Co., Ltd., Zhengzhou 450052, China\\
+$^{3}$North China University of Water Resources and Electric Power, Zhengzhou 450046, China\\[0.5em]
+$^{*}$Corresponding author: \href{mailto:shaozhuang@crpower.com.cn}{shaozhuang@crpower.com.cn}, ORCID: 0000-0003-2496-0797\\[1em]
+
+\noindent\textbf{Re:} Submission of manuscript\\
+``\emph{Real-Time Robust HOCBF Safety Filtering for Supercritical Power Plant Control under Model Mismatch}''\\[1em]
+
+\noindent Dear Editor,
+
+We submit the enclosed manuscript for consideration at Measurement and Control. The paper presents an industrial measurement-and-control safety filtering framework that preserves pressure, enthalpy, and power output constraints during supercritical power plant operation under model mismatch.
+
+\paragraph{Fit with Measurement and Control.}
+The journal's scope encompasses measurement, control, and automation in industrial applications. Our work directly addresses this scope along four dimensions:
+
+\begin{enumerate}
+    \item \textbf{Industrial measurement and control relevance.} Supercritical boiler-turbine units require continuous monitoring and constraint-preserving control of steam pressure, separator enthalpy, and power output. Model mismatch from coal quality variation, equipment aging, and unmodeled operating disturbances is a daily operational reality. Our safety filter provides a principled, real-time mechanism for maintaining these industrial operating constraints.
+    \item \textbf{Real-time safety filtering.} The method functions as an online safety projection layer that can be superimposed after any upstream controller---LQR, MPC, or a learned policy---without modifying the existing control architecture. Per-step safety-filter pipeline latency is ${\sim}25$\,ms (GPU, JIT-compiled), including the PPO forward pass, GP inference, and QP solve, and is compatible with typical distributed control system (DCS) sampling rates.
+    \item \textbf{Constraint-preserving operation.} Under model mismatch, nominal safety filters may certify unsafe control actions as safe. Our framework transforms catastrophic filter failure ($>95\%$ constraint violation) to no observed violations across six static perturbation scenarios on a 5th-order supercritical benchmark.
+    \item \textbf{Model-mismatch-resilient control implementation.} The method quantifies and certifies model uncertainty through Gaussian process residual learning with compositional uncertainty propagation, supporting a high-probability forward-invariance certificate under fixed calibrated-GP assumptions, while remaining compatible with standard industrial control architectures.
+\end{enumerate}
+
+\paragraph{Key contributions.}
+\begin{enumerate}
+    \item Compositional GP uncertainty propagation through the HOCBF $\psi$-chain, yielding a per-constraint robustness margin with a high-probability forward-invariance certificate (Theorem~1).
+    \item Controller-agnostic deployment validated with both LQR and PPO upstream controllers: identical safety outcomes across controller types.
+    \item Validation on a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics: nominal HOCBF fails ($>95\%$ violation); Robust HOCBF achieves no observed violations with per-step latency ${\sim}25$\,ms, approximately ten times faster than the implemented SLSQP-based NMPC baseline.
+\end{enumerate}
+
+\paragraph{Conflicts of interest.} The authors declare no competing interests. The manuscript has not been published elsewhere and is not under simultaneous consideration by any other journal.
+
+\vspace{1em}
+\begin{flushright}
+Sincerely,\\[1em]
+Zhuang~Shao (on behalf of all authors)\\
+\href{mailto:shaozhuang@crpower.com.cn}{shaozhuang@crpower.com.cn}
+\end{flushright}
+
+\end{document}

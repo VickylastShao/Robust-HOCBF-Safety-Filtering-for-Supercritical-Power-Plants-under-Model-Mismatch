@@ -1,5 +1,5 @@
 Robust safety filtering for energy process control under model mismatch
 GP uncertainty propagation through high-order control barrier constraints
-Fixed calibrated GP provides high-probability forward-invariance certificate
+Fixed scenario-calibrated GP supports high-probability safety certification
 Validated on 5th-order supercritical boiler-turbine benchmark (six constraints)
-Real-time QP filtering (∼25 ms) approximately 10× faster than NMPC
+Real-time QP filtering is ∼10× faster than the implemented NMPC baseline

@@ -1,0 +1,14 @@
+Method             Cond               CBF%   Pwr%    QP%  p_hi  p_lo  h_hi  h_lo  N_hi  N_lo
+-----------------------------------------------------------------------------------------------
+ppo_hocbf          S1:Heat        100.0±0.0     0.0    0.0   0.0   0.0   0.0 100.0   0.0   0.0  [141s]
+ppo_gp_hocbf       S1:Heat          0.0±0.0     0.0  100.0   0.0   0.0   0.0   0.0   0.0   0.0  [667s]
+ppo_rhocbf         S1:Heat          0.0±0.0     0.0  100.0   0.0   0.0   0.0   0.0   0.0   0.0  [662s]
+ppo_hocbf          S3:Coupled     100.0±0.0     0.0    0.0   0.0   0.0   0.0 100.0   0.0   0.0  [132s]
+ppo_gp_hocbf       S3:Coupled      45.7±2.2     0.0   99.3   0.0   0.0   0.0  45.7   0.0   0.0  [704s]
+ppo_rhocbf         S3:Coupled       0.0±0.0     0.0   99.8   0.0   0.0   0.0   0.0   0.0   0.0  [752s]
+ppo_hocbf          S6:Fuel        100.0±0.0     0.0    0.0   0.0   0.0   0.0 100.0   0.0   0.0  [148s]
+ppo_gp_hocbf       S6:Fuel          0.0±0.0     0.0  100.0   0.0   0.0   0.0   0.0   0.0   0.0  [714s]
+ppo_rhocbf         S6:Fuel          0.0±0.0     0.0  100.0   0.0   0.0   0.0   0.0   0.0   0.0  [682s]
+
+Total time: 4603s
+Results saved to /home/gpu/sz_workspace/RoCBF-Net/results/p0_metrics_5th_phi_scaled/safety_phi_scaled_core.json

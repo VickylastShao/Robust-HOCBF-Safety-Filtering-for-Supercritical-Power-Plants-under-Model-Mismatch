@@ -1,9 +1,9 @@
-\subsection{S6. Triple-Integrator Validation ($m=3$)}
+\section{ Triple-Integrator Validation ($m=3$)}
 \label{sec:triple_integrator_appendix}
 
 The compositional robustness margin $\epsilon(x)$ is derived for general relative degree $m$ (Theorem~1 of the main paper), but the CCS constraints have $m \leq 2$. This appendix validates the $m \geq 3$ generalization on a triple integrator system ($n = 3$, $m = 3$): $\dot{x}_1 = x_2$, $\dot{x}_2 = x_3$, $\dot{x}_3 = u$, with a circular keep-out zone $h(x) = (x_1 - c)^2 - r^2$ of relative degree $m = 3$. We evaluate four perturbation types: additive damping ($\Delta f = -\zeta [0, 0, x_2]^\top$, $\zeta = 0.5$), periodic ($\Delta f = A \sin(\omega t) [0, 0, 1]^\top$), coupled (damping + periodic), and nonlinear state-dependent ($\Delta f = -\eta [0, 0, x_1 x_2]^\top$). Each method is evaluated over 50 episodes of 500 steps.
 
-\paragraph{Sigma-chain validation} A key property of the recursive $\sigma$-chain is that uncertainty grows monotonically with the $\psi$-chain level: $\sigma_1 < \sigma_2 < \sigma_3$. Table~\ref{tab:sigma_chain_m3} validates this across 120 sampled states and all four perturbation scenarios. The ordering $\sigma_1 < \sigma_2 < \sigma_3$ holds for 100\% of sampled states, with growth ratios $\sigma_2/\sigma_1 \approx 2.6$--$2.9$ and $\sigma_3/\sigma_2 \approx 2.0$--$2.2$, consistent with the recursive structure of~(Eq.~11 in the main paper).
+\paragraph{Sigma-chain validation} A key property of the recursive $\sigma$-chain is that uncertainty grows monotonically with the $\psi$-chain level: $\sigma_1 < \sigma_2 < \sigma_3$. Table~\ref{tab:sigma_chain_m3} validates this across 120 sampled states and all four perturbation scenarios. The ordering $\sigma_1 < \sigma_2 < \sigma_3$ holds for 100\% of sampled states, with growth ratios $\sigma_2/\sigma_1 \approx 2.6$--$2.9$ and $\sigma_3/\sigma_2 \approx 2.0$--$2.2$, consistent with the recursive structure of the $\sigma$-chain (Eq.~7 of the main manuscript).
 
 \begin{table}[htbp]
     \centering
@@ -52,7 +52,7 @@ The 3.5\% CBF condition violation under the nonlinear scenario reflects that the
 
 \begin{table}[htbp]
     \centering
-    \caption{Triple Integrator $\epsilon$ Ablation under Nonlinear Perturbation ($m = 3$, 5 seeds $\times$ 50 episodes $\times$ 500 steps). Mean $\epsilon$ is the total per-step robustness margin; $\epsilon(x)$ statistics ($\mu=0.93$, $\max=3.39$, $\mathrm{std}=0.65$) are computed over sampled states. Results: mean $\pm$ std over 5 seeds.}
+    \caption{Triple Integrator $\epsilon$ Ablation under Nonlinear Perturbation ($m = 3$, 5 seeds $\times$ 50 episodes $\times$ 500 steps). Mean $\epsilon$ is the total per-step robustness margin aggregated over all evaluation steps. The compositional value reflects the accumulated $\sigma$-chain contribution entering the $m=3$ HOCBF inequality, whereas $\epsilon_0^{\mathrm{mean}}$ and $\epsilon_0^{\mathrm{max}}$ are constant baseline margins. Results: mean $\pm$ std over 5 seeds.}
     \label{tab:m3_epsilon_ablation}
     \begin{tabular}{lccc}
         \toprule

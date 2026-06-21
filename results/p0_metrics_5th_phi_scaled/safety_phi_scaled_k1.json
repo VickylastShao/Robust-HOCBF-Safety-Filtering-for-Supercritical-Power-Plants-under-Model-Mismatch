@@ -1,0 +1,1892 @@
+[
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 42.199999999999996,
+    "total_reward": -92.12397115161002,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.2,
+    "power_violation": 0.0,
+    "qp_intervention": 42.8,
+    "total_reward": -150.27273251303995,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.2,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 43.0,
+    "total_reward": -96.25456062483136,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 39.800000000000004,
+    "total_reward": -53.698448808187095,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 41.8,
+    "total_reward": -96.4390574748686,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 42.199999999999996,
+    "total_reward": -92.12397115161002,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.2,
+    "power_violation": 0.0,
+    "qp_intervention": 42.8,
+    "total_reward": -150.27273251303995,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.2,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 43.0,
+    "total_reward": -96.25456062483136,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 39.800000000000004,
+    "total_reward": -53.698448808187095,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "Nominal",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 41.8,
+    "total_reward": -96.4390574748686,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "Nominal",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 76.2,
+    "total_reward": -226.45181756519105,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 54.0,
+    "total_reward": -150.0111939666068,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": 0.0,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 66.8,
+    "total_reward": -40.8183956472094,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "Nominal",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 49.2,
+    "total_reward": -1240.2041154625767,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "Nominal",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10878.179063796997,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10894.173795700073,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -10875.383543014526,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10883.728590011597,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10884.477697372437,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10878.179063796997,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10894.173795700073,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -10875.383543014526,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10883.728590011597,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10884.477697372437,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10933.234287261963,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10931.21262550354,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10925.046556472778,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10930.934162139893,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10930.484062194824,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15512.968732833862,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15534.56037902832,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -15522.912733078003,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -15522.74268913269,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -15527.615337371826,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15512.968732833862,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15534.56037902832,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -15522.912733078003,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -15522.74268913269,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S2:Pressure",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -15527.615337371826,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S2:Pressure",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15578.140657424927,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15578.430562973022,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15581.872110366821,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15578.625091552734,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15582.232564926147,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 98.8,
+    "total_reward": -8043.604966163635,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -8067.159916877747,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -8050.753305435181,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.2,
+    "total_reward": -8054.183200836182,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.2,
+    "total_reward": -8054.495390892029,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 98.8,
+    "total_reward": -8043.604966163635,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S3:Coupled",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -8067.159916877747,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S3:Coupled",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -8050.753305435181,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S3:Coupled",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.2,
+    "total_reward": -8054.183200836182,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S3:Coupled",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.2,
+    "total_reward": -8054.495390892029,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S3:Coupled",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -8112.423663139343,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -8113.473094940186,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -8112.948965072632,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -8113.417220115662,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -8112.257242202759,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S3:Coupled",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -5989.921308040619,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -6012.072622299194,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -5995.604864120483,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -5999.852204799652,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -6000.13853263855,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -5989.921308040619,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S4:Nonlinear",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -6012.072622299194,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S4:Nonlinear",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -5995.604864120483,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S4:Nonlinear",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -5999.852204799652,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S4:Nonlinear",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -6000.13853263855,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S4:Nonlinear",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -6059.599814891815,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -6060.357294559479,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -6059.475970745087,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -6060.310699939728,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -6059.00386428833,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S4:Nonlinear",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -9061.795627593994,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -9077.17656135559,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -9067.135557174683,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -9072.437538146973,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -9071.419984817505,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -9061.795627593994,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S5:Valve",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -9077.17656135559,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S5:Valve",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -9067.135557174683,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S5:Valve",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -9072.437538146973,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S5:Valve",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -9071.419984817505,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S5:Valve",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -9121.857440948486,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -9121.92136001587,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -9120.469919204712,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -9121.291004180908,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -9120.844707489014,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S5:Valve",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5232.629497528076,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5247.562956809998,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -5240.768182754517,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5245.434481620789,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -5243.745435714722,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5232.629497528076,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S6:Fuel",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5247.562956809998,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S6:Fuel",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -5240.768182754517,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S6:Fuel",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5245.434481620789,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S6:Fuel",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -5243.745435714722,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S6:Fuel",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5278.516405105591,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5281.754044532776,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5281.42934513092,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5282.511672973633,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5281.23240852356,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "lqr_rhocbf",
+    "condition": "S6:Fuel",
+    "seed": 4
+  }
+]

@@ -1,0 +1,34 @@
+[project]
+name = "rocbf-net"
+version = "0.1.0"
+description = "Robust Differentiable High-Order CBF for Explicit Safe RL"
+requires-python = ">=3.11"
+dependencies = [
+    "jax[cuda12]>=0.9.0",
+    "jaxlib>=0.9.0",
+    "flax>=0.12.0",
+    "optax>=0.2.6",
+    "qpax>=0.1.1",
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "matplotlib>=3.5",
+    "gymnasium>=0.29",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-xdist>=3.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["rocbf*", "envs*"]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-p", "no:launch_testing", "-p", "no:launch_testing_ros2", "-p", "no:launch_testing_ros", "-p", "no:ament_copyright", "-p", "no:ament_flake8", "-p", "no:ament_pep257", "-p", "no:ament_xmllint", "-p", "no:ament_lint"]

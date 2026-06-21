@@ -3,7 +3,7 @@
 
 \subsection{Scenario-Specific GP Calibration}
 
-The reported results rely on scenario-specific GP training---the GP is trained on residual data from the deployment perturbation scenario. Three GP deployment strategies exist: \textbf{scenario-specific} (recommended default: formal PAC-Bayes guarantee, tightest $\epsilon(x)$), \textbf{online GP adaptation} (enables specialization without prior knowledge but relaxes the formal guarantee; $\epsilon_{\mathrm{floor}} = 0.9 \cdot \bar{\epsilon}_{\mathrm{fixed}}$ regularization), and \textbf{generic mixed GP} (not recommended: silent calibration failure, 82.7--99.7\% violation; Supplementary~S1). The OOD failure mode (S3$\to$S1: $99.9\%$ violation) reveals that $\sigmaGP$ measures spatial distance, not functional distance between perturbation structures.
+The reported results rely on scenario-specific GP training---the GP is trained on residual data from the deployment perturbation scenario. Three GP deployment strategies exist: \textbf{scenario-specific} (recommended default: formal high-probability guarantee, tightest $\epsilon(x)$), \textbf{online GP adaptation} (enables specialization without prior knowledge but relaxes the formal guarantee; $\epsilon_{\mathrm{floor}} = 0.9 \cdot \bar{\epsilon}_{\mathrm{fixed}}$ regularization), and \textbf{generic mixed GP} (not recommended: silent calibration failure, 82.7--99.7\% violation; Supplementary~S1). The OOD failure mode (S3$\to$S1: $99.9\%$ violation) reveals that $\sigmaGP$ measures spatial distance, not functional distance between perturbation structures.
 
 \subsection{Online GP Adaptation Trade-offs}
 

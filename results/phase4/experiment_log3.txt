@@ -1,0 +1,347 @@
+  [GP pretrain] 21.3s
+/home/gpu/sz_workspace/RoCBF-Net/rocbf/gp/gp_residual.py:259: RuntimeWarning: invalid value encountered in multiply
+  Y_old[:, j] = y_norm_j * float(self._y_std[j]) + float(self._y_mean[j])
+  [RoCBF-Net train] 806.1s
+  [1/240] RoCBF-Net (Ours)     | nominal         | s=0: viol=0.0017±0.0024
+  [2/240] NMPC                 | nominal         | s=0: viol=0.0000±0.0000
+  Progress: 2/240, elapsed: 16.9min, ETA: 2010.4min
+  [GP pretrain] 16.9s
+  [RoCBF-Net train] 792.2s
+  [3/240] RoCBF-Net (Ours)     | nominal         | s=1: viol=0.0017±0.0024
+  [4/240] NMPC                 | nominal         | s=1: viol=0.0000±0.0000
+  Progress: 4/240, elapsed: 33.7min, ETA: 1986.4min
+  [GP pretrain] 18.9s
+  [PPO train] 754.6s
+  [SKIP] ppo | nominal | s=2
+  [SKIP] ppo_cbf | nominal | s=2
+  [7/240] PPO-HOCBF            | nominal         | s=2: viol=0.0000±0.0000, reward=-542.6
+  [8/240] PPO-GP-HOCBF         | nominal         | s=2: viol=0.0033±0.0024, reward=-530.6
+  [9/240] PPO-RHOCBF           | nominal         | s=2: viol=0.0000±0.0000, reward=-514.4
+  [PPO-Lagr train] 761.3s
+  [10/240] PPO-Lagrangian       | nominal         | s=2: viol=0.0000±0.0000
+  [RoCBF-Net train] 793.0s
+  [11/240] RoCBF-Net (Ours)     | nominal         | s=2: viol=0.0017±0.0024
+  [12/240] NMPC                 | nominal         | s=2: viol=0.0000±0.0000
+  Progress: 12/240, elapsed: 88.9min, ETA: 1688.5min
+  [GP pretrain] 17.5s
+  [PPO train] 750.9s
+  [13/240] PPO                  | nominal         | s=3: viol=0.0050±0.0041, reward=-519.3
+  [14/240] PPO-CBF              | nominal         | s=3: viol=0.9850±0.0041, reward=-1072.7
+  [15/240] PPO-HOCBF            | nominal         | s=3: viol=0.0000±0.0000, reward=-500.3
+  [16/240] PPO-GP-HOCBF         | nominal         | s=3: viol=0.0000±0.0000, reward=-546.1
+  [17/240] PPO-RHOCBF           | nominal         | s=3: viol=0.0000±0.0000, reward=-522.8
+  [PPO-Lagr train] 744.1s
+  [18/240] PPO-Lagrangian       | nominal         | s=3: viol=0.0017±0.0024
+  [RoCBF-Net train] 785.7s
+  [19/240] RoCBF-Net (Ours)     | nominal         | s=3: viol=0.0017±0.0024
+  [20/240] NMPC                 | nominal         | s=3: viol=0.0000±0.0000
+  Progress: 20/240, elapsed: 144.7min, ETA: 1591.7min
+  [GP pretrain] 17.7s
+  [PPO train] 741.3s
+  [21/240] PPO                  | nominal         | s=4: viol=0.0000±0.0000, reward=-489.3
+  [22/240] PPO-CBF              | nominal         | s=4: viol=0.9817±0.0085, reward=-1045.0
+  [23/240] PPO-HOCBF            | nominal         | s=4: viol=0.0017±0.0024, reward=-514.5
+  [24/240] PPO-GP-HOCBF         | nominal         | s=4: viol=0.0033±0.0047, reward=-579.8
+  [25/240] PPO-RHOCBF           | nominal         | s=4: viol=0.0000±0.0000, reward=-515.3
+  [PPO-Lagr train] 743.6s
+  [26/240] PPO-Lagrangian       | nominal         | s=4: viol=0.0017±0.0024
+  [RoCBF-Net train] 784.4s
+  [27/240] RoCBF-Net (Ours)     | nominal         | s=4: viol=0.0033±0.0024
+  [28/240] NMPC                 | nominal         | s=4: viol=0.0000±0.0000
+  Progress: 28/240, elapsed: 200.0min, ETA: 1514.3min
+  [GP pretrain] 17.3s
+  [PPO train] 744.4s
+  [29/240] PPO                  | s1_heat         | s=0: viol=0.2250±0.0082, reward=-679.3
+  [30/240] PPO-CBF              | s1_heat         | s=0: viol=0.9950±0.0000, reward=-1367.6
+  [31/240] PPO-HOCBF            | s1_heat         | s=0: viol=0.2767±0.0290, reward=-636.9
+  [32/240] PPO-GP-HOCBF         | s1_heat         | s=0: viol=0.2700±0.0283, reward=-582.0
+  [33/240] PPO-RHOCBF           | s1_heat         | s=0: viol=0.0967±0.0103, reward=-598.3
+  [PPO-Lagr train] 743.1s
+  [34/240] PPO-Lagrangian       | s1_heat         | s=0: viol=0.2817±0.0306
+  [RoCBF-Net train] 786.2s
+  [35/240] RoCBF-Net (Ours)     | s1_heat         | s=0: viol=0.2833±0.0259
+  [36/240] NMPC                 | s1_heat         | s=0: viol=0.0000±0.0000
+  Progress: 36/240, elapsed: 255.9min, ETA: 1450.1min
+  [GP pretrain] 17.2s
+  [PPO train] 745.3s
+  [37/240] PPO                  | s1_heat         | s=1: viol=0.2733±0.0225, reward=-606.9
+  [38/240] PPO-CBF              | s1_heat         | s=1: viol=0.9950±0.0000, reward=-1500.4
+  [39/240] PPO-HOCBF            | s1_heat         | s=1: viol=0.2567±0.0225, reward=-638.1
+  [40/240] PPO-GP-HOCBF         | s1_heat         | s=1: viol=0.3150±0.0227, reward=-632.5
+  [41/240] PPO-RHOCBF           | s1_heat         | s=1: viol=0.0650±0.0041, reward=-552.8
+  [PPO-Lagr train] 738.8s
+  [42/240] PPO-Lagrangian       | s1_heat         | s=1: viol=0.2983±0.0062
+  [RoCBF-Net train] 775.6s
+  [43/240] RoCBF-Net (Ours)     | s1_heat         | s=1: viol=0.2667±0.0184
+  [44/240] NMPC                 | s1_heat         | s=1: viol=0.0000±0.0000
+  Progress: 44/240, elapsed: 311.4min, ETA: 1387.2min
+  [GP pretrain] 16.8s
+  [PPO train] 733.2s
+  [45/240] PPO                  | s1_heat         | s=2: viol=0.2383±0.0347, reward=-619.0
+  [46/240] PPO-CBF              | s1_heat         | s=2: viol=0.9950±0.0000, reward=-1419.2
+  [47/240] PPO-HOCBF            | s1_heat         | s=2: viol=0.2833±0.0094, reward=-601.7
+  [48/240] PPO-GP-HOCBF         | s1_heat         | s=2: viol=0.2650±0.0141, reward=-601.6
+  [49/240] PPO-RHOCBF           | s1_heat         | s=2: viol=0.1050±0.0108, reward=-564.2
+  [PPO-Lagr train] 735.7s
+  [50/240] PPO-Lagrangian       | s1_heat         | s=2: viol=0.2883±0.0103
+  [RoCBF-Net train] 777.4s
+  [51/240] RoCBF-Net (Ours)     | s1_heat         | s=2: viol=0.2833±0.0232
+  [52/240] NMPC                 | s1_heat         | s=2: viol=0.0000±0.0000
+  Progress: 52/240, elapsed: 366.4min, ETA: 1324.6min
+  [GP pretrain] 16.8s
+  [PPO train] 734.3s
+  [53/240] PPO                  | s1_heat         | s=3: viol=0.2650±0.0163, reward=-603.7
+  [54/240] PPO-CBF              | s1_heat         | s=3: viol=0.9950±0.0000, reward=-1401.1
+  [55/240] PPO-HOCBF            | s1_heat         | s=3: viol=0.2817±0.0379, reward=-584.7
+  [56/240] PPO-GP-HOCBF         | s1_heat         | s=3: viol=0.2417±0.0193, reward=-625.7
+  [57/240] PPO-RHOCBF           | s1_heat         | s=3: viol=0.0767±0.0278, reward=-570.1
+  [PPO-Lagr train] 738.1s
+  [58/240] PPO-Lagrangian       | s1_heat         | s=3: viol=0.2767±0.0118
+  [RoCBF-Net train] 781.9s
+  [59/240] RoCBF-Net (Ours)     | s1_heat         | s=3: viol=0.2617±0.0189
+  [60/240] NMPC                 | s1_heat         | s=3: viol=0.0000±0.0000
+  Progress: 60/240, elapsed: 421.5min, ETA: 1264.5min
+  [GP pretrain] 17.0s
+  [PPO train] 740.6s
+  [61/240] PPO                  | s1_heat         | s=4: viol=0.2717±0.0201, reward=-575.7
+  [62/240] PPO-CBF              | s1_heat         | s=4: viol=0.9950±0.0000, reward=-1388.9
+  [63/240] PPO-HOCBF            | s1_heat         | s=4: viol=0.2650±0.0141, reward=-599.4
+  [64/240] PPO-GP-HOCBF         | s1_heat         | s=4: viol=0.2850±0.0255, reward=-666.2
+  [65/240] PPO-RHOCBF           | s1_heat         | s=4: viol=0.0550±0.0108, reward=-561.0
+  [PPO-Lagr train] 741.7s
+  [66/240] PPO-Lagrangian       | s1_heat         | s=4: viol=0.2667±0.0047
+  [RoCBF-Net train] 784.0s
+  [67/240] RoCBF-Net (Ours)     | s1_heat         | s=4: viol=0.2617±0.0103
+  [68/240] NMPC                 | s1_heat         | s=4: viol=0.0000±0.0000
+  Progress: 68/240, elapsed: 477.0min, ETA: 1206.5min
+  [GP pretrain] 17.1s
+  [PPO train] 740.0s
+  [69/240] PPO                  | s2_pressure     | s=0: viol=0.0583±0.0155, reward=-1567.4
+  [70/240] PPO-CBF              | s2_pressure     | s=0: viol=0.0250±0.0041, reward=-1541.8
+  [71/240] PPO-HOCBF            | s2_pressure     | s=0: viol=0.0633±0.0165, reward=-1468.6
+  [72/240] PPO-GP-HOCBF         | s2_pressure     | s=0: viol=0.0533±0.0125, reward=-1356.3
+  [73/240] PPO-RHOCBF           | s2_pressure     | s=0: viol=0.0333±0.0165, reward=-1486.4
+  [PPO-Lagr train] 741.9s
+  [74/240] PPO-Lagrangian       | s2_pressure     | s=0: viol=0.0617±0.0094
+  [RoCBF-Net train] 790.3s
+  [75/240] RoCBF-Net (Ours)     | s2_pressure     | s=0: viol=0.0683±0.0118
+  [76/240] NMPC                 | s2_pressure     | s=0: viol=0.0000±0.0000
+  Progress: 76/240, elapsed: 532.7min, ETA: 1149.6min
+  [GP pretrain] 17.6s
+  [PPO train] 754.2s
+  [77/240] PPO                  | s2_pressure     | s=1: viol=0.0517±0.0165, reward=-1436.2
+  [78/240] PPO-CBF              | s2_pressure     | s=1: viol=0.0183±0.0024, reward=-1762.6
+  [79/240] PPO-HOCBF            | s2_pressure     | s=1: viol=0.0617±0.0170, reward=-1494.8
+  [80/240] PPO-GP-HOCBF         | s2_pressure     | s=1: viol=0.0750±0.0245, reward=-1456.3
+  [81/240] PPO-RHOCBF           | s2_pressure     | s=1: viol=0.0300±0.0041, reward=-1387.1
+  [PPO-Lagr train] 896.6s
+  [82/240] PPO-Lagrangian       | s2_pressure     | s=1: viol=0.0600±0.0122
+  [RoCBF-Net train] 798.6s
+  [83/240] RoCBF-Net (Ours)     | s2_pressure     | s=1: viol=0.0650±0.0147
+  [84/240] NMPC                 | s2_pressure     | s=1: viol=0.0000±0.0000
+  Progress: 84/240, elapsed: 595.1min, ETA: 1105.1min
+  [GP pretrain] 17.4s
+  [PPO train] 752.1s
+  [85/240] PPO                  | s2_pressure     | s=2: viol=0.0633±0.0062, reward=-1443.1
+  [86/240] PPO-CBF              | s2_pressure     | s=2: viol=0.0250±0.0163, reward=-1620.6
+  [87/240] PPO-HOCBF            | s2_pressure     | s=2: viol=0.0633±0.0332, reward=-1415.2
+  [88/240] PPO-GP-HOCBF         | s2_pressure     | s=2: viol=0.0483±0.0131, reward=-1414.7
+  [89/240] PPO-RHOCBF           | s2_pressure     | s=2: viol=0.0317±0.0024, reward=-1402.4
+  [PPO-Lagr train] 743.9s
+  [90/240] PPO-Lagrangian       | s2_pressure     | s=2: viol=0.0683±0.0062
+  [RoCBF-Net train] 784.9s
+  [91/240] RoCBF-Net (Ours)     | s2_pressure     | s=2: viol=0.0700±0.0268
+  [92/240] NMPC                 | s2_pressure     | s=2: viol=0.0000±0.0000
+  Progress: 92/240, elapsed: 650.8min, ETA: 1047.0min
+  [GP pretrain] 16.9s
+  [PPO train] 741.5s
+  [93/240] PPO                  | s2_pressure     | s=3: viol=0.0667±0.0094, reward=-1391.7
+  [94/240] PPO-CBF              | s2_pressure     | s=3: viol=0.0283±0.0062, reward=-1612.5
+  [95/240] PPO-HOCBF            | s2_pressure     | s=3: viol=0.0550±0.0108, reward=-1363.6
+  [96/240] PPO-GP-HOCBF         | s2_pressure     | s=3: viol=0.0667±0.0184, reward=-1492.2
+  [97/240] PPO-RHOCBF           | s2_pressure     | s=3: viol=0.0367±0.0062, reward=-1400.7
+  [PPO-Lagr train] 746.1s
+  [98/240] PPO-Lagrangian       | s2_pressure     | s=3: viol=0.0750±0.0071
+  [RoCBF-Net train] 787.9s
+  [99/240] RoCBF-Net (Ours)     | s2_pressure     | s=3: viol=0.0717±0.0131
+  [100/240] NMPC                 | s2_pressure     | s=3: viol=0.0000±0.0000
+  Progress: 100/240, elapsed: 706.5min, ETA: 989.0min
+  [GP pretrain] 17.0s
+  [PPO train] 744.4s
+  [101/240] PPO                  | s2_pressure     | s=4: viol=0.0583±0.0085, reward=-1326.2
+  [102/240] PPO-CBF              | s2_pressure     | s=4: viol=0.0200±0.0041, reward=-1549.0
+  [103/240] PPO-HOCBF            | s2_pressure     | s=4: viol=0.0767±0.0062, reward=-1411.2
+  [104/240] PPO-GP-HOCBF         | s2_pressure     | s=4: viol=0.0700±0.0108, reward=-1490.6
+  [105/240] PPO-RHOCBF           | s2_pressure     | s=4: viol=0.0283±0.0024, reward=-1433.6
+  [PPO-Lagr train] 745.6s
+  [106/240] PPO-Lagrangian       | s2_pressure     | s=4: viol=0.0467±0.0170
+  [RoCBF-Net train] 806.5s
+  [107/240] RoCBF-Net (Ours)     | s2_pressure     | s=4: viol=0.0467±0.0062
+  [108/240] NMPC                 | s2_pressure     | s=4: viol=0.0000±0.0000
+  Progress: 108/240, elapsed: 762.6min, ETA: 932.0min
+  [GP pretrain] 17.6s
+  [PPO train] 801.6s
+  [109/240] PPO                  | s3_coupled      | s=0: viol=0.0400±0.0147, reward=-1632.9
+  [110/240] PPO-CBF              | s3_coupled      | s=0: viol=0.0250±0.0041, reward=-1687.1
+  [111/240] PPO-HOCBF            | s3_coupled      | s=0: viol=0.0333±0.0184, reward=-1528.2
+  [112/240] PPO-GP-HOCBF         | s3_coupled      | s=0: viol=0.0233±0.0062, reward=-1410.7
+  [113/240] PPO-RHOCBF           | s3_coupled      | s=0: viol=0.0267±0.0085, reward=-1555.0
+  [PPO-Lagr train] 846.3s
+  [114/240] PPO-Lagrangian       | s3_coupled      | s=0: viol=0.0267±0.0062
+  [RoCBF-Net train] 919.1s
+  [115/240] RoCBF-Net (Ours)     | s3_coupled      | s=0: viol=0.0317±0.0062
+  [116/240] NMPC                 | s3_coupled      | s=0: viol=0.0000±0.0000
+  Progress: 116/240, elapsed: 826.2min, ETA: 883.2min
+  [GP pretrain] 19.4s
+  [PPO train] 840.9s
+  [SKIP] ppo | s3_coupled | s=1
+  [118/240] PPO-CBF              | s3_coupled      | s=1: viol=0.0183±0.0024, reward=-1770.1
+  [119/240] PPO-HOCBF            | s3_coupled      | s=1: viol=0.0267±0.0062, reward=-1637.4
+  [120/240] PPO-GP-HOCBF         | s3_coupled      | s=1: viol=0.0367±0.0131, reward=-1555.1
+  [121/240] PPO-RHOCBF           | s3_coupled      | s=1: viol=0.0200±0.0122, reward=-1509.3
+  [PPO-Lagr train] 842.2s
+  [122/240] PPO-Lagrangian       | s3_coupled      | s=1: viol=0.0267±0.0024
+  [RoCBF-Net train] 903.3s
+  [123/240] RoCBF-Net (Ours)     | s3_coupled      | s=1: viol=0.0233±0.0125
+  [124/240] NMPC                 | s3_coupled      | s=1: viol=0.0000±0.0000
+  Progress: 124/240, elapsed: 889.7min, ETA: 832.3min
+  [GP pretrain] 22.0s
+  [PPO train] 842.4s
+  [SKIP] ppo | s3_coupled | s=2
+  [126/240] PPO-CBF              | s3_coupled      | s=2: viol=0.0300±0.0082, reward=-1779.1
+  [127/240] PPO-HOCBF            | s3_coupled      | s=2: viol=0.0300±0.0163, reward=-1493.8
+  [128/240] PPO-GP-HOCBF         | s3_coupled      | s=2: viol=0.0233±0.0225, reward=-1473.1
+  [129/240] PPO-RHOCBF           | s3_coupled      | s=2: viol=0.0250±0.0122, reward=-1471.5
+  [PPO-Lagr train] 852.6s
+  [130/240] PPO-Lagrangian       | s3_coupled      | s=2: viol=0.0300±0.0041
+  [RoCBF-Net train] 900.2s
+  [131/240] RoCBF-Net (Ours)     | s3_coupled      | s=2: viol=0.0217±0.0085
+  [132/240] NMPC                 | s3_coupled      | s=2: viol=0.0000±0.0000
+  Progress: 132/240, elapsed: 953.4min, ETA: 780.0min
+  [GP pretrain] 20.3s
+  [PPO train] 842.9s
+  [SKIP] ppo | s3_coupled | s=3
+  [134/240] PPO-CBF              | s3_coupled      | s=3: viol=0.0300±0.0041, reward=-1719.9
+  [135/240] PPO-HOCBF            | s3_coupled      | s=3: viol=0.0367±0.0047, reward=-1488.4
+  [136/240] PPO-GP-HOCBF         | s3_coupled      | s=3: viol=0.0267±0.0094, reward=-1419.7
+  [137/240] PPO-RHOCBF           | s3_coupled      | s=3: viol=0.0267±0.0155, reward=-1550.6
+  [PPO-Lagr train] 845.7s
+  [138/240] PPO-Lagrangian       | s3_coupled      | s=3: viol=0.0383±0.0062
+  [RoCBF-Net train] 902.0s
+  [139/240] RoCBF-Net (Ours)     | s3_coupled      | s=3: viol=0.0317±0.0165
+  [140/240] NMPC                 | s3_coupled      | s=3: viol=0.0000±0.0000
+  Progress: 140/240, elapsed: 1016.9min, ETA: 726.4min
+  [GP pretrain] 19.0s
+  [PPO train] 848.3s
+  [SKIP] ppo | s3_coupled | s=4
+  [142/240] PPO-CBF              | s3_coupled      | s=4: viol=0.0217±0.0047, reward=-1651.3
+  [143/240] PPO-HOCBF            | s3_coupled      | s=4: viol=0.0250±0.0041, reward=-1423.4
+  [144/240] PPO-GP-HOCBF         | s3_coupled      | s=4: viol=0.0250±0.0108, reward=-1469.3
+  [145/240] PPO-RHOCBF           | s3_coupled      | s=4: viol=0.0317±0.0094, reward=-1545.7
+  [RoCBF-Net train] 901.0s
+  [146/240] RoCBF-Net (Ours)     | s3_coupled      | s=4: viol=0.0250±0.0041
+  [147/240] NMPC                 | s3_coupled      | s=4: viol=0.0000±0.0000
+  Progress: 147/240, elapsed: 1066.2min, ETA: 674.5min
+  [GP pretrain] 20.2s
+  [PPO train] 847.4s
+  [SKIP] ppo | s4_nonlinear | s=0
+  [149/240] PPO-CBF              | s4_nonlinear    | s=0: viol=0.0350±0.0141, reward=-1861.3
+  [150/240] PPO-HOCBF            | s4_nonlinear    | s=0: viol=0.0317±0.0094, reward=-1346.1
+  [151/240] PPO-GP-HOCBF         | s4_nonlinear    | s=0: viol=0.0333±0.0205, reward=-1455.5
+  [152/240] PPO-RHOCBF           | s4_nonlinear    | s=0: viol=0.0183±0.0103, reward=-1339.4
+  [RoCBF-Net train] 900.7s
+  [153/240] RoCBF-Net (Ours)     | s4_nonlinear    | s=0: viol=0.0300±0.0108
+  [154/240] NMPC                 | s4_nonlinear    | s=0: viol=0.0000±0.0000
+  Progress: 154/240, elapsed: 1115.4min, ETA: 622.9min
+  [GP pretrain] 21.6s
+  [PPO train] 849.5s
+  [SKIP] ppo | s4_nonlinear | s=1
+  [156/240] PPO-CBF              | s4_nonlinear    | s=1: viol=0.0167±0.0024, reward=-1721.6
+  [157/240] PPO-HOCBF            | s4_nonlinear    | s=1: viol=0.0250±0.0071, reward=-1561.5
+  [158/240] PPO-GP-HOCBF         | s4_nonlinear    | s=1: viol=0.0350±0.0108, reward=-1480.8
+  [159/240] PPO-RHOCBF           | s4_nonlinear    | s=1: viol=0.0200±0.0122, reward=-1436.9
+  [RoCBF-Net train] 894.0s
+  [160/240] RoCBF-Net (Ours)     | s4_nonlinear    | s=1: viol=0.0233±0.0062
+  Progress: 160/240, elapsed: 1163.7min, ETA: 581.8min
+  [GP pretrain] 21.0s
+  [PPO train] 846.7s
+  [SKIP] ppo | s4_nonlinear | s=2
+  [SKIP] ppo_cbf | s4_nonlinear | s=2
+  [163/240] PPO-HOCBF            | s4_nonlinear    | s=2: viol=0.0283±0.0131, reward=-1432.2
+  [164/240] PPO-GP-HOCBF         | s4_nonlinear    | s=2: viol=0.0317±0.0170, reward=-1422.1
+  [165/240] PPO-RHOCBF           | s4_nonlinear    | s=2: viol=0.0183±0.0155, reward=-1398.2
+  [RoCBF-Net train] 910.4s
+  [166/240] RoCBF-Net (Ours)     | s4_nonlinear    | s=2: viol=0.0200±0.0071
+  Progress: 166/240, elapsed: 1211.0min, ETA: 539.8min
+  [GP pretrain] 19.3s
+  [PPO train] 848.6s
+  [SKIP] ppo | s4_nonlinear | s=3
+  [SKIP] ppo_cbf | s4_nonlinear | s=3
+  [169/240] PPO-HOCBF            | s4_nonlinear    | s=3: viol=0.0367±0.0103, reward=-1378.4
+  [170/240] PPO-GP-HOCBF         | s4_nonlinear    | s=3: viol=0.0333±0.0085, reward=-1416.5
+  [171/240] PPO-RHOCBF           | s4_nonlinear    | s=3: viol=0.0200±0.0082, reward=-1347.2
+  [RoCBF-Net train] 892.8s
+  [172/240] RoCBF-Net (Ours)     | s4_nonlinear    | s=3: viol=0.0333±0.0125
+  Progress: 172/240, elapsed: 1257.8min, ETA: 497.3min
+  [GP pretrain] 19.4s
+  [PPO train] 842.6s
+  [SKIP] ppo | s4_nonlinear | s=4
+  [SKIP] ppo_cbf | s4_nonlinear | s=4
+  [175/240] PPO-HOCBF            | s4_nonlinear    | s=4: viol=0.0217±0.0062, reward=-1312.4
+  [176/240] PPO-GP-HOCBF         | s4_nonlinear    | s=4: viol=0.0233±0.0062, reward=-1353.8
+  [177/240] PPO-RHOCBF           | s4_nonlinear    | s=4: viol=0.0183±0.0062, reward=-1394.2
+  [RoCBF-Net train] 888.5s
+  [178/240] RoCBF-Net (Ours)     | s4_nonlinear    | s=4: viol=0.0333±0.0125
+  Progress: 178/240, elapsed: 1304.3min, ETA: 454.3min
+  [GP pretrain] 21.8s
+  [PPO train] 836.1s
+  [SKIP] ppo | load_following | s=0
+  [SKIP] ppo_cbf | load_following | s=0
+  [SKIP] ppo_hocbf | load_following | s=0
+  [182/240] PPO-GP-HOCBF         | load_following  | s=0: viol=0.0017±0.0024, reward=-604.4
+  [183/240] PPO-RHOCBF           | load_following  | s=0: viol=0.0000±0.0000, reward=-500.0
+  [RoCBF-Net train] 896.3s
+  [184/240] RoCBF-Net (Ours)     | load_following  | s=0: viol=0.0033±0.0047
+  Progress: 184/240, elapsed: 1349.4min, ETA: 410.7min
+  [GP pretrain] 19.1s
+  [PPO train] 845.4s
+  [SKIP] ppo | load_following | s=1
+  [SKIP] ppo_cbf | load_following | s=1
+  [SKIP] ppo_hocbf | load_following | s=1
+  [188/240] PPO-GP-HOCBF         | load_following  | s=1: viol=0.0017±0.0024, reward=-524.8
+  [189/240] PPO-RHOCBF           | load_following  | s=1: viol=0.0017±0.0024, reward=-598.1
+  [RoCBF-Net train] 891.8s
+  [190/240] RoCBF-Net (Ours)     | load_following  | s=1: viol=0.0017±0.0024
+  Progress: 190/240, elapsed: 1394.7min, ETA: 367.0min
+  [GP pretrain] 20.0s
+  [PPO train] 827.9s
+  [SKIP] ppo | load_following | s=2
+  [SKIP] ppo_cbf | load_following | s=2
+  [SKIP] ppo_hocbf | load_following | s=2
+  [SKIP] ppo_gp_hocbf | load_following | s=2
+  [195/240] PPO-RHOCBF           | load_following  | s=2: viol=0.0000±0.0000, reward=-542.2
+  [RoCBF-Net train] 878.3s
+  [196/240] RoCBF-Net (Ours)     | load_following  | s=2: viol=0.0033±0.0024
+  Progress: 196/240, elapsed: 1429.6min, ETA: 320.9min
+  [GP pretrain] 20.3s
+  [PPO train] 829.9s
+  [SKIP] ppo | load_following | s=3
+  [SKIP] ppo_cbf | load_following | s=3
+  [SKIP] ppo_hocbf | load_following | s=3
+  [SKIP] ppo_gp_hocbf | load_following | s=3
+  [201/240] PPO-RHOCBF           | load_following  | s=3: viol=0.0017±0.0024, reward=-518.3
+  [RoCBF-Net train] 886.8s
+  [202/240] RoCBF-Net (Ours)     | load_following  | s=3: viol=0.0000±0.0000
+  Progress: 202/240, elapsed: 1464.7min, ETA: 275.5min
+  [GP pretrain] 21.0s
+  [PPO train] 847.1s
+  [SKIP] ppo | load_following | s=4
+  [SKIP] ppo_cbf | load_following | s=4
+  [SKIP] ppo_hocbf | load_following | s=4
+  [SKIP] ppo_gp_hocbf | load_following | s=4
+  [SKIP] ppo_rhocbf | load_following | s=4
+  [RoCBF-Net train] 848.9s
+  [208/240] RoCBF-Net (Ours)     | load_following  | s=4: viol=0.0000±0.0000
+  Progress: 208/240, elapsed: 1496.1min, ETA: 230.2min
+
+=== Done: 208/240 experiments in 1496.1min ===

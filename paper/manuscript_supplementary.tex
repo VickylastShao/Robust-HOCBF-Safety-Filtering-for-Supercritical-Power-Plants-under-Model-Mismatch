@@ -1,8 +1,9 @@
-\documentclass[review]{elsarticle}
+\documentclass[a4paper]{elsarticle}
 
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{multirow}
 \usepackage{makecell}
 \usepackage{bm}
@@ -41,14 +42,16 @@
 
 \journal{Journal of Process Control}
 
-% Supplementary table/figure numbering
+% Supplementary numbering
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S\arabic{equation}}
 \renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\thefigure}{S\arabic{figure}}
 
 \begin{document}
 
 \begin{frontmatter}
-\title{Supplementary Material for\\ ``Robust High-Order Control Barrier Function Safety Filtering for Supercritical Power Plant Control under Model Mismatch''}
+\title{Supplemental Material for\\ ``Real-Time Robust HOCBF Safety Filtering for Supercritical Power Plant Control under Model Mismatch''}
 
 \author[1]{Zhuang~Shao}\corref{cor1}
 \author[2]{Lijun~Lei}
@@ -67,8 +70,5 @@
 \input{sections/supplementary}
 \input{sections/triple_integrator_appendix}
 \input{sections_jpc/appendix_proofs}
-
-\bibliographystyle{elsarticle-harv}
-\bibliography{refs}
 
 \end{document}

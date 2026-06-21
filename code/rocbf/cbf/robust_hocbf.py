@@ -35,14 +35,38 @@ class RobustHOCBF(HOCBF):
     f_fn : nominal drift f₀
     gp_residual : GPResidual instance (fitted)
     u_max : float, maximum control magnitude for σ_ctrl computation
-    op_norm_estimate : float, estimate of |L_f̂|_op operator norm
+    op_norm_estimate : float, estimate of ‖L_f̂‖_op operator norm.
+        If None and x0 is provided, computed automatically from the spectral
+        norm of the Jacobian of f_fn at x0.
+    x0 : optional, equilibrium state for automatic op_norm computation
     use_mean_correction : bool, if True use f̂ = f₀ + μ_GP in psi chain
     """
+
+    @staticmethod
+    def compute_operator_norm(f_fn, x0: jnp.ndarray) -> float:
+        """Compute ‖L_f̂‖_op as the spectral norm of ∂f/∂x at equilibrium.
+
+        For a linear(ized) system f(x) = A_cl x, this is ‖A_cl‖₂ (maximum
+        singular value). For nonlinear f, the Jacobian at the operating point
+        provides a local estimate.
+
+        Parameters
+        ----------
+        f_fn : drift function f: ℝⁿ → ℝⁿ
+        x0 : equilibrium state (typically the linearization point)
+
+        Returns
+        -------
+        op_norm : float, spectral norm of the Jacobian ∂f/∂x|_{x=x0}
+        """
+        J = jax.jacfwd(f_fn)(x0)
+        return float(jnp.linalg.norm(J, 2))
 
     def __init__(self, h_fn, f_fn, g_fn, relative_degree: int,
                  k_gains: list[float], gp_residual: GPResidual,
                  u_max: float = 5.0,
-                 op_norm_estimate: float = 2.0,
+                 op_norm_estimate: float | None = None,
+                 x0: jnp.ndarray | None = None,
                  u0=None,
                  epsilon_kappa: float = 1.0,
                  epsilon_floor: float = 0.0,
@@ -50,15 +74,31 @@ class RobustHOCBF(HOCBF):
         self.f_nominal = f_fn
         self.gp_residual = gp_residual
         self.u_max = u_max
-        self.op_norm_estimate = op_norm_estimate
+
+        # Compute or use provided operator norm estimate
+        if op_norm_estimate is not None:
+            self.op_norm_estimate = op_norm_estimate
+        elif x0 is not None:
+            self.op_norm_estimate = self.compute_operator_norm(f_fn, x0)
+        else:
+            self.op_norm_estimate = 2.0  # conservative fallback
+            import logging
+            logging.getLogger(__name__).warning(
+                "op_norm_estimate not provided and x0 not available; "
+                "using conservative default 2.0. For precise guarantees, "
+                "pass x0 (equilibrium state) to auto-compute from Jacobian.")
+
         self.epsilon_kappa = epsilon_kappa
         self.epsilon_floor = epsilon_floor
         self.use_mean_correction = use_mean_correction
 
         if use_mean_correction:
             def f_hat(x):
-                mu_gp, _ = gp_residual.predict(x)
-                return f_fn(x) + mu_gp
+                # GP is trained on core 3 states (r_B, p_m, h_m);
+                # slice x[:3] for 5th-order compatibility (no-op for 3rd-order).
+                mu_gp, _ = gp_residual.predict(x[:3])
+                f_nom = f_fn(x)
+                return f_nom.at[:3].add(mu_gp)
             drift_fn = f_hat
         else:
             drift_fn = f_fn
@@ -123,8 +163,13 @@ class RobustHOCBF(HOCBF):
         for i in range(2, m + 1):
             grad_psi = jax.grad(self._psi_fns_nominal[i - 1])(x)
             sigma_i_direct = beta * jnp.sum(jnp.abs(grad_psi) * sigma_gp)
-            # Cross term σ_cross^(i) is O(ρ²), absorbed by εKappa safety factor
-            sigma_i = sigma_i_direct + (self.op_norm_estimate + self.k_gains[i - 2]) * sigmas[-1]
+            # σ_cross^(i) = G_δ^{(i-1)} · β · ‖σ_GP‖_2  (Lemma S1, appendix_proofs.tex)
+            # L2 norms: operator-norm bound on the accumulated perturbation effect
+            grad_psi_norm = jnp.sqrt(jnp.sum(grad_psi ** 2) + 1e-12)
+            sigma_gp_norm = jnp.sqrt(jnp.sum(sigma_gp ** 2) + 1e-12)
+            sigma_cross = beta * grad_psi_norm * sigma_gp_norm
+            sigma_i = (sigma_i_direct + sigma_cross +
+                       (self.op_norm_estimate + self.k_gains[i - 2]) * sigmas[-1])
             sigmas.append(sigma_i)
 
         return sigmas
@@ -140,7 +185,8 @@ class RobustHOCBF(HOCBF):
           σ₁ = β Σ_j |∂h/∂x_j| σ_GP,j
           σ_i = β Σ_j |∂ψ_{i-1}/∂x_j| σ_GP,j + (‖L_f̂‖_op + k_{i-1})·σ_{i-1}
           σ_ctrl = β Σ_j |∂L_g L_f^{m-1}h/∂x_j| σ_GP,j · u_max
-          σ_total = σ_m + Σ_{j=0}^{m-2} k_{j+1}·σ_{j+1} + σ_ctrl
+          σ_total = σ_m + Σ_{j=1}^{m-1} c_j·σ_j + σ_ctrl
+          where c_j = Π_{i=j+1}^{m-1} (‖L_f̂‖_op + k_i) are the chain coupling weights
 
         Uses f_nominal for gradient propagation so that epsilon only
         quantifies residual σ uncertainty, not μ_GP gradient effects.
@@ -174,18 +220,18 @@ class RobustHOCBF(HOCBF):
             return sigma_total
 
         # Recursive levels i = 2, ..., m
-        # Use nominal psi functions to avoid μ_GP gradient amplification
-        # NOTE: The cross term σ_cross^(i) = G_δ^(i-1) · β · ‖σ_GP(x)‖ from
-        # eq:perturbation_bound is O(ρ²) and dominated by first-order terms when
-        # the perturbation ratio ρ is small (Assumption 4). Empirically,
-        # εKappa=1 already yields 0% CBF violation, confirming the cross term
-        # is covered by the existing safety margin. See "Cross term bound
-        # characterization" paragraph in robust_hocbf.tex for details.
+        # Uses nominal psi functions to avoid μ_GP gradient amplification.
+        # σ_cross^(i) term is computed explicitly per Lemma S1 (appendix_proofs.tex).
         sigmas = [sigma_1]  # sigmas[i-1] = σ_i
         for i in range(2, m + 1):
             grad_psi = jax.grad(self._psi_fns_nominal[i - 1])(x)
             sigma_i_direct = beta * jnp.sum(jnp.abs(grad_psi) * sigma_gp)
-            sigma_i = sigma_i_direct + (self.op_norm_estimate + self.k_gains[i - 2]) * sigmas[-1]
+            # σ_cross^(i) = G_δ^{(i-1)} · β · ‖σ_GP‖_2  (Lemma S1)
+            grad_psi_norm = jnp.sqrt(jnp.sum(grad_psi ** 2) + 1e-12)
+            sigma_gp_norm = jnp.sqrt(jnp.sum(sigma_gp ** 2) + 1e-12)
+            sigma_cross = beta * grad_psi_norm * sigma_gp_norm
+            sigma_i = (sigma_i_direct + sigma_cross +
+                       (self.op_norm_estimate + self.k_gains[i - 2]) * sigmas[-1])
             sigmas.append(sigma_i)
 
         # Control coupling: σ_ctrl(x)  [eq 12]
@@ -193,12 +239,17 @@ class RobustHOCBF(HOCBF):
         grad_LgLf = jax.grad(lambda x_: (jax.grad(self._lie_f_nominal[m - 1])(x_) @ self.g_fn(x_)).sum())(x)
         sigma_ctrl = beta * jnp.sum(jnp.abs(grad_LgLf) * sigma_gp) * self.u_max
 
-        # Total: σ_total = σ_m + Σ_{i=1}^{m-1} σ_i + σ_ctrl
-        # Each σ_i already incorporates propagated uncertainty from lower levels
-        # via the recursive definition, so we sum all levels to account for
-        # the HOCBF psi-chain coupling in the constraint perturbation.
-        # For m=2: σ_total = σ_2 + σ_1 + σ_ctrl  (matches original implementation)
-        sigma_total = sum(sigmas) + sigma_ctrl
+        # Total: σ_total = σ_m + Σ_{j=1}^{m-1} c_j·σ_j + σ_ctrl  [eq:st]
+        # where c_j = Π_{i=j+1}^{m-1} (‖L_f̂‖_op + k_i) are the chain coupling weights.
+        # For m=1, sigmas is empty, handled above. For m=2, c_1 = 1 (empty product).
+        sigma_total = sigmas[-1]  # σ_m
+        for j in range(1, m):  # j = 1, ..., m-1
+            # c_j = Π_{i=j+1}^{m-1} (‖L_f̂‖_op + k_i)
+            c_j = 1.0
+            for i in range(j + 1, m):  # i = j+1, ..., m-1
+                c_j *= (self.op_norm_estimate + self.k_gains[i - 1])
+            sigma_total += c_j * sigmas[j - 1]  # sigmas[j-1] = σ_j
+        sigma_total += sigma_ctrl
 
         if self.epsilon_floor > 0:
             sigma_total = jnp.maximum(sigma_total, self.epsilon_floor)
@@ -290,7 +341,8 @@ class ConstantEpsilonRobustHOCBF(RobustHOCBF):
                  k_gains: list[float], gp_residual: GPResidual,
                  epsilon_constant: float,
                  u_max: float = 5.0,
-                 op_norm_estimate: float = 2.0,
+                 op_norm_estimate: float | None = None,
+                 x0: jnp.ndarray | None = None,
                  u0=None,
                  epsilon_kappa: float = 1.0,
                  epsilon_floor: float = 0.0,

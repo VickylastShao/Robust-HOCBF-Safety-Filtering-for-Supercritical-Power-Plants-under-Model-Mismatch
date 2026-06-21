@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+*.egg
+
+# JAX and ML outputs
+.jax_cache/
+wandb/
+runs/
+*.pt
+*.ckpt
+
+# Logs and generated LaTeX auxiliaries
+*.log
+*.bak
+*.aux
+*.bbl
+*.blg
+*.out
+*.spl
+texput.log
+
+# Local tooling
+.pytest_cache/
+.claude/
+.idea/
+.vscode/
+tmp_pdf_render/
+
+# OS
+.DS_Store
+Thumbs.db

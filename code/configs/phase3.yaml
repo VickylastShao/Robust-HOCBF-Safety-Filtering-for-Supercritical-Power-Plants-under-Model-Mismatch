@@ -1,0 +1,57 @@
+phase: 3
+name: "CCS Deployment — 1000 MW USC Boiler-Turbine Coordinated Control"
+
+environment:
+  type: "usccs"
+  dt: 1.0
+  nominal_load: 1000.0
+  load_scenarios: [500, 750, 1000]
+
+dynamics:
+  n_states: 3
+  n_inputs: 3
+  delay_order: 4
+  u1_bounds: [40, 100]
+  u2_bounds: [350, 800]
+  u3_bounds: [0, 100]
+
+constraints:
+  pressure_bounds: [13.0, 24.0]
+  enthalpy_bounds: [2650, 2850]
+  power_deviation: 50.0
+
+hocbf:
+  pressure_k_gains: [0.5, 0.5]
+  enthalpy_k_gains: [1.0]
+
+gp:
+  n_dims: 3
+  kernel: "matern52"
+  noise_variance: 1.0e-4
+  n_pretrain_transitions: 3000
+  update_interval: 50
+  delta: 0.01
+
+ppo:
+  hidden_dim: 128
+  lr: 1.0e-4
+  clip_eps: 0.2
+  gamma: 0.99
+  lam: 0.95
+  epochs: 4
+  minibatch_size: 64
+  entropy_coef: 0.01
+  value_coef: 0.5
+
+training:
+  n_episodes: 2000
+  n_steps: 300
+  eval_every: 100
+  n_eval_episodes: 5
+  seed: 42
+
+exit_criteria:
+  nominal_violation_rate: 0.0
+  robust_violation_rate: 0.01
+  gp_coverage: [0.90, 0.98]
+  equilibrium_residual: 1.0e-6

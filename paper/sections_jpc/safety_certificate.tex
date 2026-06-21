@@ -9,7 +9,7 @@ Under Assumptions~\ref{asm:delta_g}--\ref{asm:small_perturbation}, fixed-GP depl
 \end{theorem}
 
 \begin{proof}[Proof sketch; full proofs in Supplementary Section~S7]
-\textbf{Step 1 (GP calibration):} By Assumptions~\ref{asm:rkhs}--\ref{asm:gp_calibration} and the PAC-Bayes bound~\eqref{eq:gp_bound}, $|\Delta \hat{f}_j(x)| \leq \beta \sigmaGPj{j}(x)$ holds simultaneously for all $j$ w.p.\ $\geq 1-\delta$.
+\textbf{Step 1 (GP calibration):} By Assumptions~\ref{asm:rkhs}--\ref{asm:gp_calibration} and the GP-UCB bound~\eqref{eq:gp_bound}, $|\Delta \hat{f}_j(x)| \leq \beta \sigmaGPj{j}(x)$ holds simultaneously for all $j$ w.p.\ $\geq 1-\delta$.
 
 \textbf{Step 2 (Compositional bound):} By induction on $i$, $|\delta_i(x)| \leq \sigma_i(x)$ for $i=1,\ldots,m$, with the cross term retained at full weight in $\sigma_{\mathrm{cross}}^{(i)}$. Under Assumption~\ref{asm:small_perturbation}(c) (Lipschitz-in-perturbation), the cross term is formally $\calO(\rho^2)$.
 
@@ -34,7 +34,7 @@ On the CCS, $\Pr_x[\epsilon(x) > \bar{s}^{\max}(x)] < 0.5\%$ under scenario-spec
 
 Theorem~\ref{thm:probabilistic_safety} is a continuous-time result. The practical implementation operates in discrete time with sampling period $T_s$. Three considerations arise.
 
-\textbf{Discrete-time CBF evaluation.} The HOCBF condition $\psi_m \geq 0$ is evaluated at the sampled state $x_k$. The control $u_k$ is held constant over $[kT_s, (k+1)T_s]$ (zero-order hold). Between samples, the true $\psi_m$ trajectory may dip below zero, introducing a $\calO(T_s^2)$ Taylor residual. For the CCS benchmark, $T_s = 1$\,s and this residual is small relative to the worst-case $\epsilon(x)$ margin.
+\textbf{Discrete-time CBF evaluation.} The HOCBF condition $\psi_m \geq 0$ is evaluated at the sampled state $x_k$. The control $u_k$ is held constant over $[kT_s, (k+1)T_s]$ (zero-order hold). Between samples, the true $\psi_m$ trajectory may dip below zero, introducing a $\calO(T_s^2)$ Taylor residual. For the CCS benchmark, inter-sample behavior is empirically checked using four sub-steps per control interval in representative trajectories (Section~\ref{sec:results}); no formal sampled-data invariance theorem is claimed---the continuous-time certificate of Theorem~1 is the formal guarantee.
 
 \textbf{QP solve latency.} The per-step QP solve requires ${\sim}25$\,ms with JIT compilation (GPU) or ${\sim}578$\,ms without JIT (CPU). The 25\,ms latency is compatible with sampling periods $T_s \geq 100$\,ms, covering typical DCS control cycles. For faster loops, the distilled policy (1.8\,ms, CPU) provides a low-latency alternative with empirical-only safety.
 

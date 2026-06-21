@@ -1,0 +1,24 @@
+{
+  "kappa": 0.7,
+  "scenario": "heat_absorption",
+  "seed": 1,
+  "cbf_violation_pct": 0.0,
+  "power_violation_pct": 0.0,
+  "qp_intervention_pct": 100.0,
+  "total_reward": -10909.547096252441,
+  "per_constraint_pct": {
+    "pressure_high": 0.0,
+    "pressure_low": 0.0,
+    "enthalpy_high": 0.0,
+    "enthalpy_low": 0.0,
+    "power_high": 0.0,
+    "power_low": 0.0
+  },
+  "epsilon_mean": 2.7764484071731568,
+  "epsilon_std": 0.013134278650041797,
+  "epsilon_max": 2.779085874557495,
+  "action_diff_mean": 3.4801825248003007,
+  "action_diff_max": 6.640041351318359,
+  "chatter_rate_pct": 99.8,
+  "scenario_name": "S1:Heat"
+}

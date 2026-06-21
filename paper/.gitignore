@@ -1,0 +1,30 @@
+# LaTeX build artifacts (regenerated on every build)
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.nav
+*.snm
+*.vrb
+
+# Editor backups
+*.bak
+*~
+.DS_Store
+
+# Keep these (do not gitignore):
+# - main.pdf       (final deliverable, version-controlled)
+# - main.tex
+# - refs.bib
+# - sections/*.tex
+# - figures/*.png, figures/*.tex
+# - response_to_reviewers.md
+# - README.md

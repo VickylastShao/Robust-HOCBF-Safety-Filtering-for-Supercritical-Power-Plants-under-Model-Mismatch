@@ -1,0 +1,112 @@
+\section{Experimental Validation}
+\label{sec:exp}
+
+The experiments are designed to evaluate whether the proposed filter can operate as a real-time safety layer in an industrial measurement and control loop. Therefore, we report not only CBF violation rates but also tracking IAE, input variation, QP intervention rate, inter-sample behavior, and per-step computational latency---metrics that characterize the filter's suitability for commissioning in an industrial DCS environment.
+
+\subsection{Benchmark and Baselines}
+
+The benchmark is a 5th-order nonlinear model of a 1000\,MW ultra-supercritical boiler-turbine unit with state $x = [r_B, p_m, h_m, N_e, \tau_f]^\top$ and three control inputs. Six safety constraints are enforced: main steam pressure ($m=2$, 13--24\,MPa), separator enthalpy ($m=1$, 2670--2830\,kJ/kg), and power output ($m=1$, $\pm50$\,MW). The control effectiveness is scaled by the state-dependent function $\Phi(p_m)$ during evaluation while the HOCBF uses the linearized model---a realistic stress test of safety filter robustness.
+
+Six static perturbation scenarios model realistic disturbances: S1 (coal quality drift, $-15\%$ heating value), S2 (feedwater pump cycling), S3 (coupled state-dependent), S4 (nonlinear fouling), S5 (valve degradation, modelled as equivalent drift $\Deltaf$ via reduced steam extraction efficiency; the $\Delta g = 0$ assumption is maintained throughout all scenarios), S6 (fuel quality variation). Three time-varying disturbance patterns (TV1--TV3) provide out-of-distribution evaluation.
+
+Methods compared: nominal HOCBF (no GP), GP-HOCBF (mean correction, $\epsilon=0$), PPO-RHOCBF (scenario-specific GP, $\epsilonKappa=1.0$), LQR-RHOCBF (same filter, classical upstream controller), and NMPC (SLSQP solver, $N=5$ horizon, offset-free estimation). GP pretraining: $N=2000$ points per scenario. Evaluation: 5 seeds $\times$ 50 episodes $\times$ 500 steps under $\Phi$-scaled rollout.
+
+\subsection{Safety Performance}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Constraint violation rate (\%) under $\Phi$-scaled nonlinear dynamics. 0\% rates: $0/250$ episodes, 95\% Wilson upper bound $1.51\%$.}
+    \label{tab:safety}
+    \small
+    \begin{tabular}{lccccccc}
+        \toprule
+        Method & Nom. & S1 & S2 & S3 & S4 & S5 & S6 \\
+        \midrule
+        PPO-HOCBF & 0.0 & 100.0 & 99.9 & 99.9 & 99.9 & 99.5 & 99.9 \\
+        PPO-GP-HOCBF & 0.0 & 0.0 & 0.0 & 45.4 & 0.0 & 0.0 & 0.0 \\
+        \textbf{PPO-RHOCBF} & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} \\
+        LQR-RHOCBF & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+        NMPC & 0.0 & 0.4 & 0.4 & 0.4 & 0.2 & 0.4 & 0.4 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Table~\ref{tab:safety} reports the main results. Nominal HOCBF suffers $>95\%$ violation under all dynamics-affecting scenarios. GP mean correction alone reduces violation to 0\% under constant perturbations but leaves 45.4\% under S3 (Coupled). Adding the compositional $\epsilon(x)$ achieves no observed violations across all scenarios. LQR-RHOCBF achieves identical safety, confirming the guarantee is controller-agnostic.
+
+We do not provide a direct quantitative comparison with the SOCP-based GP-HOCBF approach of Aali \& Liu~\cite{aali2024learning} for two reasons. First, their method is validated on robotics benchmarks (inverted pendulum, autonomous racing) with fundamentally different constraint structure and dynamics timescale from the CCS process control benchmark. Second, the SOCP reformulation aggregates GP uncertainty at the constraint level rather than propagating it compositionally through the $\psi$-chain; under the CCS coupled perturbation (S3), where uncertainty amplification across relative-degree levels is the dominant effect, the global SOCP aggregation would be structurally unable to differentiate between per-level uncertainty contributions. The per-level $\sigma$-chain propagation (Eqs.~7--9) provides finer-grained robustness allocation than a single globally-computed margin. A qualitative structural comparison is provided in Table~S5 (Supplemental Material).
+
+PPO-Lagrangian achieves partial safety improvement (0.14--1.27\% violation, Supplementary Material, Table~S6) through dual-descent cost penalization, but the Lagrangian mechanism provides only average constraint satisfaction rather than per-step forward invariance.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/Figure_2.pdf}
+    \caption{Process trajectories under S3: Coupled perturbation. Red dashed = HOCBF (violates constraints); blue solid = Robust HOCBF (remains within bounds).}
+    \label{fig:traj}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/Figure_4.pdf}
+    \caption{QP intervention rate vs.\ perturbation magnitude. Blue bars show QP intervention rate; red bars show observed CBF violation rate. Light green background indicates the safe operating envelope (Mag10--Mag75, 0\% CBF violation).}
+    \label{fig:qp}
+\end{figure}
+
+\subsection{Filter Diagnostics and Computational Performance}
+
+Figure~\ref{fig:traj} compares HOCBF and Robust HOCBF under S3: the nominal filter allows the enthalpy to drop below its lower bound, while Robust HOCBF maintains safety. Figure~\ref{fig:epsilon} quantifies the state dependence of the per-constraint robustness margin: $\epsilon_h$ varies by more than one order of magnitude across the operating enthalpy range (CV 105\%), confirming that $\epsilon(x)$ is genuinely state-dependent under coupled perturbations. Figure~\ref{fig:qp} shows the QP intervention rate scales with perturbation magnitude (3.5\% at Mag10 to 100\% at Mag75), confirming the filter is minimally invasive at low mismatch levels.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/Figure_3.pdf}
+    \caption{State-dependent enthalpy robustness margin $\epsilon_h(x)$ under S3 (Coupled, state-dependent perturbation). Left: $\epsilon_h$ (enthalpy low margin, log scale) evaluated over the operating enthalpy range $h_m^0 \pm 50$\,kJ/kg under $\Phi$-scaled nonlinear dynamics with scenario-specific GP. The margin varies by more than one order of magnitude, reflecting the sensitivity of $\sigma_{\mathrm{GP}}$ to the perturbation structure (CV 105\%). Right: distribution of $\epsilon_h$ over the operating range, centred at the equilibrium enthalpy $h_m^0 = 2698$\,kJ/kg. The pressure low margin $\epsilon_p$ exhibits CV 71\% over the corresponding operating sweep. Under constant perturbations (S1, S2, S4--S6), $\epsilon(x)$ is approximately constant per constraint and dominated by the GP regularization floor.}
+    \label{fig:epsilon}
+\end{figure}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Time-varying disturbance performance (\%).}
+    \label{tab:tv}
+    \small
+    \begin{tabular}{lccc}
+        \toprule
+        Method & TV1: Step & TV2: Fast Step & TV3: Rand.\ Walk \\
+        \midrule
+        NMPC & 2.00 & 5.00 & 19.67 \\
+        NMPC+GP (simpl.\ cautious) & 49.00 & 48.67 & 12.33 \\
+        \textbf{PPO-RHOCBF (fixed GP)} & \textbf{1.75} & \textbf{1.58} & 7.73 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Under time-varying disturbances (Table~\ref{tab:tv}), NMPC performs adequately under step and fast-step disturbances (2.00\% and 5.00\%, respectively) but degrades under persistent random-walk disturbances (19.67\%), where its EMA disturbance estimator continuously lags behind the evolving perturbation. Robust HOCBF maintains lower violation rates across all three patterns (1.75\%, 1.58\%, 7.73\%). A GP-augmented NMPC variant (simplified cautious MPC) degrades under step-like disturbances (49\% vs.\ 2\% for TV1)---the GP mean, trained on static data, injects systematic bias when the disturbance changes abruptly---but partially recovers under continuous random-walk disturbances (12.33\% vs.\ 19.67\% for TV3), where the GP smoothness helps average over rapid fluctuations.
+
+Per-step computation: the safety-filter pipeline (PPO+GP+QP) with JIT compilation (GPU: NVIDIA RTX 4090) requires ${\sim}25$\,ms (p95: 27\,ms), including the PPO forward pass, GP inference, and QP solve; NMPC (CPU: AMD Ryzen 9 7950X, scipy SLSQP) averages 254\,ms. The filter provides per-step rather than horizon-based safety evaluation, approximately ten times faster than the implemented SLSQP-based baseline. For CPU-only deployment, the distilled policy achieves 1.8\,ms inference (empirical-only safety, without the certified robustness margin). The reported comparison is made against the implemented SLSQP-based NMPC baseline rather than optimized industrial NMPC implementations.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Process control performance under $\Phi$-scaled nonlinear dynamics (PPO-RHOCBF, $\epsilonKappa=1.0$, single evaluation run, 500 steps).}
+    \label{tab:metrics}
+    \small
+    \begin{tabular}{lccc}
+        \toprule
+        Metric & S1: Heat & S3: Coupled & S5: Valve \\
+        \midrule
+        IAE$_{\mathrm{pressure}}$ (MPa$\cdot$s) & 2301 & 1971 & 1841 \\
+        IAE$_{\mathrm{enthalpy}}$ (kJ/kg$\cdot$s) & 13076 & 13094 & 13108 \\
+        IAE$_{\mathrm{power}}$ (MW$\cdot$s) & 0 & 0 & 10000 \\
+        Max.\ pressure deviation (MPa) & 4.60 & 3.95 & 3.68 \\
+        Max.\ enthalpy deviation (kJ/kg) & 26.2 & 26.2 & 26.3 \\
+        Input variation (total) & 0.7 & 1.2 & 0.4 \\
+        Inter-sample violation (\%) & 0.0 & 0.0 & 0.0 \\
+        QP intervention (\%) & 100.0 & 100.0 & 100.0 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Table~\ref{tab:metrics} reports process-level metrics under the three constraint-active perturbation scenarios. IAE and maximum deviation values confirm the filter maintains tracking quality while preserving safety; inter-sample violation remains at 0\% under zero-order-hold implementation.
+
+\subsection{Deployment Considerations}
+
+The method is intended as a \textbf{commissioning-calibrated safety filter}. The GP residual model should be calibrated using commissioning or scenario-representative data before safety-critical deployment. This design should not be interpreted as a plug-and-play OOD-robust controller; its safety certificate applies to fixed, calibrated GP deployments within the commissioned operating envelope. Three deployment strategies exist, defining a clear \textbf{deployment envelope}: (a) scenario-specific GP (recommended---provides formal guarantee and tightest $\epsilon(x)$), (b) online GP adaptation (enables deployment without prior scenario knowledge at the cost of relaxing the formal guarantee), and (c) generic mixed GP (defined as outside the deployment envelope---silent calibration failure, 82.7--99.7\% violation; Supplemental Material). The out-of-distribution failure mode (S3$\to$S1: 99.9\% violation) is explicitly characterized, not hidden: $\sigmaGP$ measures spatial distance to training data, not functional distance between perturbation structures. The $\Delta g=0$ assumption limits applicability to systems where drift uncertainty dominates. QP infeasibility serves as a one-sided diagnostic: it detects overestimated $\sigmaGP$ (too conservative) but not underestimated $\sigmaGP$ (unsafe failure).
+
+Detailed ablation results ($\epsilonKappa$ sensitivity, epsilon configuration sweep, generic GP/OOD analysis, training mode comparison, PPO-Lagrangian baseline, load-following AGC performance, and triple-integrator $m=3$ validation) are provided in the Supplemental Material.

@@ -1,0 +1,16 @@
+\ProvidesPackage{balance}
+\def\balance{\ifvoid\@outputbox\else
+  \@BALANCEfalse
+  \global\let\@tempa\@outputbox
+  \expandafter\ifx\@tempa\relax
+  \else
+    \global\setbox\@outputbox\vbox{%
+      \unvbox\@outputbox
+      \ifnum\badness=\@M\else
+        \vbadness=\@M
+        \vskip 0pt plus 2pt minus 1pt\relax
+      \fi}%
+  \fi
+  \@BALANCEtrue
+\fi}
+\endinput

@@ -1,0 +1,177 @@
+{
+  "seed_0": {
+    "standard": {
+      "power_violation_rate": 0.9247777777777778,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -17159.000328445436,
+      "power_viol_std": 0.014998353819134641,
+      "reward_std": 468.6220390337422,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "input_constraint": {
+      "power_violation_rate": 0.47222222222222215,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -7944.595988543829,
+      "power_viol_std": 0.020893616486298953,
+      "reward_std": 42.73152752832038,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "two_stage": {
+      "power_violation_rate": 0.0033333333333333322,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -578.8143694758415,
+      "power_viol_std": 1.3010426069826053e-18,
+      "reward_std": 3.556295590215323,
+      "n_episodes": 30,
+      "n_steps": 300
+    }
+  },
+  "seed_1": {
+    "standard": {
+      "power_violation_rate": 0.9302222222222222,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -17058.513957325617,
+      "power_viol_std": 0.014930290695325182,
+      "reward_std": 491.8123526366363,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "input_constraint": {
+      "power_violation_rate": 0.4823333333333332,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -7947.672634736697,
+      "power_viol_std": 0.01998425306010636,
+      "reward_std": 41.95627167552079,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "two_stage": {
+      "power_violation_rate": 0.0033333333333333322,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -577.5494230429332,
+      "power_viol_std": 1.3010426069826053e-18,
+      "reward_std": 4.824465218750385,
+      "n_episodes": 30,
+      "n_steps": 300
+    }
+  },
+  "seed_2": {
+    "standard": {
+      "power_violation_rate": 0.929,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -17135.44387588501,
+      "power_viol_std": 0.014456832294800959,
+      "reward_std": 410.7983372758919,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "input_constraint": {
+      "power_violation_rate": 0.4768888888888888,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -7942.616169969241,
+      "power_viol_std": 0.018477881338655477,
+      "reward_std": 38.32021332876578,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "two_stage": {
+      "power_violation_rate": 0.0033333333333333322,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -578.8470766623815,
+      "power_viol_std": 1.3010426069826053e-18,
+      "reward_std": 3.4544634222426773,
+      "n_episodes": 30,
+      "n_steps": 300
+    }
+  },
+  "seed_3": {
+    "standard": {
+      "power_violation_rate": 0.9275555555555555,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -16978.119800281525,
+      "power_viol_std": 0.010884352796674181,
+      "reward_std": 389.3659670264207,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "input_constraint": {
+      "power_violation_rate": 0.4725555555555555,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -7933.452403942744,
+      "power_viol_std": 0.023375887122533592,
+      "reward_std": 30.5619704834676,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "two_stage": {
+      "power_violation_rate": 0.0033333333333333322,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -578.4224139253298,
+      "power_viol_std": 1.3010426069826053e-18,
+      "reward_std": 3.3357192633218173,
+      "n_episodes": 30,
+      "n_steps": 300
+    }
+  },
+  "seed_4": {
+    "standard": {
+      "power_violation_rate": 0.9250000000000002,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -17082.806442777317,
+      "power_viol_std": 0.018150604520082648,
+      "reward_std": 412.20594807877035,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "input_constraint": {
+      "power_violation_rate": 0.46766666666666673,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -7927.8908395369845,
+      "power_viol_std": 0.014558947865933272,
+      "reward_std": 44.69152837519562,
+      "n_episodes": 30,
+      "n_steps": 300
+    },
+    "two_stage": {
+      "power_violation_rate": 0.0033333333333333322,
+      "cbf_violation_rate": 0.0,
+      "pressure_violation_rate": 0.0,
+      "enthalpy_violation_rate": 0.0,
+      "reward": -578.321177872022,
+      "power_viol_std": 1.3010426069826053e-18,
+      "reward_std": 2.538129542671313,
+      "n_episodes": 30,
+      "n_steps": 300
+    }
+  }
+}

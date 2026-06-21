@@ -1,0 +1,14 @@
+{
+  "violation_rate": [
+    1.0,
+    0.0
+  ],
+  "cbf_violation_rate": [
+    1.0,
+    0.0
+  ],
+  "cumulative_reward": [
+    -4491.916655049324,
+    129.60744807674567
+  ]
+}

@@ -9,6 +9,9 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 \usepackage[numbers]{natbib}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,breaklinks=true}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -51,14 +54,13 @@
 
 \title{Robust High-Order Control Barrier Function Safety Filtering for Supercritical Power Plant Control under Model Mismatch}
 
-\author[1]{Zhuang~Shao}\corref{cor1}\fnref{fn1}
-\author[2]{Lijun~Lei}
-\author[3]{Peng~Wang}
-\author[2]{Liang~Zheng}
-\author[2]{Jie~Zhou}
+\author[1]{Zhuang~Shao}\corref{cor1}\fnref{fn1}\ead{shaozhuang@crpower.com.cn}
+\author[2]{Lijun~Lei}\ead{leilijun6@crpower.com.cn}
+\author[3]{Peng~Wang}\ead{wangpeng@ncwu.edu.cn}
+\author[2]{Liang~Zheng}\ead{zhengliang35@crpower.com.cn}
+\author[2]{Jie~Zhou}\ead{zhoujie365@crpower.com.cn}
 
 \cortext[cor1]{Corresponding author.}
-\ead{shaozhuang@crpower.com.cn}
 \fntext[fn1]{ORCID: 0000-0003-2496-0797}
 
 \address[1]{China Resources Power Technology Research Institute Co., Ltd., Shenzhen 518000, Guangdong Province, China}
@@ -66,7 +68,7 @@
 \address[3]{North China University of Water Resources and Electric Power, Zhengzhou 450046, Henan Province, China}
 
 \begin{abstract}
-Supercritical power plants must satisfy hard constraints on steam pressure, enthalpy, and power output under model mismatch from coal quality variation, heat exchanger fouling, and equipment degradation. This paper introduces a Robust High-Order Control Barrier Function (Robust HOCBF) safety filter for energy process control. The filter combines Gaussian process (GP) mean correction of the drift dynamics with compositional uncertainty propagation through the HOCBF $\psi$-chain, yielding a per-constraint, relative-degree-aware robustness margin $\epsilon(x)$. For continuous-time control-affine systems with a fixed, scenario-calibrated GP, known relative degree, $\Delta g = 0$, and $\kappa_\epsilon = 1$, the tightened constraint provides a high-probability forward-invariance certificate (Theorem~1). The guarantee is policy-agnostic: any Lipschitz-continuous upstream controller receives the same safety certificate. On a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics, the nominal HOCBF suffers $>95\%$ constraint violation under model mismatch. The Robust HOCBF achieves no observed CBF violations across nominal operation and six static perturbation scenarios (5 seeds $\times$ 50 episodes $\times$ 500 steps; 95\% episode-level Wilson upper bound $1.46\%$), with per-step QP solve latency of ${\sim}25$\,ms (approximately $10\times$ faster than NMPC). The filter intervenes proportionally to the perturbation magnitude. Deployment limitations---scenario-specific GP calibration, the $\Delta g = 0$ assumption, and one-sided QP infeasibility diagnostics---are explicitly characterized.
+Supercritical power plants must satisfy hard constraints on steam pressure, enthalpy, and power output under model mismatch from coal quality variation, heat exchanger fouling, and equipment degradation. This paper introduces a Robust High-Order Control Barrier Function (Robust HOCBF) safety filter for energy process control. The filter combines Gaussian process (GP) mean correction of the drift dynamics with compositional uncertainty propagation through the HOCBF $\psi$-chain, yielding a per-constraint, relative-degree-aware robustness margin $\epsilon(x)$. For continuous-time control-affine systems with a fixed, scenario-calibrated GP, known relative degree, $\Delta g = 0$, and $\kappa_\epsilon = 1$, the tightened constraint provides a high-probability forward-invariance certificate (Theorem~1). The guarantee is policy-agnostic: any Lipschitz-continuous upstream controller receives the same safety certificate. On a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics, the nominal HOCBF suffers $>95\%$ constraint violation under model mismatch. The Robust HOCBF achieves no observed CBF violations across nominal operation and six static perturbation scenarios (5 seeds $\times$ 50 episodes $\times$ 500 steps; 95\% episode-level Wilson upper bound $1.51\%$), with per-step QP solve latency of ${\sim}25$\,ms (approximately $10\times$ faster than the implemented SLSQP-based NMPC baseline). The filter intervenes proportionally to the perturbation magnitude. Deployment limitations---scenario-specific GP calibration, the $\Delta g = 0$ assumption, and one-sided QP infeasibility diagnostics---are explicitly characterized.
 \end{abstract}
 
 \begin{keyword}
@@ -74,6 +76,8 @@ Control barrier functions \sep Gaussian processes \sep safety filter \sep model 
 \end{keyword}
 
 \end{frontmatter}
+
+\input{sections_jpc/fig_architecture}
 
 \input{sections_jpc/intro}
 \input{sections_jpc/related_work}
@@ -85,17 +89,18 @@ Control barrier functions \sep Gaussian processes \sep safety filter \sep model 
 \input{sections_jpc/deployment}
 \input{sections_jpc/conclusion}
 
+\clearpage
 \section*{Declarations}
 
-\noindent\textbf{Declaration of competing interest:} The author declares no competing interests.
+\noindent\textbf{Declaration of competing interest:} The authors declare no competing interests.
 
-\noindent\textbf{Funding:} This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+\noindent\textbf{Funding:} This work was supported by the Postdoctoral Research Project of China Resources Power Technology Research Institute Co., Ltd. (Internal Project No.\ 374322).
 
 \noindent\textbf{CRediT author statement:} Zhuang Shao: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Visualization, Writing -- original draft, Writing -- review \& editing. Lijun Lei: Resources, Supervision, Project administration. Peng Wang: Formal analysis, Writing -- review \& editing. Liang Zheng: Resources, Supervision. Jie Zhou: Investigation, Data curation.
 
-\noindent\textbf{Data and code availability:} The source code, simulation scripts, trained GP configurations, and plotting scripts required to reproduce all results have been deposited at \url{https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch}. The repository includes a README with reproduction commands and is released under an open-source license.
+\noindent\textbf{Data and code availability:} The source code, simulation scripts, trained GP configurations, and plotting scripts required to reproduce all results have been deposited at:\\ \url{https://github.com/VickylastShao/}\\\url{Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch}. The repository includes a README with reproduction commands and is released under an open-source license.
 
-\noindent\textbf{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process:} During the preparation of this work, the author used AI-assisted tools for language polishing and manuscript formatting. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content of the publication.
+\noindent\textbf{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process:} During the preparation of this work, the authors used DeepSeek for language polishing and manuscript formatting. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the publication.
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}

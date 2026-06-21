@@ -7,7 +7,8 @@ Under the true dynamics~\eqref{eq:true_dynamics}, the HOCBF $\psi$-chain compute
 \begin{align}
     \delta_0(x) &= 0 \label{eq:delta0} \\
     \delta_1(x) &= L_{\Delta \hat{f}} h(x) \label{eq:delta1} \\
-    \delta_i(x) &= L_{\Delta \hat{f}} \hat{\psi}_{i-1}^0 + (L_{\fhat} + k_i) \delta_{i-1} + \underbrace{L_{\Delta \hat{f}} \delta_{i-1}}_{\text{cross term}}, \quad i \geq 2 \label{eq:delta_recursive}
+    \delta_i(x) &= L_{\Delta \hat{f}} \hat{\psi}_{i-1}^0 + (L_{\fhat} + k_i) \delta_{i-1} \nonumber\\
+                &\quad + \underbrace{L_{\Delta \hat{f}} \delta_{i-1}}_{\text{cross term}}, \quad i \geq 2 \label{eq:delta_recursive}
 \end{align}
 where $\Delta \hat{f} = \Deltaf - \muGP$.
 
@@ -26,8 +27,9 @@ The total perturbation between true and nominal HOCBF constraints is:
 \label{def:epsilon}
 The \emph{compositional robustness margin} is $\epsilon(x) \triangleq \sigmatotal(x)$, constructed via:
 \begin{align}
-    \sigma_1(x) &= \beta \sum_{j=1}^{n} \left|\frac{\partial h}{\partial x_j}\right| \sigmaGPj{j}(x) \label{eq:sigma1} \\
-    \sigma_i(x) &= \beta \sum_{j=1}^{n} \left|\frac{\partial \hat{\psi}_{i-1}^0}{\partial x_j}\right| \sigmaGPj{j}(x) + (|L_{\fhat}|_{\mathrm{op}} + k_i) \sigma_{i-1}(x) + \sigma_{\mathrm{cross}}^{(i)}(x), \; i \geq 2 \label{eq:sigma_recursive} \\
+    \sigma_1(x) &= \beta \sum_{j=1}^{n} \left|\frac{\partial h}{\partial x_j}\right| \sigmaGPj{j}(x) \label{eq:sigma1} \\[4pt]
+    \sigma_i(x) &= \beta \sum_{j=1}^{n} \left|\frac{\partial \hat{\psi}_{i-1}^0}{\partial x_j}\right| \sigmaGPj{j}(x) \nonumber\\
+                &\quad + (|L_{\fhat}|_{\mathrm{op}} + k_i) \sigma_{i-1}(x) + \sigma_{\mathrm{cross}}^{(i)}(x), \;\; i \geq 2 \label{eq:sigma_recursive} \\[4pt]
     \sigmatotal(x) &= \sigma_m(x) + \sum_{j=1}^{m-1} c_j \sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) \label{eq:sigma_total}
 \end{align}
 where $c_j = \prod_{i=j+1}^{m-1} (|L_{\fhat}|_{\mathrm{op},i} + k_i)$ and $\sigma_{\mathrm{ctrl}}(x)$ bounds the coupling coefficient gap (full derivation in Supplementary Section~S7).

@@ -48,7 +48,7 @@ where $\calS(x)$ collects lower-order terms. In QP form: $A_0(x) u \leq b_0(x)$ 
 
 \subsection{Gaussian Process Residual Model}
 
-We model each component of $\Deltaf_j: \R^n \to \R$ as an independent GP with Mat\'{e}rn-5/2 kernel. Given a dataset $\calD = \{(x_i, y_i)\}_{i=1}^N$, the GP posterior yields mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The PAC-Bayes bound~\cite{srinivas2010gp} guarantees:
+We model each component of $\Deltaf_j: \R^n \to \R$ as an independent GP with Mat\'{e}rn-5/2 kernel. Given a dataset $\calD = \{(x_i, y_i)\}_{i=1}^N$, the GP posterior yields mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The GP-UCB confidence bound~\cite{srinivas2010gp} guarantees:
 \begin{equation}
     |\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \cdot \sigma_{\mathrm{GP},j}(x), \quad \text{w.p.} \geq 1 - \delta/n
     \label{eq:gp_bound}
@@ -62,7 +62,7 @@ Each residual component $\Deltaf_j$ lies in the reproducing kernel Hilbert space
 
 \begin{assumption}[GP calibration]
 \label{asm:gp_calibration}
-The GP posterior variance provides a calibrated uncertainty estimate: the PAC-Bayes bound~\eqref{eq:gp_bound} holds with the chosen $\beta$. Scenario-specific training is used to support this calibration at deployment; calibration diagnostics are discussed in Section~\ref{sec:deployment}.
+The GP posterior variance provides a calibrated uncertainty estimate: the GP-UCB confidence bound~\eqref{eq:gp_bound} holds with the chosen $\beta$. Scenario-specific training is used to support this calibration at deployment; calibration diagnostics are discussed in Section~\ref{sec:deployment}.
 \end{assumption}
 
 We define the \emph{mean-corrected drift} $\fhat(x) = f_0(x) + \muGP(x)$ and the \emph{posterior residual} $\Delta \hat{f} = \Deltaf - \muGP$. The GP is trained offline on scenario-specific data and held fixed during evaluation for the formal guarantee; online GP updates are discussed in Section~\ref{sec:deployment}.

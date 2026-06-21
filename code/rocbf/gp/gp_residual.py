@@ -172,6 +172,15 @@ class GPResidual:
             nv = float(jnp.exp(log_hp[2]))
             self._hyperparams.append((ls, sv, nv))
 
+            # Report convergence: GP hyperparameter optimization quality check
+            final_nll = best_nll
+            import logging
+            _logger = logging.getLogger(__name__)
+            _logger.debug(
+                f"GP dim {j}: NLL {float(loss_fn(log_hp)):.3f} → {final_nll:.3f} "
+                f"({n_optim_iters} steps, lr={lr}), "
+                f"final hp: ls={ls:.4f}, sv={sv:.4f}, nv={nv:.2e}")
+
             # Compute posterior quantities using numpy for robustness
             K = np.array(self._compute_kernel_matrix(X, X, ls, sv))
             K_reg = K + (nv + jitter) * np.eye(N)
@@ -186,27 +195,24 @@ class GPResidual:
             self._L.append(jnp.array(L))
             self._alpha.append(alpha)
 
-        # Compute maximum information gain γ_N from the last dimension.
+        # Compute maximum information gain γ_N per-dimension and take max.
         # γ_N = 0.5 * ln det(I + σ_n^{-2} K)
         #     = 0.5 * (ln det(K + σ_n^2 I) - N * ln σ_n^2)
-        # We recompute the Cholesky WITHOUT jitter to avoid bias in γ_N.
-        # Jitter is needed for stable Cholesky during posterior computation
-        # (L is used for alpha = K^{-1} y), but γ_N is a scalar diagnostic
-        # that should use the true noise level only.
-        nv_last = self._hyperparams[-1][2]  # noise variance (normalized)
-        K_clean = K + nv_last * np.eye(N)
-        try:
-            L_clean = np.linalg.cholesky(K_clean)
-            log_det_clean = 2.0 * float(np.sum(np.log(np.diag(L_clean))))
-        except np.linalg.LinAlgError:
-            # Numerical fallback: K + nv*I may be near-singular if nv is
-            # very small (e.g., 1e-6).  Use eigendecomposition which is
-            # more robust for near-singular matrices.
-            eigvals = np.linalg.eigvalsh(K)
-            log_det_clean = float(np.sum(np.log(np.maximum(eigvals + nv_last, 1e-15))))
-        self._gamma_N = 0.5 * (log_det_clean - self._N * np.log(nv_last))
-        # Clamp to avoid numerical issues
-        self._gamma_N = max(self._gamma_N, 0.0)
+        # Using the max across dimensions is conservative for the PAC-Bayes bound.
+        gamma_N_values = []
+        for j in range(n_dims):
+            ls_j, sv_j, nv_j = self._hyperparams[j]
+            K_j = np.array(self._compute_kernel_matrix(X, X, ls_j, sv_j))
+            K_reg_j = K_j + nv_j * np.eye(N)
+            try:
+                L_j = np.linalg.cholesky(K_reg_j)
+                log_det_j = 2.0 * float(np.sum(np.log(np.diag(L_j))))
+            except np.linalg.LinAlgError:
+                eigvals_j = np.linalg.eigvalsh(K_j)
+                log_det_j = float(np.sum(np.log(np.maximum(eigvals_j + nv_j, 1e-15))))
+            gamma_N_j = 0.5 * (log_det_j - N * np.log(nv_j))
+            gamma_N_values.append(max(gamma_N_j, 0.0))
+        self._gamma_N = max(gamma_N_values) if gamma_N_values else 0.0
 
         # Store original Y for incremental_update (avoids numerically unstable
         # cho_solve reconstruction from normalized alpha)
@@ -338,12 +344,15 @@ class GPResidual:
                 self._L.append(jnp.array(L))
                 self._alpha.append(alpha)
 
-            # Recompute γ_N for the updated dataset
-            L_last = self._L[-1]
-            nv_last = self._hyperparams[-1][2]
-            log_det_K = 2.0 * float(jnp.sum(jnp.log(jnp.diag(L_last))))
-            self._gamma_N = 0.5 * (log_det_K - self._N * jnp.log(nv_last))
-            self._gamma_N = max(self._gamma_N, 0.0)
+            # Recompute γ_N per-dimension for the updated dataset and take max
+            gamma_N_values = []
+            for j in range(self.n_dims):
+                L_j = self._L[j]
+                nv_j = self._hyperparams[j][2]
+                log_det_j = 2.0 * float(jnp.sum(jnp.log(jnp.diag(L_j))))
+                gamma_N_j = 0.5 * (log_det_j - self._N * jnp.log(nv_j))
+                gamma_N_values.append(max(gamma_N_j, 0.0))
+            self._gamma_N = max(gamma_N_values) if gamma_N_values else 0.0
 
     @staticmethod
     def compute_beta(n_dims: int, N: int, delta: float = 0.01,
