@@ -62,6 +62,15 @@ def x_test():
     return jnp.array([0.8, 0.5, 0.0])
 
 
+def _sigma_direct_and_cross(beta, grad_psi, sigma_gp):
+    """Direct L1 uncertainty plus L2 cross term used by RobustHOCBF."""
+    sigma_direct = beta * jnp.sum(jnp.abs(grad_psi) * sigma_gp)
+    grad_psi_norm = jnp.sqrt(jnp.sum(grad_psi ** 2) + 1e-12)
+    sigma_gp_norm = jnp.sqrt(jnp.sum(sigma_gp ** 2) + 1e-12)
+    sigma_cross = beta * grad_psi_norm * sigma_gp_norm
+    return sigma_direct + sigma_cross
+
+
 # --- m=3 HOCBF basic tests ---
 
 class TestHOCBFm3:
@@ -170,11 +179,11 @@ class TestRobustHOCBFm3:
         sigma_1 = beta * jnp.sum(jnp.abs(grad_h) * sigma_gp)
 
         grad_psi1 = jax.grad(rhocbf._psi_fns_nominal[1])(x_test)
-        sigma_2_direct = beta * jnp.sum(jnp.abs(grad_psi1) * sigma_gp)
+        sigma_2_direct = _sigma_direct_and_cross(beta, grad_psi1, sigma_gp)
         sigma_2 = sigma_2_direct + (rhocbf.op_norm_estimate + rhocbf.k_gains[0]) * sigma_1
 
         grad_psi2 = jax.grad(rhocbf._psi_fns_nominal[2])(x_test)
-        sigma_3_direct = beta * jnp.sum(jnp.abs(grad_psi2) * sigma_gp)
+        sigma_3_direct = _sigma_direct_and_cross(beta, grad_psi2, sigma_gp)
         sigma_3 = sigma_3_direct + (rhocbf.op_norm_estimate + rhocbf.k_gains[1]) * sigma_2
 
         assert sigma_3 > sigma_2, f"sigma_3 ({sigma_3:.4f}) should > sigma_2 ({sigma_2:.4f})"
@@ -293,15 +302,15 @@ class TestBackwardCompatibility:
         assert epsilon > 0
         assert jnp.isfinite(epsilon)
 
-        # Cross-check: manual computation (L1 element-wise aggregation)
+        # Cross-check: manual computation (L1 direct term plus L2 cross term)
         _, sigma_gp = gp.predict(x)
         beta = GPResidual.compute_beta(gp.n_dims, gp.n_training_points,
                                        gamma_N=gp.gamma_N)
         grad_h = jax.grad(h)(x)
         sigma_1 = beta * jnp.sum(jnp.abs(grad_h) * sigma_gp)
         grad_psi1 = jax.grad(rhocbf._psi_fns_nominal[1])(x)
-        sigma_2_direct = beta * jnp.sum(jnp.abs(grad_psi1) * sigma_gp)
-        sigma_2 = sigma_2_direct + (rhocbf.op_norm_estimate + rhocbf.k_gains[1]) * sigma_1
+        sigma_2_direct = _sigma_direct_and_cross(beta, grad_psi1, sigma_gp)
+        sigma_2 = sigma_2_direct + (rhocbf.op_norm_estimate + rhocbf.k_gains[0]) * sigma_1
         grad_LgLf = jax.grad(lambda x_: (jax.grad(rhocbf._lie_f_nominal[1])(x_) @ dyn.g(x_)).sum())(x)
         sigma_ctrl = beta * jnp.sum(jnp.abs(grad_LgLf) * sigma_gp) * rhocbf.u_max
         expected = sigma_2 + sigma_1 + sigma_ctrl

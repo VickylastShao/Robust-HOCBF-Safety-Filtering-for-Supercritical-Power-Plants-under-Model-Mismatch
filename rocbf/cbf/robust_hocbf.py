@@ -184,9 +184,11 @@ class RobustHOCBF(HOCBF):
         eqs (10)-(12) for arbitrary relative degree m >= 1.
 
         The recursion propagates GP uncertainty through the psi-chain
-        using L1 (element-wise) aggregation:
+        using a direct L1 term plus the L2 cross term from Lemma S1:
           σ₁ = β Σ_j |∂h/∂x_j| σ_GP,j
-          σ_i = β Σ_j |∂ψ_{i-1}/∂x_j| σ_GP,j + (‖L_f̂‖_op + k_{i-1})·σ_{i-1}
+          σ_direct_i = β Σ_j |∂ψ_{i-1}/∂x_j| σ_GP,j
+          σ_cross_i = β ‖∇ψ_{i-1}‖₂ ‖σ_GP‖₂
+          σ_i = σ_direct_i + σ_cross_i + (‖L_f̂‖_op + k_{i-1})·σ_{i-1}
           σ_ctrl = β Σ_j |∂L_g L_f^{m-1}h/∂x_j| σ_GP,j · u_max
           σ_total = σ_m + Σ_{j=1}^{m-1} c_j·σ_j + σ_ctrl
           where c_j = Π_{i=j+1}^{m-1} (‖L_f̂‖_op + k_i) are the chain coupling weights
@@ -206,7 +208,7 @@ class RobustHOCBF(HOCBF):
 
         _, sigma_gp_3d = self.gp_residual.predict(x[:3])  # (n_dims,)
         # Pad to full state dimension: GP only models core 3 states;
-        #extended states (N_e, τ_f) have zero uncertainty.
+        # extended states (N_e, τ_f) have zero uncertainty.
         sigma_gp = jnp.pad(sigma_gp_3d, (0, max(0, x.shape[0] - sigma_gp_3d.shape[0])))
         beta = GPResidual.compute_beta(self.gp_residual.n_dims,
                                        self.gp_residual.n_training_points,
