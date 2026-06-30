@@ -65,9 +65,9 @@ Suppose that the input matrix is exact ($\Delta g = 0$), each GP residual compon
 \textbf{Step 3:} $|\Delta(x,u)| \leq \sigmatotal(x) = \epsilon(x)$ for $\epsilonKappa=1$, completing the certificate.
 \end{proof}
 
-Theorem~\ref{thm:1} provides the \emph{worst-case} theoretical guarantee: setting $\epsilon_\kappa=1$ ensures the QP constraint $A_0u \leq b_0 - \epsilon(x)$ is always feasible under the stated assumptions, and forward invariance holds with the stated probability. However, this guarantee is conservative by construction---it covers the worst-case combination of GP posterior uncertainty and $\psi$-chain amplification. The following subsection introduces $\epsilon_\kappa$ as a tunable parameter that recovers this worst-case bound at $\epsilon_\kappa=1$ while permitting less conservative calibration for specific uncertainty regimes.
+Theorem~\ref{thm:1} provides the \emph{worst-case} theoretical guarantee: setting $\epsilon_\kappa=1$ applies the full compositional margin used in the certificate, so forward invariance holds with the stated probability whenever the tightened QP remains feasible under the actuator authority condition. Feasibility is not implied by the margin itself; it is governed by the safe-set geometry, actuator limits, and the feasible-control set $\calU$. The guarantee is conservative by construction---it covers the worst-case combination of GP posterior uncertainty and $\psi$-chain amplification. The following subsection introduces $\epsilon_\kappa$ as a tunable parameter that recovers this worst-case bound at $\epsilon_\kappa=1$ while permitting less conservative calibration for specific uncertainty regimes.
 
-\subsection{$\epsilon_\kappa$ as a Tunable Safety Factor}
+\subsection{\texorpdfstring{$\epsilon_\kappa$}{epsilon-kappa} as a Tunable Safety Factor}
 
 The robustness scaling factor $\epsilon_\kappa$ in the QP constraint $A_0(x)u \leq b_0(x) - \epsilon_\kappa\cdot\epsilon(x)$ controls the trade-off between safety margin and control authority:
 
@@ -79,7 +79,7 @@ The robustness scaling factor $\epsilon_\kappa$ in the QP constraint $A_0(x)u \l
 
 The central empirical question---and the primary contribution of this paper---is whether the worst-case setting ($\epsilon_\kappa=1$) is ever necessary in practice, and whether the optimal $\epsilon_\kappa$ depends on the structure and strength of the model mismatch. The experimental evaluation (Section~\ref{sec:exp}) demonstrates that: (i)~$\epsilon_\kappa=0$ (GP correction only) is sufficient for additive bounded perturbations, achieving $\leq0.18\%$ violation across six of seven uncertainty scenarios; (ii)~$\epsilon_\kappa=0.1$ is required for state-dependent coupling, recovering zero violation from 33.5\% failure; (iii)~$\epsilon_\kappa=1.0$ is never the optimal choice under any tested condition; and (iv)~the safe $\epsilon_\kappa$ range collapses as coupling strength increases, defining a deployment envelope that depends on the perturbation amplification rate $\gamma$.
 
-\subsection{Data-Driven vs. Floor-Driven $\epsilon(x)$}
+\subsection{Data-Driven vs. Floor-Driven \texorpdfstring{$\epsilon(x)$}{epsilon(x)}}
 
 The GP posterior includes a regularization floor $\sigma_{\mathrm{floor}}=10^{-4}$. Under constant perturbations, $\sigmaGP$ is near-uniform and $\epsilon(x)$ is approximately constant per constraint---the margin is \emph{floor-driven}, with the GP contributing a near-constant safety buffer. Under state-dependent perturbations (S3: Coupled), $\sigmaGP$ becomes heterogeneous and $\epsilon(x)$ is genuinely state-dependent---the margin is \emph{data-driven}, reflecting the spatial structure of uncertainty. This distinction explains why additive perturbation scenarios can safely use $\epsilon_\kappa=0$: the GP mean correction already provides the necessary adjustment, and the floor-driven $\epsilon(x)$ only adds QP conservatism without meaningful additional protection.
 

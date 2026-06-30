@@ -21,7 +21,6 @@
 | `figures/` | 5 PDF figures (Figure_1–5) |
 | `refs.bib` | BibTeX bibliography |
 | `SageV.bst` | SAGE Vancouver bibliography style |
-| `response_to_reviewers.md` | Cumulative point-by-point response (R1–R5, JPC version) |
 
 LaTeX build artifacts (`*.aux`, `*.bbl`, `*.blg`, `*.log`, `*.out`) are regeneratable and not tracked.
 
@@ -63,3 +62,4 @@ xelatex -interaction=nonstopmode manuscript_mc_supplementary.tex
 - Do not create `paper_cn/`, `paper_v2/`, `paper_old/`, etc. All revisions edit `paper/` in place.
 - Do not keep historical `editorial_synthesis_*.md` here — they belong in memory.
 - Do not commit `*.aux`, `*.bbl`, `*.log`, etc. — they are regenerated on every build.
+- Do not upload `response_to_reviewers.md` to M&C; it is historical JPC/TAC response material only.
