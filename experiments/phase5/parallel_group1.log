@@ -1,0 +1,347 @@
+
+[1/120] SKIP PPO | Nominal | seed=0 (exists)
+
+[2/120] SKIP PPO | Nominal | seed=1 (exists)
+
+[3/120] SKIP PPO | Nominal | seed=2 (exists)
+
+[4/120] SKIP PPO | Nominal | seed=3 (exists)
+
+[5/120] SKIP PPO | Nominal | seed=4 (exists)
+
+[6/120] SKIP PPO | S1:Heat | seed=0 (exists)
+
+[7/120] SKIP PPO | S1:Heat | seed=1 (exists)
+
+[8/120] SKIP PPO | S1:Heat | seed=2 (exists)
+
+[9/120] SKIP PPO | S1:Heat | seed=3 (exists)
+
+[10/120] SKIP PPO | S1:Heat | seed=4 (exists)
+
+[11/120] SKIP PPO | S2:Pressure | seed=0 (exists)
+
+[12/120] SKIP PPO | S2:Pressure | seed=1 (exists)
+
+[13/120] SKIP PPO | S2:Pressure | seed=2 (exists)
+
+[14/120] SKIP PPO | S2:Pressure | seed=3 (exists)
+
+[15/120] SKIP PPO | S2:Pressure | seed=4 (exists)
+
+[16/120] PPO | S3:Coupled | seed=0
+  → violation_rate=0.9954±0.0031, reward=-8788.1
+
+[17/120] PPO | S3:Coupled | seed=1
+  → violation_rate=0.9959±0.0026, reward=-8775.9
+
+[18/120] PPO | S3:Coupled | seed=2
+  → violation_rate=0.9968±0.0026, reward=-8782.0
+
+[19/120] PPO | S3:Coupled | seed=3
+  → violation_rate=0.9958±0.0027, reward=-8781.9
+
+[20/120] PPO | S3:Coupled | seed=4
+  → violation_rate=0.9958±0.0027, reward=-8777.1
+
+[21/120] PPO | S4:Nonlinear | seed=0
+  → violation_rate=0.9903±0.0039, reward=-6647.1
+
+[22/120] PPO | S4:Nonlinear | seed=1
+  → violation_rate=0.9905±0.0039, reward=-6634.4
+
+[23/120] PPO | S4:Nonlinear | seed=2
+  → violation_rate=0.9920±0.0036, reward=-6641.2
+
+[24/120] PPO | S4:Nonlinear | seed=3
+  → violation_rate=0.9898±0.0042, reward=-6640.5
+
+[25/120] PPO | S4:Nonlinear | seed=4
+  → violation_rate=0.9897±0.0034, reward=-6635.8
+
+[26/120] PPO | S5:Valve | seed=0
+  → violation_rate=0.9910±0.0038, reward=-9735.9
+
+[27/120] PPO | S5:Valve | seed=1
+  → violation_rate=0.9915±0.0038, reward=-9724.0
+
+[28/120] PPO | S5:Valve | seed=2
+  → violation_rate=0.9924±0.0033, reward=-9728.9
+
+[29/120] PPO | S5:Valve | seed=3
+  → violation_rate=0.9906±0.0039, reward=-9729.8
+
+[30/120] PPO | S5:Valve | seed=4
+  → violation_rate=0.9907±0.0034, reward=-9725.4
+
+[31/120] PPO | S6:Fuel | seed=0
+  → violation_rate=0.9982±0.0020, reward=-6170.6
+
+[32/120] PPO | S6:Fuel | seed=1
+  → violation_rate=0.9982±0.0016, reward=-6157.3
+
+[33/120] PPO | S6:Fuel | seed=2
+  → violation_rate=0.9989±0.0013, reward=-6162.2
+
+[34/120] PPO | S6:Fuel | seed=3
+  → violation_rate=0.9981±0.0022, reward=-6164.2
+
+[35/120] PPO | S6:Fuel | seed=4
+  → violation_rate=0.9978±0.0021, reward=-6156.9
+
+[36/120] PPO | LoadFol | seed=0
+  → violation_rate=0.0010±0.0013, reward=-39.9
+
+[37/120] PPO | LoadFol | seed=1
+  → violation_rate=0.0007±0.0010, reward=-39.8
+
+[38/120] PPO | LoadFol | seed=2
+  → violation_rate=0.0009±0.0011, reward=-39.3
+
+[39/120] PPO | LoadFol | seed=3
+  → violation_rate=0.0007±0.0015, reward=-39.8
+
+[40/120] PPO | LoadFol | seed=4
+  → violation_rate=0.0007±0.0012, reward=-40.1
+
+[41/120] PPO-Lagrangian | Nominal | seed=0
+  → violation_rate=0.0010±0.0013, reward=-39.9
+
+[42/120] PPO-Lagrangian | Nominal | seed=1
+  → violation_rate=0.0007±0.0010, reward=-39.8
+
+[43/120] PPO-Lagrangian | Nominal | seed=2
+  → violation_rate=0.0009±0.0011, reward=-39.3
+
+[44/120] PPO-Lagrangian | Nominal | seed=3
+  → violation_rate=0.0007±0.0015, reward=-39.8
+
+[45/120] PPO-Lagrangian | Nominal | seed=4
+  → violation_rate=0.0007±0.0012, reward=-40.1
+
+[46/120] PPO-Lagrangian | S1:Heat | seed=0
+  → violation_rate=0.9992±0.0014, reward=-11771.1
+
+[47/120] PPO-Lagrangian | S1:Heat | seed=1
+  → violation_rate=0.9992±0.0013, reward=-11763.2
+
+[48/120] PPO-Lagrangian | S1:Heat | seed=2
+  → violation_rate=0.9993±0.0011, reward=-11766.2
+
+[49/120] PPO-Lagrangian | S1:Heat | seed=3
+  → violation_rate=0.9993±0.0012, reward=-11767.5
+
+[50/120] PPO-Lagrangian | S1:Heat | seed=4
+  → violation_rate=0.9990±0.0013, reward=-11763.4
+
+[51/120] PPO-Lagrangian | S2:Pressure | seed=0
+  → violation_rate=0.9949±0.0031, reward=-16156.0
+
+[52/120] PPO-Lagrangian | S2:Pressure | seed=1
+  → violation_rate=0.9952±0.0025, reward=-16151.0
+
+[53/120] PPO-Lagrangian | S2:Pressure | seed=2
+  → violation_rate=0.9963±0.0026, reward=-16151.1
+
+[54/120] PPO-Lagrangian | S2:Pressure | seed=3
+  → violation_rate=0.9954±0.0031, reward=-16155.4
+
+[55/120] PPO-Lagrangian | S2:Pressure | seed=4
+  → violation_rate=0.9949±0.0028, reward=-16154.2
+
+[56/120] PPO-Lagrangian | S3:Coupled | seed=0
+  → violation_rate=0.9954±0.0031, reward=-8788.1
+
+[57/120] PPO-Lagrangian | S3:Coupled | seed=1
+  → violation_rate=0.9959±0.0026, reward=-8775.9
+
+[58/120] PPO-Lagrangian | S3:Coupled | seed=2
+  → violation_rate=0.9968±0.0026, reward=-8782.0
+
+[59/120] PPO-Lagrangian | S3:Coupled | seed=3
+  → violation_rate=0.9958±0.0027, reward=-8781.9
+
+[60/120] PPO-Lagrangian | S3:Coupled | seed=4
+  → violation_rate=0.9958±0.0027, reward=-8777.1
+
+[61/120] PPO-Lagrangian | S4:Nonlinear | seed=0
+  → violation_rate=0.9903±0.0039, reward=-6647.1
+
+[62/120] PPO-Lagrangian | S4:Nonlinear | seed=1
+  → violation_rate=0.9905±0.0039, reward=-6634.4
+
+[63/120] PPO-Lagrangian | S4:Nonlinear | seed=2
+  → violation_rate=0.9920±0.0036, reward=-6641.2
+
+[64/120] PPO-Lagrangian | S4:Nonlinear | seed=3
+  → violation_rate=0.9898±0.0042, reward=-6640.5
+
+[65/120] PPO-Lagrangian | S4:Nonlinear | seed=4
+  → violation_rate=0.9897±0.0034, reward=-6635.8
+
+[66/120] PPO-Lagrangian | S5:Valve | seed=0
+  → violation_rate=0.9910±0.0038, reward=-9735.9
+
+[67/120] PPO-Lagrangian | S5:Valve | seed=1
+  → violation_rate=0.9915±0.0038, reward=-9724.0
+
+[68/120] PPO-Lagrangian | S5:Valve | seed=2
+  → violation_rate=0.9924±0.0033, reward=-9728.9
+
+[69/120] PPO-Lagrangian | S5:Valve | seed=3
+  → violation_rate=0.9906±0.0039, reward=-9729.8
+
+[70/120] PPO-Lagrangian | S5:Valve | seed=4
+  → violation_rate=0.9907±0.0034, reward=-9725.4
+
+[71/120] PPO-Lagrangian | S6:Fuel | seed=0
+  → violation_rate=0.9982±0.0020, reward=-6170.6
+
+[72/120] PPO-Lagrangian | S6:Fuel | seed=1
+  → violation_rate=0.9982±0.0016, reward=-6157.3
+
+[73/120] PPO-Lagrangian | S6:Fuel | seed=2
+  → violation_rate=0.9989±0.0013, reward=-6162.2
+
+[74/120] PPO-Lagrangian | S6:Fuel | seed=3
+  → violation_rate=0.9981±0.0022, reward=-6164.2
+
+[75/120] PPO-Lagrangian | S6:Fuel | seed=4
+  → violation_rate=0.9978±0.0021, reward=-6156.9
+
+[76/120] PPO-Lagrangian | LoadFol | seed=0
+  → violation_rate=0.0010±0.0013, reward=-39.9
+
+[77/120] PPO-Lagrangian | LoadFol | seed=1
+  → violation_rate=0.0007±0.0010, reward=-39.8
+
+[78/120] PPO-Lagrangian | LoadFol | seed=2
+  → violation_rate=0.0009±0.0011, reward=-39.3
+
+[79/120] PPO-Lagrangian | LoadFol | seed=3
+  → violation_rate=0.0007±0.0015, reward=-39.8
+
+[80/120] PPO-Lagrangian | LoadFol | seed=4
+  → violation_rate=0.0007±0.0012, reward=-40.1
+
+[81/120] NMPC | Nominal | seed=0
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[82/120] NMPC | Nominal | seed=1
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[83/120] NMPC | Nominal | seed=2
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[84/120] NMPC | Nominal | seed=3
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[85/120] NMPC | Nominal | seed=4
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[86/120] NMPC | S1:Heat | seed=0
+  → violation_rate=0.0008±0.0056, reward=-887.6
+
+[87/120] NMPC | S1:Heat | seed=1
+  → violation_rate=0.0008±0.0056, reward=-887.6
+
+[88/120] NMPC | S1:Heat | seed=2
+  → violation_rate=0.0008±0.0056, reward=-887.6
+
+[89/120] NMPC | S1:Heat | seed=3
+  → violation_rate=0.0008±0.0056, reward=-887.6
+
+[90/120] NMPC | S1:Heat | seed=4
+  → violation_rate=0.0008±0.0056, reward=-887.6
+
+[91/120] NMPC | S2:Pressure | seed=0
+  → violation_rate=0.0008±0.0056, reward=-1318.6
+
+[92/120] NMPC | S2:Pressure | seed=1
+  → violation_rate=0.0008±0.0056, reward=-1318.6
+
+[93/120] NMPC | S2:Pressure | seed=2
+  → violation_rate=0.0008±0.0056, reward=-1318.6
+
+[94/120] NMPC | S2:Pressure | seed=3
+  → violation_rate=0.0008±0.0056, reward=-1318.6
+
+[95/120] NMPC | S2:Pressure | seed=4
+  → violation_rate=0.0008±0.0056, reward=-1318.6
+
+[96/120] NMPC | S3:Coupled | seed=0
+  → violation_rate=0.0008±0.0056, reward=-561.7
+
+[97/120] NMPC | S3:Coupled | seed=1
+  → violation_rate=0.0008±0.0056, reward=-561.7
+
+[98/120] NMPC | S3:Coupled | seed=2
+  → violation_rate=0.0008±0.0056, reward=-561.7
+
+[99/120] NMPC | S3:Coupled | seed=3
+  → violation_rate=0.0008±0.0056, reward=-561.7
+
+[100/120] NMPC | S3:Coupled | seed=4
+  → violation_rate=0.0008±0.0056, reward=-561.7
+
+[101/120] NMPC | S4:Nonlinear | seed=0
+  → violation_rate=0.0004±0.0028, reward=-385.4
+
+[102/120] NMPC | S4:Nonlinear | seed=1
+  → violation_rate=0.0004±0.0028, reward=-385.4
+
+[103/120] NMPC | S4:Nonlinear | seed=2
+  → violation_rate=0.0004±0.0028, reward=-385.4
+
+[104/120] NMPC | S4:Nonlinear | seed=3
+  → violation_rate=0.0004±0.0028, reward=-385.4
+
+[105/120] NMPC | S4:Nonlinear | seed=4
+  → violation_rate=0.0004±0.0028, reward=-385.4
+
+[106/120] NMPC | S5:Valve | seed=0
+  → violation_rate=0.0008±0.0056, reward=-720.9
+
+[107/120] NMPC | S5:Valve | seed=1
+  → violation_rate=0.0008±0.0056, reward=-720.9
+
+[108/120] NMPC | S5:Valve | seed=2
+  → violation_rate=0.0008±0.0056, reward=-720.9
+
+[109/120] NMPC | S5:Valve | seed=3
+  → violation_rate=0.0008±0.0056, reward=-720.9
+
+[110/120] NMPC | S5:Valve | seed=4
+  → violation_rate=0.0008±0.0056, reward=-720.9
+
+[111/120] NMPC | S6:Fuel | seed=0
+  → violation_rate=0.0008±0.0056, reward=-382.0
+
+[112/120] NMPC | S6:Fuel | seed=1
+  → violation_rate=0.0008±0.0056, reward=-382.0
+
+[113/120] NMPC | S6:Fuel | seed=2
+  → violation_rate=0.0008±0.0056, reward=-382.0
+
+[114/120] NMPC | S6:Fuel | seed=3
+  → violation_rate=0.0008±0.0056, reward=-382.0
+
+[115/120] NMPC | S6:Fuel | seed=4
+  → violation_rate=0.0008±0.0056, reward=-382.0
+
+[116/120] NMPC | LoadFol | seed=0
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[117/120] NMPC | LoadFol | seed=1
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[118/120] NMPC | LoadFol | seed=2
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[119/120] NMPC | LoadFol | seed=3
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[120/120] NMPC | LoadFol | seed=4
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+=== Done: 120/120 experiments completed ===

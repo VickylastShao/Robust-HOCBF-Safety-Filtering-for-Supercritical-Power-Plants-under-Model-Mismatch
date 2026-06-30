@@ -1,0 +1,357 @@
+
+================================================================================
+E1 sweep: n_samples = 25 (5 seeds)
+================================================================================
+================================================================================
+SPARSE GP DEMO: ε(x) empirical benefit
+================================================================================
+  Scenario: nonlinear, uncertainty_scale=0.5
+  sigma_floor=1e-06, noise_variance=1e-06
+  Sparse GP: n=25, x₁ ∈ (-0.5, 0.8)
+  Constraint: x₁ > 1.20 (keepout center=1.5, r=0.3)
+  Policy target: x₁ → 1.15
+
+────────────────────────────────────────────────────────────
+Seed 0/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.1671, max=10.4059, std=1.6752, CV=0.529
+  ε by region: data-rich (x₁<0.8) = 3.7320, data-sparse (x₁≥0.8) = 2.8377, ratio = 0.8×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=34.0%, interv=100.0%, near_c=0.0%, ε̄=57.4749  (11.6s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=1.0%, interv=100.0%, near_c=0.0%, ε̄=3.1671  (9.7s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=19.5%, interv=100.0%, near_c=0.0%, ε̄=10.4059  (9.2s)
+  no_epsilon          : viol=4.50%, cbf=58.35%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 1/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.5843, max=13.8904, std=2.4722, CV=0.690
+  ε by region: data-rich (x₁<0.8) = 4.9380, data-sparse (x₁≥0.8) = 2.7333, ratio = 0.6×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=36.5%, interv=100.0%, near_c=0.0%, ε̄=58.4686  (10.6s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=3.0%, interv=100.0%, near_c=0.0%, ε̄=3.5843  (9.3s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=23.0%, interv=100.0%, near_c=0.0%, ε̄=13.8904  (9.2s)
+  no_epsilon          : viol=4.50%, cbf=58.60%, qp_inf=0.0%, interv=79.7%, near_c=12.0%, ε̄=0.0000  (6.0s)
+
+────────────────────────────────────────────────────────────
+Seed 2/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=2.7935, max=12.6357, std=1.8430, CV=0.660
+  ε by region: data-rich (x₁<0.8) = 3.7480, data-sparse (x₁≥0.8) = 2.2826, ratio = 0.6×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=32.5%, interv=100.0%, near_c=0.0%, ε̄=57.6320  (10.7s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=0.0%, interv=100.0%, near_c=0.0%, ε̄=2.7935  (9.3s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=22.0%, interv=100.0%, near_c=0.0%, ε̄=12.6357  (9.2s)
+  no_epsilon          : viol=4.45%, cbf=58.25%, qp_inf=0.0%, interv=79.3%, near_c=12.0%, ε̄=0.0000  (6.2s)
+
+────────────────────────────────────────────────────────────
+Seed 3/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=2.4825, max=9.5383, std=1.4186, CV=0.571
+  ε by region: data-rich (x₁<0.8) = 3.4530, data-sparse (x₁≥0.8) = 2.0803, ratio = 0.6×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=34.5%, interv=100.0%, near_c=0.0%, ε̄=50.6798  (10.5s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=0.0%, interv=100.0%, near_c=0.0%, ε̄=2.4825  (9.2s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=18.5%, interv=100.0%, near_c=0.0%, ε̄=9.5383  (9.2s)
+  no_epsilon          : viol=4.45%, cbf=58.45%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 4/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=2.6253, max=10.3816, std=1.5159, CV=0.577
+  ε by region: data-rich (x₁<0.8) = 3.5948, data-sparse (x₁≥0.8) = 2.2236, ratio = 0.6×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=39.5%, interv=100.0%, near_c=0.0%, ε̄=65.9138  (10.8s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=0.0%, interv=100.0%, near_c=0.0%, ε̄=2.6253  (9.3s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=19.5%, interv=100.0%, near_c=0.0%, ε̄=10.3816  (9.5s)
+  no_epsilon          : viol=4.50%, cbf=58.75%, qp_inf=0.0%, interv=80.0%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+====================================================================================================
+SPARSE GP DEMO — SUMMARY ACROSS SEEDS
+====================================================================================================
+
+Mode                 Viol%      CBF%       QP_Inf%    Interv%    ε̄         ε_std     
+--------------------------------------------------------------------------------
+compositional        0.00       0.00       35.4       100.0      58.0338    43.4858   
+constant_mean        0.00       0.00       0.8        100.0      2.9306     0.0000    
+constant_max         0.00       0.00       20.5       100.0      11.3704    0.0000    
+no_epsilon           4.48       58.48      0.0        79.7       0.0000     0.0000    
+
+ε(x) statistics (averaged across seeds):
+  mean: 2.9306
+  max: 11.3704
+  min: 0.5680
+  std: 1.7850
+  cv: 0.6055
+  rich_mean: 3.8932
+  sparse_mean: 2.4315
+  ratio_sparse_rich: 0.6288
+  n=25 done in 262s
+
+================================================================================
+E1 sweep: n_samples = 50 (5 seeds)
+================================================================================
+================================================================================
+SPARSE GP DEMO: ε(x) empirical benefit
+================================================================================
+  Scenario: nonlinear, uncertainty_scale=0.5
+  sigma_floor=1e-06, noise_variance=1e-06
+  Sparse GP: n=50, x₁ ∈ (-0.5, 0.8)
+  Constraint: x₁ > 1.20 (keepout center=1.5, r=0.3)
+  Policy target: x₁ → 1.15
+
+────────────────────────────────────────────────────────────
+Seed 0/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.8805, max=28.9416, std=4.1134, CV=0.843
+  ε by region: data-rich (x₁<0.8) = 4.4532, data-sparse (x₁≥0.8) = 5.1297, ratio = 1.2×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=1.5%, interv=100.0%, near_c=0.0%, ε̄=1.4957  (10.8s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=4.5%, interv=100.0%, near_c=0.0%, ε̄=4.8805  (9.1s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=34.0%, interv=100.0%, near_c=0.0%, ε̄=28.9416  (8.8s)
+  no_epsilon          : viol=4.50%, cbf=58.35%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 1/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.7717, max=27.5543, std=4.2046, CV=0.881
+  ε by region: data-rich (x₁<0.8) = 5.3437, data-sparse (x₁≥0.8) = 4.4120, ratio = 0.8×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=56.5%, interv=100.0%, near_c=0.0%, ε̄=95.9021  (10.2s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=4.0%, interv=100.0%, near_c=0.0%, ε̄=4.7717  (8.8s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=33.0%, interv=100.0%, near_c=0.0%, ε̄=27.5543  (8.7s)
+  no_epsilon          : viol=4.50%, cbf=58.60%, qp_inf=0.0%, interv=79.7%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 2/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.0699, max=29.8326, std=3.8048, CV=0.935
+  ε by region: data-rich (x₁<0.8) = 4.1076, data-sparse (x₁≥0.8) = 4.0497, ratio = 1.0×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=40.5%, interv=100.0%, near_c=0.0%, ε̄=48.6043  (10.4s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=2.5%, interv=100.0%, near_c=0.0%, ε̄=4.0699  (9.0s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=34.5%, interv=100.0%, near_c=0.0%, ε̄=29.8326  (8.9s)
+  no_epsilon          : viol=4.45%, cbf=58.25%, qp_inf=0.0%, interv=79.3%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 3/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.6690, max=20.4359, std=2.9718, CV=0.810
+  ε by region: data-rich (x₁<0.8) = 4.3222, data-sparse (x₁≥0.8) = 3.3983, ratio = 0.8×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=64.5%, interv=100.0%, near_c=0.0%, ε̄=134.6952  (10.3s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=2.0%, interv=100.0%, near_c=0.0%, ε̄=3.6690  (9.0s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=28.0%, interv=100.0%, near_c=0.0%, ε̄=20.4359  (9.0s)
+  no_epsilon          : viol=4.45%, cbf=58.45%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.2s)
+
+────────────────────────────────────────────────────────────
+Seed 4/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.5608, max=20.5343, std=2.9655, CV=0.833
+  ε by region: data-rich (x₁<0.8) = 4.0102, data-sparse (x₁≥0.8) = 3.3746, ratio = 0.8×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=31.5%, interv=100.0%, near_c=0.0%, ε̄=31.4315  (10.3s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=1.5%, interv=100.0%, near_c=0.0%, ε̄=3.5608  (8.9s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=28.5%, interv=100.0%, near_c=0.0%, ε̄=20.5343  (8.8s)
+  no_epsilon          : viol=4.50%, cbf=58.75%, qp_inf=0.0%, interv=80.0%, near_c=12.0%, ε̄=0.0000  (6.2s)
+
+====================================================================================================
+SPARSE GP DEMO — SUMMARY ACROSS SEEDS
+====================================================================================================
+
+Mode                 Viol%      CBF%       QP_Inf%    Interv%    ε̄         ε_std     
+--------------------------------------------------------------------------------
+compositional        0.00       0.00       38.9       100.0      62.4257    81.3803   
+constant_mean        0.00       0.00       2.9        100.0      4.1904     0.0000    
+constant_max         0.00       0.00       31.6       100.0      25.4597    0.0000    
+no_epsilon           4.48       58.48      0.0        79.7       0.0000     0.0000    
+
+ε(x) statistics (averaged across seeds):
+  mean: 4.1904
+  max: 25.4597
+  min: 0.3929
+  std: 3.6120
+  cv: 0.8603
+  rich_mean: 4.4474
+  sparse_mean: 4.0729
+  ratio_sparse_rich: 0.9182
+  n=50 done in 254s
+
+================================================================================
+E1 sweep: n_samples = 100 (5 seeds)
+================================================================================
+================================================================================
+SPARSE GP DEMO: ε(x) empirical benefit
+================================================================================
+  Scenario: nonlinear, uncertainty_scale=0.5
+  sigma_floor=1e-06, noise_variance=1e-06
+  Sparse GP: n=100, x₁ ∈ (-0.5, 0.8)
+  Constraint: x₁ > 1.20 (keepout center=1.5, r=0.3)
+  Policy target: x₁ → 1.15
+
+────────────────────────────────────────────────────────────
+Seed 0/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.2758, max=29.4596, std=3.9184, CV=0.916
+  ε by region: data-rich (x₁<0.8) = 3.8914, data-sparse (x₁≥0.8) = 4.4999, ratio = 1.2×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=18.5%, interv=100.0%, near_c=0.0%, ε̄=12.6430  (11.5s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=3.0%, interv=100.0%, near_c=0.0%, ε̄=4.2758  (9.7s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=34.0%, interv=100.0%, near_c=0.0%, ε̄=29.4596  (9.4s)
+  no_epsilon          : viol=4.50%, cbf=58.35%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 1/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.1983, max=25.2905, std=3.7928, CV=0.903
+  ε by region: data-rich (x₁<0.8) = 4.2930, data-sparse (x₁≥0.8) = 4.1388, ratio = 1.0×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=26.0%, interv=100.0%, near_c=0.0%, ε̄=24.3910  (11.1s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=3.0%, interv=100.0%, near_c=0.0%, ε̄=4.1983  (9.5s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=31.0%, interv=100.0%, near_c=0.0%, ε̄=25.2905  (9.3s)
+  no_epsilon          : viol=4.50%, cbf=58.60%, qp_inf=0.0%, interv=79.7%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 2/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.8539, max=33.1830, std=3.9458, CV=1.024
+  ε by region: data-rich (x₁<0.8) = 3.8590, data-sparse (x₁≥0.8) = 3.8512, ratio = 1.0×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=37.0%, interv=100.0%, near_c=0.0%, ε̄=54.3495  (10.8s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=2.0%, interv=100.0%, near_c=0.0%, ε̄=3.8539  (9.3s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=36.0%, interv=100.0%, near_c=0.0%, ε̄=33.1830  (9.3s)
+  no_epsilon          : viol=4.45%, cbf=58.25%, qp_inf=0.0%, interv=79.3%, near_c=12.0%, ε̄=0.0000  (6.2s)
+
+────────────────────────────────────────────────────────────
+Seed 3/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.1807, max=21.5498, std=2.6488, CV=0.833
+  ε by region: data-rich (x₁<0.8) = 3.3994, data-sparse (x₁≥0.8) = 3.0901, ratio = 0.9×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=43.0%, interv=100.0%, near_c=0.0%, ε̄=72.0796  (11.0s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=1.0%, interv=100.0%, near_c=0.0%, ε̄=3.1807  (9.3s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=28.5%, interv=100.0%, near_c=0.0%, ε̄=21.5498  (9.3s)
+  no_epsilon          : viol=4.45%, cbf=58.45%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 4/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.4749, max=21.4608, std=2.9773, CV=0.857
+  ε by region: data-rich (x₁<0.8) = 3.8519, data-sparse (x₁≥0.8) = 3.3186, ratio = 0.9×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=38.5%, interv=100.0%, near_c=0.0%, ε̄=59.0673  (11.0s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=1.5%, interv=100.0%, near_c=0.0%, ε̄=3.4749  (9.4s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=28.5%, interv=100.0%, near_c=0.0%, ε̄=21.4608  (9.3s)
+  no_epsilon          : viol=4.50%, cbf=58.75%, qp_inf=0.0%, interv=80.0%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+====================================================================================================
+SPARSE GP DEMO — SUMMARY ACROSS SEEDS
+====================================================================================================
+
+Mode                 Viol%      CBF%       QP_Inf%    Interv%    ε̄         ε_std     
+--------------------------------------------------------------------------------
+compositional        0.00       0.00       32.6       100.0      44.5061    75.0863   
+constant_mean        0.00       0.00       2.1        100.0      3.7967     0.0000    
+constant_max         0.00       0.00       31.6       100.0      26.1888    0.0000    
+no_epsilon           4.48       58.48      0.0        79.7       0.0000     0.0000    
+
+ε(x) statistics (averaged across seeds):
+  mean: 3.7967
+  max: 26.1888
+  min: 0.4491
+  std: 3.4566
+  cv: 0.9067
+  rich_mean: 3.8589
+  sparse_mean: 3.7797
+  ratio_sparse_rich: 0.9778
+  n=100 done in 264s
+
+================================================================================
+E1 sweep: n_samples = 200 (5 seeds)
+================================================================================
+================================================================================
+SPARSE GP DEMO: ε(x) empirical benefit
+================================================================================
+  Scenario: nonlinear, uncertainty_scale=0.5
+  sigma_floor=1e-06, noise_variance=1e-06
+  Sparse GP: n=200, x₁ ∈ (-0.5, 0.8)
+  Constraint: x₁ > 1.20 (keepout center=1.5, r=0.3)
+  Policy target: x₁ → 1.15
+
+────────────────────────────────────────────────────────────
+Seed 0/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.7321, max=36.4579, std=4.6086, CV=0.974
+  ε by region: data-rich (x₁<0.8) = 4.2813, data-sparse (x₁≥0.8) = 4.9950, ratio = 1.2×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=37.5%, interv=100.0%, near_c=0.0%, ε̄=73.8656  (12.0s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=4.0%, interv=100.0%, near_c=0.0%, ε̄=4.7321  (9.8s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=37.5%, interv=100.0%, near_c=0.0%, ε̄=36.4579  (9.4s)
+  no_epsilon          : viol=4.50%, cbf=58.35%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 1/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.5155, max=30.7633, std=4.3009, CV=0.952
+  ε by region: data-rich (x₁<0.8) = 4.6161, data-sparse (x₁≥0.8) = 4.4522, ratio = 1.0×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=38.0%, interv=100.0%, near_c=0.0%, ε̄=76.3676  (11.4s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=3.5%, interv=100.0%, near_c=0.0%, ε̄=4.5155  (9.6s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=34.5%, interv=100.0%, near_c=0.0%, ε̄=30.7633  (9.5s)
+  no_epsilon          : viol=4.50%, cbf=58.60%, qp_inf=0.0%, interv=79.7%, near_c=12.0%, ε̄=0.0000  (6.2s)
+
+────────────────────────────────────────────────────────────
+Seed 2/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=4.2371, max=39.5439, std=4.3697, CV=1.031
+  ε by region: data-rich (x₁<0.8) = 3.9377, data-sparse (x₁≥0.8) = 4.3974, ratio = 1.1×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=38.5%, interv=100.0%, near_c=0.0%, ε̄=77.8612  (11.1s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=3.0%, interv=100.0%, near_c=0.0%, ε̄=4.2371  (9.5s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=39.0%, interv=100.0%, near_c=0.0%, ε̄=39.5439  (9.5s)
+  no_epsilon          : viol=4.45%, cbf=58.25%, qp_inf=0.0%, interv=79.3%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 3/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.3530, max=25.4809, std=2.8453, CV=0.849
+  ε by region: data-rich (x₁<0.8) = 3.6000, data-sparse (x₁≥0.8) = 3.2506, ratio = 0.9×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=39.0%, interv=100.0%, near_c=0.0%, ε̄=81.2933  (11.1s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=1.5%, interv=100.0%, near_c=0.0%, ε̄=3.3530  (9.4s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=31.0%, interv=100.0%, near_c=0.0%, ε̄=25.4809  (9.5s)
+  no_epsilon          : viol=4.45%, cbf=58.45%, qp_inf=0.0%, interv=79.8%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+────────────────────────────────────────────────────────────
+Seed 4/5
+────────────────────────────────────────────────────────────
+  ε stats: mean=3.4434, max=22.1674, std=3.0053, CV=0.873
+  ε by region: data-rich (x₁<0.8) = 3.7648, data-sparse (x₁≥0.8) = 3.3102, ratio = 0.9×
+  compositional       : viol=0.00%, cbf=0.00%, qp_inf=42.0%, interv=100.0%, near_c=0.0%, ε̄=95.3508  (11.2s)
+  constant_mean       : viol=0.00%, cbf=0.00%, qp_inf=1.5%, interv=100.0%, near_c=0.0%, ε̄=3.4434  (9.4s)
+  constant_max        : viol=0.00%, cbf=0.00%, qp_inf=28.5%, interv=100.0%, near_c=0.0%, ε̄=22.1674  (9.5s)
+  no_epsilon          : viol=4.50%, cbf=58.75%, qp_inf=0.0%, interv=80.0%, near_c=12.0%, ε̄=0.0000  (6.1s)
+
+====================================================================================================
+SPARSE GP DEMO — SUMMARY ACROSS SEEDS
+====================================================================================================
+
+Mode                 Viol%      CBF%       QP_Inf%    Interv%    ε̄         ε_std     
+--------------------------------------------------------------------------------
+compositional        0.00       0.00       39.0       100.0      80.9477    133.1044  
+constant_mean        0.00       0.00       2.7        100.0      4.0562     0.0000    
+constant_max         0.00       0.00       34.1       100.0      30.8826    0.0000    
+no_epsilon           4.48       58.48      0.0        79.7       0.0000     0.0000    
+
+ε(x) statistics (averaged across seeds):
+  mean: 4.0562
+  max: 30.8826
+  min: 0.5546
+  std: 3.8260
+  cv: 0.9358
+  rich_mean: 4.0400
+  sparse_mean: 4.0811
+  ratio_sparse_rich: 1.0060
+  n=200 done in 268s
+
+E1 complete. Results in results/phase5/e1_sparse_gp_n_sweep
+
+     n |       mode | viol%(mean±std) | cbf%(mean±std) |  qp_inf%(mean) |       ε̄(mean)
+------------------------------------------------------------------------------------------
+    25 | compositional |  0.00± 0.00 |  0.00± 0.00 | 35.40± 2.42 | 58.0338
+    25 | constant_mean |  0.00± 0.00 |  0.00± 0.00 |  0.80± 1.17 | 2.9306
+    25 | constant_max |  0.00± 0.00 |  0.00± 0.00 | 20.50± 1.70 | 11.3704
+    25 | no_epsilon |  4.48± 0.02 | 58.48± 0.18 |  0.00± 0.00 | 0.0000
+    50 | compositional |  0.00± 0.00 |  0.00± 0.00 | 38.90±22.01 | 62.4257
+    50 | constant_mean |  0.00± 0.00 |  0.00± 0.00 |  2.90± 1.16 | 4.1904
+    50 | constant_max |  0.00± 0.00 |  0.00± 0.00 | 31.60± 2.78 | 25.4597
+    50 | no_epsilon |  4.48± 0.02 | 58.48± 0.18 |  0.00± 0.00 | 0.0000
+   100 | compositional |  0.00± 0.00 |  0.00± 0.00 | 32.60± 9.00 | 44.5061
+   100 | constant_mean |  0.00± 0.00 |  0.00± 0.00 |  2.10± 0.80 | 3.7967
+   100 | constant_max |  0.00± 0.00 |  0.00± 0.00 | 31.60± 2.99 | 26.1888
+   100 | no_epsilon |  4.48± 0.02 | 58.48± 0.18 |  0.00± 0.00 | 0.0000
+   200 | compositional |  0.00± 0.00 |  0.00± 0.00 | 39.00± 1.58 | 80.9477
+   200 | constant_mean |  0.00± 0.00 |  0.00± 0.00 |  2.70± 1.03 | 4.0562
+   200 | constant_max |  0.00± 0.00 |  0.00± 0.00 | 34.10± 3.92 | 30.8826
+   200 | no_epsilon |  4.48± 0.02 | 58.48± 0.18 |  0.00± 0.00 | 0.0000

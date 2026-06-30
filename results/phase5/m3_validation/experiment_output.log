@@ -1,0 +1,120 @@
+======================================================================
+PART A: SIGMA CHAIN VALIDATION
+======================================================================
+Sigma chain validation on 120 states × 4 scenarios
+  Computing damping... σ₁=0.0770, σ₂=0.2069, σ₃=0.4373
+  Computing periodic... σ₁=0.1006, σ₂=0.2544, σ₃=0.5137
+  Computing coupled... σ₁=0.1006, σ₂=0.2544, σ₃=0.5137
+  Computing nonlinear... σ₁=0.0774, σ₂=0.2188, σ₃=0.4743
+
+Scenario        σ₁_mean    σ₂_mean    σ₃_mean    σ₁<σ₂<σ₃     ratio_2/1  ratio_3/2 
+-----------------------------------------------------------------------------
+damping         0.0770     0.2069     0.4373     100.0%       2.73       2.14
+periodic        0.1006     0.2544     0.5137     100.0%       2.59       2.05
+coupled         0.1006     0.2544     0.5137     100.0%       2.59       2.05
+nonlinear       0.0774     0.2188     0.4743     100.0%       2.86       2.19
+
+======================================================================
+PART B: SAFETY FILTER EVALUATION
+======================================================================
+
+--- Scenario: damping ---
+  JIT warmup done (11.2s)
+    no_filter ep 5/10 done
+    no_filter ep 10/10 done
+  no_filter      : viol=8.60%, cbf_viol=0.00%
+    hocbf_m3 ep 5/10 done
+    hocbf_m3 ep 10/10 done
+  hocbf_m3       : viol=0.00%, cbf_viol=0.00%
+    rhocbf_m3 ep 5/10 done
+    rhocbf_m3 ep 10/10 done
+  rhocbf_m3      : viol=0.00%, cbf_viol=0.00%, ε_mean=1.8953
+  Scenario damping total: 658.3s
+
+--- Scenario: periodic ---
+  JIT warmup done (10.5s)
+    no_filter ep 5/10 done
+    no_filter ep 10/10 done
+  no_filter      : viol=8.95%, cbf_viol=0.00%
+    hocbf_m3 ep 5/10 done
+    hocbf_m3 ep 10/10 done
+  hocbf_m3       : viol=0.00%, cbf_viol=0.00%
+    rhocbf_m3 ep 5/10 done
+    rhocbf_m3 ep 10/10 done
+  rhocbf_m3      : viol=0.00%, cbf_viol=0.00%, ε_mean=29.8889
+  Scenario periodic total: 659.9s
+
+--- Scenario: coupled ---
+  JIT warmup done (10.8s)
+    no_filter ep 5/10 done
+    no_filter ep 10/10 done
+  no_filter      : viol=9.35%, cbf_viol=0.00%
+    hocbf_m3 ep 5/10 done
+    hocbf_m3 ep 10/10 done
+  hocbf_m3       : viol=0.00%, cbf_viol=0.00%
+    rhocbf_m3 ep 5/10 done
+    rhocbf_m3 ep 10/10 done
+  rhocbf_m3      : viol=0.00%, cbf_viol=0.00%, ε_mean=28.8743
+  Scenario coupled total: 663.6s
+
+--- Scenario: nonlinear ---
+  JIT warmup done (11.7s)
+    no_filter ep 5/10 done
+    no_filter ep 10/10 done
+  no_filter      : viol=8.60%, cbf_viol=0.00%
+    hocbf_m3 ep 5/10 done
+    hocbf_m3 ep 10/10 done
+  hocbf_m3       : viol=13.25%, cbf_viol=41.45%
+    rhocbf_m3 ep 5/10 done
+    rhocbf_m3 ep 10/10 done
+  rhocbf_m3      : viol=0.00%, cbf_viol=3.50%, ε_mean=20.1077
+  Scenario nonlinear total: 669.4s
+
+================================================================================
+M=3 VALIDATION — LaTeX TABLES
+================================================================================
+
+--- Sigma Chain Table ---
+\begin{table}[h]
+\centering
+\caption{Sigma-chain ordering validation ($m = 3$)}
+\label{tab:sigma_chain_m3}
+\begin{tabular}{lcccccc}
+\toprule
+Scenario & $\bar{\sigma}_1$ & $\bar{\sigma}_2$ & $\bar{\sigma}_3$ & $\sigma_1 < \sigma_2 < \sigma_3$ (\%) & $\sigma_2/\sigma_1$ & $\sigma_3/\sigma_2$ \\
+\midrule
+Damping & 0.0770 & 0.2069 & 0.4373 & 100.0\% & 2.73 & 2.14 \\
+Periodic & 0.1006 & 0.2544 & 0.5137 & 100.0\% & 2.59 & 2.05 \\
+Coupled & 0.1006 & 0.2544 & 0.5137 & 100.0\% & 2.59 & 2.05 \\
+Nonlinear & 0.0774 & 0.2188 & 0.4743 & 100.0\% & 2.86 & 2.19 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+--- Safety Evaluation Table ---
+\begin{table}[h]
+\centering
+\caption{Higher-order validation ($m = 3$) on triple integrator}
+\label{tab:m3_validation}
+\begin{tabular}{lcccc}
+\toprule
+Scenario & Method & Violation Rate & CBF Viol. & $\bar{\epsilon}$ \\
+\midrule
+Damping & Scripted & 8.60\% & 0.00\% & --- \\
+Damping & HOCBF($m{=}3$) & 0.00\% & 0.00\% & --- \\
+Damping & RHOCBF($m{=}3$) & 0.00\% & 0.00\% & 1.8953 \\
+\midrule
+Periodic & Scripted & 8.95\% & 0.00\% & --- \\
+Periodic & HOCBF($m{=}3$) & 0.00\% & 0.00\% & --- \\
+Periodic & RHOCBF($m{=}3$) & 0.00\% & 0.00\% & 29.8889 \\
+\midrule
+Coupled & Scripted & 9.35\% & 0.00\% & --- \\
+Coupled & HOCBF($m{=}3$) & 0.00\% & 0.00\% & --- \\
+Coupled & RHOCBF($m{=}3$) & 0.00\% & 0.00\% & 28.8743 \\
+\midrule
+Nonlinear & Scripted & 8.60\% & 0.00\% & --- \\
+Nonlinear & HOCBF($m{=}3$) & 13.25\% & 41.45\% & --- \\
+Nonlinear & RHOCBF($m{=}3$) & 0.00\% & 3.50\% & 20.1077 \\
+\bottomrule
+\end{tabular}
+\end{table}

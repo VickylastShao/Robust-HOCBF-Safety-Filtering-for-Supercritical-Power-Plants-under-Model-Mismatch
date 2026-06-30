@@ -1,0 +1,51 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S3:Weak', 'S3:Strong']
+κ values:   [0.1, 0.3, 1.0]
+Seeds:      [0, 1]
+Total:      12 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/12] SKIP κ=0.1 | S3:Weak | seed=0 (exists)
+
+[2/12] SKIP κ=0.1 | S3:Weak | seed=1 (exists)
+
+[3/12] SKIP κ=0.3 | S3:Weak | seed=0 (exists)
+
+[4/12] SKIP κ=0.3 | S3:Weak | seed=1 (exists)
+
+[5/12] SKIP κ=1.0 | S3:Weak | seed=0 (exists)
+
+[6/12] κ=1.0 | S3:Weak | seed=1
+  → violation_rate=0.0032±0.0013, reward=-5365.9, time=2871s
+
+[7/12] SKIP κ=0.1 | S3:Strong | seed=0 (exists)
+
+[8/12] κ=0.1 | S3:Strong | seed=1
+  → violation_rate=0.9844±0.0050, reward=-24863.0, time=3378s
+
+[9/12] κ=0.3 | S3:Strong | seed=0
+  → violation_rate=0.9980±0.0003, reward=-24908.5, time=3372s
+
+[10/12] κ=0.3 | S3:Strong | seed=1
+  → violation_rate=0.9987±0.0017, reward=-24892.7, time=3009s
+
+[11/12] SKIP κ=1.0 | S3:Strong | seed=0 (exists)
+
+[12/12] κ=1.0 | S3:Strong | seed=1
+  → violation_rate=0.9998±0.0006, reward=-24907.7, time=3622s
+
+=== Kappa Sweep Summary ===
+
+  S3:Weak (S3: Weak (γ=0.5)):
+    κ=0.1: no results
+    κ=0.3: no results
+    κ=1.0: mean=0.32% ±0.00% (n=1)
+
+  S3:Strong (S3: Strong (γ=2.0)):
+    κ=0.1: mean=98.44% ±0.00% (n=1)
+    κ=0.3: mean=99.83% ±0.04% (n=2)
+    κ=1.0: mean=99.98% ±0.00% (n=1)
+
+=== Done: 12/12 experiments ===

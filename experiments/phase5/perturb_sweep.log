@@ -1,0 +1,19 @@
+Pretraining GP on S1 heat (N=500)...
+Building GP-HOCBF (κ=0)...
+  Mag10 (Δh=-10)... QP=100.0% Viol=0.0% (197s)
+  Moderate (Δh=-15)... QP=100.0% Viol=0.0% (201s)
+  Mag25 (Δh=-25)... QP=100.0% Viol=0.0% (201s)
+  Mag50 (Δh=-50)... QP=100.0% Viol=0.0% (209s)
+  Mag75 (Δh=-75)... QP=100.0% Viol=100.0% (198s)
+  Mag100 (Δh=-100)... QP=100.0% Viol=100.0% (203s)
+
+Saved: results/phase5/perturbation_sweep.json
+
+=== Summary ===
+Mag          Δh       QP Intv%   Viol%   
+Mag10        -10      100.0      0.0     
+Moderate     -15      100.0      0.0     
+Mag25        -25      100.0      0.0     
+Mag50        -50      100.0      0.0     
+Mag75        -75      100.0      100.0   
+Mag100       -100     100.0      100.0   

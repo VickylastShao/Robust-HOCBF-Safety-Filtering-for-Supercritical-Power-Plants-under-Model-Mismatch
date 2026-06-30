@@ -1,0 +1,52 @@
+=== Phase 5 Full Sweep Started: Mon Jun 22 01:48:52 CST 2026 ===
+Methods: ppo, ppo_lagr, nmpc, ppo_cbf, ppo_hocbf, ppo_gp_hocbf, ppo_rhocbf, rocbf_net
+Conditions: nominal, s1_heat, s2_pressure, s3_coupled, s4_nonlinear, s5_valve, s6_fuel, load_following
+Seeds: 0-4 (5 per combo)
+Total: 320 experiments
+
+[1/320] PPO | Nominal | seed=0
+  → violation_rate=0.0010±0.0013, reward=-39.9
+
+[2/320] PPO | Nominal | seed=1
+  → violation_rate=0.0007±0.0010, reward=-39.8
+
+[3/320] PPO | Nominal | seed=2
+  → violation_rate=0.0009±0.0011, reward=-39.3
+
+[4/320] PPO | Nominal | seed=3
+  → violation_rate=0.0007±0.0015, reward=-39.8
+
+[5/320] PPO | Nominal | seed=4
+  → violation_rate=0.0007±0.0012, reward=-40.1
+
+[6/320] PPO | S1:Heat | seed=0
+  → violation_rate=0.9992±0.0014, reward=-11771.1
+
+[7/320] PPO | S1:Heat | seed=1
+  → violation_rate=0.9992±0.0013, reward=-11763.2
+
+[8/320] PPO | S1:Heat | seed=2
+  → violation_rate=0.9993±0.0011, reward=-11766.2
+
+[9/320] PPO | S1:Heat | seed=3
+  → violation_rate=0.9993±0.0012, reward=-11767.5
+
+[10/320] PPO | S1:Heat | seed=4
+  → violation_rate=0.9990±0.0013, reward=-11763.4
+
+[11/320] PPO | S2:Pressure | seed=0
+  → violation_rate=0.9949±0.0031, reward=-16156.0
+
+[12/320] PPO | S2:Pressure | seed=1
+  → violation_rate=0.9952±0.0025, reward=-16151.0
+
+[13/320] PPO | S2:Pressure | seed=2
+  → violation_rate=0.9963±0.0026, reward=-16151.1
+
+[14/320] PPO | S2:Pressure | seed=3
+  → violation_rate=0.9954±0.0031, reward=-16155.4
+
+[15/320] PPO | S2:Pressure | seed=4
+  → violation_rate=0.9949±0.0028, reward=-16154.2
+
+[16/320] PPO | S3:Coupled | seed=0

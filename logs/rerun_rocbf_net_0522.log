@@ -1,0 +1,37 @@
+RoCBF-Net Rerun with epsilon_kappa=1.0
+  Deleting old result: rocbf_net_s4_nonlinear_seed2.json
+  Deleting old result: rocbf_net_load_following_seed3.json
+  Deleting old result: rocbf_net_s3_coupled_seed0.json
+  Deleting old result: rocbf_net_s3_coupled_seed2.json
+  Deleting old result: rocbf_net_s4_nonlinear_seed4.json
+  Deleting old result: rocbf_net_s3_coupled_seed3.json
+  Deleting old result: rocbf_net_s3_coupled_seed1.json
+  Deleting old result: rocbf_net_load_following_seed1.json
+  Deleting old result: rocbf_net_s4_nonlinear_seed1.json
+  Deleting old result: rocbf_net_load_following_seed0.json
+  Deleting old result: rocbf_net_load_following_seed2.json
+  Deleting old result: rocbf_net_s4_nonlinear_seed0.json
+  Deleting old result: rocbf_net_s3_coupled_seed4.json
+  Deleting old result: rocbf_net_s4_nonlinear_seed3.json
+  Deleting old result: rocbf_net_load_following_seed4.json
+Deleted 15 old RoCBF-Net results
+
+[1/30] RoCBF-Net | nominal | s=0
+  [GP pretrain] 21.1s
+    Ep 50: r=-580.6
+    Ep 100: r=-684.7
+    Ep 150: r=-586.6
+/home/gpu/sz_workspace/RoCBF-Net/rocbf/gp/gp_residual.py:259: RuntimeWarning: invalid value encountered in multiply
+  Y_old[:, j] = y_norm_j * float(self._y_std[j]) + float(self._y_mean[j])
+    Ep 200: r=-1463.3
+  [RoCBF-Net train] 632.3s
+Traceback (most recent call last):
+  File "/home/gpu/sz_workspace/RoCBF-Net/experiments/phase4/rerun_rocbf_net.py", line 301, in <module>
+    main()
+  File "/home/gpu/sz_workspace/RoCBF-Net/experiments/phase4/rerun_rocbf_net.py", line 268, in main
+    metrics = evaluate(model, safety_layer, eval_dyn, constraint,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gpu/sz_workspace/RoCBF-Net/experiments/phase4/rerun_rocbf_net.py", line 140, in evaluate
+    pressures.append(float(y[0]) - float(y_ref[0]))
+                                         ^^^^^
+UnboundLocalError: cannot access local variable 'y_ref' where it is not associated with a value

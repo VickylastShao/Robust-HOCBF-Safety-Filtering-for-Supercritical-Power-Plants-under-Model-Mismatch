@@ -1,0 +1,728 @@
+
+[1/240] SKIP PPO | nominal | seed=0 (exists)
+
+[2/240] SKIP PPO | nominal | seed=1 (exists)
+
+[3/240] SKIP PPO | nominal | seed=2 (exists)
+
+[4/240] SKIP PPO | nominal | seed=3 (exists)
+
+[5/240] SKIP PPO | nominal | seed=4 (exists)
+
+[6/240] SKIP PPO | s1_heat | seed=0 (exists)
+
+[7/240] SKIP PPO | s1_heat | seed=1 (exists)
+
+[8/240] SKIP PPO | s1_heat | seed=2 (exists)
+
+[9/240] SKIP PPO | s1_heat | seed=3 (exists)
+
+[10/240] SKIP PPO | s1_heat | seed=4 (exists)
+
+[11/240] SKIP PPO | s2_pressure | seed=0 (exists)
+
+[12/240] SKIP PPO | s2_pressure | seed=1 (exists)
+
+[13/240] SKIP PPO | s2_pressure | seed=2 (exists)
+
+[14/240] SKIP PPO | s2_pressure | seed=3 (exists)
+
+[15/240] SKIP PPO | s2_pressure | seed=4 (exists)
+
+[16/240] PPO | s3_coupled | seed=0
+  [ppo|s3_coupled|seed=0] Ep 50: r=-1297.0
+  [ppo|s3_coupled|seed=0] Ep 100: r=-489.7
+  [ppo|s3_coupled|seed=0] Ep 150: r=-613.7
+  [ppo|s3_coupled|seed=0] Ep 200: r=-1482.9
+  → violation_rate=0.0183±0.0094, reward=-1462.3
+
+[17/240] PPO | s3_coupled | seed=1
+  [ppo|s3_coupled|seed=1] Ep 50: r=-416.1
+  [ppo|s3_coupled|seed=1] Ep 100: r=-1457.0
+  [ppo|s3_coupled|seed=1] Ep 150: r=-548.0
+  [ppo|s3_coupled|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.0267±0.0165, reward=-1480.5
+
+[18/240] PPO | s3_coupled | seed=2
+  [ppo|s3_coupled|seed=2] Ep 50: r=-1285.1
+  [ppo|s3_coupled|seed=2] Ep 100: r=-1257.9
+  [ppo|s3_coupled|seed=2] Ep 150: r=-647.8
+  [ppo|s3_coupled|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0300±0.0108, reward=-1352.7
+
+[19/240] PPO | s3_coupled | seed=3
+  [ppo|s3_coupled|seed=3] Ep 50: r=-1340.1
+  [ppo|s3_coupled|seed=3] Ep 100: r=-547.8
+  [ppo|s3_coupled|seed=3] Ep 150: r=-619.3
+  [ppo|s3_coupled|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0200±0.0071, reward=-1450.6
+
+[20/240] PPO | s3_coupled | seed=4
+  [ppo|s3_coupled|seed=4] Ep 50: r=-410.1
+  [ppo|s3_coupled|seed=4] Ep 100: r=-568.0
+  [ppo|s3_coupled|seed=4] Ep 150: r=-511.8
+  [ppo|s3_coupled|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0267±0.0047, reward=-1487.3
+
+[21/240] PPO | s4_nonlinear | seed=0
+  [ppo|s4_nonlinear|seed=0] Ep 50: r=-1297.0
+  [ppo|s4_nonlinear|seed=0] Ep 100: r=-489.7
+  [ppo|s4_nonlinear|seed=0] Ep 150: r=-613.7
+  [ppo|s4_nonlinear|seed=0] Ep 200: r=-1482.9
+  → violation_rate=0.0167±0.0085, reward=-1390.1
+
+[22/240] PPO | s4_nonlinear | seed=1
+  [ppo|s4_nonlinear|seed=1] Ep 50: r=-416.1
+  [ppo|s4_nonlinear|seed=1] Ep 100: r=-1457.0
+  [ppo|s4_nonlinear|seed=1] Ep 150: r=-548.0
+  [ppo|s4_nonlinear|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.0233±0.0118, reward=-1408.4
+
+[23/240] PPO | s4_nonlinear | seed=2
+  [ppo|s4_nonlinear|seed=2] Ep 50: r=-1285.1
+  [ppo|s4_nonlinear|seed=2] Ep 100: r=-1257.9
+  [ppo|s4_nonlinear|seed=2] Ep 150: r=-647.8
+  [ppo|s4_nonlinear|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0233±0.0085, reward=-1284.9
+
+[24/240] PPO | s4_nonlinear | seed=3
+  [ppo|s4_nonlinear|seed=3] Ep 50: r=-1340.1
+  [ppo|s4_nonlinear|seed=3] Ep 100: r=-547.8
+  [ppo|s4_nonlinear|seed=3] Ep 150: r=-619.3
+  [ppo|s4_nonlinear|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0217±0.0062, reward=-1380.1
+
+[25/240] PPO | s4_nonlinear | seed=4
+  [ppo|s4_nonlinear|seed=4] Ep 50: r=-410.1
+  [ppo|s4_nonlinear|seed=4] Ep 100: r=-568.0
+  [ppo|s4_nonlinear|seed=4] Ep 150: r=-511.8
+  [ppo|s4_nonlinear|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0267±0.0024, reward=-1415.9
+
+[26/240] PPO | load_following | seed=0
+  [ppo|load_following|seed=0] Ep 50: r=-1297.0
+  [ppo|load_following|seed=0] Ep 100: r=-489.7
+  [ppo|load_following|seed=0] Ep 150: r=-613.7
+  [ppo|load_following|seed=0] Ep 200: r=-1482.9
+  → violation_rate=0.0000±0.0000, reward=-496.6
+
+[27/240] PPO | load_following | seed=1
+  [ppo|load_following|seed=1] Ep 50: r=-416.1
+  [ppo|load_following|seed=1] Ep 100: r=-1457.0
+  [ppo|load_following|seed=1] Ep 150: r=-548.0
+  [ppo|load_following|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.0000±0.0000, reward=-510.1
+
+[28/240] PPO | load_following | seed=2
+  [ppo|load_following|seed=2] Ep 50: r=-1285.1
+  [ppo|load_following|seed=2] Ep 100: r=-1257.9
+  [ppo|load_following|seed=2] Ep 150: r=-647.8
+  [ppo|load_following|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0000±0.0000, reward=-464.3
+
+[29/240] PPO | load_following | seed=3
+  [ppo|load_following|seed=3] Ep 50: r=-1340.1
+  [ppo|load_following|seed=3] Ep 100: r=-547.8
+  [ppo|load_following|seed=3] Ep 150: r=-619.3
+  [ppo|load_following|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0000±0.0000, reward=-513.7
+
+[30/240] PPO | load_following | seed=4
+  [ppo|load_following|seed=4] Ep 50: r=-410.1
+  [ppo|load_following|seed=4] Ep 100: r=-568.0
+  [ppo|load_following|seed=4] Ep 150: r=-511.8
+  [ppo|load_following|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0033±0.0024, reward=-528.0
+
+[31/240] SKIP PPO-Lagrangian | nominal | seed=0 (exists)
+
+[32/240] SKIP PPO-Lagrangian | nominal | seed=1 (exists)
+
+[33/240] SKIP PPO-Lagrangian | nominal | seed=2 (exists)
+
+[34/240] SKIP PPO-Lagrangian | nominal | seed=3 (exists)
+
+[35/240] SKIP PPO-Lagrangian | nominal | seed=4 (exists)
+
+[36/240] SKIP PPO-Lagrangian | s1_heat | seed=0 (exists)
+
+[37/240] SKIP PPO-Lagrangian | s1_heat | seed=1 (exists)
+
+[38/240] SKIP PPO-Lagrangian | s1_heat | seed=2 (exists)
+
+[39/240] SKIP PPO-Lagrangian | s1_heat | seed=3 (exists)
+
+[40/240] SKIP PPO-Lagrangian | s1_heat | seed=4 (exists)
+
+[41/240] SKIP PPO-Lagrangian | s2_pressure | seed=0 (exists)
+
+[42/240] SKIP PPO-Lagrangian | s2_pressure | seed=1 (exists)
+
+[43/240] SKIP PPO-Lagrangian | s2_pressure | seed=2 (exists)
+
+[44/240] SKIP PPO-Lagrangian | s2_pressure | seed=3 (exists)
+
+[45/240] SKIP PPO-Lagrangian | s2_pressure | seed=4 (exists)
+
+[46/240] SKIP PPO-Lagrangian | s3_coupled | seed=0 (exists)
+
+[47/240] SKIP PPO-Lagrangian | s3_coupled | seed=1 (exists)
+
+[48/240] SKIP PPO-Lagrangian | s3_coupled | seed=2 (exists)
+
+[49/240] PPO-Lagrangian | s3_coupled | seed=3
+  [ppo_lagr|s3_coupled|seed=3] Ep 50: r=-1340.1
+  [ppo_lagr|s3_coupled|seed=3] Ep 100: r=-547.8
+  [ppo_lagr|s3_coupled|seed=3] Ep 150: r=-619.3
+  [ppo_lagr|s3_coupled|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0200±0.0071, reward=-1450.6
+
+[50/240] PPO-Lagrangian | s3_coupled | seed=4
+  [ppo_lagr|s3_coupled|seed=4] Ep 50: r=-410.1
+  [ppo_lagr|s3_coupled|seed=4] Ep 100: r=-568.0
+  [ppo_lagr|s3_coupled|seed=4] Ep 150: r=-511.8
+  [ppo_lagr|s3_coupled|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0267±0.0047, reward=-1487.3
+
+[51/240] PPO-Lagrangian | s4_nonlinear | seed=0
+  [ppo_lagr|s4_nonlinear|seed=0] Ep 50: r=-1297.0
+  [ppo_lagr|s4_nonlinear|seed=0] Ep 100: r=-489.7
+  [ppo_lagr|s4_nonlinear|seed=0] Ep 150: r=-613.7
+  [ppo_lagr|s4_nonlinear|seed=0] Ep 200: r=-1482.9
+  → violation_rate=0.0167±0.0085, reward=-1390.1
+
+[52/240] PPO-Lagrangian | s4_nonlinear | seed=1
+  [ppo_lagr|s4_nonlinear|seed=1] Ep 50: r=-416.1
+  [ppo_lagr|s4_nonlinear|seed=1] Ep 100: r=-1457.0
+  [ppo_lagr|s4_nonlinear|seed=1] Ep 150: r=-548.0
+  [ppo_lagr|s4_nonlinear|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.0233±0.0118, reward=-1408.4
+
+[53/240] PPO-Lagrangian | s4_nonlinear | seed=2
+  [ppo_lagr|s4_nonlinear|seed=2] Ep 50: r=-1285.1
+  [ppo_lagr|s4_nonlinear|seed=2] Ep 100: r=-1257.9
+  [ppo_lagr|s4_nonlinear|seed=2] Ep 150: r=-647.8
+  [ppo_lagr|s4_nonlinear|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0233±0.0085, reward=-1284.9
+
+[54/240] PPO-Lagrangian | s4_nonlinear | seed=3
+  [ppo_lagr|s4_nonlinear|seed=3] Ep 50: r=-1340.1
+  [ppo_lagr|s4_nonlinear|seed=3] Ep 100: r=-547.8
+  [ppo_lagr|s4_nonlinear|seed=3] Ep 150: r=-619.3
+  [ppo_lagr|s4_nonlinear|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0217±0.0062, reward=-1380.1
+
+[55/240] PPO-Lagrangian | s4_nonlinear | seed=4
+  [ppo_lagr|s4_nonlinear|seed=4] Ep 50: r=-410.1
+  [ppo_lagr|s4_nonlinear|seed=4] Ep 100: r=-568.0
+  [ppo_lagr|s4_nonlinear|seed=4] Ep 150: r=-511.8
+  [ppo_lagr|s4_nonlinear|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0267±0.0024, reward=-1415.9
+
+[56/240] PPO-Lagrangian | load_following | seed=0
+  [ppo_lagr|load_following|seed=0] Ep 50: r=-1297.0
+  [ppo_lagr|load_following|seed=0] Ep 100: r=-489.7
+  [ppo_lagr|load_following|seed=0] Ep 150: r=-613.7
+  [ppo_lagr|load_following|seed=0] Ep 200: r=-1482.9
+  → violation_rate=0.0000±0.0000, reward=-496.6
+
+[57/240] PPO-Lagrangian | load_following | seed=1
+  [ppo_lagr|load_following|seed=1] Ep 50: r=-416.1
+  [ppo_lagr|load_following|seed=1] Ep 100: r=-1457.0
+  [ppo_lagr|load_following|seed=1] Ep 150: r=-548.0
+  [ppo_lagr|load_following|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.0000±0.0000, reward=-510.1
+
+[58/240] PPO-Lagrangian | load_following | seed=2
+  [ppo_lagr|load_following|seed=2] Ep 50: r=-1285.1
+  [ppo_lagr|load_following|seed=2] Ep 100: r=-1257.9
+  [ppo_lagr|load_following|seed=2] Ep 150: r=-647.8
+  [ppo_lagr|load_following|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0000±0.0000, reward=-464.3
+
+[59/240] PPO-Lagrangian | load_following | seed=3
+  [ppo_lagr|load_following|seed=3] Ep 50: r=-1340.1
+  [ppo_lagr|load_following|seed=3] Ep 100: r=-547.8
+  [ppo_lagr|load_following|seed=3] Ep 150: r=-619.3
+  [ppo_lagr|load_following|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0000±0.0000, reward=-513.7
+
+[60/240] PPO-Lagrangian | load_following | seed=4
+  [ppo_lagr|load_following|seed=4] Ep 50: r=-410.1
+  [ppo_lagr|load_following|seed=4] Ep 100: r=-568.0
+  [ppo_lagr|load_following|seed=4] Ep 150: r=-511.8
+  [ppo_lagr|load_following|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0033±0.0024, reward=-528.0
+
+[61/240] SKIP NMPC | nominal | seed=0 (exists)
+
+[62/240] SKIP NMPC | nominal | seed=1 (exists)
+
+[63/240] SKIP NMPC | nominal | seed=2 (exists)
+
+[64/240] SKIP NMPC | nominal | seed=3 (exists)
+
+[65/240] SKIP NMPC | nominal | seed=4 (exists)
+
+[66/240] SKIP NMPC | s1_heat | seed=0 (exists)
+
+[67/240] SKIP NMPC | s1_heat | seed=1 (exists)
+
+[68/240] SKIP NMPC | s1_heat | seed=2 (exists)
+
+[69/240] SKIP NMPC | s1_heat | seed=3 (exists)
+
+[70/240] SKIP NMPC | s1_heat | seed=4 (exists)
+
+[71/240] SKIP NMPC | s2_pressure | seed=0 (exists)
+
+[72/240] SKIP NMPC | s2_pressure | seed=1 (exists)
+
+[73/240] SKIP NMPC | s2_pressure | seed=2 (exists)
+
+[74/240] SKIP NMPC | s2_pressure | seed=3 (exists)
+
+[75/240] SKIP NMPC | s2_pressure | seed=4 (exists)
+
+[76/240] SKIP NMPC | s3_coupled | seed=0 (exists)
+
+[77/240] SKIP NMPC | s3_coupled | seed=1 (exists)
+
+[78/240] SKIP NMPC | s3_coupled | seed=2 (exists)
+
+[79/240] SKIP NMPC | s3_coupled | seed=3 (exists)
+
+[80/240] SKIP NMPC | s3_coupled | seed=4 (exists)
+
+[81/240] SKIP NMPC | s4_nonlinear | seed=0 (exists)
+
+[82/240] NMPC | s4_nonlinear | seed=1
+  → violation_rate=0.0000±0.0000, reward=-5.0
+
+[83/240] NMPC | s4_nonlinear | seed=2
+  → violation_rate=0.0000±0.0000, reward=-5.0
+
+[84/240] NMPC | s4_nonlinear | seed=3
+  → violation_rate=0.0000±0.0000, reward=-5.0
+
+[85/240] NMPC | s4_nonlinear | seed=4
+  → violation_rate=0.0000±0.0000, reward=-5.0
+
+[86/240] NMPC | load_following | seed=0
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[87/240] NMPC | load_following | seed=1
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[88/240] NMPC | load_following | seed=2
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[89/240] NMPC | load_following | seed=3
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[90/240] NMPC | load_following | seed=4
+  → violation_rate=0.0000±0.0000, reward=0.0
+
+[91/240] SKIP PPO-CBF | nominal | seed=0 (exists)
+
+[92/240] SKIP PPO-CBF | nominal | seed=1 (exists)
+
+[93/240] SKIP PPO-CBF | nominal | seed=2 (exists)
+
+[94/240] SKIP PPO-CBF | nominal | seed=3 (exists)
+
+[95/240] SKIP PPO-CBF | nominal | seed=4 (exists)
+
+[96/240] SKIP PPO-CBF | s1_heat | seed=0 (exists)
+
+[97/240] SKIP PPO-CBF | s1_heat | seed=1 (exists)
+
+[98/240] SKIP PPO-CBF | s1_heat | seed=2 (exists)
+
+[99/240] SKIP PPO-CBF | s1_heat | seed=3 (exists)
+
+[100/240] SKIP PPO-CBF | s1_heat | seed=4 (exists)
+
+[101/240] SKIP PPO-CBF | s2_pressure | seed=0 (exists)
+
+[102/240] SKIP PPO-CBF | s2_pressure | seed=1 (exists)
+
+[103/240] SKIP PPO-CBF | s2_pressure | seed=2 (exists)
+
+[104/240] SKIP PPO-CBF | s2_pressure | seed=3 (exists)
+
+[105/240] SKIP PPO-CBF | s2_pressure | seed=4 (exists)
+
+[106/240] SKIP PPO-CBF | s3_coupled | seed=0 (exists)
+
+[107/240] SKIP PPO-CBF | s3_coupled | seed=1 (exists)
+
+[108/240] SKIP PPO-CBF | s3_coupled | seed=2 (exists)
+
+[109/240] SKIP PPO-CBF | s3_coupled | seed=3 (exists)
+
+[110/240] SKIP PPO-CBF | s3_coupled | seed=4 (exists)
+
+[111/240] SKIP PPO-CBF | s4_nonlinear | seed=0 (exists)
+
+[112/240] SKIP PPO-CBF | s4_nonlinear | seed=1 (exists)
+
+[113/240] PPO-CBF | s4_nonlinear | seed=2
+  [ppo_cbf|s4_nonlinear|seed=2] Ep 50: r=-1285.1
+  [ppo_cbf|s4_nonlinear|seed=2] Ep 100: r=-1257.9
+  [ppo_cbf|s4_nonlinear|seed=2] Ep 150: r=-647.8
+  [ppo_cbf|s4_nonlinear|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0233±0.0062, reward=-1575.5
+
+[114/240] PPO-CBF | s4_nonlinear | seed=3
+  [ppo_cbf|s4_nonlinear|seed=3] Ep 50: r=-1340.1
+  [ppo_cbf|s4_nonlinear|seed=3] Ep 100: r=-547.8
+  [ppo_cbf|s4_nonlinear|seed=3] Ep 150: r=-619.3
+  [ppo_cbf|s4_nonlinear|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0133±0.0085, reward=-1677.2
+
+[115/240] PPO-CBF | s4_nonlinear | seed=4
+  [ppo_cbf|s4_nonlinear|seed=4] Ep 50: r=-410.1
+  [ppo_cbf|s4_nonlinear|seed=4] Ep 100: r=-568.0
+  [ppo_cbf|s4_nonlinear|seed=4] Ep 150: r=-511.8
+  [ppo_cbf|s4_nonlinear|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0250±0.0041, reward=-1714.6
+
+[116/240] PPO-CBF | load_following | seed=0
+  [ppo_cbf|load_following|seed=0] Ep 50: r=-1297.0
+  [ppo_cbf|load_following|seed=0] Ep 100: r=-489.7
+  [ppo_cbf|load_following|seed=0] Ep 150: r=-613.7
+  [ppo_cbf|load_following|seed=0] Ep 200: r=-1482.9
+  → violation_rate=0.9833±0.0062, reward=-1062.1
+
+[117/240] PPO-CBF | load_following | seed=1
+  [ppo_cbf|load_following|seed=1] Ep 50: r=-416.1
+  [ppo_cbf|load_following|seed=1] Ep 100: r=-1457.0
+  [ppo_cbf|load_following|seed=1] Ep 150: r=-548.0
+  [ppo_cbf|load_following|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.9833±0.0047, reward=-1086.9
+
+[118/240] PPO-CBF | load_following | seed=2
+  [ppo_cbf|load_following|seed=2] Ep 50: r=-1285.1
+  [ppo_cbf|load_following|seed=2] Ep 100: r=-1257.9
+  [ppo_cbf|load_following|seed=2] Ep 150: r=-647.8
+  [ppo_cbf|load_following|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.9833±0.0094, reward=-994.0
+
+[119/240] PPO-CBF | load_following | seed=3
+  [ppo_cbf|load_following|seed=3] Ep 50: r=-1340.1
+  [ppo_cbf|load_following|seed=3] Ep 100: r=-547.8
+  [ppo_cbf|load_following|seed=3] Ep 150: r=-619.3
+  [ppo_cbf|load_following|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.9867±0.0024, reward=-1142.3
+
+[120/240] PPO-CBF | load_following | seed=4
+  [ppo_cbf|load_following|seed=4] Ep 50: r=-410.1
+  [ppo_cbf|load_following|seed=4] Ep 100: r=-568.0
+  [ppo_cbf|load_following|seed=4] Ep 150: r=-511.8
+  [ppo_cbf|load_following|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.9783±0.0125, reward=-1048.0
+
+[121/240] SKIP PPO-HOCBF | nominal | seed=0 (exists)
+
+[122/240] SKIP PPO-HOCBF | nominal | seed=1 (exists)
+
+[123/240] SKIP PPO-HOCBF | nominal | seed=2 (exists)
+
+[124/240] SKIP PPO-HOCBF | nominal | seed=3 (exists)
+
+[125/240] SKIP PPO-HOCBF | nominal | seed=4 (exists)
+
+[126/240] SKIP PPO-HOCBF | s1_heat | seed=0 (exists)
+
+[127/240] SKIP PPO-HOCBF | s1_heat | seed=1 (exists)
+
+[128/240] SKIP PPO-HOCBF | s1_heat | seed=2 (exists)
+
+[129/240] SKIP PPO-HOCBF | s1_heat | seed=3 (exists)
+
+[130/240] SKIP PPO-HOCBF | s1_heat | seed=4 (exists)
+
+[131/240] SKIP PPO-HOCBF | s2_pressure | seed=0 (exists)
+
+[132/240] SKIP PPO-HOCBF | s2_pressure | seed=1 (exists)
+
+[133/240] SKIP PPO-HOCBF | s2_pressure | seed=2 (exists)
+
+[134/240] SKIP PPO-HOCBF | s2_pressure | seed=3 (exists)
+
+[135/240] SKIP PPO-HOCBF | s2_pressure | seed=4 (exists)
+
+[136/240] SKIP PPO-HOCBF | s3_coupled | seed=0 (exists)
+
+[137/240] SKIP PPO-HOCBF | s3_coupled | seed=1 (exists)
+
+[138/240] SKIP PPO-HOCBF | s3_coupled | seed=2 (exists)
+
+[139/240] SKIP PPO-HOCBF | s3_coupled | seed=3 (exists)
+
+[140/240] SKIP PPO-HOCBF | s3_coupled | seed=4 (exists)
+
+[141/240] SKIP PPO-HOCBF | s4_nonlinear | seed=0 (exists)
+
+[142/240] SKIP PPO-HOCBF | s4_nonlinear | seed=1 (exists)
+
+[143/240] SKIP PPO-HOCBF | s4_nonlinear | seed=2 (exists)
+
+[144/240] SKIP PPO-HOCBF | s4_nonlinear | seed=3 (exists)
+
+[145/240] PPO-HOCBF | s4_nonlinear | seed=4
+  [ppo_hocbf|s4_nonlinear|seed=4] Ep 50: r=-410.1
+  [ppo_hocbf|s4_nonlinear|seed=4] Ep 100: r=-568.0
+  [ppo_hocbf|s4_nonlinear|seed=4] Ep 150: r=-511.8
+  [ppo_hocbf|s4_nonlinear|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0267±0.0024, reward=-1415.9
+
+[146/240] PPO-HOCBF | load_following | seed=0
+  [ppo_hocbf|load_following|seed=0] Ep 50: r=-1297.0
+  [ppo_hocbf|load_following|seed=0] Ep 100: r=-489.7
+  [ppo_hocbf|load_following|seed=0] Ep 150: r=-613.7
+  [ppo_hocbf|load_following|seed=0] Ep 200: r=-1482.9
+  → violation_rate=0.0000±0.0000, reward=-496.6
+
+[147/240] PPO-HOCBF | load_following | seed=1
+  [ppo_hocbf|load_following|seed=1] Ep 50: r=-416.1
+  [ppo_hocbf|load_following|seed=1] Ep 100: r=-1457.0
+  [ppo_hocbf|load_following|seed=1] Ep 150: r=-548.0
+  [ppo_hocbf|load_following|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.0000±0.0000, reward=-510.1
+
+[148/240] PPO-HOCBF | load_following | seed=2
+  [ppo_hocbf|load_following|seed=2] Ep 50: r=-1285.1
+  [ppo_hocbf|load_following|seed=2] Ep 100: r=-1257.9
+  [ppo_hocbf|load_following|seed=2] Ep 150: r=-647.8
+  [ppo_hocbf|load_following|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0000±0.0000, reward=-464.3
+
+[149/240] PPO-HOCBF | load_following | seed=3
+  [ppo_hocbf|load_following|seed=3] Ep 50: r=-1340.1
+  [ppo_hocbf|load_following|seed=3] Ep 100: r=-547.8
+  [ppo_hocbf|load_following|seed=3] Ep 150: r=-619.3
+  [ppo_hocbf|load_following|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0000±0.0000, reward=-513.7
+
+[150/240] PPO-HOCBF | load_following | seed=4
+  [ppo_hocbf|load_following|seed=4] Ep 50: r=-410.1
+  [ppo_hocbf|load_following|seed=4] Ep 100: r=-568.0
+  [ppo_hocbf|load_following|seed=4] Ep 150: r=-511.8
+  [ppo_hocbf|load_following|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0033±0.0024, reward=-528.0
+
+[151/240] SKIP PPO-GP-HOCBF | nominal | seed=0 (exists)
+
+[152/240] SKIP PPO-GP-HOCBF | nominal | seed=1 (exists)
+
+[153/240] SKIP PPO-GP-HOCBF | nominal | seed=2 (exists)
+
+[154/240] SKIP PPO-GP-HOCBF | nominal | seed=3 (exists)
+
+[155/240] SKIP PPO-GP-HOCBF | nominal | seed=4 (exists)
+
+[156/240] SKIP PPO-GP-HOCBF | s1_heat | seed=0 (exists)
+
+[157/240] SKIP PPO-GP-HOCBF | s1_heat | seed=1 (exists)
+
+[158/240] SKIP PPO-GP-HOCBF | s1_heat | seed=2 (exists)
+
+[159/240] SKIP PPO-GP-HOCBF | s1_heat | seed=3 (exists)
+
+[160/240] SKIP PPO-GP-HOCBF | s1_heat | seed=4 (exists)
+
+[161/240] SKIP PPO-GP-HOCBF | s2_pressure | seed=0 (exists)
+
+[162/240] SKIP PPO-GP-HOCBF | s2_pressure | seed=1 (exists)
+
+[163/240] SKIP PPO-GP-HOCBF | s2_pressure | seed=2 (exists)
+
+[164/240] SKIP PPO-GP-HOCBF | s2_pressure | seed=3 (exists)
+
+[165/240] SKIP PPO-GP-HOCBF | s2_pressure | seed=4 (exists)
+
+[166/240] SKIP PPO-GP-HOCBF | s3_coupled | seed=0 (exists)
+
+[167/240] SKIP PPO-GP-HOCBF | s3_coupled | seed=1 (exists)
+
+[168/240] SKIP PPO-GP-HOCBF | s3_coupled | seed=2 (exists)
+
+[169/240] SKIP PPO-GP-HOCBF | s3_coupled | seed=3 (exists)
+
+[170/240] SKIP PPO-GP-HOCBF | s3_coupled | seed=4 (exists)
+
+[171/240] SKIP PPO-GP-HOCBF | s4_nonlinear | seed=0 (exists)
+
+[172/240] SKIP PPO-GP-HOCBF | s4_nonlinear | seed=1 (exists)
+
+[173/240] SKIP PPO-GP-HOCBF | s4_nonlinear | seed=2 (exists)
+
+[174/240] SKIP PPO-GP-HOCBF | s4_nonlinear | seed=3 (exists)
+
+[175/240] SKIP PPO-GP-HOCBF | s4_nonlinear | seed=4 (exists)
+
+[176/240] SKIP PPO-GP-HOCBF | load_following | seed=0 (exists)
+
+[177/240] PPO-GP-HOCBF | load_following | seed=1
+  [ppo_gp_hocbf|load_following|seed=1] Ep 50: r=-416.1
+  [ppo_gp_hocbf|load_following|seed=1] Ep 100: r=-1457.0
+  [ppo_gp_hocbf|load_following|seed=1] Ep 150: r=-548.0
+  [ppo_gp_hocbf|load_following|seed=1] Ep 200: r=-1255.1
+  → violation_rate=0.0000±0.0000, reward=-509.2
+
+[178/240] PPO-GP-HOCBF | load_following | seed=2
+  [ppo_gp_hocbf|load_following|seed=2] Ep 50: r=-1285.1
+  [ppo_gp_hocbf|load_following|seed=2] Ep 100: r=-1257.9
+  [ppo_gp_hocbf|load_following|seed=2] Ep 150: r=-647.8
+  [ppo_gp_hocbf|load_following|seed=2] Ep 200: r=-1561.3
+  → violation_rate=0.0000±0.0000, reward=-463.7
+
+[179/240] PPO-GP-HOCBF | load_following | seed=3
+  [ppo_gp_hocbf|load_following|seed=3] Ep 50: r=-1340.1
+  [ppo_gp_hocbf|load_following|seed=3] Ep 100: r=-547.8
+  [ppo_gp_hocbf|load_following|seed=3] Ep 150: r=-619.3
+  [ppo_gp_hocbf|load_following|seed=3] Ep 200: r=-1281.9
+  → violation_rate=0.0000±0.0000, reward=-513.3
+
+[180/240] PPO-GP-HOCBF | load_following | seed=4
+  [ppo_gp_hocbf|load_following|seed=4] Ep 50: r=-410.1
+  [ppo_gp_hocbf|load_following|seed=4] Ep 100: r=-568.0
+  [ppo_gp_hocbf|load_following|seed=4] Ep 150: r=-511.8
+  [ppo_gp_hocbf|load_following|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0033±0.0024, reward=-527.5
+
+[181/240] SKIP PPO-RHOCBF | nominal | seed=0 (exists)
+
+[182/240] SKIP PPO-RHOCBF | nominal | seed=1 (exists)
+
+[183/240] SKIP PPO-RHOCBF | nominal | seed=2 (exists)
+
+[184/240] SKIP PPO-RHOCBF | nominal | seed=3 (exists)
+
+[185/240] SKIP PPO-RHOCBF | nominal | seed=4 (exists)
+
+[186/240] SKIP PPO-RHOCBF | s1_heat | seed=0 (exists)
+
+[187/240] SKIP PPO-RHOCBF | s1_heat | seed=1 (exists)
+
+[188/240] SKIP PPO-RHOCBF | s1_heat | seed=2 (exists)
+
+[189/240] SKIP PPO-RHOCBF | s1_heat | seed=3 (exists)
+
+[190/240] SKIP PPO-RHOCBF | s1_heat | seed=4 (exists)
+
+[191/240] SKIP PPO-RHOCBF | s2_pressure | seed=0 (exists)
+
+[192/240] SKIP PPO-RHOCBF | s2_pressure | seed=1 (exists)
+
+[193/240] SKIP PPO-RHOCBF | s2_pressure | seed=2 (exists)
+
+[194/240] SKIP PPO-RHOCBF | s2_pressure | seed=3 (exists)
+
+[195/240] SKIP PPO-RHOCBF | s2_pressure | seed=4 (exists)
+
+[196/240] SKIP PPO-RHOCBF | s3_coupled | seed=0 (exists)
+
+[197/240] SKIP PPO-RHOCBF | s3_coupled | seed=1 (exists)
+
+[198/240] SKIP PPO-RHOCBF | s3_coupled | seed=2 (exists)
+
+[199/240] SKIP PPO-RHOCBF | s3_coupled | seed=3 (exists)
+
+[200/240] SKIP PPO-RHOCBF | s3_coupled | seed=4 (exists)
+
+[201/240] SKIP PPO-RHOCBF | s4_nonlinear | seed=0 (exists)
+
+[202/240] SKIP PPO-RHOCBF | s4_nonlinear | seed=1 (exists)
+
+[203/240] SKIP PPO-RHOCBF | s4_nonlinear | seed=2 (exists)
+
+[204/240] SKIP PPO-RHOCBF | s4_nonlinear | seed=3 (exists)
+
+[205/240] SKIP PPO-RHOCBF | s4_nonlinear | seed=4 (exists)
+
+[206/240] SKIP PPO-RHOCBF | load_following | seed=0 (exists)
+
+[207/240] SKIP PPO-RHOCBF | load_following | seed=1 (exists)
+
+[208/240] SKIP PPO-RHOCBF | load_following | seed=2 (exists)
+
+[209/240] SKIP PPO-RHOCBF | load_following | seed=3 (exists)
+
+[210/240] PPO-RHOCBF | load_following | seed=4
+  [ppo_rhocbf|load_following|seed=4] Ep 50: r=-410.1
+  [ppo_rhocbf|load_following|seed=4] Ep 100: r=-568.0
+  [ppo_rhocbf|load_following|seed=4] Ep 150: r=-511.8
+  [ppo_rhocbf|load_following|seed=4] Ep 200: r=-1484.4
+  → violation_rate=0.0033±0.0024, reward=-544.6
+
+[211/240] SKIP RoCBF-Net (Ours) | nominal | seed=0 (exists)
+
+[212/240] SKIP RoCBF-Net (Ours) | nominal | seed=1 (exists)
+
+[213/240] SKIP RoCBF-Net (Ours) | nominal | seed=2 (exists)
+
+[214/240] SKIP RoCBF-Net (Ours) | nominal | seed=3 (exists)
+
+[215/240] SKIP RoCBF-Net (Ours) | nominal | seed=4 (exists)
+
+[216/240] SKIP RoCBF-Net (Ours) | s1_heat | seed=0 (exists)
+
+[217/240] SKIP RoCBF-Net (Ours) | s1_heat | seed=1 (exists)
+
+[218/240] SKIP RoCBF-Net (Ours) | s1_heat | seed=2 (exists)
+
+[219/240] SKIP RoCBF-Net (Ours) | s1_heat | seed=3 (exists)
+
+[220/240] SKIP RoCBF-Net (Ours) | s1_heat | seed=4 (exists)
+
+[221/240] SKIP RoCBF-Net (Ours) | s2_pressure | seed=0 (exists)
+
+[222/240] SKIP RoCBF-Net (Ours) | s2_pressure | seed=1 (exists)
+
+[223/240] SKIP RoCBF-Net (Ours) | s2_pressure | seed=2 (exists)
+
+[224/240] SKIP RoCBF-Net (Ours) | s2_pressure | seed=3 (exists)
+
+[225/240] SKIP RoCBF-Net (Ours) | s2_pressure | seed=4 (exists)
+
+[226/240] SKIP RoCBF-Net (Ours) | s3_coupled | seed=0 (exists)
+
+[227/240] SKIP RoCBF-Net (Ours) | s3_coupled | seed=1 (exists)
+
+[228/240] SKIP RoCBF-Net (Ours) | s3_coupled | seed=2 (exists)
+
+[229/240] SKIP RoCBF-Net (Ours) | s3_coupled | seed=3 (exists)
+
+[230/240] SKIP RoCBF-Net (Ours) | s3_coupled | seed=4 (exists)
+
+[231/240] SKIP RoCBF-Net (Ours) | s4_nonlinear | seed=0 (exists)
+
+[232/240] SKIP RoCBF-Net (Ours) | s4_nonlinear | seed=1 (exists)
+
+[233/240] SKIP RoCBF-Net (Ours) | s4_nonlinear | seed=2 (exists)
+
+[234/240] SKIP RoCBF-Net (Ours) | s4_nonlinear | seed=3 (exists)
+
+[235/240] SKIP RoCBF-Net (Ours) | s4_nonlinear | seed=4 (exists)
+
+[236/240] SKIP RoCBF-Net (Ours) | load_following | seed=0 (exists)
+
+[237/240] SKIP RoCBF-Net (Ours) | load_following | seed=1 (exists)
+
+[238/240] SKIP RoCBF-Net (Ours) | load_following | seed=2 (exists)
+
+[239/240] SKIP RoCBF-Net (Ours) | load_following | seed=3 (exists)
+
+[240/240] RoCBF-Net (Ours) | load_following | seed=4
+  [rocbf_net|load_following|seed=4] Ep 50: r=-410.1
+  [rocbf_net|load_following|seed=4] Ep 100: r=-1468.6
+  [rocbf_net|load_following|seed=4] Ep 150: r=-682.5
+/home/gpu/sz_workspace/RoCBF-Net/rocbf/gp/gp_residual.py:259: RuntimeWarning: invalid value encountered in multiply
+  Y_old[:, j] = y_norm_j * float(self._y_std[j]) + float(self._y_mean[j])
+  [rocbf_net|load_following|seed=4] Ep 200: r=-1432.3
+  → violation_rate=0.0000±0.0000, reward=-493.9
+
+=== Done: 240/240 experiments completed ===

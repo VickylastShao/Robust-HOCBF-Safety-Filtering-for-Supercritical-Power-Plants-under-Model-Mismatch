@@ -1,0 +1,49 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S2:Pressure']
+κ values:   [0.0, 0.1, 0.3, 0.5, 1.0]
+Seeds:      [0, 1, 2]
+Total:      15 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/15] SKIP κ=0.0 | S2:Pressure | seed=0 (exists)
+
+[2/15] SKIP κ=0.0 | S2:Pressure | seed=1 (exists)
+
+[3/15] SKIP κ=0.0 | S2:Pressure | seed=2 (exists)
+
+[4/15] SKIP κ=0.1 | S2:Pressure | seed=0 (exists)
+
+[5/15] SKIP κ=0.1 | S2:Pressure | seed=1 (exists)
+
+[6/15] SKIP κ=0.1 | S2:Pressure | seed=2 (exists)
+
+[7/15] SKIP κ=0.3 | S2:Pressure | seed=0 (exists)
+
+[8/15] SKIP κ=0.3 | S2:Pressure | seed=1 (exists)
+
+[9/15] SKIP κ=0.3 | S2:Pressure | seed=2 (exists)
+
+[10/15] SKIP κ=0.5 | S2:Pressure | seed=0 (exists)
+
+[11/15] SKIP κ=0.5 | S2:Pressure | seed=1 (exists)
+
+[12/15] SKIP κ=0.5 | S2:Pressure | seed=2 (exists)
+
+[13/15] SKIP κ=1.0 | S2:Pressure | seed=0 (exists)
+
+[14/15] SKIP κ=1.0 | S2:Pressure | seed=1 (exists)
+
+[15/15] SKIP κ=1.0 | S2:Pressure | seed=2 (exists)
+
+=== Kappa Sweep Summary ===
+
+  S2:Pressure (Additive oscillation — GP alone should suffice, κ>0 may hurt):
+    κ=0.0: no results
+    κ=0.1: no results
+    κ=0.3: no results
+    κ=0.5: no results
+    κ=1.0: no results
+
+=== Done: 15/15 experiments ===

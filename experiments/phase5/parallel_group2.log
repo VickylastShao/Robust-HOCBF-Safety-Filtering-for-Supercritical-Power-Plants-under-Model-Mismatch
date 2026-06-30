@@ -1,0 +1,362 @@
+
+[1/120] PPO-CBF | Nominal | seed=0
+  → violation_rate=0.0010±0.0013, reward=-39.9
+
+[2/120] PPO-CBF | Nominal | seed=1
+  → violation_rate=0.0007±0.0010, reward=-39.7
+
+[3/120] PPO-CBF | Nominal | seed=2
+  → violation_rate=0.0008±0.0011, reward=-39.2
+
+[4/120] PPO-CBF | Nominal | seed=3
+  → violation_rate=0.0007±0.0014, reward=-39.7
+
+[5/120] PPO-CBF | Nominal | seed=4
+  → violation_rate=0.0007±0.0012, reward=-40.0
+
+[6/120] PPO-CBF | S1:Heat | seed=0
+  → violation_rate=0.9992±0.0014, reward=-11771.0
+
+[7/120] PPO-CBF | S1:Heat | seed=1
+  → violation_rate=0.9992±0.0013, reward=-11763.1
+
+[8/120] PPO-CBF | S1:Heat | seed=2
+  → violation_rate=0.9993±0.0011, reward=-11765.6
+
+[9/120] PPO-CBF | S1:Heat | seed=3
+  → violation_rate=0.9993±0.0012, reward=-11766.9
+
+[10/120] PPO-CBF | S1:Heat | seed=4
+  → violation_rate=0.9990±0.0013, reward=-11762.7
+
+[11/120] PPO-CBF | S2:Pressure | seed=0
+  → violation_rate=0.9949±0.0031, reward=-16155.9
+
+[12/120] PPO-CBF | S2:Pressure | seed=1
+  → violation_rate=0.9952±0.0025, reward=-16151.1
+
+[13/120] PPO-CBF | S2:Pressure | seed=2
+  → violation_rate=0.9963±0.0026, reward=-16150.8
+
+[14/120] PPO-CBF | S2:Pressure | seed=3
+  → violation_rate=0.9954±0.0031, reward=-16155.1
+
+[15/120] PPO-CBF | S2:Pressure | seed=4
+  → violation_rate=0.9948±0.0028, reward=-16152.5
+
+[16/120] PPO-CBF | S3:Coupled | seed=0
+  → violation_rate=0.9954±0.0031, reward=-8788.0
+
+[17/120] PPO-CBF | S3:Coupled | seed=1
+  → violation_rate=0.9959±0.0026, reward=-8775.9
+
+[18/120] PPO-CBF | S3:Coupled | seed=2
+  → violation_rate=0.9968±0.0026, reward=-8781.3
+
+[19/120] PPO-CBF | S3:Coupled | seed=3
+  → violation_rate=0.9958±0.0027, reward=-8781.3
+
+[20/120] PPO-CBF | S3:Coupled | seed=4
+  → violation_rate=0.9958±0.0027, reward=-8775.1
+
+[21/120] PPO-CBF | S4:Nonlinear | seed=0
+  → violation_rate=0.9903±0.0039, reward=-6647.0
+
+[22/120] PPO-CBF | S4:Nonlinear | seed=1
+  → violation_rate=0.9905±0.0039, reward=-6634.6
+
+[23/120] PPO-CBF | S4:Nonlinear | seed=2
+  → violation_rate=0.9920±0.0035, reward=-6640.6
+
+[24/120] PPO-CBF | S4:Nonlinear | seed=3
+  → violation_rate=0.9898±0.0042, reward=-6640.1
+
+[25/120] PPO-CBF | S4:Nonlinear | seed=4
+  → violation_rate=0.9896±0.0035, reward=-6633.9
+
+[26/120] PPO-CBF | S5:Valve | seed=0
+  → violation_rate=0.9910±0.0038, reward=-9735.8
+
+[27/120] PPO-CBF | S5:Valve | seed=1
+  → violation_rate=0.9915±0.0038, reward=-9723.7
+
+[28/120] PPO-CBF | S5:Valve | seed=2
+  → violation_rate=0.9923±0.0034, reward=-9728.3
+
+[29/120] PPO-CBF | S5:Valve | seed=3
+  → violation_rate=0.9906±0.0039, reward=-9729.5
+
+[30/120] PPO-CBF | S5:Valve | seed=4
+  → violation_rate=0.9907±0.0034, reward=-9725.2
+
+[31/120] PPO-CBF | S6:Fuel | seed=0
+  → violation_rate=0.9982±0.0020, reward=-6170.5
+
+[32/120] PPO-CBF | S6:Fuel | seed=1
+  → violation_rate=0.9982±0.0016, reward=-6157.1
+
+[33/120] PPO-CBF | S6:Fuel | seed=2
+  → violation_rate=0.9989±0.0013, reward=-6161.7
+
+[34/120] PPO-CBF | S6:Fuel | seed=3
+  → violation_rate=0.9981±0.0022, reward=-6164.1
+
+[35/120] PPO-CBF | S6:Fuel | seed=4
+  → violation_rate=0.9978±0.0021, reward=-6156.6
+
+[36/120] PPO-CBF | LoadFol | seed=0
+  → violation_rate=0.0010±0.0013, reward=-39.9
+
+[37/120] PPO-CBF | LoadFol | seed=1
+  → violation_rate=0.0007±0.0010, reward=-39.7
+
+[38/120] PPO-CBF | LoadFol | seed=2
+  → violation_rate=0.0008±0.0011, reward=-39.2
+
+[39/120] PPO-CBF | LoadFol | seed=3
+  → violation_rate=0.0007±0.0014, reward=-39.7
+
+[40/120] PPO-CBF | LoadFol | seed=4
+  → violation_rate=0.0007±0.0012, reward=-40.0
+
+[41/120] PPO-HOCBF | Nominal | seed=0
+  → violation_rate=0.0000±0.0000, reward=-39.9
+
+[42/120] PPO-HOCBF | Nominal | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.7
+
+[43/120] PPO-HOCBF | Nominal | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.2
+
+[44/120] PPO-HOCBF | Nominal | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.7
+
+[45/120] PPO-HOCBF | Nominal | seed=4
+  → violation_rate=0.0000±0.0000, reward=-40.0
+
+[46/120] PPO-HOCBF | S1:Heat | seed=0
+  → violation_rate=0.9992±0.0014, reward=-11771.1
+
+[47/120] PPO-HOCBF | S1:Heat | seed=1
+  → violation_rate=0.9992±0.0013, reward=-11763.2
+
+[48/120] PPO-HOCBF | S1:Heat | seed=2
+  → violation_rate=0.9993±0.0011, reward=-11765.7
+
+[49/120] PPO-HOCBF | S1:Heat | seed=3
+  → violation_rate=0.9993±0.0012, reward=-11767.0
+
+[50/120] PPO-HOCBF | S1:Heat | seed=4
+  → violation_rate=0.9990±0.0013, reward=-11762.8
+
+[51/120] PPO-HOCBF | S2:Pressure | seed=0
+  → violation_rate=0.9949±0.0031, reward=-16156.0
+
+[52/120] PPO-HOCBF | S2:Pressure | seed=1
+  → violation_rate=0.9952±0.0025, reward=-16151.2
+
+[53/120] PPO-HOCBF | S2:Pressure | seed=2
+  → violation_rate=0.9963±0.0026, reward=-16150.9
+
+[54/120] PPO-HOCBF | S2:Pressure | seed=3
+  → violation_rate=0.9954±0.0031, reward=-16155.1
+
+[55/120] PPO-HOCBF | S2:Pressure | seed=4
+  → violation_rate=0.9948±0.0028, reward=-16152.6
+
+[56/120] PPO-HOCBF | S3:Coupled | seed=0
+  → violation_rate=0.9954±0.0031, reward=-8788.1
+
+[57/120] PPO-HOCBF | S3:Coupled | seed=1
+  → violation_rate=0.9959±0.0026, reward=-8776.0
+
+[58/120] PPO-HOCBF | S3:Coupled | seed=2
+  → violation_rate=0.9968±0.0026, reward=-8781.4
+
+[59/120] PPO-HOCBF | S3:Coupled | seed=3
+  → violation_rate=0.9958±0.0027, reward=-8781.4
+
+[60/120] PPO-HOCBF | S3:Coupled | seed=4
+  → violation_rate=0.9958±0.0027, reward=-8775.2
+
+[61/120] PPO-HOCBF | S4:Nonlinear | seed=0
+  → violation_rate=0.9903±0.0039, reward=-6647.1
+
+[62/120] PPO-HOCBF | S4:Nonlinear | seed=1
+  → violation_rate=0.9905±0.0039, reward=-6634.7
+
+[63/120] PPO-HOCBF | S4:Nonlinear | seed=2
+  → violation_rate=0.9920±0.0035, reward=-6640.7
+
+[64/120] PPO-HOCBF | S4:Nonlinear | seed=3
+  → violation_rate=0.9898±0.0042, reward=-6640.2
+
+[65/120] PPO-HOCBF | S4:Nonlinear | seed=4
+  → violation_rate=0.9896±0.0035, reward=-6634.0
+
+[66/120] PPO-HOCBF | S5:Valve | seed=0
+  → violation_rate=0.9910±0.0038, reward=-9736.0
+
+[67/120] PPO-HOCBF | S5:Valve | seed=1
+  → violation_rate=0.9915±0.0038, reward=-9723.8
+
+[68/120] PPO-HOCBF | S5:Valve | seed=2
+  → violation_rate=0.9923±0.0034, reward=-9728.4
+
+[69/120] PPO-HOCBF | S5:Valve | seed=3
+  → violation_rate=0.9906±0.0039, reward=-9729.6
+
+[70/120] PPO-HOCBF | S5:Valve | seed=4
+  → violation_rate=0.9907±0.0034, reward=-9725.4
+
+[71/120] PPO-HOCBF | S6:Fuel | seed=0
+  → violation_rate=0.9982±0.0020, reward=-6170.6
+
+[72/120] PPO-HOCBF | S6:Fuel | seed=1
+  → violation_rate=0.9982±0.0016, reward=-6157.2
+
+[73/120] PPO-HOCBF | S6:Fuel | seed=2
+  → violation_rate=0.9989±0.0013, reward=-6161.8
+
+[74/120] PPO-HOCBF | S6:Fuel | seed=3
+  → violation_rate=0.9981±0.0022, reward=-6164.2
+
+[75/120] PPO-HOCBF | S6:Fuel | seed=4
+  → violation_rate=0.9978±0.0021, reward=-6156.7
+
+[76/120] PPO-HOCBF | LoadFol | seed=0
+  → violation_rate=0.0000±0.0000, reward=-39.9
+
+[77/120] PPO-HOCBF | LoadFol | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.7
+
+[78/120] PPO-HOCBF | LoadFol | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.2
+
+[79/120] PPO-HOCBF | LoadFol | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.7
+
+[80/120] PPO-HOCBF | LoadFol | seed=4
+  → violation_rate=0.0000±0.0000, reward=-40.0
+
+[81/120] PPO-GP-HOCBF | Nominal | seed=0
+  → violation_rate=0.0000±0.0000, reward=-39.0
+
+[82/120] PPO-GP-HOCBF | Nominal | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.0
+
+[83/120] PPO-GP-HOCBF | Nominal | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.7
+
+[84/120] PPO-GP-HOCBF | Nominal | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.6
+
+[85/120] PPO-GP-HOCBF | Nominal | seed=4
+  → violation_rate=0.0000±0.0000, reward=-39.5
+
+[86/120] PPO-GP-HOCBF | S1:Heat | seed=0
+  → violation_rate=0.0030±0.0031, reward=-10852.2
+
+[87/120] PPO-GP-HOCBF | S1:Heat | seed=1
+  → violation_rate=0.0020±0.0000, reward=-10853.1
+
+[88/120] PPO-GP-HOCBF | S1:Heat | seed=2
+  → violation_rate=0.0006±0.0013, reward=-10853.8
+
+[89/120] PPO-GP-HOCBF | S1:Heat | seed=3
+  → violation_rate=0.0003±0.0008, reward=-10853.0
+
+[90/120] PPO-GP-HOCBF | S1:Heat | seed=4
+  → violation_rate=0.0000±0.0000, reward=-10852.0
+
+[91/120] PPO-GP-HOCBF | S2:Pressure | seed=0
+  → violation_rate=0.0000±0.0000, reward=-15482.8
+
+[92/120] PPO-GP-HOCBF | S2:Pressure | seed=1
+  → violation_rate=0.0000±0.0000, reward=-15483.8
+
+[93/120] PPO-GP-HOCBF | S2:Pressure | seed=2
+  → violation_rate=0.0000±0.0000, reward=-15484.7
+
+[94/120] PPO-GP-HOCBF | S2:Pressure | seed=3
+  → violation_rate=0.0021±0.0007, reward=-15483.7
+
+[95/120] PPO-GP-HOCBF | S2:Pressure | seed=4
+  → violation_rate=0.0000±0.0000, reward=-15482.6
+
+[96/120] PPO-GP-HOCBF | S3:Coupled | seed=0
+  → violation_rate=0.3368±0.0349, reward=-8003.3
+
+[97/120] PPO-GP-HOCBF | S3:Coupled | seed=1
+  → violation_rate=0.4035±0.0249, reward=-8004.4
+
+[98/120] PPO-GP-HOCBF | S3:Coupled | seed=2
+  → violation_rate=0.2860±0.0261, reward=-8005.2
+
+[99/120] PPO-GP-HOCBF | S3:Coupled | seed=3
+  → violation_rate=0.3837±0.0357, reward=-8004.3
+
+[100/120] PPO-GP-HOCBF | S3:Coupled | seed=4
+  → violation_rate=0.5724±0.0279, reward=-8003.2
+
+[101/120] PPO-GP-HOCBF | S4:Nonlinear | seed=0
+  → violation_rate=0.0000±0.0000, reward=-5959.5
+
+[102/120] PPO-GP-HOCBF | S4:Nonlinear | seed=1
+  → violation_rate=0.0000±0.0000, reward=-5960.2
+
+[103/120] PPO-GP-HOCBF | S4:Nonlinear | seed=2
+  → violation_rate=0.0000±0.0000, reward=-5959.9
+
+[104/120] PPO-GP-HOCBF | S4:Nonlinear | seed=3
+  → violation_rate=0.0000±0.0003, reward=-5960.6
+
+[105/120] PPO-GP-HOCBF | S4:Nonlinear | seed=4
+  → violation_rate=0.0020±0.0003, reward=-5959.6
+
+[106/120] PPO-GP-HOCBF | S5:Valve | seed=0
+  → violation_rate=0.0000±0.0000, reward=-9053.3
+
+[107/120] PPO-GP-HOCBF | S5:Valve | seed=1
+  → violation_rate=0.0018±0.0006, reward=-9053.6
+
+[108/120] PPO-GP-HOCBF | S5:Valve | seed=2
+  → violation_rate=0.0019±0.0005, reward=-9054.3
+
+[109/120] PPO-GP-HOCBF | S5:Valve | seed=3
+  → violation_rate=0.0019±0.0007, reward=-9054.1
+
+[110/120] PPO-GP-HOCBF | S5:Valve | seed=4
+  → violation_rate=0.0020±0.0003, reward=-9052.8
+
+[111/120] PPO-GP-HOCBF | S6:Fuel | seed=0
+  → violation_rate=0.0013±0.0010, reward=-5243.0
+
+[112/120] PPO-GP-HOCBF | S6:Fuel | seed=1
+  → violation_rate=0.0020±0.0003, reward=-5243.2
+
+[113/120] PPO-GP-HOCBF | S6:Fuel | seed=2
+  → violation_rate=0.0019±0.0004, reward=-5243.7
+
+[114/120] PPO-GP-HOCBF | S6:Fuel | seed=3
+  → violation_rate=0.0020±0.0006, reward=-5243.5
+
+[115/120] PPO-GP-HOCBF | S6:Fuel | seed=4
+  → violation_rate=0.0020±0.0000, reward=-5242.6
+
+[116/120] PPO-GP-HOCBF | LoadFol | seed=0
+  → violation_rate=0.0000±0.0000, reward=-39.0
+
+[117/120] PPO-GP-HOCBF | LoadFol | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.0
+
+[118/120] PPO-GP-HOCBF | LoadFol | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.7
+
+[119/120] PPO-GP-HOCBF | LoadFol | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.6
+
+[120/120] PPO-GP-HOCBF | LoadFol | seed=4
+  → violation_rate=0.0000±0.0000, reward=-39.5
+
+=== Done: 120/120 experiments completed ===

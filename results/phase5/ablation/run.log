@@ -1,0 +1,124 @@
+
+============================================================
+SEED 0
+============================================================
+  JIT qp_matrices compiled
+
+--- Mode 1: Decoupled Training ---
+  [Decoupled] Ep 50: r=-931.9 (avg50=-886.1)
+  [Decoupled] Ep 100: r=-934.8 (avg50=-943.0)
+  [Decoupled] Ep 150: r=-902.2 (avg50=-982.7)
+  [Decoupled] Ep 200: r=-1031.5 (avg50=-1026.6)
+    Eval ep 10/30: viol=0.0067, cbf=0.0000
+    Eval ep 20/30: viol=0.0033, cbf=0.0000
+    Eval ep 30/30: viol=0.0000, cbf=0.0000
+  Decoupled: viol=0.0034, cbf_viol=0.0000, time=793s
+
+--- Mode 2: Coupled Non-Differentiable ---
+  [Coupled-nondiff] Ep 50: r=-635.4 (avg50=-569.8)
+  [Coupled-nondiff] Ep 100: r=-624.0 (avg50=-639.1)
+  [Coupled-nondiff] Ep 150: r=-609.6 (avg50=-675.6)
+  [Coupled-nondiff] Ep 200: r=-722.8 (avg50=-719.0)
+    Eval ep 10/30: viol=0.0067, cbf=0.0000
+    Eval ep 20/30: viol=0.0033, cbf=0.0000
+    Eval ep 30/30: viol=0.0000, cbf=0.0000
+  Coupled-nondiff: viol=0.0034, cbf_viol=0.0000, time=889s
+
+--- Mode 3: SKIPPED (qpax training infeasible) ---
+
+--- Policy Distillation ---
+  [Distill] Epoch 20: loss=2.6298
+  [Distill] Epoch 40: loss=2.3625
+  [Distill] Epoch 60: loss=2.3852
+  [Distill] Epoch 80: loss=2.9116
+  [Distill] Epoch 100: loss=2.7680
+    Distill eval ep 10/30: viol=0.0033, cbf=0.0000
+    Distill eval ep 20/30: viol=0.0000, cbf=0.0000
+    Distill eval ep 30/30: viol=0.0000, cbf=0.0000
+  Distilled: viol=0.0012, cbf_viol=0.0000, solve_time=1.8ms
+
+============================================================
+SEED 1
+============================================================
+  JIT qp_matrices compiled
+
+--- Mode 1: Decoupled Training ---
+  [Decoupled] Ep 50: r=-967.9 (avg50=-876.9)
+  [Decoupled] Ep 100: r=-905.9 (avg50=-935.9)
+  [Decoupled] Ep 150: r=-884.3 (avg50=-972.2)
+  [Decoupled] Ep 200: r=-1081.1 (avg50=-1019.0)
+    Eval ep 10/30: viol=0.0000, cbf=0.0000
+    Eval ep 20/30: viol=0.0033, cbf=0.0000
+    Eval ep 30/30: viol=0.0000, cbf=0.0000
+  Decoupled: viol=0.0030, cbf_viol=0.0000, time=795s
+
+--- Mode 2: Coupled Non-Differentiable ---
+  [Coupled-nondiff] Ep 50: r=-673.4 (avg50=-560.2)
+  [Coupled-nondiff] Ep 100: r=-608.5 (avg50=-634.6)
+  [Coupled-nondiff] Ep 150: r=-576.3 (avg50=-671.3)
+  [Coupled-nondiff] Ep 200: r=-766.6 (avg50=-712.2)
+    Eval ep 10/30: viol=0.0000, cbf=0.0000
+    Eval ep 20/30: viol=0.0067, cbf=0.0000
+    Eval ep 30/30: viol=0.0000, cbf=0.0000
+  Coupled-nondiff: viol=0.0031, cbf_viol=0.0000, time=894s
+
+--- Mode 3: SKIPPED (qpax training infeasible) ---
+
+--- Policy Distillation ---
+  [Distill] Epoch 20: loss=3.1457
+  [Distill] Epoch 40: loss=2.8845
+  [Distill] Epoch 60: loss=2.6032
+  [Distill] Epoch 80: loss=2.8146
+  [Distill] Epoch 100: loss=2.6630
+    Distill eval ep 10/30: viol=0.0000, cbf=0.0000
+    Distill eval ep 20/30: viol=0.0000, cbf=0.0000
+    Distill eval ep 30/30: viol=0.0000, cbf=0.0000
+  Distilled: viol=0.0001, cbf_viol=0.0000, solve_time=1.8ms
+
+============================================================
+SEED 2
+============================================================
+  JIT qp_matrices compiled
+
+--- Mode 1: Decoupled Training ---
+  [Decoupled] Ep 50: r=-911.0 (avg50=-878.1)
+  [Decoupled] Ep 100: r=-1013.9 (avg50=-940.1)
+  [Decoupled] Ep 150: r=-1020.3 (avg50=-974.2)
+  [Decoupled] Ep 200: r=-945.6 (avg50=-1024.0)
+    Eval ep 10/30: viol=0.0033, cbf=0.0000
+    Eval ep 20/30: viol=0.0000, cbf=0.0000
+    Eval ep 30/30: viol=0.0000, cbf=0.0000
+  Decoupled: viol=0.0028, cbf_viol=0.0000, time=797s
+
+--- Mode 2: Coupled Non-Differentiable ---
+  [Coupled-nondiff] Ep 50: r=-607.9 (avg50=-558.9)
+  [Coupled-nondiff] Ep 100: r=-694.4 (avg50=-639.3)
+  [Coupled-nondiff] Ep 150: r=-718.5 (avg50=-675.2)
+  [Coupled-nondiff] Ep 200: r=-653.2 (avg50=-718.6)
+    Eval ep 10/30: viol=0.0033, cbf=0.0000
+    Eval ep 20/30: viol=0.0000, cbf=0.0000
+    Eval ep 30/30: viol=0.0000, cbf=0.0000
+  Coupled-nondiff: viol=0.0028, cbf_viol=0.0000, time=895s
+
+--- Mode 3: SKIPPED (qpax training infeasible) ---
+
+--- Policy Distillation ---
+  [Distill] Epoch 20: loss=2.8984
+  [Distill] Epoch 40: loss=2.3796
+  [Distill] Epoch 60: loss=3.1427
+  [Distill] Epoch 80: loss=2.7561
+  [Distill] Epoch 100: loss=2.2418
+    Distill eval ep 10/30: viol=0.0000, cbf=0.0000
+    Distill eval ep 20/30: viol=0.0000, cbf=0.0000
+    Distill eval ep 30/30: viol=0.0033, cbf=0.0000
+  Distilled: viol=0.0007, cbf_viol=0.0000, solve_time=1.8ms
+
+================================================================================
+TRAINING ABLATION SUMMARY
+================================================================================
+Mode                      CBF Viol.       Reward       Train Time   Solve Time  
+--------------------------------------------------------------------------------
+decoupled                 0.0000          -1023.2      795          2.5         
+coupled_nondiff           0.0000          -716.6       893          2.5         
+distilled                 0.0000          -972.4       5            1.8         
+================================================================================

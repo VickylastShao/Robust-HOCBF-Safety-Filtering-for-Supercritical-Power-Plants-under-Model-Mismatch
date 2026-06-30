@@ -1,0 +1,278 @@
+RoCBF-Net Rerun with epsilon_kappa=1.0
+Deleted 0 old RoCBF-Net results
+
+[1/30] RoCBF-Net | nominal | s=0
+  [GP pretrain] 21.0s
+    Ep 50: r=-580.6
+    Ep 100: r=-684.7
+    Ep 150: r=-586.6
+/home/gpu/sz_workspace/RoCBF-Net/rocbf/gp/gp_residual.py:259: RuntimeWarning: invalid value encountered in multiply
+  Y_old[:, j] = y_norm_j * float(self._y_std[j]) + float(self._y_mean[j])
+    Ep 200: r=-1463.3
+  [RoCBF-Net train] 626.6s
+  [1/30] RoCBF-Net (Ours) | nominal         | s=0: viol=0.0000
+
+[2/30] RoCBF-Net | nominal | s=1
+  [GP pretrain] 17.1s
+    Ep 50: r=-1299.4
+    Ep 100: r=-636.6
+    Ep 150: r=-1615.9
+/home/gpu/sz_workspace/RoCBF-Net/rocbf/gp/gp_residual.py:259: RuntimeWarning: invalid value encountered in multiply
+  Y_old[:, j] = y_norm_j * float(self._y_std[j]) + float(self._y_mean[j])
+    Ep 200: r=-1286.1
+  [RoCBF-Net train] 609.6s
+  [2/30] RoCBF-Net (Ours) | nominal         | s=1: viol=0.0000
+
+[3/30] RoCBF-Net | nominal | s=2
+  [GP pretrain] 17.2s
+    Ep 50: r=-1292.7
+    Ep 100: r=-1549.9
+    Ep 150: r=-1317.6
+    Ep 200: r=-1581.1
+  [RoCBF-Net train] 611.0s
+  [3/30] RoCBF-Net (Ours) | nominal         | s=2: viol=0.0000
+
+[4/30] RoCBF-Net | nominal | s=3
+  [GP pretrain] 17.1s
+    Ep 50: r=-1310.5
+    Ep 100: r=-512.7
+    Ep 150: r=-466.9
+    Ep 200: r=-1423.2
+  [RoCBF-Net train] 609.8s
+  [4/30] RoCBF-Net (Ours) | nominal         | s=3: viol=0.0000
+
+[5/30] RoCBF-Net | nominal | s=4
+  [GP pretrain] 17.4s
+    Ep 50: r=-612.6
+    Ep 100: r=-1284.0
+    Ep 150: r=-1519.2
+    Ep 200: r=-1431.7
+  [RoCBF-Net train] 611.2s
+  [5/30] RoCBF-Net (Ours) | nominal         | s=4: viol=0.0000
+
+[6/30] RoCBF-Net | s1_heat | s=0
+  [GP pretrain] 17.1s
+    Ep 50: r=-580.6
+    Ep 100: r=-684.7
+    Ep 150: r=-586.6
+    Ep 200: r=-1463.3
+  [RoCBF-Net train] 612.6s
+  [6/30] RoCBF-Net (Ours) | s1_heat         | s=0: viol=0.1667
+
+[7/30] RoCBF-Net | s1_heat | s=1
+  [GP pretrain] 17.0s
+    Ep 50: r=-1299.4
+    Ep 100: r=-636.6
+    Ep 150: r=-1615.9
+    Ep 200: r=-1286.1
+  [RoCBF-Net train] 614.8s
+  [7/30] RoCBF-Net (Ours) | s1_heat         | s=1: viol=0.3333
+
+[8/30] RoCBF-Net | s1_heat | s=2
+  [GP pretrain] 17.2s
+    Ep 50: r=-1292.7
+    Ep 100: r=-1549.9
+    Ep 150: r=-1317.6
+    Ep 200: r=-1581.1
+  [RoCBF-Net train] 614.6s
+  [8/30] RoCBF-Net (Ours) | s1_heat         | s=2: viol=0.3333
+
+[9/30] RoCBF-Net | s1_heat | s=3
+  [GP pretrain] 17.2s
+    Ep 50: r=-1310.5
+    Ep 100: r=-512.7
+    Ep 150: r=-466.9
+    Ep 200: r=-1423.2
+  [RoCBF-Net train] 612.9s
+  [9/30] RoCBF-Net (Ours) | s1_heat         | s=3: viol=0.3333
+
+[10/30] RoCBF-Net | s1_heat | s=4
+  [GP pretrain] 17.4s
+    Ep 50: r=-612.6
+    Ep 100: r=-1284.0
+    Ep 150: r=-1519.2
+    Ep 200: r=-1431.7
+  [RoCBF-Net train] 613.6s
+  [10/30] RoCBF-Net (Ours) | s1_heat         | s=4: viol=0.3333
+
+[11/30] RoCBF-Net | s2_pressure | s=0
+  [GP pretrain] 17.1s
+    Ep 50: r=-580.6
+    Ep 100: r=-684.7
+    Ep 150: r=-586.6
+    Ep 200: r=-1463.3
+  [RoCBF-Net train] 616.1s
+  [11/30] RoCBF-Net (Ours) | s2_pressure     | s=0: viol=0.0000
+
+[12/30] RoCBF-Net | s2_pressure | s=1
+  [GP pretrain] 17.3s
+    Ep 50: r=-1299.4
+    Ep 100: r=-636.6
+    Ep 150: r=-1615.9
+    Ep 200: r=-1286.1
+  [RoCBF-Net train] 617.6s
+  [12/30] RoCBF-Net (Ours) | s2_pressure     | s=1: viol=0.0000
+
+[13/30] RoCBF-Net | s2_pressure | s=2
+  [GP pretrain] 17.1s
+    Ep 50: r=-1292.7
+    Ep 100: r=-1549.9
+    Ep 150: r=-1317.6
+    Ep 200: r=-1581.1
+  [RoCBF-Net train] 617.2s
+  [13/30] RoCBF-Net (Ours) | s2_pressure     | s=2: viol=0.0000
+
+[14/30] RoCBF-Net | s2_pressure | s=3
+  [GP pretrain] 17.1s
+    Ep 50: r=-1310.5
+    Ep 100: r=-512.7
+    Ep 150: r=-466.9
+    Ep 200: r=-1423.2
+  [RoCBF-Net train] 613.8s
+  [14/30] RoCBF-Net (Ours) | s2_pressure     | s=3: viol=0.0000
+
+[15/30] RoCBF-Net | s2_pressure | s=4
+  [GP pretrain] 17.1s
+    Ep 50: r=-612.6
+    Ep 100: r=-1284.0
+    Ep 150: r=-1519.2
+    Ep 200: r=-1431.7
+  [RoCBF-Net train] 616.3s
+  [15/30] RoCBF-Net (Ours) | s2_pressure     | s=4: viol=0.0000
+
+[16/30] RoCBF-Net | s3_coupled | s=0
+  [GP pretrain] 16.9s
+    Ep 50: r=-580.6
+    Ep 100: r=-684.7
+    Ep 150: r=-586.6
+    Ep 200: r=-1463.3
+  [RoCBF-Net train] 618.8s
+  [16/30] RoCBF-Net (Ours) | s3_coupled      | s=0: viol=0.0000
+
+[17/30] RoCBF-Net | s3_coupled | s=1
+  [GP pretrain] 17.4s
+    Ep 50: r=-1299.4
+    Ep 100: r=-636.6
+    Ep 150: r=-1615.9
+    Ep 200: r=-1286.1
+  [RoCBF-Net train] 618.4s
+  [17/30] RoCBF-Net (Ours) | s3_coupled      | s=1: viol=0.0000
+
+[18/30] RoCBF-Net | s3_coupled | s=2
+  [GP pretrain] 16.9s
+    Ep 50: r=-1292.7
+    Ep 100: r=-1549.9
+    Ep 150: r=-1317.6
+    Ep 200: r=-1581.1
+  [RoCBF-Net train] 618.1s
+  [18/30] RoCBF-Net (Ours) | s3_coupled      | s=2: viol=0.0000
+
+[19/30] RoCBF-Net | s3_coupled | s=3
+  [GP pretrain] 17.0s
+    Ep 50: r=-1310.5
+    Ep 100: r=-512.7
+    Ep 150: r=-466.9
+    Ep 200: r=-1423.2
+  [RoCBF-Net train] 616.4s
+  [19/30] RoCBF-Net (Ours) | s3_coupled      | s=3: viol=0.0000
+
+[20/30] RoCBF-Net | s3_coupled | s=4
+  [GP pretrain] 17.2s
+    Ep 50: r=-612.6
+    Ep 100: r=-1284.0
+    Ep 150: r=-1519.2
+    Ep 200: r=-1431.7
+  [RoCBF-Net train] 618.4s
+  [20/30] RoCBF-Net (Ours) | s3_coupled      | s=4: viol=0.0000
+
+[21/30] RoCBF-Net | s4_nonlinear | s=0
+  [GP pretrain] 17.1s
+    Ep 50: r=-580.6
+    Ep 100: r=-684.7
+    Ep 150: r=-586.6
+    Ep 200: r=-1463.3
+  [RoCBF-Net train] 621.4s
+  [21/30] RoCBF-Net (Ours) | s4_nonlinear    | s=0: viol=0.0000
+
+[22/30] RoCBF-Net | s4_nonlinear | s=1
+  [GP pretrain] 17.2s
+    Ep 50: r=-1299.4
+    Ep 100: r=-636.6
+    Ep 150: r=-1615.9
+    Ep 200: r=-1286.1
+  [RoCBF-Net train] 623.2s
+  [22/30] RoCBF-Net (Ours) | s4_nonlinear    | s=1: viol=0.0000
+
+[23/30] RoCBF-Net | s4_nonlinear | s=2
+  [GP pretrain] 17.4s
+    Ep 50: r=-1292.7
+    Ep 100: r=-1549.9
+    Ep 150: r=-1317.6
+    Ep 200: r=-1581.1
+  [RoCBF-Net train] 622.5s
+  [23/30] RoCBF-Net (Ours) | s4_nonlinear    | s=2: viol=0.0000
+
+[24/30] RoCBF-Net | s4_nonlinear | s=3
+  [GP pretrain] 17.4s
+    Ep 50: r=-1310.5
+    Ep 100: r=-512.7
+    Ep 150: r=-466.9
+    Ep 200: r=-1423.2
+  [RoCBF-Net train] 621.2s
+  [24/30] RoCBF-Net (Ours) | s4_nonlinear    | s=3: viol=0.0000
+
+[25/30] RoCBF-Net | s4_nonlinear | s=4
+  [GP pretrain] 17.2s
+    Ep 50: r=-612.6
+    Ep 100: r=-1284.0
+    Ep 150: r=-1519.2
+    Ep 200: r=-1431.7
+  [RoCBF-Net train] 623.2s
+  [25/30] RoCBF-Net (Ours) | s4_nonlinear    | s=4: viol=0.0000
+
+[26/30] RoCBF-Net | load_following | s=0
+  [GP pretrain] 17.1s
+    Ep 50: r=-580.6
+    Ep 100: r=-684.7
+    Ep 150: r=-586.6
+    Ep 200: r=-1463.3
+  [RoCBF-Net train] 624.9s
+  [26/30] RoCBF-Net (Ours) | load_following  | s=0: viol=0.0000
+
+[27/30] RoCBF-Net | load_following | s=1
+  [GP pretrain] 17.3s
+    Ep 50: r=-1299.4
+    Ep 100: r=-636.6
+    Ep 150: r=-1615.9
+    Ep 200: r=-1286.1
+  [RoCBF-Net train] 624.4s
+  [27/30] RoCBF-Net (Ours) | load_following  | s=1: viol=0.0000
+
+[28/30] RoCBF-Net | load_following | s=2
+  [GP pretrain] 17.1s
+    Ep 50: r=-1292.7
+    Ep 100: r=-1549.9
+    Ep 150: r=-1317.6
+    Ep 200: r=-1581.1
+  [RoCBF-Net train] 623.0s
+  [28/30] RoCBF-Net (Ours) | load_following  | s=2: viol=0.0000
+
+[29/30] RoCBF-Net | load_following | s=3
+  [GP pretrain] 17.3s
+    Ep 50: r=-1310.5
+    Ep 100: r=-512.7
+    Ep 150: r=-466.9
+    Ep 200: r=-1423.2
+  [RoCBF-Net train] 622.3s
+  [29/30] RoCBF-Net (Ours) | load_following  | s=3: viol=0.0000
+
+[30/30] RoCBF-Net | load_following | s=4
+  [GP pretrain] 17.2s
+    Ep 50: r=-612.6
+    Ep 100: r=-1284.0
+    Ep 150: r=-1519.2
+    Ep 200: r=-1431.7
+  [RoCBF-Net train] 623.6s
+  [30/30] RoCBF-Net (Ours) | load_following  | s=4: viol=0.0000
+
+Done! All RoCBF-Net results rerun with kappa=1.0

@@ -1,0 +1,21 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S4:Nonlinear']
+κ values:   [1.0]
+Seeds:      [0, 1]
+Total:      2 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/2] κ=1.0 | S4:Nonlinear | seed=0
+  → violation_rate=0.5602±0.0383, reward=-6459.3, time=2859s
+
+[2/2] κ=1.0 | S4:Nonlinear | seed=1
+  → violation_rate=0.3764±0.1267, reward=-6288.0, time=2792s
+
+=== Kappa Sweep Summary ===
+
+  S4:Nonlinear (Quadratic pressure dependence — GP alone should suffice):
+    κ=1.0: mean=46.83% ±9.19% (n=2)
+
+=== Done: 2/2 experiments ===

@@ -1,0 +1,38 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S4:Nonlinear']
+κ values:   [0.0, 0.1, 0.3, 0.5, 1.0]
+Seeds:      [0, 1, 2]
+Total:      15 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/15] SKIP κ=0.0 | S4:Nonlinear | seed=0 (exists)
+
+[2/15] SKIP κ=0.0 | S4:Nonlinear | seed=1 (exists)
+
+[3/15] SKIP κ=0.0 | S4:Nonlinear | seed=2 (exists)
+
+[4/15] SKIP κ=0.1 | S4:Nonlinear | seed=0 (exists)
+
+[5/15] SKIP κ=0.1 | S4:Nonlinear | seed=1 (exists)
+
+[6/15] κ=0.1 | S4:Nonlinear | seed=2
+  → violation_rate=0.0000±0.0000, reward=-5921.5, time=2773s
+
+[7/15] κ=0.3 | S4:Nonlinear | seed=0
+  → violation_rate=0.0000±0.0000, reward=-5854.7, time=2340s
+
+[8/15] κ=0.3 | S4:Nonlinear | seed=1
+  → violation_rate=0.0000±0.0000, reward=-5855.2, time=2154s
+
+[9/15] κ=0.3 | S4:Nonlinear | seed=2
+  → violation_rate=0.0000±0.0000, reward=-5857.0, time=2115s
+
+[10/15] κ=0.5 | S4:Nonlinear | seed=0
+  → violation_rate=0.0020±0.0003, reward=-5789.4, time=2120s
+
+[11/15] κ=0.5 | S4:Nonlinear | seed=1
+  → violation_rate=0.0000±0.0000, reward=-5791.1, time=2373s
+
+[12/15] κ=0.5 | S4:Nonlinear | seed=2

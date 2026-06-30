@@ -1,0 +1,28 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S3:MStr']
+κ values:   [0.0, 0.3]
+Seeds:      [0, 1]
+Total:      4 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/4] κ=0.0 | S3:MStr | seed=0
+  → violation_rate=0.0044±0.0010, reward=-12704.7, time=3897s
+
+[2/4] κ=0.0 | S3:MStr | seed=1
+  → violation_rate=0.0058±0.0006, reward=-12706.4, time=3463s
+
+[3/4] κ=0.3 | S3:MStr | seed=0
+  → violation_rate=0.9408±0.0107, reward=-13607.0, time=3491s
+
+[4/4] κ=0.3 | S3:MStr | seed=1
+  → violation_rate=0.9531±0.0093, reward=-13624.7, time=3418s
+
+=== Kappa Sweep Summary ===
+
+  S3:MStr ():
+    κ=0.0: mean=0.51% ±0.07% (n=2)
+    κ=0.3: mean=94.69% ±0.61% (n=2)
+
+=== Done: 4/4 experiments ===

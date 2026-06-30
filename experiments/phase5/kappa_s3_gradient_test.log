@@ -1,0 +1,10 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S3:Weak']
+κ values:   [0.3]
+Seeds:      [0]
+Total:      1 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/1] κ=0.3 | S3:Weak | seed=0

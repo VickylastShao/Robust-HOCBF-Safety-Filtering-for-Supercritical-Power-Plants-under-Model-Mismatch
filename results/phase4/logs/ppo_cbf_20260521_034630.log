@@ -1,0 +1,97 @@
+
+[1/60] PPO-CBF | nominal | seed=0
+  [ppo_cbf|nominal|seed=0] Ep 50: r=-149.5
+  [ppo_cbf|nominal|seed=0] Ep 100: r=-151.4
+  [ppo_cbf|nominal|seed=0] Ep 150: r=-159.7
+  [ppo_cbf|nominal|seed=0] Ep 200: r=-152.8
+  [ppo_cbf|nominal|seed=0] Ep 250: r=-158.5
+  [ppo_cbf|nominal|seed=0] Ep 300: r=-159.8
+  → violation_rate=0.5000±0.0000, reward=-155.9
+
+[2/60] PPO-CBF | nominal | seed=1
+  [ppo_cbf|nominal|seed=1] Ep 50: r=-161.3
+  [ppo_cbf|nominal|seed=1] Ep 150: r=-153.5
+  [ppo_cbf|nominal|seed=1] Ep 250: r=-159.2
+  [ppo_cbf|nominal|seed=1] Ep 300: r=-159.3
+  → violation_rate=0.5000±0.0000, reward=-159.4
+
+[3/60] PPO-CBF | nominal | seed=2
+  [ppo_cbf|nominal|seed=2] Ep 50: r=-153.6
+  [ppo_cbf|nominal|seed=2] Ep 100: r=-155.7
+  [ppo_cbf|nominal|seed=2] Ep 150: r=-159.6
+  [ppo_cbf|nominal|seed=2] Ep 200: r=-151.5
+  [ppo_cbf|nominal|seed=2] Ep 300: r=-146.9
+  → violation_rate=0.5000±0.0000, reward=-156.5
+
+[4/60] PPO-CBF | nominal | seed=3
+  [ppo_cbf|nominal|seed=3] Ep 50: r=-172.4
+  [ppo_cbf|nominal|seed=3] Ep 100: r=-150.7
+  [ppo_cbf|nominal|seed=3] Ep 150: r=-160.0
+  [ppo_cbf|nominal|seed=3] Ep 250: r=-159.3
+  [ppo_cbf|nominal|seed=3] Ep 300: r=-146.5
+  → violation_rate=0.5000±0.0000, reward=-155.0
+
+[5/60] PPO-CBF | nominal | seed=4
+  [ppo_cbf|nominal|seed=4] Ep 50: r=-152.9
+  [ppo_cbf|nominal|seed=4] Ep 100: r=-159.4
+  [ppo_cbf|nominal|seed=4] Ep 150: r=-159.0
+  [ppo_cbf|nominal|seed=4] Ep 200: r=-159.0
+  [ppo_cbf|nominal|seed=4] Ep 300: r=-159.5
+  → violation_rate=0.5000±0.0000, reward=-158.0
+
+[6/60] PPO-CBF | nominal | seed=5
+  [ppo_cbf|nominal|seed=5] Ep 50: r=-494.7
+  [ppo_cbf|nominal|seed=5] Ep 200: r=-159.1
+  [ppo_cbf|nominal|seed=5] Ep 250: r=-145.1
+  [ppo_cbf|nominal|seed=5] Ep 300: r=-158.8
+  → violation_rate=0.5000±0.0000, reward=-157.8
+
+[7/60] PPO-CBF | nominal | seed=6
+  [ppo_cbf|nominal|seed=6] Ep 50: r=-239.3
+  [ppo_cbf|nominal|seed=6] Ep 100: r=-167.9
+  [ppo_cbf|nominal|seed=6] Ep 150: r=-151.0
+  [ppo_cbf|nominal|seed=6] Ep 200: r=-159.0
+  [ppo_cbf|nominal|seed=6] Ep 250: r=-151.1
+  → violation_rate=0.5000±0.0000, reward=-159.3
+
+[8/60] PPO-CBF | nominal | seed=7
+  [ppo_cbf|nominal|seed=7] Ep 50: r=-1067.3
+  [ppo_cbf|nominal|seed=7] Ep 100: r=-152.4
+  [ppo_cbf|nominal|seed=7] Ep 150: r=-159.3
+  [ppo_cbf|nominal|seed=7] Ep 200: r=-153.7
+  → violation_rate=0.5000±0.0000, reward=-158.1
+
+[9/60] PPO-CBF | nominal | seed=8
+  [ppo_cbf|nominal|seed=8] Ep 50: r=-195.1
+  [ppo_cbf|nominal|seed=8] Ep 100: r=-159.6
+  [ppo_cbf|nominal|seed=8] Ep 150: r=-159.3
+  [ppo_cbf|nominal|seed=8] Ep 250: r=-159.2
+  [ppo_cbf|nominal|seed=8] Ep 300: r=-160.0
+  → violation_rate=0.5000±0.0000, reward=-155.8
+
+[10/60] PPO-CBF | nominal | seed=9
+  [ppo_cbf|nominal|seed=9] Ep 50: r=-217.3
+  [ppo_cbf|nominal|seed=9] Ep 100: r=-153.6
+  [ppo_cbf|nominal|seed=9] Ep 150: r=-160.0
+  [ppo_cbf|nominal|seed=9] Ep 200: r=-160.7
+  [ppo_cbf|nominal|seed=9] Ep 250: r=-160.7
+  [ppo_cbf|nominal|seed=9] Ep 300: r=-158.3
+  → violation_rate=0.5000±0.0000, reward=-160.5
+
+[11/60] PPO-CBF | s1_heat | seed=0
+  [ppo_cbf|s1_heat|seed=0] Ep 50: r=-149.5
+  [ppo_cbf|s1_heat|seed=0] Ep 100: r=-151.4
+  [ppo_cbf|s1_heat|seed=0] Ep 150: r=-159.7
+  [ppo_cbf|s1_heat|seed=0] Ep 200: r=-152.8
+  [ppo_cbf|s1_heat|seed=0] Ep 250: r=-158.5
+  [ppo_cbf|s1_heat|seed=0] Ep 300: r=-159.8
+  → violation_rate=0.5000±0.0000, reward=-156.4
+
+[12/60] PPO-CBF | s1_heat | seed=1
+  [ppo_cbf|s1_heat|seed=1] Ep 50: r=-161.3
+  [ppo_cbf|s1_heat|seed=1] Ep 150: r=-153.5
+  [ppo_cbf|s1_heat|seed=1] Ep 250: r=-159.2
+  [ppo_cbf|s1_heat|seed=1] Ep 300: r=-159.3
+  → violation_rate=0.5000±0.0000, reward=-159.8
+
+[13/60] PPO-CBF | s1_heat | seed=2

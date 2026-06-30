@@ -39,4 +39,5 @@ Thumbs.db
 tmp_pdf_render/
 /*.aux
 /*.out
+/*.log
 *.bak

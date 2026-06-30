@@ -1,0 +1,19 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S3:Strong']
+κ values:   [0.0, 0.1, 0.3]
+Seeds:      [0, 1]
+Total:      6 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/6] κ=0.0 | S3:Strong | seed=0
+  → violation_rate=0.0000±0.0000, reward=-23610.8, time=3134s
+
+[2/6] κ=0.0 | S3:Strong | seed=1
+  → violation_rate=0.0038±0.0006, reward=-23614.7, time=3113s
+
+[3/6] κ=0.1 | S3:Strong | seed=0
+  → violation_rate=0.9939±0.0023, reward=-24885.8, time=3557s
+
+[4/6] κ=0.1 | S3:Strong | seed=1

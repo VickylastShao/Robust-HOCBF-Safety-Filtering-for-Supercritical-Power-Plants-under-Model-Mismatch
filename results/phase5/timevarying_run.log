@@ -1,0 +1,58 @@
+============================================================
+Training RoCBF-Net on standard scenarios...
+============================================================
+  Training ep 100/500: r=-1351.0 (avg50=-5602.0)
+  Training ep 200/500: r=-2750.6 (avg50=-5889.5)
+  Training ep 300/500: r=-2713.3 (avg50=-6033.3)
+  Training ep 400/500: r=-779.4 (avg50=-3286.4)
+  Training ep 500/500: r=-17926.5 (avg50=-6054.9)
+
+============================================================
+Scenario: s5_step
+============================================================
+  Evaluating NMPC (5 eps)...
+  NMPC violation: 2.00%
+  Evaluating RoCBF-Net (fixed GP)...
+  RoCBF-Net (fixed GP) violation: 1.75%
+  Evaluating RoCBF-Net (online GP, ε_floor=38.1)...
+    [Online GP] ep 10: GP updated, n_data=3300, ε_mean=62.0934
+    [Online GP] ep 20: GP updated, n_data=3600, ε_mean=46.2923
+  RoCBF-Net (online GP) violation: 4.45%
+
+============================================================
+Scenario: s6_fast_step
+============================================================
+  Evaluating NMPC (5 eps)...
+  NMPC violation: 5.00%
+  Evaluating RoCBF-Net (fixed GP)...
+  RoCBF-Net (fixed GP) violation: 1.58%
+  Evaluating RoCBF-Net (online GP, ε_floor=38.2)...
+    [Online GP] ep 10: GP updated, n_data=3300, ε_mean=62.2831
+    [Online GP] ep 20: GP updated, n_data=3600, ε_mean=47.6864
+  RoCBF-Net (online GP) violation: 5.17%
+
+============================================================
+Scenario: s7_random_walk
+============================================================
+  Evaluating NMPC (5 eps)...
+  NMPC violation: 19.67%
+  Evaluating RoCBF-Net (fixed GP)...
+  RoCBF-Net (fixed GP) violation: 7.73%
+  Evaluating RoCBF-Net (online GP, ε_floor=43.0)...
+    [Online GP] ep 10: GP updated, n_data=3300, ε_mean=65.0698
+    [Online GP] ep 20: GP updated, n_data=3600, ε_mean=62.9134
+  RoCBF-Net (online GP) violation: 6.73%
+
+Results saved to results/phase5/timevarying_results.json
+Saved results/phase5/figures/timevarying_violation.png
+Saved results/phase5/figures/epsilon_evolution.png
+
+====================================================================================================
+SUMMARY: Time-Varying Disturbance Experiment (Fixed GP vs Online GP)
+====================================================================================================
+Scenario             NMPC Viol.%          RoCBF-Net (fixed)         RoCBF-Net (online)       
+----------------------------------------------------------------------------------------------------
+s5_step              100.00\% (56.55, 100.00) 100.00\% (83.89, 100.00)  100.00\% (83.89, 100.00) 
+s6_fast_step         100.00\% (56.55, 100.00) 100.00\% (83.89, 100.00)  100.00\% (83.89, 100.00) 
+s7_random_walk       100.00\% (56.55, 100.00) 100.00\% (83.89, 100.00)  100.00\% (83.89, 100.00) 
+====================================================================================================

@@ -1,0 +1,264 @@
+
+[1/80] PPO-RHOCBF | Nominal | seed=0
+  → violation_rate=0.0000±0.0000, reward=-38.9
+
+[2/80] PPO-RHOCBF | Nominal | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.0
+
+[3/80] PPO-RHOCBF | Nominal | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.6
+
+[4/80] PPO-RHOCBF | Nominal | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.6
+
+[5/80] PPO-RHOCBF | Nominal | seed=4
+  → violation_rate=0.0000±0.0000, reward=-39.5
+
+[6/80] SKIP PPO-RHOCBF | S1:Heat | seed=0 (exists)
+
+[7/80] PPO-RHOCBF | S1:Heat | seed=1
+  → violation_rate=0.0000±0.0000, reward=-10664.0
+
+[8/80] PPO-RHOCBF | S1:Heat | seed=2
+  → violation_rate=0.0020±0.0000, reward=-10696.4
+
+[9/80] PPO-RHOCBF | S1:Heat | seed=3
+  → violation_rate=0.0020±0.0000, reward=-10707.1
+
+[10/80] PPO-RHOCBF | S1:Heat | seed=4
+  → violation_rate=0.0034±0.0035, reward=-10874.0
+
+[11/80] PPO-RHOCBF | S2:Pressure | seed=0
+  → violation_rate=0.9936±0.0031, reward=-16146.8
+
+[12/80] PPO-RHOCBF | S2:Pressure | seed=1
+  → violation_rate=0.9952±0.0032, reward=-16145.9
+
+[13/80] PPO-RHOCBF | S2:Pressure | seed=2
+  → violation_rate=0.9937±0.0028, reward=-16146.1
+
+[14/80] PPO-RHOCBF | S2:Pressure | seed=3
+  → violation_rate=0.9934±0.0028, reward=-16147.3
+
+[15/80] PPO-RHOCBF | S2:Pressure | seed=4
+  → violation_rate=0.9955±0.0028, reward=-16148.6
+
+[16/80] PPO-RHOCBF | S3:Coupled | seed=0
+  → violation_rate=0.4366±0.0979, reward=-8148.6
+
+[17/80] PPO-RHOCBF | S3:Coupled | seed=1
+  → violation_rate=0.3882±0.0339, reward=-8085.9
+
+[18/80] PPO-RHOCBF | S3:Coupled | seed=2
+  → violation_rate=0.0040±0.0017, reward=-7884.2
+
+[19/80] PPO-RHOCBF | S3:Coupled | seed=3
+  → violation_rate=0.0134±0.0057, reward=-7771.2
+
+[20/80] PPO-RHOCBF | S3:Coupled | seed=4
+  → violation_rate=0.0058±0.0022, reward=-7909.7
+
+[21/80] PPO-RHOCBF | S4:Nonlinear | seed=0
+  → violation_rate=0.5589±0.0367, reward=-6458.9
+
+[22/80] PPO-RHOCBF | S4:Nonlinear | seed=1
+  → violation_rate=0.3958±0.1438, reward=-6308.8
+
+[23/80] PPO-RHOCBF | S4:Nonlinear | seed=2
+  → violation_rate=0.0068±0.0013, reward=-5836.1
+
+[24/80] PPO-RHOCBF | S4:Nonlinear | seed=3
+  → violation_rate=0.2604±0.1162, reward=-6194.2
+
+[25/80] PPO-RHOCBF | S4:Nonlinear | seed=4
+  → violation_rate=0.3876±0.0375, reward=-6336.6
+
+[26/80] PPO-RHOCBF | S5:Valve | seed=0
+  → violation_rate=0.0000±0.0000, reward=-9001.1
+
+[27/80] PPO-RHOCBF | S5:Valve | seed=1
+  → violation_rate=0.0000±0.0000, reward=-9003.6
+
+[28/80] PPO-RHOCBF | S5:Valve | seed=2
+  → violation_rate=0.0000±0.0000, reward=-9002.1
+
+[29/80] PPO-RHOCBF | S5:Valve | seed=3
+  → violation_rate=0.0000±0.0000, reward=-9003.6
+
+[30/80] PPO-RHOCBF | S5:Valve | seed=4
+  → violation_rate=0.0000±0.0000, reward=-8999.5
+
+[31/80] PPO-RHOCBF | S6:Fuel | seed=0
+  → violation_rate=0.0000±0.0000, reward=-5190.3
+
+[32/80] PPO-RHOCBF | S6:Fuel | seed=1
+  → violation_rate=0.0000±0.0000, reward=-5192.7
+
+[33/80] PPO-RHOCBF | S6:Fuel | seed=2
+  → violation_rate=0.0000±0.0000, reward=-5190.5
+
+[34/80] PPO-RHOCBF | S6:Fuel | seed=3
+  → violation_rate=0.0000±0.0000, reward=-5192.4
+
+[35/80] PPO-RHOCBF | S6:Fuel | seed=4
+  → violation_rate=0.0000±0.0000, reward=-5186.5
+
+[36/80] PPO-RHOCBF | LoadFol | seed=0
+  → violation_rate=0.0000±0.0000, reward=-38.9
+
+[37/80] PPO-RHOCBF | LoadFol | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.0
+
+[38/80] PPO-RHOCBF | LoadFol | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.6
+
+[39/80] PPO-RHOCBF | LoadFol | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.6
+
+[40/80] PPO-RHOCBF | LoadFol | seed=4
+  → violation_rate=0.0000±0.0000, reward=-39.5
+
+[41/80] RoCBF-Net (Ours) | Nominal | seed=0
+  → violation_rate=0.0000±0.0000, reward=-39.1
+
+[42/80] RoCBF-Net (Ours) | Nominal | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.3
+
+[43/80] RoCBF-Net (Ours) | Nominal | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.2
+
+[44/80] RoCBF-Net (Ours) | Nominal | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.3
+
+[45/80] RoCBF-Net (Ours) | Nominal | seed=4
+  → violation_rate=0.0000±0.0000, reward=-39.4
+
+[46/80] SKIP RoCBF-Net (Ours) | S1:Heat | seed=0 (exists)
+
+[47/80] RoCBF-Net (Ours) | S1:Heat | seed=1
+  ✗ FAILED: Matrix is not positive definite
+Traceback (most recent call last):
+  File "/mnt/c/Users/vicks/codex-home/RoCBF-Net/rocbf/gp/gp_residual.py", line 337, in incremental_update
+    L = np.linalg.cholesky(K_reg)
+  File "/home/shao/miniconda3/lib/python3.13/site-packages/numpy/linalg/_linalg.py", line 876, in cholesky
+    r = gufunc(a, signature=signature)
+  File "/home/shao/miniconda3/lib/python3.13/site-packages/numpy/linalg/_linalg.py", line 148, in _raise_linalgerror_nonposdef
+    raise LinAlgError("Matrix is not positive definite")
+numpy.linalg.LinAlgError: Matrix is not positive definite
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/vicks/codex-home/RoCBF-Net/experiments/phase5/run_experiment_5th.py", line 658, in run_all
+    result = run_single(method_name, condition, seed, config)
+  File "/mnt/c/Users/vicks/codex-home/RoCBF-Net/experiments/phase5/run_experiment_5th.py", line 245, in run_single
+    gp.incremental_update(X_new, Y_new, reoptimize_hyperparams=False)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/c/Users/vicks/codex-home/RoCBF-Net/rocbf/gp/gp_residual.py", line 340, in incremental_update
+    L = np.linalg.cholesky(K_reg)
+  File "/home/shao/miniconda3/lib/python3.13/site-packages/numpy/linalg/_linalg.py", line 876, in cholesky
+    r = gufunc(a, signature=signature)
+  File "/home/shao/miniconda3/lib/python3.13/site-packages/numpy/linalg/_linalg.py", line 148, in _raise_linalgerror_nonposdef
+    raise LinAlgError("Matrix is not positive definite")
+numpy.linalg.LinAlgError: Matrix is not positive definite
+
+[48/80] RoCBF-Net (Ours) | S1:Heat | seed=2
+  → violation_rate=0.0020±0.0000, reward=-10665.4
+
+[49/80] RoCBF-Net (Ours) | S1:Heat | seed=3
+  → violation_rate=0.0020±0.0000, reward=-10631.2
+
+[50/80] RoCBF-Net (Ours) | S1:Heat | seed=4
+  → violation_rate=0.0038±0.0025, reward=-10675.8
+
+[51/80] RoCBF-Net (Ours) | S2:Pressure | seed=0
+  → violation_rate=0.9934±0.0028, reward=-16146.3
+
+[52/80] RoCBF-Net (Ours) | S2:Pressure | seed=1
+  → violation_rate=0.9948±0.0029, reward=-16148.8
+
+[53/80] RoCBF-Net (Ours) | S2:Pressure | seed=2
+  → violation_rate=0.9932±0.0033, reward=-16151.9
+
+[54/80] RoCBF-Net (Ours) | S2:Pressure | seed=3
+  → violation_rate=0.9937±0.0030, reward=-16146.3
+
+[55/80] RoCBF-Net (Ours) | S2:Pressure | seed=4
+  → violation_rate=0.9950±0.0025, reward=-16150.0
+
+[56/80] RoCBF-Net (Ours) | S3:Coupled | seed=0
+  → violation_rate=0.0561±0.0457, reward=-7722.7
+
+[57/80] RoCBF-Net (Ours) | S3:Coupled | seed=1
+  → violation_rate=0.3268±0.0861, reward=-8031.8
+
+[58/80] RoCBF-Net (Ours) | S3:Coupled | seed=2
+  → violation_rate=0.7552±0.0238, reward=-8508.7
+
+[59/80] RoCBF-Net (Ours) | S3:Coupled | seed=3
+  → violation_rate=0.6201±0.0233, reward=-8338.4
+
+[60/80] RoCBF-Net (Ours) | S3:Coupled | seed=4
+  → violation_rate=0.6710±0.0250, reward=-8414.2
+
+[61/80] RoCBF-Net (Ours) | S4:Nonlinear | seed=0
+  → violation_rate=0.5938±0.0331, reward=-6496.4
+
+[62/80] RoCBF-Net (Ours) | S4:Nonlinear | seed=1
+  → violation_rate=0.4572±0.0379, reward=-6391.5
+
+[63/80] RoCBF-Net (Ours) | S4:Nonlinear | seed=2
+  → violation_rate=0.5271±0.0235, reward=-6468.0
+
+[64/80] RoCBF-Net (Ours) | S4:Nonlinear | seed=3
+  → violation_rate=0.5620±0.0278, reward=-6528.2
+
+[65/80] RoCBF-Net (Ours) | S4:Nonlinear | seed=4
+  → violation_rate=0.3180±0.0350, reward=-6292.8
+
+[66/80] RoCBF-Net (Ours) | S5:Valve | seed=0
+  → violation_rate=0.0000±0.0000, reward=-8999.4
+
+[67/80] RoCBF-Net (Ours) | S5:Valve | seed=1
+  → violation_rate=0.0000±0.0000, reward=-9002.9
+
+[68/80] RoCBF-Net (Ours) | S5:Valve | seed=2
+  → violation_rate=0.0000±0.0000, reward=-9001.0
+
+[69/80] RoCBF-Net (Ours) | S5:Valve | seed=3
+  → violation_rate=0.0000±0.0000, reward=-9000.4
+
+[70/80] RoCBF-Net (Ours) | S5:Valve | seed=4
+  → violation_rate=0.0000±0.0000, reward=-8999.5
+
+[71/80] RoCBF-Net (Ours) | S6:Fuel | seed=0
+  → violation_rate=0.0000±0.0000, reward=-5188.6
+
+[72/80] RoCBF-Net (Ours) | S6:Fuel | seed=1
+  → violation_rate=0.0000±0.0000, reward=-5191.8
+
+[73/80] RoCBF-Net (Ours) | S6:Fuel | seed=2
+  → violation_rate=0.0000±0.0000, reward=-5189.4
+
+[74/80] RoCBF-Net (Ours) | S6:Fuel | seed=3
+  → violation_rate=0.0000±0.0000, reward=-5189.6
+
+[75/80] RoCBF-Net (Ours) | S6:Fuel | seed=4
+  → violation_rate=0.0000±0.0000, reward=-5185.9
+
+[76/80] RoCBF-Net (Ours) | LoadFol | seed=0
+  → violation_rate=0.0000±0.0000, reward=-39.1
+
+[77/80] RoCBF-Net (Ours) | LoadFol | seed=1
+  → violation_rate=0.0000±0.0000, reward=-39.3
+
+[78/80] RoCBF-Net (Ours) | LoadFol | seed=2
+  → violation_rate=0.0000±0.0000, reward=-39.2
+
+[79/80] RoCBF-Net (Ours) | LoadFol | seed=3
+  → violation_rate=0.0000±0.0000, reward=-39.3
+
+[80/80] RoCBF-Net (Ours) | LoadFol | seed=4
+  → violation_rate=0.0000±0.0000, reward=-39.4
+
+=== Done: 80/80 experiments completed ===

@@ -1,0 +1,209 @@
+
+============================================================
+SEED 0
+============================================================
+  JIT qp_matrices compiled
+
+--- Condition: baseline (λ=0.0, input_constraint=False) ---
+  [λ=0.0] Ep 50: r=-11265.5 (avg50=-10256.4)
+  [λ=0.0] Ep 100: r=-11382.0 (avg50=-11283.7)
+  [λ=0.0] Ep 150: r=-11349.8 (avg50=-11281.7)
+  [λ=0.0] Ep 200: r=-11378.1 (avg50=-11427.1)
+    Eval ep 10/30: power_viol=0.9167, cbf=0.0000
+    Eval ep 20/30: power_viol=0.8933, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9333, cbf=0.0000
+  baseline: power_viol=0.9248, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_0.01 (λ=0.01, input_constraint=False) ---
+  [λ=0.01] Ep 50: r=-12645.8 (avg50=-11370.1)
+  [λ=0.01] Ep 100: r=-12775.4 (avg50=-12673.5)
+  [λ=0.01] Ep 150: r=-12727.6 (avg50=-12698.8)
+  [λ=0.01] Ep 200: r=-12862.0 (avg50=-12910.7)
+    Eval ep 10/30: power_viol=0.9167, cbf=0.0000
+    Eval ep 20/30: power_viol=0.8933, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9333, cbf=0.0000
+  lambda_0.01: power_viol=0.9248, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_0.1 (λ=0.1, input_constraint=False) ---
+  [λ=0.1] Ep 50: r=-25084.4 (avg50=-21463.5)
+  [λ=0.1] Ep 100: r=-25319.8 (avg50=-25188.6)
+  [λ=0.1] Ep 150: r=-25129.5 (avg50=-25455.0)
+  [λ=0.1] Ep 200: r=-26217.5 (avg50=-26264.7)
+    Eval ep 10/30: power_viol=0.9167, cbf=0.0000
+    Eval ep 20/30: power_viol=0.8933, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9333, cbf=0.0000
+  lambda_0.1: power_viol=0.9248, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_1.0 (λ=1.0, input_constraint=False) ---
+  [λ=1.0] Ep 50: r=-149585.8 (avg50=-123160.9)
+  [λ=1.0] Ep 100: r=-150789.3 (avg50=-150393.3)
+  [λ=1.0] Ep 150: r=-149158.2 (avg50=-153033.1)
+  [λ=1.0] Ep 200: r=-159777.2 (avg50=-159811.0)
+    Eval ep 10/30: power_viol=0.9167, cbf=0.0000
+    Eval ep 20/30: power_viol=0.8933, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9333, cbf=0.0000
+  lambda_1.0: power_viol=0.9248, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: input_constraint (λ=0.0, input_constraint=True) ---
+  [λ=0.0] Ep 50: r=-11265.5 (avg50=-10256.4)
+  [λ=0.0] Ep 100: r=-11382.0 (avg50=-11283.7)
+  [λ=0.0] Ep 150: r=-11349.8 (avg50=-11281.7)
+  [λ=0.0] Ep 200: r=-11378.1 (avg50=-11427.1)
+    Eval ep 10/30: power_viol=0.4967, cbf=0.0000
+    Eval ep 20/30: power_viol=0.4367, cbf=0.0000
+    Eval ep 30/30: power_viol=0.4667, cbf=0.0000
+  input_constraint: power_viol=0.4722, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: combined (λ=0.1, input_constraint=True) ---
+  [λ=0.1] Ep 50: r=-25084.4 (avg50=-21463.5)
+  [λ=0.1] Ep 100: r=-25319.8 (avg50=-25188.6)
+  [λ=0.1] Ep 150: r=-25129.5 (avg50=-25455.0)
+  [λ=0.1] Ep 200: r=-26217.5 (avg50=-26264.7)
+    Eval ep 10/30: power_viol=0.4967, cbf=0.0000
+    Eval ep 20/30: power_viol=0.4367, cbf=0.0000
+    Eval ep 30/30: power_viol=0.4667, cbf=0.0000
+  combined: power_viol=0.4722, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+============================================================
+SEED 1
+============================================================
+  JIT qp_matrices compiled
+
+--- Condition: baseline (λ=0.0, input_constraint=False) ---
+  [λ=0.0] Ep 50: r=-11584.7 (avg50=-10227.5)
+  [λ=0.0] Ep 100: r=-11128.0 (avg50=-11247.0)
+  [λ=0.0] Ep 150: r=-10650.8 (avg50=-11318.4)
+  [λ=0.0] Ep 200: r=-11617.7 (avg50=-11348.0)
+    Eval ep 10/30: power_viol=0.9400, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9533, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9200, cbf=0.0000
+  baseline: power_viol=0.9302, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_0.01 (λ=0.01, input_constraint=False) ---
+  [λ=0.01] Ep 50: r=-13069.4 (avg50=-11328.1)
+  [λ=0.01] Ep 100: r=-12457.8 (avg50=-12625.2)
+  [λ=0.01] Ep 150: r=-11850.8 (avg50=-12739.8)
+  [λ=0.01] Ep 200: r=-13192.1 (avg50=-12808.6)
+    Eval ep 10/30: power_viol=0.9400, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9533, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9200, cbf=0.0000
+  lambda_0.01: power_viol=0.9302, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_0.1 (λ=0.1, input_constraint=False) ---
+  [λ=0.1] Ep 50: r=-26448.4 (avg50=-21306.1)
+  [λ=0.1] Ep 100: r=-24429.7 (avg50=-25036.0)
+  [λ=0.1] Ep 150: r=-22652.2 (avg50=-25534.6)
+  [λ=0.1] Ep 200: r=-27362.5 (avg50=-25955.0)
+    Eval ep 10/30: power_viol=0.9400, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9533, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9200, cbf=0.0000
+  lambda_0.1: power_viol=0.9302, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_1.0 (λ=1.0, input_constraint=False) ---
+  [λ=1.0] Ep 50: r=-160360.9 (avg50=-121891.3)
+  [λ=1.0] Ep 100: r=-144172.8 (avg50=-149197.5)
+  [λ=1.0] Ep 150: r=-130673.9 (avg50=-153498.5)
+  [λ=1.0] Ep 200: r=-169070.9 (avg50=-157426.0)
+    Eval ep 10/30: power_viol=0.9433, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9533, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9200, cbf=0.0000
+  lambda_1.0: power_viol=0.9304, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: input_constraint (λ=0.0, input_constraint=True) ---
+  [λ=0.0] Ep 50: r=-11584.7 (avg50=-10227.5)
+  [λ=0.0] Ep 100: r=-11128.0 (avg50=-11247.0)
+  [λ=0.0] Ep 150: r=-10650.8 (avg50=-11318.4)
+  [λ=0.0] Ep 200: r=-11617.7 (avg50=-11348.0)
+    Eval ep 10/30: power_viol=0.4733, cbf=0.0000
+    Eval ep 20/30: power_viol=0.4767, cbf=0.0000
+    Eval ep 30/30: power_viol=0.4733, cbf=0.0000
+  input_constraint: power_viol=0.4823, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: combined (λ=0.1, input_constraint=True) ---
+  [λ=0.1] Ep 50: r=-26448.4 (avg50=-21306.1)
+  [λ=0.1] Ep 100: r=-24429.7 (avg50=-25036.0)
+  [λ=0.1] Ep 150: r=-22652.2 (avg50=-25534.6)
+  [λ=0.1] Ep 200: r=-27362.5 (avg50=-25955.0)
+    Eval ep 10/30: power_viol=0.4733, cbf=0.0000
+    Eval ep 20/30: power_viol=0.4767, cbf=0.0000
+    Eval ep 30/30: power_viol=0.4733, cbf=0.0000
+  combined: power_viol=0.4823, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+============================================================
+SEED 2
+============================================================
+  JIT qp_matrices compiled
+
+--- Condition: baseline (λ=0.0, input_constraint=False) ---
+  [λ=0.0] Ep 50: r=-10966.7 (avg50=-10177.6)
+  [λ=0.0] Ep 100: r=-11092.3 (avg50=-11255.2)
+  [λ=0.0] Ep 150: r=-11536.8 (avg50=-11338.4)
+  [λ=0.0] Ep 200: r=-11003.1 (avg50=-11346.0)
+    Eval ep 10/30: power_viol=0.9433, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9467, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9133, cbf=0.0000
+  baseline: power_viol=0.9290, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_0.01 (λ=0.01, input_constraint=False) ---
+  [λ=0.01] Ep 50: r=-12263.9 (avg50=-11266.9)
+  [λ=0.01] Ep 100: r=-12485.7 (avg50=-12639.2)
+  [λ=0.01] Ep 150: r=-13047.8 (avg50=-12768.7)
+  [λ=0.01] Ep 200: r=-12341.1 (avg50=-12810.9)
+    Eval ep 10/30: power_viol=0.9433, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9467, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9133, cbf=0.0000
+  lambda_0.01: power_viol=0.9290, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_0.1 (λ=0.1, input_constraint=False) ---
+  [λ=0.1] Ep 50: r=-23953.0 (avg50=-21145.7)
+  [λ=0.1] Ep 100: r=-25029.5 (avg50=-25102.9)
+  [λ=0.1] Ep 150: r=-26648.1 (avg50=-25643.9)
+  [λ=0.1] Ep 200: r=-24383.8 (avg50=-25995.6)
+    Eval ep 10/30: power_viol=0.9433, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9467, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9133, cbf=0.0000
+  lambda_0.1: power_viol=0.9290, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: lambda_1.0 (λ=1.0, input_constraint=False) ---
+  [λ=1.0] Ep 50: r=-140945.3 (avg50=-120739.8)
+  [λ=1.0] Ep 100: r=-150490.6 (avg50=-149790.3)
+  [λ=1.0] Ep 150: r=-162661.0 (avg50=-154410.1)
+  [λ=1.0] Ep 200: r=-144814.6 (avg50=-157849.8)
+    Eval ep 10/30: power_viol=0.9433, cbf=0.0000
+    Eval ep 20/30: power_viol=0.9467, cbf=0.0000
+    Eval ep 30/30: power_viol=0.9133, cbf=0.0000
+  lambda_1.0: power_viol=0.9290, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: input_constraint (λ=0.0, input_constraint=True) ---
+  [λ=0.0] Ep 50: r=-10966.7 (avg50=-10177.6)
+  [λ=0.0] Ep 100: r=-11092.3 (avg50=-11255.2)
+  [λ=0.0] Ep 150: r=-11536.8 (avg50=-11338.4)
+  [λ=0.0] Ep 200: r=-11003.1 (avg50=-11346.0)
+    Eval ep 10/30: power_viol=0.4767, cbf=0.0000
+    Eval ep 20/30: power_viol=0.4700, cbf=0.0000
+    Eval ep 30/30: power_viol=0.4500, cbf=0.0000
+  input_constraint: power_viol=0.4769, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+--- Condition: combined (λ=0.1, input_constraint=True) ---
+  [λ=0.1] Ep 50: r=-23953.0 (avg50=-21145.7)
+  [λ=0.1] Ep 100: r=-25029.5 (avg50=-25102.9)
+  [λ=0.1] Ep 150: r=-26648.1 (avg50=-25643.9)
+  [λ=0.1] Ep 200: r=-24383.8 (avg50=-25995.6)
+    Eval ep 10/30: power_viol=0.4733, cbf=0.0000
+    Eval ep 20/30: power_viol=0.4700, cbf=0.0000
+    Eval ep 30/30: power_viol=0.4467, cbf=0.0000
+  combined: power_viol=0.4766, cbf_viol=0.0000, pressure_viol=0.0000, enthalpy_viol=0.0000
+
+==========================================================================================
+POWER CONSTRAINT MITIGATION SUMMARY
+==========================================================================================
+Condition            Power Viol      CBF Viol        Pressure        Enthalpy        Reward    
+------------------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/gpu/sz_workspace/RoCBF-Net/experiments/phase5/power_constraint_mitigation.py", line 519, in <module>
+    results = run_power_mitigation(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gpu/sz_workspace/RoCBF-Net/experiments/phase5/power_constraint_mitigation.py", line 458, in run_power_mitigation
+    total_power_steps = sum(
+                        ^^^^
+TypeError: unsupported operand type(s) for +: 'int' and 'list'

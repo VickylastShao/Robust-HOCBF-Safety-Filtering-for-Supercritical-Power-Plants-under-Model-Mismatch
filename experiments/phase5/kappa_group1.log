@@ -1,0 +1,27 @@
+=== Epsilon-Kappa Sensitivity Sweep ===
+Conditions: ['S2:Pressure']
+κ values:   [0.0, 0.1, 0.3, 0.5, 1.0]
+Seeds:      [0, 1, 2]
+Total:      15 experiments
+Output:     results/phase5/kappa_sweep
+Method:     PPO-RHOCBF (static GP, variable ε_κ)
+======================================================================
+
+[1/15] SKIP κ=0.0 | S2:Pressure | seed=0 (exists)
+
+[2/15] SKIP κ=0.0 | S2:Pressure | seed=1 (exists)
+
+[3/15] SKIP κ=0.0 | S2:Pressure | seed=2 (exists)
+
+[4/15] κ=0.1 | S2:Pressure | seed=0
+  → violation_rate=0.0000±0.0000, reward=-15180.5, time=2900s
+
+[5/15] κ=0.1 | S2:Pressure | seed=1
+  → violation_rate=0.0000±0.0000, reward=-15180.5, time=4405s
+
+[6/15] κ=0.1 | S2:Pressure | seed=2
+  → violation_rate=0.0000±0.0000, reward=-15181.1, time=4433s
+
+[7/15] SKIP κ=0.3 | S2:Pressure | seed=0 (exists)
+
+[8/15] κ=0.3 | S2:Pressure | seed=1
