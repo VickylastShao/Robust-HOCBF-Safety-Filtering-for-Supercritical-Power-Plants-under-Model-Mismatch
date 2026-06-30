@@ -41,3 +41,7 @@ tmp_pdf_render/
 /*.out
 /*.log
 *.bak
+
+# Generated submission bundles
+paper/submission_mc_*/
+paper/*submission*.zip
