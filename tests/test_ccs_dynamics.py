@@ -100,15 +100,16 @@ def test_ccs_step_at_equilibrium():
 
 
 def test_ccs_delay_augmentation():
-    """With delay_order > 0, augmented state has correct dimension."""
+    """With delay_order > 0, augmented state has correct dimension and finite values."""
     dyn_delay = _make_dynamics(delay_order=4)
     assert dyn_delay.nx_aug == 7
 
     x0, u0 = dyn_delay.equilibrium(1.0)
-    # With delay, need to augment initial state
     x_aug = jnp.concatenate([x0, jnp.zeros(4)])
     x_next = dyn_delay.step(x_aug, u0)
+
     assert x_next.shape == (7,)
+    assert jnp.all(jnp.isfinite(x_next)), f"Delay step produced non-finite state: {x_next}"
 
 
 def test_uncertain_ccs_dynamics():

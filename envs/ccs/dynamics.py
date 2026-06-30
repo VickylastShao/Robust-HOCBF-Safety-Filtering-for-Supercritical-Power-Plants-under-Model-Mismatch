@@ -504,9 +504,9 @@ class USCCSDynamics:
         for i in range(n):
             C[i] = num[i + 1] - den[i + 1] * num[0]
 
-        D = np.array([num[0]])  # D = b0/a0
+        D = float(num[0])  # D = b0/a0
 
-        return jnp.array(A), jnp.array(B), jnp.array(C), float(D)
+        return jnp.array(A), jnp.array(B), jnp.array(C), D
 
     @property
     def x0(self) -> jnp.ndarray:
