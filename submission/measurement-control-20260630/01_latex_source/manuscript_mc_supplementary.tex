@@ -1,0 +1,70 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{booktabs,graphicx,multirow,makecell,bm,enumitem}
+\usepackage[numbers,comma]{natbib}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{setspace}
+\onehalfspacing
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calK}{\mathcal{K}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\Deltaf}{\Delta f}
+\newcommand{\Deltag}{\Delta g}
+\newcommand{\epsilonKappa}{\kappa_\epsilon}
+\newcommand{\sigmatotal}{\sigma_{\mathrm{total}}}
+\newcommand{\sigmaGP}{\sigma_{\mathrm{GP}}}
+\newcommand{\sigmaGPj}[1]{\sigma_{\mathrm{GP},#1}}
+\newcommand{\fhat}{\hat{f}}
+\newcommand{\muGP}{\mu_{\mathrm{GP}}}
+\newcommand{\Ahat}{\hat{A}_0}
+\newcommand{\bhat}{\hat{b}_0}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calH}{\mathcal{H}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% Supplementary numbering
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+\begin{document}
+
+\title{Supplemental Material for\\ ``RoCBF-Net: A Tunable Safety Architecture for High-Order CBFs Under Uncertainty---GP Correction, Tunable Margins, and the Deployment Envelope''}
+
+\author{
+Zhuang~Shao$^{1,*}$, Lijun~Lei$^{2}$, Peng~Wang$^{3}$, Liang~Zheng$^{2}$, Jie~Zhou$^{2}$\\[1em]
+$^{1}$China Resources Power Technology Research Institute Co., Ltd.,\\
+\hspace*{1em}Shenzhen 518000, China\\
+$^{2}$Rundian Energy Science and Technology Co., Ltd.,\\
+\hspace*{1em}Zhengzhou 450052, China\\
+$^{3}$North China University of Water Resources and Electric Power,\\
+\hspace*{1em}Zhengzhou 450046, China\\[0.5em]
+$^{*}$Corresponding author: \texttt{shaozhuang@crpower.com.cn}
+}
+
+\date{}
+\maketitle
+
+\input{sections/supplementary}
+\input{sections/triple_integrator_appendix}
+\input{sections_jpc/appendix_proofs}
+
+\bibliographystyle{SageV}
+\bibliography{refs}
+
+\end{document}

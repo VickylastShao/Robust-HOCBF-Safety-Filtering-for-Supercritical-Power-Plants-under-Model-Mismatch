@@ -1,0 +1,91 @@
+phase: 5
+name: "Fair Comparison — 8 Methods × 8 Conditions × 5 Seeds on 5th-Order CCS"
+
+seeds: 5
+conditions: [nominal, s1_heat, s2_pressure, s3_coupled, s4_nonlinear, s5_valve, s6_fuel, load_following]
+methods: [ppo, ppo_lagr, nmpc, ppo_cbf, ppo_hocbf, ppo_gp_hocbf, ppo_rhocbf, rocbf_net]
+
+training:
+  n_steps: 200
+  eval_every: 50
+  n_eval: 3
+  convergence_window: 30
+  convergence_threshold: 0.05
+  max_episodes: 200
+  min_episodes: 50
+
+evaluation:
+  n_episodes: 50
+  n_steps: 500
+  load_following_steps: 500
+
+methods_config:
+  ppo:
+    hidden_dim: 128
+    lr: 1.0e-4
+  ppo_lagr:
+    hidden_dim: 128
+    lr: 1.0e-4
+    cost_limit: 0.0
+    lagrangian_lr: 0.01
+  nmpc:
+    horizon: 10
+  ppo_cbf:
+    hidden_dim: 128
+    lr: 1.0e-4
+  ppo_hocbf:
+    hidden_dim: 128
+    lr: 1.0e-4
+    pressure_k_gains: [0.5, 0.5]
+    enthalpy_k_gains: [1.0]
+    power_k_gains: [1.0]
+  ppo_gp_hocbf:
+    hidden_dim: 128
+    lr: 1.0e-4
+    n_pretrain: 500
+    sigma_floor: 1.0e-4
+    scenario_specific_gp: true
+  ppo_rhocbf:
+    hidden_dim: 128
+    lr: 1.0e-4
+    epsilon_kappa: 1.0
+    n_pretrain: 500
+    sigma_floor: 1.0e-4
+    scenario_specific_gp: true
+    use_mean_correction: true
+    epsilon_floor: 0.0
+    pressure_k_gains: [0.5, 0.5]
+    enthalpy_k_gains: [1.0]
+    power_k_gains: [1.0]
+    u_max: 100.0
+  rocbf_net:
+    hidden_dim: 128
+    lr: 1.0e-4
+    epsilon_kappa: 1.0
+    epsilon_floor: 0.0
+    use_mean_correction: true
+    scenario_specific_gp: true
+    gp_update_interval: 50
+    n_pretrain: 500
+    sigma_floor: 1.0e-4
+    pressure_k_gains: [0.5, 0.5]
+    enthalpy_k_gains: [1.0]
+    power_k_gains: [1.0]
+    u_max: 100.0
+
+hocbf:
+  pressure_k_gains: [0.5, 0.5]
+  enthalpy_k_gains: [1.0]
+  power_k_gains: [1.0]
+  u_max: 100.0
+
+gp:
+  noise_variance: 1.0e-4
+  sigma_floor: 1.0e-4
+  n_pretrain: 500
+
+agc_schedule:
+  base_load: 1000.0
+  ramp_rate: 5.0
+  regulation_amp: 20.0
+  regulation_period: 300.0

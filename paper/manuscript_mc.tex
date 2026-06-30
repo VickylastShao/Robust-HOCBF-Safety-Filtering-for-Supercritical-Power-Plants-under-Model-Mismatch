@@ -1,0 +1,94 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{booktabs,graphicx,multirow,makecell,bm,enumitem}
+\usepackage[numbers,comma]{natbib}
+\usepackage{hyperref}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{lineno}
+\linenumbers
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+
+\newcommand{\R}{\mathbb{R}}\newcommand{\E}{\mathbb{E}}\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\calC}{\mathcal{C}}\newcommand{\calU}{\mathcal{U}}\newcommand{\calX}{\mathcal{X}}
+\newcommand{\calD}{\mathcal{D}}\newcommand{\calK}{\mathcal{K}}\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calO}{\mathcal{O}}\newcommand{\calH}{\mathcal{H}}
+\newcommand{\Deltaf}{\Delta f}\newcommand{\Deltag}{\Delta g}
+\newcommand{\epsilonKappa}{\epsilon_\kappa}
+\newcommand{\sigmatotal}{\sigma_{\mathrm{total}}}
+\newcommand{\sigmaGP}{\sigma_{\mathrm{GP}}}\newcommand{\sigmaGPj}[1]{\sigma_{\mathrm{GP},#1}}
+\newcommand{\fhat}{\hat{f}}\newcommand{\muGP}{\mu_{\mathrm{GP}}}
+\newcommand{\Ahat}{\hat{A}_0}\newcommand{\bhat}{\hat{b}_0}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\begin{document}
+
+\date{}
+\title{RoCBF-Net: A Tunable Safety Architecture for High-Order CBFs Under Uncertainty---GP Correction, Tunable Margins, and the Deployment Envelope}
+
+\author{
+Zhuang~Shao$^{1,*}$, Lijun~Lei$^{2}$, Peng~Wang$^{3}$, Liang~Zheng$^{2}$, Jie~Zhou$^{2}$\\[1em]
+$^{1}$China Resources Power Technology Research Institute Co., Ltd.,\\
+\hspace*{1em}Shenzhen 518000, China\\
+$^{2}$Rundian Energy Science and Technology Co., Ltd.,\\
+\hspace*{1em}Zhengzhou 450052, China\\
+$^{3}$North China University of Water Resources and Electric Power,\\
+\hspace*{1em}Zhengzhou 450046, China\\[0.5em]
+$^{*}$Corresponding author: \texttt{shaozhuang@crpower.com.cn},\\
+\hspace*{1em}ORCID: 0000-0003-2496-0797
+}
+
+\maketitle
+
+\begin{abstract}
+Safety filters based on control barrier functions (CBFs) project control actions into the safe set, but their certificate relies on accurate dynamics---a condition routinely violated in industrial plants under coal quality drift, equipment aging, and unmodeled disturbances. This paper presents RoCBF-Net, a tunable safety filtering architecture that combines three components: high-order CBF (HOCBF) constraints with correct relative degrees, Gaussian process (GP) residual learning, and a scalar robustness factor $\epsilon_\kappa$ that scales the compositional uncertainty margin in the quadratic program constraint. The key finding is that GP mean correction---not the compositional $\epsilon(x)$ margin---is the dominant safety mechanism, reducing constraint violations by $>500\times$ versus uncorrected HOCBF across eight conditions on a 5th-order supercritical boiler-turbine benchmark. Moreover, the optimal $\epsilon_\kappa$ depends systematically on the uncertainty structure: $\epsilon_\kappa=0$ suffices for additive bounded perturbations, while $\epsilon_\kappa=0.1$ is required for state-dependent coupling (recovering zero violation from 33.5\% failure). Crucially, the theoretical worst-case $\epsilon_\kappa=1.0$ is never the optimal choice under any tested condition, and a coupling-strength sweep reveals a \emph{deployment envelope}---the safe $\epsilon_\kappa$ range collapses from $[0.1,1.0]$ at weak coupling to the singleton $\{0\}$ at strong coupling ($\gamma\geq1.5$), where any positive margin harms safety. These results motivate treating $\epsilon_\kappa$ as a tunable calibration parameter selected per uncertainty type and strength, rather than a fixed theoretical constant. The safety-filter pipeline runs at ${\sim}25$\,ms per step (GPU, JIT-compiled), approximately ten times faster than the implemented SLSQP-based NMPC baseline.
+\end{abstract}
+
+\textbf{Keywords:} Control barrier functions; safety filtering; Gaussian processes; model mismatch; robustness margin calibration; deployment envelope; supercritical power plant
+
+\input{sections_mc/intro}
+\input{sections_mc/related_work}
+\input{sections_mc/methodology}
+\input{sections_mc/experimental}
+\input{sections_mc/conclusion}
+
+\section*{Statements and Declarations}
+
+\subsection*{Ethical considerations}
+Not applicable. This study did not involve human participants, human data, human tissue, or animal experiments.
+
+\subsection*{Consent to participate}
+Not applicable.
+
+\subsection*{Consent for publication}
+Not applicable.
+
+\subsection*{Declaration of conflicting interests}
+The authors declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.
+
+\subsection*{Funding}
+This work was supported by the Postdoctoral Research Project of China Resources Power Technology Research Institute Co., Ltd. (Internal Project No.\ 374322).
+
+\subsection*{Author contributions}
+Zhuang Shao: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Visualization, Writing -- original draft, Writing -- review \& editing. Lijun Lei: Resources, Supervision, Project administration. Peng Wang: Formal analysis, Writing -- review \& editing. Liang Zheng: Resources, Supervision. Jie Zhou: Investigation, Data curation.
+
+\subsection*{Data availability}
+The source code, simulation scripts, trained GP configurations, and plotting scripts required to reproduce the results are available at \url{https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch}.
+
+\subsection*{Declaration of generative AI and AI-assisted technologies}
+During the preparation of this work, the authors used ChatGPT for language polishing and manuscript formatting. The authors reviewed and edited the content and take full responsibility for the published article.
+
+\bibliographystyle{SageV}
+\bibliography{refs}
+
+\end{document}

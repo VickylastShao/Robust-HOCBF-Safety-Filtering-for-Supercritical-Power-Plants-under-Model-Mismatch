@@ -1,0 +1,24 @@
+{
+  "kappa": 0.7,
+  "scenario": "coupled",
+  "seed": 2,
+  "cbf_violation_pct": 0.0,
+  "power_violation_pct": 0.0,
+  "qp_intervention_pct": 99.0,
+  "total_reward": -8065.847046852112,
+  "per_constraint_pct": {
+    "pressure_high": 0.0,
+    "pressure_low": 0.0,
+    "enthalpy_high": 0.0,
+    "enthalpy_low": 0.0,
+    "power_high": 0.0,
+    "power_low": 0.0
+  },
+  "epsilon_mean": 2.7430637645721436,
+  "epsilon_std": 0.07738011345931148,
+  "epsilon_max": 3.2129647731781006,
+  "action_diff_mean": 2.5455316665340213,
+  "action_diff_max": 6.100601673126221,
+  "chatter_rate_pct": 97.39999999999999,
+  "scenario_name": "S3:Coupled"
+}

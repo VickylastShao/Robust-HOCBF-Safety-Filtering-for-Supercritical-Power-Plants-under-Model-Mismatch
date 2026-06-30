@@ -1,0 +1,39 @@
+{
+  "violation_rate": [
+    0.0,
+    0.0
+  ],
+  "cumulative_reward": [
+    0.0,
+    0.0
+  ],
+  "tracking_rmse": {
+    "pressure": [
+      0.0,
+      0.0
+    ],
+    "enthalpy": [
+      0.0,
+      0.0
+    ],
+    "power": [
+      0.0,
+      0.0
+    ]
+  },
+  "control_cost": [
+    0.0,
+    0.0
+  ],
+  "min_barrier_value": [
+    1.3999996185302734,
+    0.0
+  ],
+  "online_time_ms": [
+    25.842687675418954,
+    6.3250012794959405
+  ],
+  "convergence_episode": 0,
+  "n_training_episodes": 0,
+  "reward_history": []
+}

@@ -1,0 +1,80 @@
+\section{Problem Formulation}
+\label{sec:problem}
+
+\subsection{Control-Affine Systems with Model Mismatch}
+
+Consider a control-affine system
+\begin{equation}
+    \dot{x} = f(x) + g(x)u, \quad x \in \R^n, \; u \in \calU \subset \R^m
+    \label{eq:control_affine}
+\end{equation}
+where $f$ and $g$ are locally Lipschitz, and $\calU$ is a compact control constraint set. The true system differs from the nominal model:
+\begin{equation}
+    \dot{x} = \underbrace{f_0(x) + g_0(x)u}_{\text{nominal}} + \underbrace{\Deltaf(x)}_{\text{residual}}
+    \label{eq:true_dynamics}
+\end{equation}
+where $\Deltaf: \R^n \to \R^n$ represents model mismatch. We assume the input matrix is known exactly:
+
+\begin{assumption}[$\Deltag = 0$]
+\label{asm:delta_g}
+$g(x) = g_0(x)$ for all $x \in \calX$. This holds when actuator dynamics are well-characterized but process dynamics (heat transfer, reaction kinetics, fluid properties) contain parametric uncertainty---typical for energy processes where the dominant uncertainty lies in the drift.
+\end{assumption}
+
+\begin{definition}[Safe Set]
+\label{def:safe_set}
+Given a continuously differentiable $h: \R^n \to \R$, the safe set is $\calC = \{x \in \R^n : h(x) \geq 0\}$. $\calC$ is \emph{forward invariant} if $x(0) \in \calC \implies x(t) \in \calC$ for all $t \geq 0$.
+\end{definition}
+
+\subsection{High-Order Control Barrier Functions}
+
+When $h$ has relative degree $m \geq 2$ (i.e., $L_g L_f^{m-1} h \neq 0$ but $L_g L_f^{k} h = 0$ for $k < m-1$), standard CBFs are inapplicable. HOCBFs~\cite{xiao2021hocbf} address this through a recursive $\psi$-chain:
+
+\begin{definition}[HOCBF]
+\label{def:hocbf}
+Given extended class-$\calK$ functions $\alpha_i$, $i = 1, \ldots, m$, define:
+\begin{align}
+    \psi_0(x) &= h(x) \label{eq:psi0} \\
+    \psi_i(x) &= \dot{\psi}_{i-1}(x) + \alpha_i(\psi_{i-1}(x)), \quad i = 1, \ldots, m \label{eq:psi_chain}
+\end{align}
+$h$ is a HOCBF if $\exists u \in \calU$ such that $\psi_m(x) \geq 0$ for all $x$ in the operating region.
+\end{definition}
+
+For linear class-$\calK$ functions $\alpha_i(r) = k_i r$, the HOCBF constraint expands to:
+\begin{equation}
+    L_f^m h(x) + L_g L_f^{m-1} h(x) u + \calS(x) \geq 0
+    \label{eq:hocbf_constraint}
+\end{equation}
+where $\calS(x)$ collects lower-order terms. In QP form: $A_0(x) u \leq b_0(x)$ with $A_0 = -L_g L_f^{m-1} h$, $b_0 = L_f^m h + \calS$.
+
+\subsection{Gaussian Process Residual Model}
+
+We model each component of $\Deltaf_j: \R^n \to \R$ as an independent GP with Mat\'{e}rn-5/2 kernel. Given a dataset $\calD = \{(x_i, y_i)\}_{i=1}^N$, the GP posterior yields mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The GP-UCB confidence bound~\cite{srinivas2010gp} guarantees:
+\begin{equation}
+    |\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \cdot \sigma_{\mathrm{GP},j}(x), \quad \text{w.p.} \geq 1 - \delta/n
+    \label{eq:gp_bound}
+\end{equation}
+with $\beta = \sqrt{2(\gamma_N + 1 + \ln(n/\delta))}$, where $\gamma_N$ is the maximum information gain. This bound holds simultaneously for all $j = 1, \ldots, n$ with probability $\geq 1 - \delta$ (union bound).
+
+\begin{assumption}[RKHS boundedness]
+\label{asm:rkhs}
+Each residual component $\Deltaf_j$ lies in the reproducing kernel Hilbert space (RKHS) $\calH_k$ of the Mat\'{e}rn-5/2 kernel with bounded norm: $\|\Deltaf_j\|_k \leq B < \infty$. This is standard in the GP bandit literature~\cite{srinivas2010gp}.
+\end{assumption}
+
+\begin{assumption}[GP calibration]
+\label{asm:gp_calibration}
+The GP posterior variance provides a calibrated uncertainty estimate: the GP-UCB confidence bound~\eqref{eq:gp_bound} holds with the chosen $\beta$. Scenario-specific training is used to support this calibration at deployment; calibration diagnostics are discussed in Section~\ref{sec:deployment}.
+\end{assumption}
+
+We define the \emph{mean-corrected drift} $\fhat(x) = f_0(x) + \muGP(x)$ and the \emph{posterior residual} $\Delta \hat{f} = \Deltaf - \muGP$. The GP is trained offline on scenario-specific data and held fixed during evaluation for the formal guarantee; online GP updates are discussed in Section~\ref{sec:deployment}.
+
+\subsection{Safety Filtering Problem}
+
+At each time step, an upstream controller proposes an action $u_{\mathrm{prop}}$. The safety filter solves the QP:
+\begin{equation}
+    \begin{aligned}
+        u^* = \quad & \argmin_{u \in \calU} \quad \|u - u_{\mathrm{prop}}\|^2 \\
+        \text{s.t.} \quad & A_0(x) u \leq b_0(x)
+    \end{aligned}
+    \label{eq:cbf_qp}
+\end{equation}
+Under model mismatch ($\Deltaf \neq 0$), the nominal $A_0, b_0$ are computed from the incorrect model $f_0$, and the QP may certify unsafe actions as safe. The problem addressed in this paper is: \emph{construct a tightened constraint $A_0(x) u \leq b_0(x) - \epsilon(x)$ such that satisfaction of the tightened constraint implies satisfaction of the true (unknown) HOCBF constraint with high probability.}

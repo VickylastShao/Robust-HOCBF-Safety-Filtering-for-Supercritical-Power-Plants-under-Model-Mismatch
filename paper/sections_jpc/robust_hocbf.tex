@@ -1,0 +1,55 @@
+\section{Robust HOCBF with Compositional Uncertainty Propagation}
+\label{sec:robust_hocbf}
+
+\subsection{Compositional Robustness Margin $\epsilon(x)$}
+
+Under the true dynamics~\eqref{eq:true_dynamics}, the HOCBF $\psi$-chain computed with the mean-corrected model $\fhat = f_0 + \muGP$ differs from the true chain. Define the perturbation at level $i$: $\delta_i(x) \triangleq \psi_i(x) - \hat{\psi}_i^0(x)$, where $\hat{\psi}_i^0$ is computed with $\fhat$. The perturbations satisfy:
+\begin{align}
+    \delta_0(x) &= 0 \label{eq:delta0} \\
+    \delta_1(x) &= L_{\Delta \hat{f}} h(x) \label{eq:delta1} \\
+    \delta_i(x) &= L_{\Delta \hat{f}} \hat{\psi}_{i-1}^0 + (L_{\fhat} + k_i) \delta_{i-1} \nonumber\\
+                &\quad + \underbrace{L_{\Delta \hat{f}} \delta_{i-1}}_{\text{cross term}}, \quad i \geq 2 \label{eq:delta_recursive}
+\end{align}
+where $\Delta \hat{f} = \Deltaf - \muGP$.
+
+\begin{assumption}[Small perturbation with Lipschitz-in-perturbation]
+\label{asm:small_perturbation}
+(a)~$\|\Delta \hat{f}\| / \|\fhat\| \leq \rho_{\max}$; (b)~$\Delta \hat{f}_j$ is $C^2$ with bounded Hessian $H_f$; (c)~\emph{Lipschitz-in-perturbation}: $\|\nabla_x \Delta \hat{f}_j(x)\| \leq L_{\hat{f}} \cdot \|\Delta \hat{f}(x)\|_\infty$. Under (c), the cross term is formally $\calO(\rho^2)$ (Lemma~S1, Supplementary Section~S7).
+\end{assumption}
+
+The total perturbation between true and nominal HOCBF constraints is:
+\begin{equation}
+    \Delta(x, u) = \underbrace{[L_f^m h - L_{f_0}^m h]}_{\text{highest-order gap}} + \underbrace{[L_g L_f^{m-1} h - L_g L_{f_0}^{m-1} h] \cdot u}_{\text{coupling coeff. gap}} + \underbrace{[\calS(x) - \calS_0(x)]}_{\psi\text{-chain gap}}
+    \label{eq:total_perturbation}
+\end{equation}
+
+\begin{definition}[Compositional Robustness Margin]
+\label{def:epsilon}
+The \emph{compositional robustness margin} is $\epsilon(x) \triangleq \sigmatotal(x)$, constructed via:
+\begin{align}
+    \sigma_1(x) &= \beta \sum_{j=1}^{n} \left|\frac{\partial h}{\partial x_j}\right| \sigmaGPj{j}(x) \label{eq:sigma1} \\[4pt]
+    \sigma_i(x) &= \beta \sum_{j=1}^{n} \left|\frac{\partial \hat{\psi}_{i-1}^0}{\partial x_j}\right| \sigmaGPj{j}(x) \nonumber\\
+                &\quad + (|L_{\fhat}|_{\mathrm{op}} + k_i) \sigma_{i-1}(x) + \sigma_{\mathrm{cross}}^{(i)}(x), \;\; i \geq 2 \label{eq:sigma_recursive} \\[4pt]
+    \sigmatotal(x) &= \sigma_m(x) + \sum_{j=1}^{m-1} c_j \sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) \label{eq:sigma_total}
+\end{align}
+where $c_j = \prod_{i=j+1}^{m-1} (|L_{\fhat}|_{\mathrm{op},i} + k_i)$ and $\sigma_{\mathrm{ctrl}}(x)$ bounds the coupling coefficient gap (full derivation in Supplementary Section~S7).
+\end{definition}
+
+The \emph{Robust HOCBF constraint} is $A_0(x) u \leq b_0(x) - \epsilon(x)$.
+
+\subsection{Complementary Roles of Mean Correction and $\epsilon(x)$}
+
+Mean correction and $\epsilon(x)$ serve complementary roles (Remark~\ref{rmk:complementarity}). The GP mean $\muGP$ reduces the residual from $\Deltaf$ to $\Delta \hat{f}$, shrinking $\epsilon$ into the QP-feasible regime (the \emph{tractability enabler}). The compositional $\epsilon(x)$ then certifies the remaining residual through the $\sigma$-chain (the \emph{safety certifier}). Without mean correction, $\epsilon$ must cover the full $\Deltaf$, which can lead to QP infeasibility, as shown by the $\epsilon$-ablation results in the Supplementary Material; without $\epsilon$, the residual is uncertified, leading to violations under state-dependent perturbations (S3: Coupled, $45.4\%$).
+
+\begin{remark}[Complementarity]
+\label{rmk:complementarity}
+Safety requires $\epsilon(x) \geq |\Delta|$ (sufficient margin); feasibility requires $\epsilon(x)$ small enough for QP solvability within $\calU$. Mean correction reduces $\epsilon$ from covering $\Deltaf$ to covering $\Delta \hat{f} \propto \beta \cdot \sigmaGP$.
+\end{remark}
+
+\subsection{Data-Driven vs.\ Floor-Driven $\epsilon(x)$}
+
+The GP posterior variance includes a regularization floor $\sigma_{\mathrm{floor}} = 10^{-4}$ (added in quadrature). Under well-calibrated GP with constant perturbations, $\sigmaGP \lesssim 10^{-3}$ while $\sigma_{\mathrm{floor}} = 10^{-4}$, making the floor a significant contributor to $\epsilon(x)$. Consequently, $\epsilon(x)$ is approximately constant per constraint ($\mathrm{CV}(\epsilon) < 1\%$). Under state-dependent perturbations (S3: Coupled), $\sigmaGP \approx 0.34$ with $\mathrm{CV}(\sigmaGP) \approx 196\%$, making $\epsilon(x)$ genuinely state-dependent and entirely data-driven. The compositional $\sigma$-chain structure is essential in both regimes: when floor-dominated, it distributes the effective margin across constraints by relative degree; when data-driven, it provides state-dependent, per-constraint adaptation.
+
+\subsection{Differentiable QP and Policy Distillation}
+
+The safety filter QP is implemented using qpax~\cite{howell2024qpax} with KKT implicit differentiation~\cite{amos2017optnet}, enabling post-training policy distillation. A standalone network trained to mimic the Actor+QP mapping achieves 1.8\,ms inference vs.\ ${\sim}25$\,ms for the online QP (empirical-only safety guarantee on the distilled mapping; the production configuration retains the online QP filter as a safety fallback). The differentiable QP is an implementation mechanism rather than a co-equal scientific contribution.

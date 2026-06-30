@@ -1,0 +1,24 @@
+  [GP pretrain] 21.8s
+  [PPO train] 769.8s
+  [1/240] PPO                  | nominal         | s=0: viol=0.0017±0.0024, reward=-604.4
+  [2/240] PPO-CBF              | nominal         | s=0: viol=0.9883±0.0047, reward=-1053.1
+  [3/240] PPO-HOCBF            | nominal         | s=0: viol=0.0033±0.0047, reward=-555.0
+  [4/240] PPO-GP-HOCBF         | nominal         | s=0: viol=0.0000±0.0000, reward=-494.2
+  [5/240] PPO-RHOCBF           | nominal         | s=0: viol=0.0017±0.0024, reward=-550.7
+  [PPO-Lagr train] 755.5s
+  [6/240] PPO-Lagrangian       | nominal         | s=0: viol=0.0000±0.0000
+/home/gpu/sz_workspace/RoCBF-Net/rocbf/gp/gp_residual.py:259: RuntimeWarning: invalid value encountered in multiply
+  Y_old[:, j] = y_norm_j * float(self._y_std[j]) + float(self._y_mean[j])
+  [RoCBF-Net train] 813.2s
+  [7/240] RoCBF-Net (Ours)     | nominal         | s=0: viol=0.0017±0.0024
+  [8/240] NMPC                 | nominal         | s=0: viol=0.0000±0.0000
+  Progress: 8/240, elapsed: 60.8min, ETA: 1762.7min
+  [GP pretrain] 17.9s
+  [PPO train] 770.6s
+  [9/240] PPO                  | nominal         | s=1: viol=0.0017±0.0024, reward=-525.3
+  [10/240] PPO-CBF              | nominal         | s=1: viol=0.9817±0.0125, reward=-1193.7
+  [11/240] PPO-HOCBF            | nominal         | s=1: viol=0.0017±0.0024, reward=-551.8
+  [12/240] PPO-GP-HOCBF         | nominal         | s=1: viol=0.0017±0.0024, reward=-543.8
+  [13/240] PPO-RHOCBF           | nominal         | s=1: viol=0.0000±0.0000, reward=-503.4
+  [PPO-Lagr train] 771.1s
+  [14/240] PPO-Lagrangian       | nominal         | s=1: viol=0.0017±0.0024

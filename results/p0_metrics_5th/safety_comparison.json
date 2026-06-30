@@ -1,0 +1,614 @@
+[
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.768305022866116,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -20.856873003882356,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.235884942521807,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.768305022866116,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -20.856873003882356,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.235884942521807,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.768305022866116,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -20.856873003882356,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.235884942521807,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.768305022866116,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -20.856873003882356,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -24.235884942521807,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 41.333333333333336,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -799.7347458600998,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 41.333333333333336,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 40.666666666666664,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -807.4069118499756,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 40.666666666666664,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 41.333333333333336,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -795.734348833561,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 41.333333333333336,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 41.333333333333336,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -799.7347458600998,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 41.333333333333336,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 40.666666666666664,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -807.4069118499756,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 40.666666666666664,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 41.333333333333336,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -795.734348833561,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 41.333333333333336,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 41.0,
+    "total_reward": -714.6314896941185,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 40.666666666666664,
+    "total_reward": -727.3353867530823,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 41.333333333333336,
+    "total_reward": -710.251602947712,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 41.333333333333336,
+    "total_reward": -713.9538213610649,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 40.666666666666664,
+    "total_reward": -726.67578291893,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 41.333333333333336,
+    "total_reward": -709.5811851620674,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.1851180791855,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -372.4761952161789,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.5234342813492,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo",
+    "condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.1851180791855,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -372.4761952161789,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.5234342813492,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_hocbf",
+    "condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.1851180791855,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -372.4761952161789,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.5234342813492,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_gp_hocbf",
+    "condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.1851180791855,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -372.4761952161789,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -378.5234342813492,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "method": "ppo_rhocbf",
+    "condition": "S2:Pressure",
+    "seed": 2
+  }
+]

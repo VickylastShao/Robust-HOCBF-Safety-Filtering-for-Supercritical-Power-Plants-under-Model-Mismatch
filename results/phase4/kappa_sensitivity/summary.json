@@ -1,0 +1,262 @@
+{
+  "heat_absorption": [
+    {
+      "kappa": 0.001,
+      "violation_rate": 0.30149999260902405,
+      "violation_std": 0.03301893547177315,
+      "min_barrier": -98.7433853149414,
+      "min_barrier_std": 16.304216384887695,
+      "condition": "heat_absorption",
+      "eval_time_s": 4.02907919883728
+    },
+    {
+      "kappa": 0.01,
+      "violation_rate": 0.2865000367164612,
+      "violation_std": 0.03471671789884567,
+      "min_barrier": -92.4395751953125,
+      "min_barrier_std": 16.11488914489746,
+      "condition": "heat_absorption",
+      "eval_time_s": 3.7832536697387695
+    },
+    {
+      "kappa": 0.05,
+      "violation_rate": 0.3070000112056732,
+      "violation_std": 0.021354153752326965,
+      "min_barrier": -93.51826477050781,
+      "min_barrier_std": 19.61159896850586,
+      "condition": "heat_absorption",
+      "eval_time_s": 3.7971394062042236
+    },
+    {
+      "kappa": 0.1,
+      "violation_rate": 0.29249998927116394,
+      "violation_std": 0.02052437886595726,
+      "min_barrier": -94.0157699584961,
+      "min_barrier_std": 14.806180000305176,
+      "condition": "heat_absorption",
+      "eval_time_s": 3.8044636249542236
+    },
+    {
+      "kappa": 0.2,
+      "violation_rate": 0.296999990940094,
+      "violation_std": 0.023473389446735382,
+      "min_barrier": -92.57470703125,
+      "min_barrier_std": 12.065652847290039,
+      "condition": "heat_absorption",
+      "eval_time_s": 3.786837100982666
+    },
+    {
+      "kappa": 0.5,
+      "violation_rate": 0.3050000071525574,
+      "violation_std": 0.01870828866958618,
+      "min_barrier": -100.2413330078125,
+      "min_barrier_std": 13.886472702026367,
+      "condition": "heat_absorption",
+      "eval_time_s": 3.778543710708618
+    },
+    {
+      "kappa": 1.0,
+      "violation_rate": 0.29749998450279236,
+      "violation_std": 0.03348507359623909,
+      "min_barrier": -87.8413314819336,
+      "min_barrier_std": 11.787800788879395,
+      "condition": "heat_absorption",
+      "eval_time_s": 3.736682415008545
+    }
+  ],
+  "pressure_oscillation": [
+    {
+      "kappa": 0.001,
+      "violation_rate": 0.2355000078678131,
+      "violation_std": 0.03622498735785484,
+      "min_barrier": -88.14226531982422,
+      "min_barrier_std": 12.183523178100586,
+      "condition": "pressure_oscillation",
+      "eval_time_s": 3.7950799465179443
+    },
+    {
+      "kappa": 0.01,
+      "violation_rate": 0.22450001537799835,
+      "violation_std": 0.020670024678111076,
+      "min_barrier": -92.53369140625,
+      "min_barrier_std": 8.179362297058105,
+      "condition": "pressure_oscillation",
+      "eval_time_s": 3.790753126144409
+    },
+    {
+      "kappa": 0.05,
+      "violation_rate": 0.2329999953508377,
+      "violation_std": 0.026191601529717445,
+      "min_barrier": -88.32551574707031,
+      "min_barrier_std": 21.0985107421875,
+      "condition": "pressure_oscillation",
+      "eval_time_s": 3.771519184112549
+    },
+    {
+      "kappa": 0.1,
+      "violation_rate": 0.20850001275539398,
+      "violation_std": 0.024295059964060783,
+      "min_barrier": -90.4157943725586,
+      "min_barrier_std": 14.36941909790039,
+      "condition": "pressure_oscillation",
+      "eval_time_s": 3.727771043777466
+    },
+    {
+      "kappa": 0.2,
+      "violation_rate": 0.21399998664855957,
+      "violation_std": 0.02497999183833599,
+      "min_barrier": -78.68281555175781,
+      "min_barrier_std": 14.151156425476074,
+      "condition": "pressure_oscillation",
+      "eval_time_s": 3.705601692199707
+    },
+    {
+      "kappa": 0.5,
+      "violation_rate": 0.2329999953508377,
+      "violation_std": 0.020396076142787933,
+      "min_barrier": -91.0368423461914,
+      "min_barrier_std": 14.902877807617188,
+      "condition": "pressure_oscillation",
+      "eval_time_s": 3.7934775352478027
+    },
+    {
+      "kappa": 1.0,
+      "violation_rate": 0.2175000011920929,
+      "violation_std": 0.02482438087463379,
+      "min_barrier": -77.3322982788086,
+      "min_barrier_std": 11.545378684997559,
+      "condition": "pressure_oscillation",
+      "eval_time_s": 3.767432928085327
+    }
+  ],
+  "coupled": [
+    {
+      "kappa": 0.001,
+      "violation_rate": 0.1770000159740448,
+      "violation_std": 0.020396078005433083,
+      "min_barrier": -78.60578918457031,
+      "min_barrier_std": 17.65189552307129,
+      "condition": "coupled",
+      "eval_time_s": 4.6447248458862305
+    },
+    {
+      "kappa": 0.01,
+      "violation_rate": 0.1720000058412552,
+      "violation_std": 0.019131125882267952,
+      "min_barrier": -79.26191711425781,
+      "min_barrier_std": 16.66555404663086,
+      "condition": "coupled",
+      "eval_time_s": 4.640954494476318
+    },
+    {
+      "kappa": 0.05,
+      "violation_rate": 0.18299999833106995,
+      "violation_std": 0.028301944956183434,
+      "min_barrier": -81.21428680419922,
+      "min_barrier_std": 12.556927680969238,
+      "condition": "coupled",
+      "eval_time_s": 4.608727693557739
+    },
+    {
+      "kappa": 0.1,
+      "violation_rate": 0.17149999737739563,
+      "violation_std": 0.02366960048675537,
+      "min_barrier": -74.9306869506836,
+      "min_barrier_std": 12.788994789123535,
+      "condition": "coupled",
+      "eval_time_s": 4.546674728393555
+    },
+    {
+      "kappa": 0.2,
+      "violation_rate": 0.1629999876022339,
+      "violation_std": 0.02088061161339283,
+      "min_barrier": -69.26042938232422,
+      "min_barrier_std": 7.0869460105896,
+      "condition": "coupled",
+      "eval_time_s": 4.623715877532959
+    },
+    {
+      "kappa": 0.5,
+      "violation_rate": 0.18450000882148743,
+      "violation_std": 0.022073738276958466,
+      "min_barrier": -72.25957489013672,
+      "min_barrier_std": 19.02458953857422,
+      "condition": "coupled",
+      "eval_time_s": 4.627750873565674
+    },
+    {
+      "kappa": 1.0,
+      "violation_rate": 0.17999999225139618,
+      "violation_std": 0.020976176485419273,
+      "min_barrier": -76.7577133178711,
+      "min_barrier_std": 5.149173736572266,
+      "condition": "coupled",
+      "eval_time_s": 4.600360870361328
+    }
+  ],
+  "nonlinear": [
+    {
+      "kappa": 0.001,
+      "violation_rate": 0.16600000858306885,
+      "violation_std": 0.02861817739903927,
+      "min_barrier": -75.5964126586914,
+      "min_barrier_std": 13.43564510345459,
+      "condition": "nonlinear",
+      "eval_time_s": 4.516402006149292
+    },
+    {
+      "kappa": 0.01,
+      "violation_rate": 0.16300000250339508,
+      "violation_std": 0.02767670713365078,
+      "min_barrier": -74.19292449951172,
+      "min_barrier_std": 12.159906387329102,
+      "condition": "nonlinear",
+      "eval_time_s": 4.413294315338135
+    },
+    {
+      "kappa": 0.05,
+      "violation_rate": 0.1809999942779541,
+      "violation_std": 0.021656407043337822,
+      "min_barrier": -71.59175109863281,
+      "min_barrier_std": 18.081029891967773,
+      "condition": "nonlinear",
+      "eval_time_s": 4.415019750595093
+    },
+    {
+      "kappa": 0.1,
+      "violation_rate": 0.17399999499320984,
+      "violation_std": 0.019339079037308693,
+      "min_barrier": -79.1253433227539,
+      "min_barrier_std": 15.022178649902344,
+      "condition": "nonlinear",
+      "eval_time_s": 4.406156778335571
+    },
+    {
+      "kappa": 0.2,
+      "violation_rate": 0.18050001561641693,
+      "violation_std": 0.03102015145123005,
+      "min_barrier": -83.72944641113281,
+      "min_barrier_std": 20.228496551513672,
+      "condition": "nonlinear",
+      "eval_time_s": 4.362229585647583
+    },
+    {
+      "kappa": 0.5,
+      "violation_rate": 0.18150000274181366,
+      "violation_std": 0.02302715554833412,
+      "min_barrier": -80.449951171875,
+      "min_barrier_std": 14.48539924621582,
+      "condition": "nonlinear",
+      "eval_time_s": 4.4264678955078125
+    },
+    {
+      "kappa": 1.0,
+      "violation_rate": 0.17349998652935028,
+      "violation_std": 0.02490481734275818,
+      "min_barrier": -69.33039855957031,
+      "min_barrier_std": 11.030628204345703,
+      "condition": "nonlinear",
+      "eval_time_s": 4.401174783706665
+    }
+  ]
+}

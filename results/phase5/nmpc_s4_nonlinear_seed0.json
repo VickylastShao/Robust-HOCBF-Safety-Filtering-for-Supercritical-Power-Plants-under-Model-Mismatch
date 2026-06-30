@@ -1,0 +1,61 @@
+{
+  "violation_rate": [
+    0.0004,
+    0.0028000000000000004
+  ],
+  "cbf_violation_rate": [
+    0.0004,
+    0.0028000000000000004
+  ],
+  "cumulative_reward": [
+    -385.4486659526825,
+    1.0980881406744194
+  ],
+  "tracking_rmse": {
+    "pressure": [
+      2.767287012183055,
+      0.0023676339599435336
+    ],
+    "enthalpy": [
+      6.187237793299277,
+      0.5498443054291517
+    ],
+    "power": [
+      0.0007436308174933803,
+      3.6305056460417936e-06
+    ]
+  },
+  "control_cost": [
+    6253.023320236206,
+    28.835015286134368
+  ],
+  "min_barrier_value": [
+    3.6418764877319334,
+    2.948839498258975
+  ],
+  "online_time_ms": [
+    340.9207922504982,
+    73.41637985146671
+  ],
+  "per_constraint_type": {
+    "pressure": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 2500
+    },
+    "enthalpy": {
+      "violation_rate": 0.0004,
+      "violation_count": 1,
+      "total_steps": 2500
+    },
+    "power": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 2500
+    }
+  },
+  "convergence_episode": 0,
+  "n_training_episodes": 0,
+  "reward_history": [],
+  "epsilon_log": []
+}

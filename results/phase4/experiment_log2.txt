@@ -1,0 +1,14 @@
+  [GP pretrain] 21.3s
+  [1/240] NMPC                 | nominal         | s=0: viol=0.0000±0.0000
+  Progress: 1/240, elapsed: 0.5min, ETA: 113.6min
+  [GP pretrain] 17.2s
+/home/gpu/sz_workspace/RoCBF-Net/rocbf/gp/gp_residual.py:259: RuntimeWarning: invalid value encountered in multiply
+  Y_old[:, j] = y_norm_j * float(self._y_std[j]) + float(self._y_mean[j])
+  [RoCBF-Net train] 822.2s
+  [2/240] RoCBF-Net (Ours)     | nominal         | s=1: viol=0.0017±0.0024
+  [3/240] NMPC                 | nominal         | s=1: viol=0.0000±0.0000
+  Progress: 3/240, elapsed: 17.6min, ETA: 1387.9min
+  [GP pretrain] 18.9s
+  [PPO train] 774.1s
+  [4/240] PPO                  | nominal         | s=2: viol=0.0000±0.0000, reward=-542.6
+  [5/240] PPO-CBF              | nominal         | s=2: viol=0.6550±0.4420, reward=-1011.6

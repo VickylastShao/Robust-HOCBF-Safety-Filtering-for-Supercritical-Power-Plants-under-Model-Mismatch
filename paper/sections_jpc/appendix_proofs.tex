@@ -1,0 +1,51 @@
+\section{Proofs of Theoretical Results}
+\label{sec:appendix_proofs}
+
+\subsection{Residual Gradient Bound}
+
+\begin{lemma}[Residual gradient bound]
+\label{lem:residual_gradient}
+Let $\delta_i = \psi_i - \hat{\psi}_i^0$ with $\delta_0 \equiv 0$. Under the smoothness and gradient boundedness conditions stated in Theorem~1 of the main manuscript and smoothness of $\hat{f}$ on the compact operating region $\calX_{\mathrm{op}}$, $\|\nabla_x \delta_i(x)\| \leq G_\delta^{(i)}$ for all $x \in \calX_{\mathrm{op}}$, with
+\begin{align}
+    G_\delta^{(0)} &= 0, \nonumber\\
+    G_\delta^{(i)} &= H_\psi^{(i-1)} \|\Delta \hat{f}\|_\infty + G_\psi^{(i-1)} G_f + (L_{\hat f,i} + k_i) G_\delta^{(i-1)} + H_\delta^{(i-1)}\|\Delta\hat f\|_\infty + G_\delta^{(i-1)} G_f
+    \label{eq:G_delta_recursive_app}
+\end{align}
+where $H_\psi^{(i-1)} = \sup_x \|\nabla_x^2 \hat{\psi}_{i-1}^0\|_{\mathrm{op}}$, $G_\psi^{(i-1)} = \sup_x \|\nabla_x \hat{\psi}_{i-1}^0\|$, and $G_f$ is the gradient bound from the gradient boundedness condition of Theorem~1 of the main manuscript.
+\end{lemma}
+
+\begin{proof}
+Differentiate $\delta_i$ term by term: $\delta_i = L_{\Delta\hat f}\hat\psi_{i-1}^0 + (L_{\hat f}+k_i)\delta_{i-1} + L_{\Delta\hat f}\delta_{i-1}$.
+\begin{enumerate}
+    \item[(i)] $\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0) = \nabla_x^2\hat\psi_{i-1}^0 \Delta\hat f + (\nabla_x\Delta\hat f)^\top \nabla_x\hat\psi_{i-1}^0$. By Cauchy-Schwarz and the gradient boundedness condition of Theorem~1 of the main manuscript: $\|\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0)\| \leq H_\psi^{(i-1)}\|\Delta\hat f\|_\infty + G_\psi^{(i-1)} G_f$.
+    \item[(ii)] $\nabla_x((L_{\hat f}+k_i)\delta_{i-1})$ contributes $(L_{\hat f,i} + k_i) G_\delta^{(i-1)}$.
+    \item[(iii)] $\nabla_x(L_{\Delta\hat f}\delta_{i-1}) = \nabla_x^2\delta_{i-1} \Delta\hat f + (\nabla_x\Delta\hat f)^\top \nabla_x\delta_{i-1}$, bounded by $H_\delta^{(i-1)}\|\Delta\hat f\|_\infty + G_\delta^{(i-1)} G_f$.
+\end{enumerate}
+Summing yields~Eq.~(S1). Under the gradient boundedness condition of Theorem~1 of the main manuscript, $G_f = L_{\hat{f}}\|\Delta\hat f\|_\infty = \calO(\|\Delta\hat f\|)$. By induction, $G_\delta^{(i)} = \calO(\|\Delta\hat f\|)$ at every level, so $|L_{\Delta\hat f}\delta_{i-1}| \leq G_\delta^{(i-1)}\|\Delta\hat f\| = \calO(\|\Delta\hat f\|^2) = \calO(\rho^2)$.
+\end{proof}
+
+\subsection{Full Proof of Theorem~1}
+
+\begin{proof}[Proof of Theorem~1]
+\textbf{Step 1 (GP calibration).} By the RKHS boundedness and GP calibration conditions stated in Theorem~1 of the main manuscript and the GP-UCB concentration inequality of Srinivas et al.\ [4], $|\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \cdot \sigmaGPj{j}(x)$ for all $x \in \calX$ holds with probability $\geq 1 - \delta/n$ per dimension. By union bound over $j = 1,\ldots,n$, this holds simultaneously with probability $\geq 1 - \delta$. Condition on this event.
+
+\textbf{Step 2 (Compositional bound).} We show $|\delta_i(x)| \leq \sigma_i(x)$ by induction on $i$.
+\begin{itemize}
+    \item \emph{Base case ($i=1$):} $\delta_1 = \sum_j (\partial h/\partial x_j) \Delta \hat{f}_j$. By Step~1 and triangle inequality, $|\delta_1| \leq \beta \sum_j |\partial h/\partial x_j| \sigmaGPj{j} = \sigma_1$.
+    \item \emph{Inductive step ($i \geq 2$):} Assume $|\delta_{i-1}| \leq \sigma_{i-1}$. From~Eq.~(5) of the main text: $|\delta_i| \leq |L_{\Delta \hat{f}} \hat{\psi}_{i-1}^0| + (|L_{\fhat}|_{\mathrm{op}} + k_i)|\delta_{i-1}| + |L_{\Delta \hat{f}} \delta_{i-1}|$. Term 1 bounded identically to base case; Term 2 bounded by induction hypothesis; Term 3 bounded using Lemma~S1: $|L_{\Delta \hat{f}} \delta_{i-1}| \leq G_\delta^{(i-1)} \beta \|\sigmaGP\|_2 = \sigma_{\mathrm{cross}}^{(i)}$. Summing: $|\delta_i| \leq \sigma_i$.
+\end{itemize}
+The cross term is retained at full weight. Under the gradient boundedness condition of Theorem~1 of the main manuscript, it is formally $\calO(\rho^2)$.
+
+\textbf{Step 3 (Total perturbation).} Combining the inductive bounds from Step~2 with the coupling-coefficient bound~Eq.~(S2) yields $|\Delta(x,u)| \leq \sigma_m(x) + \sum_{j=1}^{m-1} c_j \sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) = \sigmatotal(x)$. For $\epsilonKappa = 1$, $\epsilon(x) = \sigmatotal(x)$, hence $|\Delta(x,u)| \leq \epsilon(x)$.
+
+\textbf{Step 4 (Forward invariance).} For $u^*$ satisfying $A_0 u^* \leq b_0 - \epsilon$: $\psi_m^{\mathrm{true}}(x,u^*) = \hat{\psi}_m^0(x,u^*) + \Delta(x,u^*) \geq \epsilon(x) - |\Delta(x,u^*)| \geq 0$. By Theorem~2 of~Xiao et al.\ [2], the safe set $\calC$ is forward invariant.
+\end{proof}
+
+\subsection{Coupling Coefficient Gap Bound}
+
+The coupling coefficient gap is bounded by:
+\begin{equation}
+    \sigma_{\mathrm{ctrl}}(x) = \beta \sum_{j} \left|\frac{\partial (L_g L_{\fhat}^{m-1} h)}{\partial x_j}\right| \sigmaGPj{j}(x) \cdot u_{\max}
+    \label{eq:sigma_ctrl_app}
+\end{equation}
+where $u_{\max} = \sup_{u \in \calU} \|u\|$. On the CCS, $\sigma_{\mathrm{ctrl}} / \sigmatotal < 0.15$ for both constraints.

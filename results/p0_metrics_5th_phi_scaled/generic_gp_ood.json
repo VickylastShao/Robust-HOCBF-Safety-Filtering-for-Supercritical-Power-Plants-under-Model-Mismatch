@@ -1,0 +1,802 @@
+[
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -40.653104141005315,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.4,
+    "total_reward": -41.18441621339298,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -45.56931884448568,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -37.23631045264483,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "Nominal",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -39.62294952952652,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "Nominal",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 45.4,
+    "total_reward": -142.82130763836903,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "Nominal",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 39.2,
+    "total_reward": -150.1258506822196,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "Nominal",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.2,
+    "power_violation": 0.0,
+    "qp_intervention": 49.0,
+    "total_reward": -99.32459873998596,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "Nominal",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 40.6,
+    "total_reward": -112.58473229240917,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "Nominal",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 40.8,
+    "total_reward": -54.561390844057314,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "Nominal",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10875.075698852539,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10893.632190704346,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -10882.188844680786,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10886.269802093506,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S1:Heat",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10886.094829559326,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S1:Heat",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 94.19999999999999,
+    "power_violation": 0.0,
+    "qp_intervention": 6.0,
+    "total_reward": -11772.795289993286,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 97.2,
+    "power_violation": 0.0,
+    "qp_intervention": 2.8000000000000003,
+    "total_reward": -11851.43920326233,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 87.2,
+    "power_violation": 0.0,
+    "qp_intervention": 12.6,
+    "total_reward": -11749.982891082764,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 96.0,
+    "power_violation": 0.0,
+    "qp_intervention": 4.2,
+    "total_reward": -11839.85372543335,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S1:Heat",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 86.2,
+    "power_violation": 0.0,
+    "qp_intervention": 13.8,
+    "total_reward": -11684.216453552246,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S1:Heat",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 100.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -10991.652549743652,
+    "gp_type": "ood_s3_to_s1",
+    "gp_strategy": "ood_s3_to_s1",
+    "deploy_condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 100.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -11028.306659698486,
+    "gp_type": "ood_s3_to_s1",
+    "gp_strategy": "ood_s3_to_s1",
+    "deploy_condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 99.8,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -11025.204845428467,
+    "gp_type": "ood_s3_to_s1",
+    "gp_strategy": "ood_s3_to_s1",
+    "deploy_condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 100.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -11010.46537399292,
+    "gp_type": "ood_s3_to_s1",
+    "gp_strategy": "ood_s3_to_s1",
+    "deploy_condition": "S1:Heat",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 99.8,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -11002.006086349487,
+    "gp_type": "ood_s3_to_s1",
+    "gp_strategy": "ood_s3_to_s1",
+    "deploy_condition": "S1:Heat",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15518.23110961914,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -15531.66164970398,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -15517.889841079712,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -15528.027606964111,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S2:Pressure",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -15521.807001113892,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S2:Pressure",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 96.2,
+    "power_violation": 0.0,
+    "qp_intervention": 3.8,
+    "total_reward": -16201.381858825684,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S2:Pressure",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 96.6,
+    "power_violation": 0.0,
+    "qp_intervention": 3.2,
+    "total_reward": -16248.044477462769,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S2:Pressure",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 96.8,
+    "power_violation": 0.0,
+    "qp_intervention": 3.0,
+    "total_reward": -16240.312602996826,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S2:Pressure",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 95.19999999999999,
+    "power_violation": 0.0,
+    "qp_intervention": 4.3999999999999995,
+    "total_reward": -16241.251655578613,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S2:Pressure",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 97.0,
+    "power_violation": 0.0,
+    "qp_intervention": 2.4,
+    "total_reward": -16224.650239944458,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S2:Pressure",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 98.8,
+    "total_reward": -8044.367946624756,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S3:Coupled",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -8066.951944351196,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S3:Coupled",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -8049.15718460083,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S3:Coupled",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.2,
+    "total_reward": -8053.115571975708,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S3:Coupled",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.2,
+    "total_reward": -8053.518162727356,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S3:Coupled",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 79.4,
+    "power_violation": 0.0,
+    "qp_intervention": 22.8,
+    "total_reward": -8594.374995231628,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S3:Coupled",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 87.2,
+    "power_violation": 0.0,
+    "qp_intervention": 12.8,
+    "total_reward": -8745.143797397614,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S3:Coupled",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 85.6,
+    "power_violation": 0.0,
+    "qp_intervention": 18.2,
+    "total_reward": -8709.974687099457,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S3:Coupled",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 84.2,
+    "power_violation": 0.0,
+    "qp_intervention": 17.0,
+    "total_reward": -8675.683491706848,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S3:Coupled",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 77.0,
+    "power_violation": 0.0,
+    "qp_intervention": 22.0,
+    "total_reward": -8556.987840652466,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S3:Coupled",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -7882.120959281921,
+    "gp_type": "ood_s1_to_s3",
+    "gp_strategy": "ood_s1_to_s3",
+    "deploy_condition": "S3:Coupled",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -7904.951364994049,
+    "gp_type": "ood_s1_to_s3",
+    "gp_strategy": "ood_s1_to_s3",
+    "deploy_condition": "S3:Coupled",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -7890.317530632019,
+    "gp_type": "ood_s1_to_s3",
+    "gp_strategy": "ood_s1_to_s3",
+    "deploy_condition": "S3:Coupled",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -7894.6764941215515,
+    "gp_type": "ood_s1_to_s3",
+    "gp_strategy": "ood_s1_to_s3",
+    "deploy_condition": "S3:Coupled",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -7895.12211227417,
+    "gp_type": "ood_s1_to_s3",
+    "gp_strategy": "ood_s1_to_s3",
+    "deploy_condition": "S3:Coupled",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -5990.4672775268555,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -6012.04141330719,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -5994.855880737305,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -5997.311483860016,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -5999.6442766189575,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 98.2,
+    "power_violation": 0.0,
+    "qp_intervention": 0.6,
+    "total_reward": -6717.00813293457,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 98.2,
+    "power_violation": 0.0,
+    "qp_intervention": 2.0,
+    "total_reward": -6757.215918064117,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 97.8,
+    "power_violation": 0.0,
+    "qp_intervention": 0.8,
+    "total_reward": -6757.7865834236145,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 98.6,
+    "power_violation": 0.0,
+    "qp_intervention": 1.6,
+    "total_reward": -6746.425033569336,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 98.4,
+    "power_violation": 0.0,
+    "qp_intervention": 0.4,
+    "total_reward": -6726.967769622803,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S4:Nonlinear",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -9061.91547203064,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S5:Valve",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -9077.107286453247,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S5:Valve",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.6,
+    "total_reward": -9068.065670013428,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S5:Valve",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -9069.200746536255,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S5:Valve",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.4,
+    "total_reward": -9071.569248199463,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S5:Valve",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 98.4,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -9766.672918319702,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S5:Valve",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 99.2,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -9807.75807762146,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S5:Valve",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 98.6,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -9809.725801467896,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S5:Valve",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 99.2,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -9812.246417999268,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S5:Valve",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 98.6,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -9775.555173873901,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S5:Valve",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5236.858651161194,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S6:Fuel",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5248.524667739868,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S6:Fuel",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -5240.412808418274,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S6:Fuel",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 100.0,
+    "total_reward": -5245.282388687134,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S6:Fuel",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 99.8,
+    "total_reward": -5243.773120880127,
+    "gp_type": "scenario_specific",
+    "gp_strategy": "scenario_specific",
+    "deploy_condition": "S6:Fuel",
+    "seed": 4
+  },
+  {
+    "cbf_violation": 100.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -6182.491756439209,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S6:Fuel",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 99.8,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -6224.070730209351,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S6:Fuel",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 99.6,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -6229.5391092300415,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S6:Fuel",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 99.8,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -6231.195534706116,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S6:Fuel",
+    "seed": 3
+  },
+  {
+    "cbf_violation": 99.4,
+    "power_violation": 0.0,
+    "qp_intervention": 0.2,
+    "total_reward": -6188.509963989258,
+    "gp_type": "generic_mixed",
+    "gp_strategy": "generic_mixed",
+    "deploy_condition": "S6:Fuel",
+    "seed": 4
+  }
+]

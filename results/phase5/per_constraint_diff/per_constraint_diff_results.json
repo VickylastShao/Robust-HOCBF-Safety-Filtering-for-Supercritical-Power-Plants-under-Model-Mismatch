@@ -1,0 +1,206 @@
+{
+  "scenario_specific_compositional": {
+    "violation_rate": 0.001,
+    "cbf_violation_rate": 0.0,
+    "reward": -557.6759559512138,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.993,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.0,
+    "mean_epsilon_per_constraint": [
+      0.17090136632323266,
+      0.17090136632323266,
+      0.043598711490631104,
+      0.043598711490631104
+    ],
+    "config_name": "compositional",
+    "gp_type": "scenario_specific"
+  },
+  "scenario_specific_constant_mean": {
+    "violation_rate": 0.001,
+    "cbf_violation_rate": 0.0,
+    "reward": -557.6759559512138,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.993,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.0,
+    "mean_epsilon_per_constraint": [
+      0.17090146243572235,
+      0.17090146243572235,
+      0.04359870404005051,
+      0.04359870404005051
+    ],
+    "config_name": "constant_mean",
+    "gp_type": "scenario_specific"
+  },
+  "scenario_specific_uniform_max": {
+    "violation_rate": 0.001,
+    "cbf_violation_rate": 0.0,
+    "reward": -556.2805355191231,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.993,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.0,
+    "mean_epsilon_per_constraint": [
+      0.17090146243572235,
+      0.17090146243572235,
+      0.17090146243572235,
+      0.17090146243572235
+    ],
+    "config_name": "uniform_max",
+    "gp_type": "scenario_specific"
+  },
+  "scenario_specific_uniform_min": {
+    "violation_rate": 0.001,
+    "cbf_violation_rate": 0.0,
+    "reward": -557.6759559512138,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.993,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.0,
+    "mean_epsilon_per_constraint": [
+      0.04359870404005051,
+      0.04359870404005051,
+      0.04359870404005051,
+      0.04359870404005051
+    ],
+    "config_name": "uniform_min",
+    "gp_type": "scenario_specific"
+  },
+  "scenario_specific_uniform_mean": {
+    "violation_rate": 0.001,
+    "cbf_violation_rate": 0.0,
+    "reward": -556.9786036968231,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.993,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.0,
+    "mean_epsilon_per_constraint": [
+      0.10725008696317673,
+      0.10725008696317673,
+      0.10725008696317673,
+      0.10725008696317673
+    ],
+    "config_name": "uniform_mean",
+    "gp_type": "scenario_specific"
+  },
+  "scenario_specific_no_epsilon": {
+    "violation_rate": 0.001,
+    "cbf_violation_rate": 0.0,
+    "reward": -558.1565760016441,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.993,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.0,
+    "mean_epsilon_per_constraint": [
+      0.17090136632323266,
+      0.17090136632323266,
+      0.043598711490631104,
+      0.043598711490631104
+    ],
+    "config_name": "no_epsilon",
+    "gp_type": "scenario_specific"
+  },
+  "mixed_compositional": {
+    "violation_rate": 1.0,
+    "cbf_violation_rate": 0.005,
+    "reward": -7233.368895816803,
+    "qp_infeasible_rate": 0.9949999999999999,
+    "qp_intervention_rate": 0.9960000000000001,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.005,
+    "mean_epsilon_per_constraint": [
+      0.18887829259037972,
+      0.18887829259037972,
+      64.12043262124061,
+      64.12043262124061
+    ],
+    "config_name": "compositional",
+    "gp_type": "mixed"
+  },
+  "mixed_constant_mean": {
+    "violation_rate": 1.0,
+    "cbf_violation_rate": 0.0,
+    "reward": -7264.766515350342,
+    "qp_infeasible_rate": 1.0,
+    "qp_intervention_rate": 1.0,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.0,
+    "mean_epsilon_per_constraint": [
+      0.18598832190036774,
+      0.18598832190036774,
+      82.97303771972656,
+      82.97303771972656
+    ],
+    "config_name": "constant_mean",
+    "gp_type": "mixed"
+  },
+  "mixed_uniform_max": {
+    "violation_rate": 1.0,
+    "cbf_violation_rate": 0.005,
+    "reward": -7234.067424678802,
+    "qp_infeasible_rate": 0.9949999999999999,
+    "qp_intervention_rate": 0.9949999999999999,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.005,
+    "mean_epsilon_per_constraint": [
+      82.97303771972656,
+      82.97303771972656,
+      82.97303771972656,
+      82.97303771972656
+    ],
+    "config_name": "uniform_max",
+    "gp_type": "mixed"
+  },
+  "mixed_uniform_min": {
+    "violation_rate": 0.992,
+    "cbf_violation_rate": 0.992,
+    "reward": -913.0680955529212,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.10900000000000001,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.992,
+    "mean_epsilon_per_constraint": [
+      0.18598832190036774,
+      0.18598832190036774,
+      0.18598832190036774,
+      0.18598832190036774
+    ],
+    "config_name": "uniform_min",
+    "gp_type": "mixed"
+  },
+  "mixed_uniform_mean": {
+    "violation_rate": 0.006,
+    "cbf_violation_rate": 0.005,
+    "reward": -524.6783168494701,
+    "qp_infeasible_rate": 0.993,
+    "qp_intervention_rate": 0.993,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.005,
+    "mean_epsilon_per_constraint": [
+      41.57950973510742,
+      41.57950973510742,
+      41.57950973510742,
+      41.57950973510742
+    ],
+    "config_name": "uniform_mean",
+    "gp_type": "mixed"
+  },
+  "mixed_no_epsilon": {
+    "violation_rate": 0.9909999999999999,
+    "cbf_violation_rate": 0.9909999999999999,
+    "reward": -914.8059610724449,
+    "qp_infeasible_rate": 0.0,
+    "qp_intervention_rate": 0.10200000000000001,
+    "pressure_violation_rate": 0.0,
+    "enthalpy_violation_rate": 0.9909999999999999,
+    "mean_epsilon_per_constraint": [
+      0.18860010504722596,
+      0.18860010504722596,
+      62.09979205727577,
+      62.09979205727577
+    ],
+    "config_name": "no_epsilon",
+    "gp_type": "mixed"
+  }
+}

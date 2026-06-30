@@ -1,0 +1,272 @@
+[
+  {
+    "cbf_violation": 30.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -11725.072490692139,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 30.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": null,
+    "method": "ppo",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 30.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -11730.91093826294,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 30.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": null,
+    "method": "ppo",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 34.4,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -11741.612161636353,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 34.4,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": null,
+    "method": "ppo",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 30.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -11725.072490692139,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 30.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": null,
+    "method": "ppo_hocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 30.0,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -11730.91093826294,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 30.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": null,
+    "method": "ppo_hocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 34.4,
+    "power_violation": 0.0,
+    "qp_intervention": 0.0,
+    "total_reward": -11741.612161636353,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 34.4,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": null,
+    "method": "ppo_hocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 30.0,
+    "total_reward": -11639.896518707275,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_gp_hocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 30.0,
+    "total_reward": -11640.270055770874,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_gp_hocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 34.4,
+    "total_reward": -11630.923080444336,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_gp_hocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 30.2,
+    "total_reward": -11639.003385543823,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 30.2,
+    "total_reward": -11639.376159667969,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 34.4,
+    "total_reward": -11629.939432144165,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "ppo_rhocbf",
+    "condition": "S1:Heat",
+    "seed": 2
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 30.2,
+    "total_reward": -11639.003385543823,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 0
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 30.2,
+    "total_reward": -11639.376159667969,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 1
+  },
+  {
+    "cbf_violation": 0.0,
+    "power_violation": 0.0,
+    "qp_intervention": 34.4,
+    "total_reward": -11629.939432144165,
+    "per_constraint": {
+      "pressure_high": 0.0,
+      "pressure_low": 0.0,
+      "enthalpy_high": 0.0,
+      "enthalpy_low": 0.0,
+      "power_high": 0.0,
+      "power_low": 0.0
+    },
+    "gp_type": "scenario_specific",
+    "method": "rocbf_net",
+    "condition": "S1:Heat",
+    "seed": 2
+  }
+]

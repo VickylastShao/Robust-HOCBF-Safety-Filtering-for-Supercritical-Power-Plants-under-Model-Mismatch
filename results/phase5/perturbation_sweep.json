@@ -1,0 +1,57 @@
+{
+  "description": "GP-HOCBF (\u03ba=0) QP intervention vs perturbation magnitude",
+  "method": "GP-HOCBF \u03ba=0",
+  "gp_pretrain": "N=500 S1 heat",
+  "n_episodes_per_magnitude": 10,
+  "n_steps_per_episode": 500,
+  "data": [
+    {
+      "magnitude": -10,
+      "label": "Mag10",
+      "qp_intervention_pct": 100.0,
+      "cbf_violation_pct": 0.0,
+      "n_episodes": 10,
+      "n_steps_per_ep": 500
+    },
+    {
+      "magnitude": -15,
+      "label": "Moderate",
+      "qp_intervention_pct": 100.0,
+      "cbf_violation_pct": 0.0,
+      "n_episodes": 10,
+      "n_steps_per_ep": 500
+    },
+    {
+      "magnitude": -25,
+      "label": "Mag25",
+      "qp_intervention_pct": 100.0,
+      "cbf_violation_pct": 0.0,
+      "n_episodes": 10,
+      "n_steps_per_ep": 500
+    },
+    {
+      "magnitude": -50,
+      "label": "Mag50",
+      "qp_intervention_pct": 100.0,
+      "cbf_violation_pct": 0.0,
+      "n_episodes": 10,
+      "n_steps_per_ep": 500
+    },
+    {
+      "magnitude": -75,
+      "label": "Mag75",
+      "qp_intervention_pct": 100.0,
+      "cbf_violation_pct": 100.0,
+      "n_episodes": 10,
+      "n_steps_per_ep": 500
+    },
+    {
+      "magnitude": -100,
+      "label": "Mag100",
+      "qp_intervention_pct": 100.0,
+      "cbf_violation_pct": 100.0,
+      "n_episodes": 10,
+      "n_steps_per_ep": 500
+    }
+  ]
+}

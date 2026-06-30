@@ -1,0 +1,88 @@
+\section{RoCBF-Net: Architecture and Theory}
+
+\subsection{Problem Formulation}
+
+Consider a control-affine system with model mismatch:
+\begin{equation}
+    \dot{x} = \underbrace{f_0(x) + g_0(x)u}_{\text{nominal}} + \underbrace{\Deltaf(x)}_{\text{residual}}, \quad x \in \R^n, \; u \in \calU \subset \R^m
+    \label{eq:true}
+\end{equation}
+where $\Deltaf$ represents unmodeled dynamics, parameter drift, and external disturbances. We assume the input matrix is known ($\Delta g = 0$), as actuator characteristics are typically well-characterized in industrial settings. For scenarios where actuator degradation primarily affects process variables through reduced throughput (e.g., valve fouling reducing steam extraction efficiency) rather than through changes in actuator gain, the dominant effect is captured by $\Deltaf$; the benchmark models actuator degradation scenarios (S5) in this form.
+
+For a constraint $h(x) \geq 0$ with relative degree $m$, the HOCBF $\psi$-chain is:
+\begin{equation}
+    \psi_0 = h(x), \quad \psi_i = \dot{\psi}_{i-1} + \alpha_i(\psi_{i-1}), \;\; i=1,\ldots,m
+    \label{eq:psi}
+\end{equation}
+With linear $\alpha_i(r) = k_i r$, the constraint $A_0(x)u \leq b_0(x)$ enforces forward invariance when the model is exact.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/Figure_1.pdf}
+    \caption{RoCBF-Net safety filtering architecture. The upstream controller (LQR, MPC, PID, or learned policy) proposes an action $u_{\mathrm{prop}}$; the RoCBF-Net filter evaluates it against current plant measurements and the GP residual model, projecting to the nearest certified-safe action $u^*$ via the QP constraint $Au \leq b - \epsilon_\kappa\epsilon(x)$. The three components---HOCBF (correct relative degrees), GP (scenario-specific, online, or omitted), and $\epsilon_\kappa$ (tuned per uncertainty regime)---are independently configurable.}
+    \label{fig:architecture}
+\end{figure}
+
+\subsection{GP Residual Model}
+
+Each component of $\Deltaf_j$ is modeled as an independent GP with Mat\'{e}rn-5/2 kernel. Given $N$ training points, the posterior provides mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The GP-UCB bound guarantees:
+\begin{equation}
+    |\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \sigma_{\mathrm{GP},j}(x), \quad \text{w.p.} \geq 1-\delta/n
+    \label{eq:gp_bound}
+\end{equation}
+with $\beta = \sqrt{2(\gamma_N + 1 + \ln(n/\delta))}$ and maximum information gain $\gamma_N$~\cite{srinivas2010gp}.
+
+We define the mean-corrected drift $\fhat = f_0 + \muGP$ and posterior residual $\Delta \hat{f} = \Deltaf - \muGP$.
+
+\subsection{Compositional Robustness Margin}
+
+The perturbation at level $i$ is $\delta_i = \psi_i - \hat{\psi}_i^0$, satisfying:
+\begin{align}
+    \delta_1 &= L_{\Delta\hat{f}}h \label{eq:d1}\\
+    \delta_i &= L_{\Delta\hat{f}}\hat{\psi}_{i-1}^0 + (L_{\fhat}+k_i)\delta_{i-1} + L_{\Delta\hat{f}}\delta_{i-1}, \; i\geq 2 \label{eq:di}
+\end{align}
+
+The compositional robustness margin is constructed via:
+\begin{align}
+    \sigma_1(x) &= \beta \sum_j |\partial h/\partial x_j| \sigmaGPj{j}(x) \label{eq:s1}\\
+    \sigma_i(x) &= \beta \sum_j |\partial \hat{\psi}_{i-1}^0/\partial x_j| \sigmaGPj{j}(x) + (\|L_{\fhat}\|_{\mathrm{op}} + k_i)\sigma_{i-1}(x) + \sigma_{\mathrm{cross}}^{(i)}(x) \label{eq:si}\\
+    \sigmatotal(x) &= \sigma_m(x) + \sum_{j=1}^{m-1} c_j\sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) \label{eq:st}
+\end{align}
+where $\|L_{\fhat}\|_{\mathrm{op}}$ is the operator norm (spectral norm of the Jacobian $\partial \fhat / \partial x$ evaluated at the equilibrium operating point), $\sigma_{\mathrm{cross}}^{(i)}(x)$ bounds the cross term $|L_{\Delta\hat{f}}\delta_{i-1}|$ via Lemma~S1, and $c_j = \prod_{i=j+1}^{m-1} (\|L_{\fhat}\|_{\mathrm{op}} + k_i)$ are the chain coupling weights. The robust HOCBF constraint is $A_0(x)u \leq b_0(x) - \epsilonKappa\cdot\sigmatotal(x)$.
+
+\subsection{Theoretical Guarantee: Worst-Case Bound}
+
+\begin{theorem}[Probabilistic forward invariance]
+\label{thm:1}
+Suppose that the input matrix is exact ($\Delta g = 0$), each GP residual component satisfies the RKHS boundedness condition required by the GP-UCB confidence bound, the GP posterior is calibrated on fixed i.i.d.\ training data, the relative degree is known, the perturbation is sufficiently small and Lipschitz-in-perturbation, and the robust QP is feasible. For $\epsilonKappa = 1$, if $\epsilon(x) \geq |\Delta(x,u)|$ for all admissible $u$, then $\calC$ is forward invariant with probability at least $1-\delta$.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+\textbf{Step 1 (GP calibration):} By the RKHS boundedness and GP calibration conditions together with~\eqref{eq:gp_bound}, $|\Delta\hat{f}_j| \leq \beta\sigmaGPj{j}$ holds with probability $\geq 1-\delta/n$ per dimension; by union bound over the $n$ state dimensions, this holds simultaneously with probability $\geq 1-\delta$.
+
+\textbf{Step 2 (Compositional bound):} By induction, $|\delta_i| \leq \sigma_i$. The cross term $\sigma_{\mathrm{cross}}^{(i)}$ is bounded via Lemma~S1 (Appendix): $|L_{\Delta\hat{f}}\delta_{i-1}| \leq G_\delta^{(i-1)} \beta\|\sigma_{\mathrm{GP}}\|_2$.
+
+\textbf{Step 3:} $|\Delta(x,u)| \leq \sigmatotal(x) = \epsilon(x)$ for $\epsilonKappa=1$, completing the certificate.
+\end{proof}
+
+Theorem~\ref{thm:1} provides the \emph{worst-case} theoretical guarantee: setting $\epsilon_\kappa=1$ ensures the QP constraint $A_0u \leq b_0 - \epsilon(x)$ is always feasible under the stated assumptions, and forward invariance holds with the stated probability. However, this guarantee is conservative by construction---it covers the worst-case combination of GP posterior uncertainty and $\psi$-chain amplification. The following subsection introduces $\epsilon_\kappa$ as a tunable parameter that recovers this worst-case bound at $\epsilon_\kappa=1$ while permitting less conservative calibration for specific uncertainty regimes.
+
+\subsection{$\epsilon_\kappa$ as a Tunable Safety Factor}
+
+The robustness scaling factor $\epsilon_\kappa$ in the QP constraint $A_0(x)u \leq b_0(x) - \epsilon_\kappa\cdot\epsilon(x)$ controls the trade-off between safety margin and control authority:
+
+\begin{itemize}
+    \item $\epsilon_\kappa = 0$: The QP enforces $A_0u \leq b_0$, i.e., the nominal HOCBF constraint with GP mean correction only. No robustness margin is applied beyond the mean correction itself.
+    \item $\epsilon_\kappa = 1$: The QP enforces the full compositional margin $\epsilon(x)$, recovering the worst-case certificate of Theorem~\ref{thm:1}.
+    \item $0 < \epsilon_\kappa < 1$: The QP enforces a fraction of the compositional margin, trading theoretical coverage for reduced QP conservatism.
+\end{itemize}
+
+The central empirical question---and the primary contribution of this paper---is whether the worst-case setting ($\epsilon_\kappa=1$) is ever necessary in practice, and whether the optimal $\epsilon_\kappa$ depends on the structure and strength of the model mismatch. The experimental evaluation (Section~\ref{sec:exp}) demonstrates that: (i)~$\epsilon_\kappa=0$ (GP correction only) is sufficient for additive bounded perturbations, achieving $\leq0.18\%$ violation across six of seven uncertainty scenarios; (ii)~$\epsilon_\kappa=0.1$ is required for state-dependent coupling, recovering zero violation from 33.5\% failure; (iii)~$\epsilon_\kappa=1.0$ is never the optimal choice under any tested condition; and (iv)~the safe $\epsilon_\kappa$ range collapses as coupling strength increases, defining a deployment envelope that depends on the perturbation amplification rate $\gamma$.
+
+\subsection{Data-Driven vs. Floor-Driven $\epsilon(x)$}
+
+The GP posterior includes a regularization floor $\sigma_{\mathrm{floor}}=10^{-4}$. Under constant perturbations, $\sigmaGP$ is near-uniform and $\epsilon(x)$ is approximately constant per constraint---the margin is \emph{floor-driven}, with the GP contributing a near-constant safety buffer. Under state-dependent perturbations (S3: Coupled), $\sigmaGP$ becomes heterogeneous and $\epsilon(x)$ is genuinely state-dependent---the margin is \emph{data-driven}, reflecting the spatial structure of uncertainty. This distinction explains why additive perturbation scenarios can safely use $\epsilon_\kappa=0$: the GP mean correction already provides the necessary adjustment, and the floor-driven $\epsilon(x)$ only adds QP conservatism without meaningful additional protection.
+
+\subsection{Sampled-Data Implementation}
+
+Theorem~\ref{thm:1} is a continuous-time result. The practical implementation uses discrete sampling ($T_s = 1$\,s, zero-order hold). The full safety-filter pipeline latency is ${\sim}25$\,ms (GPU, JIT-compiled, including PPO forward pass, GP inference, and QP solve). When the QP is infeasible, a slack-penalised relaxation with LQR fallback is invoked. Inter-sample constraint satisfaction is empirically verified (Section~\ref{sec:exp}). We do not claim a formal discrete-time invariance theorem.

@@ -1,0 +1,38 @@
+\section{Deployment Limitations and Practical Considerations}
+\label{sec:deployment}
+
+\subsection{Scenario-Specific GP Calibration}
+
+The reported results rely on scenario-specific GP training---the GP is trained on residual data from the deployment perturbation scenario. Three GP deployment strategies exist: \textbf{scenario-specific} (recommended default: formal high-probability guarantee, tightest $\epsilon(x)$), \textbf{online GP adaptation} (enables specialization without prior knowledge but relaxes the formal guarantee; $\epsilon_{\mathrm{floor}} = 0.9 \cdot \bar{\epsilon}_{\mathrm{fixed}}$ regularization), and \textbf{generic mixed GP} (not recommended: silent calibration failure, 82.7--99.7\% violation; Supplementary~S1). The OOD failure mode (S3$\to$S1: $99.9\%$ violation) reveals that $\sigmaGP$ measures spatial distance, not functional distance between perturbation structures.
+
+\subsection{Online GP Adaptation Trade-offs}
+
+Online GP updates benefit slowly-varying disturbances (TV3: $7.7\%\to6.7\%$; Supplementary Table~S1). Under abrupt step disturbances (TV1, TV2), online updates degrade safety; fixed GP is recommended for general deployment (Table~\ref{tab:timevarying_jpc}).
+
+\subsection{The $\Delta g = 0$ Assumption}
+
+Assumption~\ref{asm:delta_g} limits applicability to drift-dominated uncertainty. In the CCS domain, this excludes valve stiction, feedwater pump wear, and coal mill nonlinearity. S5 (valve degradation) models valve wear as a drift perturbation $\Delta f_4 = -20$, capturing steady-state power reduction but not dynamic actuator response. Practitioners can assess $\Delta g \neq 0$ significance by comparing input-dependent vs.\ drift residuals during commissioning.
+
+\subsection{One-Sided Diagnostic}
+
+QP infeasibility detects overestimated $\sigmaGP$ but not underestimated (unsafe). Table~\ref{tab:deployment_guide} summarizes recommendations.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Deployment Decision Guide}
+    \label{tab:deployment_guide}
+    \footnotesize
+    \begin{tabular}{p{0.28\textwidth} p{0.32\textwidth} p{0.28\textwidth}}
+        \toprule
+        \textbf{Condition} & \textbf{Configuration} & \textbf{Evidence} \\
+        \midrule
+        $\Delta f \approx 0$ (nominal accurate) & $\epsilon = 0$ (nominal HOCBF) & Table~1, Nominal \\
+        $\Delta f \neq 0$, constant perturbation & Per-constraint constant $\epsilon_0$ & Supplementary, S1/S2/S4-S6 \\
+        $\Delta f \neq 0$, state-dependent perturbation & Compositional $\epsilon(x)$ & Table~1, S3: $45.4\%\to0\%$ \\
+        Formal guarantee required & $\epsilon(x)$, $\kappa_\epsilon{=}1$, fixed GP & Theorem~1 \\
+        Slowly-varying disturbance & Online GP (optional) & Table~3, TV3 \\
+        Abrupt step disturbances & Fixed GP & Table~3, TV1/TV2 \\
+        Unknown deployment perturbation & Online GP $+$ $\epsilon$-floor & Section~\ref{sec:deployment} \\
+        \bottomrule
+    \end{tabular}
+\end{table}

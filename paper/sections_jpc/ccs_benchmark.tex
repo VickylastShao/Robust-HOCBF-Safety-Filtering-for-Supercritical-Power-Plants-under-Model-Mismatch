@@ -1,0 +1,37 @@
+\section{Supercritical Boiler-Turbine Benchmark}
+\label{sec:ccs}
+
+\subsection{Process Description and Model}
+
+The benchmark is a 5th-order nonlinear state-space model of a 1000\,MW ultra-supercritical once-through boiler-turbine unit. The state vector $x = [r_B, p_m, h_m, N_e, \tau_f]^\top$ comprises: fuel flow rate $r_B$ (kg/s), separator pressure $p_m$ (MPa), separator outlet enthalpy $h_m$ (kJ/kg), turbine power output $N_e$ (MW), and delayed fuel command $\tau_f$ (kg/s). The control inputs $u = [u_B, D_{fw}, u_t]^\top$ are: coal feed rate (kg/s), feedwater flow rate (kg/s), and turbine valve opening (\%). Key parameters: turbine time constant $T_g = 8$\,s (IEEE standard range 5--10\,s), fuel transport delay $T_{\mathrm{delay}} = 30$\,s (literature range 30--60\,s). The dominant nonlinearity is the pressure-dependent fluid property function $\Phi(p_m)$.
+
+The 5th-order model has a critical advantage over the 3rd-order formulation: power output $N_e$ is promoted to a state variable with explicit dynamics $\dot{N}_e = -(N_e/T_g) + g_{53}(x) u_t$, making the power constraint CBF-enforceable at $m=1$. In the 3rd-order model, power is an algebraic output ($m=0$) and fundamentally not CBF-enforceable.
+
+The model is linearized around the equilibrium and stabilized with LQR. To evaluate safety under the true nonlinear control effectiveness, we use a \emph{$\Phi$-scaled rollout}: the control effectiveness rows are scaled by $\Phi(p_m)/\Phi_0$, while the HOCBF uses the linearized model. This creates a realistic stress test where the model used for safety certification differs from the true plant dynamics. Under this rollout, nominal HOCBF suffers 100\% CBF violation under all perturbation scenarios.
+
+\subsection{Safety Constraints}
+
+Six CBF constraints are enforced with known relative degree and physical bounds:
+\begin{itemize}
+    \item \textbf{Main steam pressure} ($m=2$): $p_{st} \in [13.0, 24.0]$\,MPa. Relative degree $m=2$ because the control input affects $\dot{p}_m$ through feedwater and valve channels, but steam pressure $p_{st}$ depends nonlinearly on $p_m$.
+    \item \textbf{Separator outlet enthalpy} ($m=1$): $h_m \in [2670, 2830]$\,kJ/kg. Feedwater flow directly affects $\dot{h}_m$.
+    \item \textbf{Power output} ($m=1$): $N_e \in [N_{\mathrm{target}}-50, N_{\mathrm{target}}+50]$\,MW. Turbine valve opening directly affects $\dot{N}_e$ in the 5th-order model.
+\end{itemize}
+Actuator rate limits are enforced as linear QP constraints.
+
+\subsection{Uncertainty Scenarios}
+
+Six static perturbation scenarios model realistic power plant disturbances:
+\begin{enumerate}
+    \item \textbf{S1: Coal quality drift} ($-15\%$ heating value~\cite{liu2016coal}). $\Deltaf = [0, -5, -50, 0, 0]^\top$.
+    \item \textbf{S2: Feedwater pump cycling}. Sustained low flow: $\Deltaf = [0, -6, -45, 0, 0]^\top$.
+    \item \textbf{S3: Coupled state-dependent disturbance}. Destabilizing positive feedback: $\Deltaf = [0, 0.3(p_m-p_{m,0})-3.0, 0.15(h_m-h_{m,0})-40.0, 0, 0]^\top$.
+    \item \textbf{S4: Nonlinear fouling}. Quadratic pressure dependence.
+    \item \textbf{S5: Valve degradation}. Affects power output: $\Delta f_4 = -20$.
+    \item \textbf{S6: Fuel quality variation}. Multi-dimensional perturbation affecting pressure, enthalpy, and power.
+\end{enumerate}
+Three additional time-varying disturbance patterns (denoted TV1--TV3 to avoid confusion with static labels S5/S6) are used for out-of-distribution evaluation: TV1~Step ($T=50$\,s), TV2~Fast Step ($T=20$\,s), and TV3~Random Walk.
+
+\subsection{Baselines and Evaluation Protocol}
+
+Eight methods are compared: (1)~PPO (no safety), (2)~PPO-Lagrangian, (3)~NMPC with offset-free disturbance estimation (horizon $N=5$, SLSQP solver), (4)~PPO-CBF (first-order CBF, incorrect $m$), (5)~PPO-HOCBF (correct $m$, no GP), (6)~PPO-GP-HOCBF (GP mean correction, $\epsilon=0$), (7)~PPO-RHOCBF (fixed scenario-specific GP, $\epsilonKappa=1.0$), (8)~LQR+RHOCBF (same filter, classical upstream controller). Training: 200 PPO episodes $\times$ 200 steps (40,000 total environment steps). PPO provides a learned upstream controller; the safety guarantee is controller-agnostic---LQR+RHOCBF achieves identical safety. Evaluation: 5 seeds $\times$ 50 episodes $\times$ 500 steps (125,000 total steps) under $\Phi$-scaled nonlinear rollout. GP pretraining: $N=2000$ points per scenario. Primary safety metric: episode-level CBF violation rate with 95\% Wilson CI. Process control performance metrics: tracking error (IAE), constraint violation magnitude, QP intervention rate, and per-step solve latency.
