@@ -1,0 +1,122 @@
+{
+  "source": {
+    "interface": "CRICP FastAPI historian adapter",
+    "endpoint": "/gethistrange_millisecondtimestamp",
+    "unit": "Xiantao Unit 2",
+    "sampling_interval_sec": 300,
+    "raw_data_public": false,
+    "note": "bounded low-rate query for manuscript grounding"
+  },
+  "rows": 288,
+  "time_start": "2026-07-01T02:33:56+08:00",
+  "time_end": "2026-07-02T02:28:56+08:00",
+  "variables": {
+    "load_mw": {
+      "label": "Generator active power",
+      "unit": "MW",
+      "valid_count": 288,
+      "mean": 290.7687,
+      "std": 96.1905,
+      "min": 195.7463,
+      "median": 259.3606,
+      "max": 520.7788,
+      "p05": 197.65,
+      "p95": 458.0224
+    },
+    "main_pressure_mpa": {
+      "label": "Main steam pressure",
+      "unit": "MPa",
+      "valid_count": 288,
+      "mean": 16.7944,
+      "std": 3.949,
+      "min": 12.702,
+      "median": 15.4344,
+      "max": 26.4727,
+      "p05": 12.9425,
+      "p95": 24.0893
+    },
+    "main_temperature_c": {
+      "label": "Main steam temperature",
+      "unit": "degC",
+      "valid_count": 288,
+      "mean": 598.982,
+      "std": 2.1258,
+      "min": 591.5045,
+      "median": 599.4032,
+      "max": 604.2175,
+      "p05": 595.1132,
+      "p95": 601.5498
+    },
+    "reheat_pressure_mpa": {
+      "label": "Reheat steam pressure",
+      "unit": "MPa",
+      "valid_count": 288,
+      "mean": 2.4156,
+      "std": 0.8968,
+      "min": 1.5263,
+      "median": 2.1082,
+      "max": 4.5487,
+      "p05": 1.5468,
+      "p95": 3.9665
+    },
+    "reheat_temperature_c": {
+      "label": "Reheat steam temperature",
+      "unit": "degC",
+      "valid_count": 288,
+      "mean": 600.1153,
+      "std": 10.8537,
+      "min": 572.5551,
+      "median": 599.2832,
+      "max": 623.044,
+      "p05": 582.6912,
+      "p95": 618.654
+    },
+    "fuel_flow_tph": {
+      "label": "Fuel flow",
+      "unit": "t/h",
+      "valid_count": 288,
+      "mean": 127.2518,
+      "std": 35.8568,
+      "min": 82.1657,
+      "median": 117.5376,
+      "max": 224.1274,
+      "p05": 89.0201,
+      "p95": 189.3393
+    },
+    "air_flow_tph": {
+      "label": "Total air flow",
+      "unit": "t/h",
+      "valid_count": 288,
+      "mean": 1557.7493,
+      "std": 337.1484,
+      "min": 1059.2053,
+      "median": 1486.0493,
+      "max": 2369.072,
+      "p05": 1156.0701,
+      "p95": 2121.9623
+    }
+  },
+  "dynamic_features": {
+    "load_step_abs_p95_mw_per_sample": 35.7714,
+    "load_step_abs_max_mw_per_sample": 54.4131,
+    "pressure_step_abs_p95_mpa_per_sample": 1.6854,
+    "pressure_step_abs_max_mpa_per_sample": 2.8792,
+    "load_step_abs_p95_mw_per_h_equiv": 429.2563,
+    "load_step_abs_max_mw_per_h_equiv": 652.9574,
+    "pressure_step_abs_p95_mpa_per_h_equiv": 20.2244,
+    "pressure_step_abs_max_mpa_per_h_equiv": 34.5502
+  },
+  "correlations": {
+    "load_pressure": 0.9863,
+    "load_fuel": 0.98
+  },
+  "point_mapping": {
+    "DCS2_LOAD_3S": "load_mw",
+    "DCS2_MAIN_PRESS": "main_pressure_mpa",
+    "DCS2_MAIN_TEMP": "main_temperature_c",
+    "DCS2_REHEAT_PRESS": "reheat_pressure_mpa",
+    "DCS2_REHEAT_TEMP": "reheat_temperature_c",
+    "DCS2_FUELFLOWRP": "fuel_flow_tph",
+    "DCS2_TOTALFLOW": "air_flow_tph"
+  }
+}
