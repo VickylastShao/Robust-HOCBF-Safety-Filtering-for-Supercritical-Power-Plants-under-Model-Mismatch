@@ -1,15 +1,15 @@
 \section{Experimental Validation}
 \label{sec:exp}
 
-The experiments are designed to evaluate whether the proposed filter can operate as a real-time safety layer in an industrial measurement and control loop. Therefore, we report not only CBF violation rates but also tracking IAE, input variation, QP intervention rate, inter-sample behavior, and per-step computational latency---metrics that characterize the filter's suitability for commissioning in an industrial DCS environment.
+The experiments evaluate RoCBF-Net as a real-time safety layer in an industrial measurement and control loop. We report CBF violation rates together with tracking IAE, input variation, QP intervention rate, inter-sample behavior, and per-step computational latency. These metrics characterize both safety and commissioning suitability in a DCS-like setting.
 
 \subsection{Benchmark and Baselines}
 
-The benchmark is a 5th-order nonlinear model of a 1000\,MW ultra-supercritical boiler-turbine unit with state $x = [r_B, p_m, h_m, N_e, \tau_f]^\top$ and three control inputs. Six safety constraints are enforced: main steam pressure ($m=2$, 13--24\,MPa), separator enthalpy ($m=1$, 2670--2830\,kJ/kg), and power output ($m=1$, $\pm50$\,MW). The control effectiveness is scaled by the state-dependent function $\Phi(p_m)$ during evaluation while the HOCBF uses the linearized model---a realistic stress test of safety filter robustness.
+The benchmark is a 5th-order nonlinear simulation model of a 1000\,MW ultra-supercritical boiler-turbine unit with state $x = [r_B, p_m, h_m, N_e, \tau_f]^\top$ and three control inputs. Six safety constraints are enforced: main steam pressure ($m=2$, 13--24\,MPa), separator enthalpy ($m=1$, 2670--2830\,kJ/kg), and power output ($m=1$, $\pm50$\,MW). Table~\ref{tab:implementation_settings} summarizes the measured variables and implementation settings. During evaluation, the nonlinear plant uses state-dependent $\Phi(p_m)$-scaled control effectiveness while the HOCBF uses the linearized model. This mismatch stresses the safety filter without changing the controller design model.
 
 Six static perturbation scenarios model realistic disturbances: S1 (coal quality drift, $-15\%$ heating value), S2 (feedwater pump cycling), S3 (coupled state-dependent, $\delta \propto x$), S4 (nonlinear fouling), S5 (valve degradation, modelled as equivalent drift $\Deltaf$ via reduced steam extraction efficiency; the $\Delta g = 0$ assumption is maintained throughout all scenarios), and S6 (fuel quality variation). Scenarios S1--S4 are common to the 3rd- and 5th-order CCS models; S5 and S6 are specific to the 5th-order model, affecting the extended states $N_e$ and $\tau_f$.
 
-Methods compared: PPO (no safety layer), PPO-Lagrangian (dual-descent constraint penalty), PPO-CBF (first-order CBF, $m{=}1$ for all constraints---deliberate ablation), PPO-HOCBF (correct relative degrees $m{=}2,1,1$, no GP), PPO-GP-HOCBF (GP mean correction, $\epsilon_\kappa{=}0$), PPO-RHOCBF (scenario-specific GP + compositional $\epsilon(x)$, $\epsilon_\kappa{=}1.0$), RoCBF-Net (online GP adaptation, $\epsilon_\kappa{=}1.0$), and NMPC (SLSQP solver, $N{=}5$ horizon). GP pretraining: $N=500$ points per scenario (5th-order CCS, $\Phi$-scaled rollout). Evaluation: 5 seeds $\times$ 50 episodes $\times$ 500 steps.
+The comparison isolates the safety layer. PPO, PPO-Lagrangian, PPO-CBF, and PPO-HOCBF use the same upstream learned action source and differ only in the post-controller constraint mechanism: no safety layer, dual-descent penalty, first-order CBF ($m{=}1$ for all constraints), and correct HOCBF relative degrees ($m{=}2,1,1$) without GP correction. The RoCBF-Net family is evaluated at fixed operating points: mean-corrected GP-HOCBF with no additional margin ($\epsilon_\kappa{=}0$), full-margin RHOCBF with scenario-specific GP ($\epsilon_\kappa{=}1.0$), and online GP-RHOCBF with uncalibrated full margin. The calibrated operating schedule is then assessed in Secs.~\ref{sec:kappa}--\ref{sec:envelope}. NMPC (SLSQP solver, $N{=}5$ horizon) is included as a strong optimization-based reference. GP pretraining uses $N=500$ points per scenario, and evaluation uses 5 seeds $\times$ 50 episodes $\times$ 500 steps. The study is a simulation-benchmark validation of a pre-deployment safety-filter design and commissioning protocol. Plant historian replay, hardware-in-the-loop tests, and site-specific protection reviews remain required before field deployment.
 
 \subsection{Safety Performance}
 
@@ -18,6 +18,7 @@ Methods compared: PPO (no safety layer), PPO-Lagrangian (dual-descent constraint
     \caption{Constraint violation rate (\%) under $\Phi$-scaled nonlinear dynamics. 0\% rates: $0/250$ episodes, 95\% Wilson upper bound $1.51\%$.}
     \label{tab:safety}
     \small
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccccccc}
         \toprule
         Method & Nom. & S1 & S2 & S3 & S4 & S5 & S6 \\
@@ -26,31 +27,56 @@ Methods compared: PPO (no safety layer), PPO-Lagrangian (dual-descent constraint
         PPO-Lagrangian & 0.08 & 99.92 & 99.53 & 99.59 & 99.05 & 99.12 & 99.83 \\
         PPO-CBF (1st-order, $m{=}1$) & 0.08 & 99.92 & 99.53 & 99.59 & 99.05 & 99.12 & 99.83 \\
         PPO-HOCBF ($m{=}2,1,1$, no GP) & 0.00 & 99.92 & 99.53 & 99.59 & 99.05 & 99.12 & 99.83 \\
-        PPO-GP-HOCBF ($\epsilon_\kappa{=}0$) & 0.00 & 0.12 & 0.04 & 39.65 & 0.04 & 0.15 & 0.18 \\
-        PPO-RHOCBF ($\epsilon_\kappa{=}1.0$) & 0.00 & 1.38 & 99.43 & 16.96 & 32.19 & 0.00 & 0.00 \\
-        \textbf{RoCBF-Net} ($\epsilon_\kappa{=}1.0$, online GP) & 0.00 & 15.02 & 99.40 & 48.58 & 49.16 & 0.00 & 0.00 \\
+        RoCBF-Net mean-only ($\epsilon_\kappa{=}0$) & 0.00 & 0.12 & 0.04 & 39.65 & 0.04 & 0.15 & 0.18 \\
+        RoCBF-Net full margin ($\epsilon_\kappa{=}1.0$) & 0.00 & 1.38 & 99.43 & 16.96 & 32.19 & 0.00 & 0.00 \\
+        Online RoCBF-Net full margin (uncal.) & 0.00 & 15.02 & 99.40 & 48.58 & 49.16 & 0.00 & 0.00 \\
         NMPC ($N{=}5$, SLSQP) & 0.00 & 0.08 & 0.08 & 0.08 & 0.04 & 0.08 & 0.08 \\
         \bottomrule
     \end{tabular}
+    }
 \end{table}
 
-Table~\ref{tab:safety} reports the main results. Five key findings emerge. \textbf{(1) Safety layer alone fails under uncertainty.} PPO without safety, PPO-Lagrangian (dual descent), and PPO-CBF (first-order, $m{=}1$ for all constraints) all exceed 99\% violation under any dynamics-affecting scenario---soft constraints and incorrect relative degree offer no protection. PPO-HOCBF with correct relative degrees ($m{=}2,1,1$) but no GP achieves 0.00\% on nominal but still $>$99\% under uncertainty: correct mathematical structure is necessary but insufficient without uncertainty modeling. \textbf{(2) GP mean correction is the dominant safety mechanism.} PPO-GP-HOCBF ($\epsilon_\kappa{=}0$, GP mean correction only) reduces violation to $\leq$0.18\% under six of seven uncertainty scenarios---a $>$500$\times$ improvement over PPO-HOCBF---without any robustness margin. This establishes GP residual modeling, not the compositional $\epsilon(x)$ margin, as the primary driver of empirical safety. The exception is S3 (Coupled, state-dependent), where GP mean correction alone leaves 39.65\% violation; the state-dependent feedback amplification escapes pure mean-level correction.
-\textbf{(3) $\epsilon_\kappa{=}1.0$ (theoretical bound) is overly conservative.} PPO-RHOCBF with $\epsilon_\kappa{=}1.0$ degrades on S2 (99.43\%) and S4 (32.19\%) compared to $\epsilon_\kappa{=}0$ (0.04\% and 0.04\%, respectively). The full theoretical margin overly constrains the QP feasible set, forcing constraint-dropping fallback and thereby increasing violations rather than preventing them. RoCBF-Net with online GP adaptation shares this conservatism, underperforming the static GP variant on most uncertainty conditions. An $\epsilon_\kappa$ sensitivity sweep (Sec.~\ref{sec:kappa}) confirms that the optimal scaling lies in $[0,0.3]$ for additive uncertainty and $[0.1,0.5]$ for state-dependent uncertainty---far below the theoretical $\kappa{=}1.0$.
-\textbf{(4) NMPC is the optimal benchmark.} NMPC with $N{=}5$ horizon achieves $\leq$0.08\% violation across all conditions, establishing an upper performance bound. Its per-step cost (${\sim}254$\,ms, CPU) is approximately $10\times$ higher than the CBF-QP filter (${\sim}25$\,ms, GPU), a trade-off discussed in Sec.~\ref{sec:comp}.
-\textbf{(5) Violations are enthalpy-dominated.} The per-constraint logs reveal zero observed violations on pressure ($m{=}2$) and power ($m{=}1$) constraints; the aggregate violations arise from the enthalpy constraint ($m{=}1$). This bottleneck reflects both its tighter safety bounds (2670--2830\,kJ/kg) and the direct impact of heat-absorption uncertainty on the enthalpy state.
-These results reveal a clear hierarchy: correct HOCBF structure is necessary, GP uncertainty correction is the primary safety mechanism, and $\epsilon_\kappa$ provides a tunable safety--performance trade-off best calibrated per uncertainty type rather than fixed at the worst-case theoretical bound.
+Table~\ref{tab:safety} reports the main safety results. A nominal safety layer without residual learning fails under model mismatch. PPO without safety, PPO-Lagrangian, and PPO-CBF all exceed 99\% violation under any dynamics-affecting scenario. PPO-HOCBF with correct relative degrees achieves 0.00\% on nominal dynamics but still exceeds 99\% under uncertainty. Correct HOCBF structure is therefore necessary but insufficient without uncertainty modeling.
+
+GP mean correction is the dominant safety mechanism. RoCBF-Net at $\epsilon_\kappa{=}0$ reduces violation to $\leq$0.18\% under six of seven uncertainty scenarios, a $>$500$\times$ improvement over PPO-HOCBF, without applying an additional robustness margin. The exception is S3 (Coupled, state-dependent), where GP mean correction alone leaves 39.65\% violation because the perturbation includes feedback amplification.
+
+The full theoretical margin tests the conservative end of the certificate, not the recommended operating point. RoCBF-Net with $\epsilon_\kappa{=}1.0$ degrades on S2 (99.43\%) and S4 (32.19\%) compared with $\epsilon_\kappa{=}0$ (0.04\% and 0.04\%, respectively). The margin tightens the QP feasible set, triggers constraint-dropping fallback, and can increase violations. The sensitivity sweep in Sec.~\ref{sec:kappa} is used to select the calibrated $\epsilon_\kappa$ schedule.
+
+NMPC with $N{=}5$ horizon achieves $\leq$0.08\% violation across all conditions and serves as the strongest optimization-based safety reference in this study. Its per-step cost (${\sim}254$\,ms, CPU) is approximately $10\times$ higher than the implemented CBF-QP pipeline (${\sim}25$\,ms, GPU), a hardware- and implementation-dependent trade-off discussed in Sec.~\ref{sec:comp}.
+
+The remaining violations are enthalpy-dominated. Per-constraint logs show zero observed violations on pressure ($m{=}2$) and power ($m{=}1$); the aggregate violations arise from the enthalpy constraint ($m{=}1$). This bottleneck reflects its tight safety bounds (2670--2830\,kJ/kg) and the direct impact of heat-absorption uncertainty on the enthalpy state.
+
+These results establish the mechanism hierarchy: correct HOCBF structure is necessary, GP uncertainty correction is the primary safety mechanism, and $\epsilon_\kappa$ provides a tunable safety--performance trade-off that should be calibrated by uncertainty type rather than fixed at the worst-case theoretical bound.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/Figure_6_process_response.pdf}
+    \caption{Process response and safety-filter intervention under the S3 coupled perturbation. \textbf{(a)} Steam-pressure response. \textbf{(b)} Separator-enthalpy response with the active lower safety limit. \textbf{(c)} Enthalpy safety margin. \textbf{(d)} Normalized QP correction magnitude. The curves show the first 10\,s of a 300-step rollout; intervention percentages are computed over the full rollout.}
+    \label{fig:process_response}
+\end{figure}
+
+Figure~\ref{fig:process_response} translates the aggregate violation rates into process-control signals. The pressure response remains within the 13--24\,MPa band for all three filters, whereas the enthalpy response separates the safety mechanisms. HOCBF without GP correction crosses the lower enthalpy bound immediately and settles outside the admissible set. GP mean correction drives the trajectory back to the boundary but leaves a short transient violation. Adding the calibrated $\epsilon_\kappa{=}0.1$ margin keeps enthalpy inside the safe band. Because the upstream action in this diagnostic is the zero-deviation action around the LQR-stabilized operating point, the QP correction in Fig.~\ref{fig:process_response}(d) is the direct intervention required to maintain the enthalpy constraint under S3.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/Figure_8_model_mismatch.pdf}
+    \caption{Direct model-mismatch diagnosis under the S3 coupled perturbation. \textbf{(a)} Nominal and true one-step enthalpy-margin responses from identical state-input pairs. \textbf{(b,c)} Pressure and enthalpy residuals compared with the scenario-specific GP posterior mean and GP-UCB envelope ($\mu_{\mathrm{GP}}\pm\beta\sigma_{\mathrm{GP}}$, $\beta=35.2$, $N=500$). \textbf{(d)} Normalized posterior residual error; values below one lie inside the GP-UCB envelope used by the robust HOCBF margin.}
+    \label{fig:model_mismatch}
+\end{figure}
+
+Figure~\ref{fig:model_mismatch} makes the model mismatch explicit. For the same state and zero-deviation input, the nominal model predicts a next-step enthalpy margin of 28.0\,kJ\,kg$^{-1}$, whereas the true S3 plant drops to $-12.0$\,kJ\,kg$^{-1}$. The pressure and enthalpy residual panels show that this discrepancy is structured and learnable: the GP posterior mean tracks the realized model gap, and the remaining residual stays inside the calibrated GP-UCB envelope. This mechanism explains the improvement from nominal HOCBF to GP-corrected and robust HOCBF filtering in Fig.~\ref{fig:process_response}.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/Figure_2.pdf}
-    \caption{Process trajectories under S3: Coupled perturbation. Red dashed = HOCBF without GP (100\% violation, enthalpy drops below bound); blue solid = GP-HOCBF ($\epsilon_\kappa{=}0$, GP mean correction only, substantially reduces but does not eliminate violations under state-dependent coupling). Aggregate violation rate over all seeds for S3 is 39.65\% (Table~\ref{tab:safety}), motivating the need for $\epsilon_\kappa{>}0$ (Sec.~\ref{sec:kappa}).}
+    \caption{Failure mechanism and margin calibration under S3: Coupled perturbation. \textbf{(a)} Separator-enthalpy trajectories over the first 10 steps of a 300-step rollout for HOCBF without GP, mean-corrected GP-HOCBF ($\epsilon_\kappa{=}0$), and GP-HOCBF with a small margin ($\epsilon_\kappa{=}0.1$). The shaded region marks violation of $h_{\min}=2670$\,kJ\,kg$^{-1}$. \textbf{(b)} Equivalent enthalpy safety margin $h_m-h_{\min}$. \textbf{(c)} Seed-level S3 $\epsilon_\kappa$ sweep over full evaluation rollouts (dots = seeds, black ticks/line = mean; $n=3$ except $\epsilon_\kappa{=}1.0$, where $n=2$).}
     \label{fig:traj}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/Figure_4.pdf}
-    \caption{Safety envelope under varying perturbation magnitude. GP-HOCBF ($\epsilon_\kappa{=}0$, GP mean correction only) evaluated across six magnitudes of the S1 heat absorption perturbation. The filter maintains zero violation up to Mag50 (50\,kJ/kg enthalpy perturbation), defining the safe operating envelope (green). At Mag75 and above, the perturbation exceeds the GP correction capacity and the filter collapses to 100\% violation.}
+    \caption{Safety envelope under varying S1 heat-absorption magnitude for GP-HOCBF with $\epsilon_\kappa{=}0$. The filter maintains zero violation up to Mag50; Mag75 and Mag100 exceed the GP correction capacity and produce 100\% violation.}
     \label{fig:qp}
 \end{figure}
 
@@ -60,57 +86,65 @@ These results reveal a clear hierarchy: correct HOCBF structure is necessary, GP
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/kappa_sensitivity.pdf}
-    \caption{$\epsilon_\kappa$ sensitivity sweep across three representative uncertainty scenarios (5th-order CCS). Optimal $\kappa$ differs by uncertainty type: additive uncertainty (S2, S4) achieves zero violation at $\kappa{=}0$ and collapses at $\kappa{\geq}0.5$; state-dependent uncertainty (S3) requires $\kappa{>}0$ (fails at $\kappa{=}0$ with 33.5\% violation) but remains safe up to $\kappa{=}0.5$ (0.25\%). $\kappa{=}1.0$ is never the optimal choice on any condition.}
+    \caption{$\epsilon_\kappa$ sensitivity across three representative uncertainty scenarios. Additive uncertainty (S2, S4) is safest at $\kappa{=}0$; state-dependent uncertainty (S3) requires a positive but non-maximal margin.}
     \label{fig:kappa_sweep}
 \end{figure}
 
-To quantify the practical safety--performance trade-off, we swept $\epsilon_\kappa \in \{0, 0.1, 0.3, 0.5, 1.0\}$ across three representative conditions (2--3 seeds per setting, 5th-order CCS): S2 (additive oscillation), S3 (state-dependent coupled), and S4 (nonlinear fouling). Figure~\ref{fig:kappa_sweep} reports the results.
+To quantify the practical safety--performance trade-off, we swept $\epsilon_\kappa \in \{0, 0.1, 0.3, 0.5, 1.0\}$ across three representative 5th-order CCS conditions: S2 (additive oscillation), S3 (state-dependent coupled), and S4 (nonlinear fouling). Each setting uses 2--3 seeds. This sweep is a commissioning diagnostic, not a replacement for the 5-seed safety table; the Supplemental Material reports the seed counts behind each cell.
 
-\textbf{Additive uncertainty (S2, S4):} $\kappa{=}0$ achieves zero violation. The GP mean correction alone compensates for bounded, non-amplifying perturbations. Increasing $\kappa$ to $0.5$ collapses QP feasibility on S2 (99.4\% violation) while S4 remains safe (0.10\%)---the nonlinear fouling perturbation structure preserves a larger feasible set than the pressure oscillation. $\kappa^*_{\mathrm{S2}}{=}0$, $\kappa^*_{\mathrm{S4}}{=}0$.
+\textbf{Additive uncertainty (S2, S4):} $\kappa{=}0$ achieves zero violation. GP mean correction alone compensates for bounded, non-amplifying perturbations. Increasing $\kappa$ to $0.5$ collapses QP feasibility on S2 (99.4\% violation), while S4 remains safe (0.10\%). The nonlinear fouling perturbation preserves a larger feasible set than the pressure oscillation. $\kappa^*_{\mathrm{S2}}{=}0$, $\kappa^*_{\mathrm{S4}}{=}0$.
 
-\textbf{State-dependent uncertainty (S3):} $\kappa{=}0$ fails (33.5\% violation)---GP mean correction cannot track the feedback-amplified perturbation. Adding even a small margin ($\kappa{=}0.1$) restores zero-violation safety, and safety is maintained through $\kappa{=}0.5$ (0.25\%). $\kappa{=}1.0$ collapses (40.3\%). $\kappa^*_{\mathrm{S3}}{=}0.1$.
+\textbf{State-dependent uncertainty (S3):} $\kappa{=}0$ fails (33.5\% violation) because GP mean correction cannot fully track the feedback-amplified perturbation. A small margin ($\kappa{=}0.1$) restores zero-violation safety, and safety is maintained through $\kappa{=}0.5$ (0.25\%). The full margin $\kappa{=}1.0$ collapses feasibility (40.3\% violation). $\kappa^*_{\mathrm{S3}}{=}0.1$.
 
-\textbf{Practical recommendations:} For additive uncertainty ($|\delta|$ bounded), $\epsilon_\kappa \in [0, 0.3]$ suffices; GP mean correction is the primary mechanism. For state-dependent uncertainty ($\delta \propto x$), $\epsilon_\kappa \in [0.1, 0.5]$ is recommended---the margin is necessary but should not be maximal. $\epsilon_\kappa{=}1.0$ (the theoretical worst-case bound) is never optimal in practice. These findings motivate treating $\epsilon_\kappa$ as a tunable safety factor calibrated per uncertainty type rather than a fixed theoretical constant.
+\textbf{Practical recommendations:} For additive uncertainty ($|\delta|$ bounded), use the smallest margin that maintains residual coverage; in the tested additive scenarios, $\epsilon_\kappa{=}0$ is preferred and values up to $0.3$ remain safe in the diagnostic sweep. For state-dependent uncertainty ($\delta \propto x$), $\epsilon_\kappa \in [0.1, 0.5]$ is recommended only within the tested coupling envelope. The margin is useful but should not be maximal. These findings motivate treating $\epsilon_\kappa$ as a tunable safety factor calibrated by uncertainty type rather than as a fixed theoretical constant.
 
 
 \subsection{Deployment Envelope: \texorpdfstring{$\epsilon_\kappa$}{epsilon-kappa} Under Varying Coupling Strength}
 \label{sec:envelope}
 
-Section~\ref{sec:kappa} established that the optimal $\epsilon_\kappa$ differs between additive and state-dependent uncertainty. A natural follow-on question is whether the \emph{strength} of state-dependent coupling also matters---and if so, whether the safe $\epsilon_\kappa$ range shrinks as coupling intensifies. To answer this, we swept $\epsilon_\kappa \in \{0, 0.1, 0.3, 0.5, 1.0\}$ across four S3 coupling strengths, scaling the state-dependent feedback gain $\gamma \in \{0.5, 1.0, 1.5, 2.0\}$ in the perturbation function $\delta(x) = [0, \gamma\,c_p (x_1 - x_1^0) - d_p, 0.5\gamma\,c_h (x_2 - x_2^0) - d_h, 0, 0]^\top$ (2 seeds $\times$ 50 episodes $\times$ 500 steps, 5th-order CCS). Figure~\ref{fig:kappa_gradient} reports the results.
+Section~\ref{sec:kappa} established that the preferred $\epsilon_\kappa$ differs between additive and state-dependent uncertainty. The next question is whether the \emph{strength} of state-dependent coupling also matters. We therefore swept $\epsilon_\kappa \in \{0, 0.1, 0.3, 0.5, 1.0\}$ across four S3 coupling strengths, scaling the state-dependent feedback gain $\gamma \in \{0.5, 1.0, 1.5, 2.0\}$ in the perturbation function $\delta(x) = [0, \gamma\,c_p (x_1 - x_1^0) - d_p, 0.5\gamma\,c_h (x_2 - x_2^0) - d_h, 0, 0]^\top$ (2 seeds $\times$ 50 episodes $\times$ 500 steps, 5th-order CCS). This gradient is a boundary-finding diagnostic and should be interpreted together with the 5-seed main table and the full data in the Supplemental Material.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/kappa_s3_gradient.pdf}
-    \caption{Deployment envelope of $\epsilon_\kappa$ under varying S3 coupling strength $\gamma$ (5th-order CCS). \textbf{Left:} violation rate vs.\ $\epsilon_\kappa$ for four coupling strengths. \textbf{Right:} safe $\epsilon_\kappa$ range (defined as $<$1\% violation) as a function of $\gamma$. At weak coupling ($\gamma{=}0.5$), $\kappa{=}0$ already fails (8.3\%) and a small margin ($\kappa{=}0.1$) restores zero violation. At medium coupling ($\gamma{=}1.0$), the $\kappa{=}0$ failure deepens (33.5\%) while $\kappa{=}0.1$ maintains safety. At mid-strong coupling ($\gamma{=}1.5$), the reversal is already complete: $\kappa{=}0$ achieves 0.51\% violation while any $\kappa{>}0$ collapses QP feasibility (75.3\%--97.3\%). The envelope closes between $\gamma{=}1.0$ and $\gamma{=}1.5$. At strong coupling ($\gamma{=}2.0$), any $\kappa{>}0$ collapses QP feasibility ($>$98\% violation) while $\kappa{=}0$ achieves near-zero violation (0.19\%)---the perturbation grows faster than the CBF Lie-derivative chain can compensate, so adding margin only constrains the QP without providing protection. The safe $\epsilon_\kappa$ envelope closes between $\gamma{=}1.0$ and $\gamma{=}1.5$.}
+    \caption{Deployment envelope of $\epsilon_\kappa$ under varying S3 coupling strength $\gamma$ (5th-order CCS). \textbf{Left:} violation rate vs.\ $\epsilon_\kappa$ for four coupling strengths. \textbf{Right:} safe $\epsilon_\kappa$ range, defined as $<$1\% violation. A small positive margin is useful at $\gamma=0.5$ and $\gamma=1.0$, but the envelope closes between $\gamma=1.0$ and $\gamma=1.5$. At $\gamma\geq1.5$, positive margins mainly collapse QP feasibility.}
     \label{fig:kappa_gradient}
 \end{figure}
 
-Three regimes emerge from the coupling gradient. \textbf{(i) GP-sufficient regime ($\gamma < 0.5$):} GP mean correction alone provides near-perfect safety---the state-dependent perturbation is weak enough that the GP prediction tracks it without a robustness margin. \textbf{(ii) $\epsilon_\kappa$-useful regime ($0.5 \leq \gamma < 1.5$):} the perturbation outgrows the GP correction at $\kappa{=}0$, and a small positive margin ($\kappa \in [0.1, 0.3]$) restores zero-violation safety. Within this regime, the safe $\kappa$ range narrows as $\gamma$ increases: $\kappa \in [0.1, 1.0]$ at $\gamma{=}0.5$ but shrinks to $\kappa \in [0.1, 0.5]$ at $\gamma{=}1.0$. \textbf{(iii) Deployment boundary ($\gamma \geq 1.5$):} the perturbation amplification rate exceeds the CBF Lie-derivative chain's compensation capacity. Adding $\epsilon_\kappa$ is counterproductive---it constrains the QP without addressing the fundamental limitation that the HOCBF structure cannot certify safety under this perturbation growth rate. $\kappa{=}0$ remains marginally safe (0.51\% at $\gamma{=}1.5$, 0.19\% at $\gamma{=}2.0$) but any positive $\kappa$ collapses feasibility (75--98\% at $\gamma{=}1.5$, 98--100\% at $\gamma{=}2.0$). The filter remains useful as a diagnostic: QP infeasibility at high coupling signals that the system should fall back to a conservative schedule or raise an alarm.
+Three regimes emerge from the coupling gradient. In the GP-sufficient regime ($\gamma < 0.5$), GP mean correction alone provides near-perfect safety because the state-dependent perturbation is weak enough for the GP prediction to track without a robustness margin.
+
+In the $\epsilon_\kappa$-useful regime ($0.5 \leq \gamma < 1.5$), the perturbation outgrows the GP correction at $\kappa{=}0$, and a small positive margin ($\kappa \in [0.1, 0.3]$) restores zero-violation safety. The safe $\kappa$ range narrows as $\gamma$ increases: $\kappa \in [0.1, 1.0]$ at $\gamma{=}0.5$ and $\kappa \in [0.1, 0.5]$ at $\gamma{=}1.0$.
+
+At the deployment boundary ($\gamma \geq 1.5$), the perturbation amplification rate exceeds the CBF Lie-derivative chain's compensation capacity. Adding $\epsilon_\kappa$ constrains the QP without addressing that structural limitation. $\kappa{=}0$ remains marginally safe (0.51\% at $\gamma{=}1.5$, 0.19\% at $\gamma{=}2.0$), but any positive $\kappa$ collapses feasibility (75--98\% at $\gamma{=}1.5$, 98--100\% at $\gamma{=}2.0$). In this regime, QP infeasibility is a diagnostic signal: the unit should fall back to a conservative schedule or raise an alarm rather than increase the margin.
 
 \begin{table}[htbp]
     \centering
-    \caption{Deployment envelope of $\varepsilon_\kappa$ as a function of S3 coupling strength $\gamma$. Safe range defined as achieving $<$1\% violation rate. 5th-order CCS, 2 seeds $\times$ 50 episodes $\times$ 500 steps.}
+    \caption{Deployment envelope of $\epsilon_\kappa$ as a function of S3 coupling strength $\gamma$. Safe range defined as achieving $<$1\% violation rate. 5th-order CCS, 2 seeds $\times$ 50 episodes $\times$ 500 steps.}
     \label{tab:deployment_envelope}
     \small
     \begin{tabular}{ccccc}
         \toprule
         $\gamma$ & $\kappa^*$ & Safe $\kappa$ Range & Min Violation & Regime \\
         \midrule
-        0.5 (Weak) & 0.1 & $[0.1, 1.0]$ & 0.00\% & $\varepsilon_\kappa$ useful \\
-        1.0 (Medium) & 0.1 & $[0.1, 0.5]$ & 0.00\% & $\varepsilon_\kappa$ useful \\
+        0.5 (Weak) & 0.1 & $[0.1, 1.0]$ & 0.00\% & $\epsilon_\kappa$ useful \\
+        1.0 (Medium) & 0.1 & $[0.1, 0.5]$ & 0.00\% & $\epsilon_\kappa$ useful \\
         1.5 (Mid-strong) & 0.0 & $\{0\}$ & 0.51\% & Deployment boundary \\
         2.0 (Strong) & 0.0 & $\{0\}$ & 0.19\% & Deployment boundary \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\textbf{Implication.} The coupling gradient defines a deployment envelope for $\epsilon_\kappa$ (Table~\ref{tab:deployment_envelope}). Rather than fixing $\kappa$ to a theoretical worst-case value (1.0), commissioning involves characterizing the expected coupling strength and selecting $\kappa$ from the appropriate regime. For industrial CCS units operating under known state-dependent coupling profiles (e.g.,$\,$S3 with $\gamma \approx 1.0$), $\kappa = 0.1$ provides the safety--performance optimum. For units entering service with unknown perturbation characteristics, a conservative initial setting of $\kappa = 0.3$ balances safety against excessive QP intervention, with the option to reduce $\kappa$ toward $0$ as operational data confirms GP model adequacy. The deployment boundary at $\gamma \geq 1.5$ reveals a fundamental limitation: when the perturbation amplifies faster than the Lie-derivative chain can compensate, no $\epsilon_\kappa$ value helps, and the QP infeasibility signal should trigger a fallback rather than a margin increase.
+\textbf{Implication.} The coupling gradient defines a deployment envelope for $\epsilon_\kappa$ (Table~\ref{tab:deployment_envelope}). Commissioning should characterize the expected coupling strength and then select $\kappa$ from the corresponding regime, rather than fixing $\kappa$ to the theoretical worst-case value. For units whose replay data match the S3-like medium-coupling profile ($\gamma \approx 1.0$), $\kappa = 0.1$ gives the best safety--performance trade-off in this benchmark. For units entering service with uncertain perturbation characteristics, $\kappa = 0.3$ should be used only after diagnostic tests indicate that the unit is not near the $\gamma \geq 1.5$ boundary. At that boundary, no tested $\epsilon_\kappa$ value improves safety; QP infeasibility should trigger fallback rather than a margin increase.
 
 
 \subsection{Filter Diagnostics and Computational Performance}
 \label{sec:comp}
 
-Figure~\ref{fig:traj} compares HOCBF (no GP) and GP-HOCBF ($\epsilon_\kappa{=}0$) under S3: the nominal filter allows enthalpy to drop below its lower bound on every step, while the GP-corrected filter substantially reduces violations (1.3\% vs.\ 100\% on the shown trajectory). Under state-dependent coupling, GP mean correction alone leaves residual violations (39.65\% aggregate, Table~\ref{tab:safety}) because the feedback-amplified perturbation escapes pure mean-level correction---motivating a small positive $\epsilon_\kappa$ (Sec.~\ref{sec:kappa}). Figure~\ref{fig:epsilon} quantifies the compositional $\epsilon(x)$ margin under S3, showing that $\epsilon_h$ varies by more than one order of magnitude across the operating enthalpy range (CV 105\%). This state dependence is pronounced only under state-dependent perturbations (S3); under constant perturbations (S1, S2, S4--S6), $\epsilon(x)$ is approximately constant and dominated by the GP regularization floor---consistent with the $\epsilon_\kappa$ sweep finding that additive uncertainty requires negligible margin. Figure~\ref{fig:qp} shows the violation rate as a function of perturbation magnitude under GP-HOCBF ($\epsilon_\kappa{=}0$). The filter maintains zero violation up to Mag50 (50\,kJ/kg enthalpy perturbation), beyond which (Mag75, 75\,kJ/kg) the perturbation outgrows the GP correction capacity and violations rise to 100\%. This defines a sharp safe operating envelope for the GP-only configuration.
+Figure~\ref{fig:traj} isolates the S3 enthalpy bottleneck. Panels (a,b) show the first 10 steps of a 300-step rollout because boundary crossing occurs immediately. HOCBF without GP drops below the lower enthalpy bound, GP mean correction removes most of the offset but leaves the trajectory close to the active boundary, and a small positive margin ($\epsilon_\kappa{=}0.1$) restores zero violation on the full rollout. The seed-level sweep in Fig.~\ref{fig:traj}(c) connects this trajectory-level mechanism to the aggregate S3 result: $\epsilon_\kappa{=}0$ leaves 33.47\% mean violation in the kappa sweep and 39.65\% in the main 5-seed table, while $\epsilon_\kappa{=}0.1$ restores 0\% violation in the sweep.
+
+Figure~\ref{fig:epsilon} quantifies the compositional $\epsilon(x)$ margin under S3. The enthalpy margin $\epsilon_h$ varies by more than one order of magnitude across the operating enthalpy range (CV 105\%). This state dependence is pronounced only under state-dependent perturbations. Under constant perturbations (S1, S2, S4--S6), $\epsilon(x)$ is approximately constant and dominated by the GP regularization floor, consistent with the $\epsilon_\kappa$ sweep result that additive uncertainty requires negligible margin in the tested regime.
+
+Figure~\ref{fig:qp} shows violation rate as a function of perturbation magnitude under GP-HOCBF ($\epsilon_\kappa{=}0$). The filter maintains zero violation up to Mag50 (50\,kJ/kg enthalpy perturbation). At Mag75 (75\,kJ/kg) and above, the perturbation exceeds the GP correction capacity and violations rise to 100\%. This defines the safe operating envelope for the GP-only configuration.
 
 \begin{figure}[htbp]
     \centering
@@ -119,13 +153,13 @@ Figure~\ref{fig:traj} compares HOCBF (no GP) and GP-HOCBF ($\epsilon_\kappa{=}0$
     \label{fig:epsilon}
 \end{figure}
 
-Per-step computation: the safety-filter pipeline (PPO+GP+QP) with GPU JIT compilation requires ${\sim}25$\,ms (p95: 27\,ms), including the PPO forward pass, GP inference, and QP solve; NMPC (CPU, scipy SLSQP) averages 254\,ms. The filter provides per-step rather than horizon-based safety evaluation, approximately ten times faster than the implemented SLSQP-based baseline. For CPU-only deployment, the distilled policy achieves 1.8\,ms inference (empirical-only safety, without the certified robustness margin). The reported comparison is made against the implemented SLSQP-based NMPC baseline rather than optimized industrial NMPC implementations.
+Per-step computation is reported for the implemented research code, not as a hardware-normalized solver benchmark. The safety-filter pipeline (PPO+GP+QP) requires ${\sim}25$\,ms after GPU JIT compilation (p95: 27\,ms), including the PPO forward pass, GP inference, and QP solve. The NMPC reference (CPU, scipy SLSQP) averages 254\,ms. The implemented filter therefore fits within the 1\,s sampling budget and is faster than the implemented SLSQP baseline. Optimized industrial MPC packages may have different timing. For CPU-only deployment, the distilled policy achieves 1.8\,ms inference, but this is an empirical policy surrogate without the certified robustness-margin calculation.
 
-The GP-HOCBF filter operates as a minimally invasive safety overlay: when the RL policy outputs actions that satisfy all CBF constraints, the QP returns the action unchanged (zero intervention). Under $\epsilon_\kappa{=}0$, the QP rarely intervenes on nominal and additive-uncertainty conditions (S1, S2, S4--S6, Load Following), acting only when the GP residual prediction indicates an impending constraint boundary crossing. The filter is thus \textbf{minimally invasive under low uncertainty}. Under S3 (state-dependent), where the GP alone is insufficient, a modest margin ($\epsilon_\kappa{=}0.1$) restores the safety guarantee at negligible control cost. Under $\epsilon_\kappa{=}1.0$, the filter intervenes on nearly every step---the QP is over-constrained and must frequently relax constraints via the weak-authority fallback, negating the safety benefit of the added margin. This confirms that $\epsilon_\kappa$ controls the \textbf{intervention--safety trade-off}: zero for minimal invasiveness on well-modeled systems, a small positive value for state-dependent uncertainty, and never the full theoretical bound.
+The GP-HOCBF filter is minimally invasive when the proposed action already satisfies the CBF constraints: the QP returns the action unchanged. Under $\epsilon_\kappa{=}0$, the QP rarely intervenes on nominal and additive-uncertainty conditions (S1, S2, S4--S6, Load Following), acting mainly when the GP residual prediction indicates an impending boundary crossing. Under S3, where GP mean correction alone is insufficient, a modest margin ($\epsilon_\kappa{=}0.1$) restores safety at negligible control cost. Under $\epsilon_\kappa{=}1.0$, the filter intervenes on nearly every step, and the QP frequently relaxes constraints through the weak-authority fallback. This confirms that $\epsilon_\kappa$ controls the intervention--safety trade-off: zero for minimal intervention on well-modeled systems, a small positive value for state-dependent uncertainty, and the full theoretical margin only when the tightened QP remains feasible.
 
 \begin{table}[htbp]
     \centering
-    \caption{Process control performance of GP-HOCBF ($\epsilon_\kappa{=}0$, the recommended practical configuration) under $\Phi$-scaled 5th-order CCS. Mean$\pm$std over 5 seeds $\times$ 50 episodes $\times$ 500 steps.}
+    \caption{Process control performance of the mean-only RoCBF-Net operating point ($\epsilon_\kappa{=}0$) under $\Phi$-scaled 5th-order CCS. Mean$\pm$std over 5 seeds $\times$ 50 episodes $\times$ 500 steps.}
     \label{tab:metrics}
     \small
     \begin{tabular}{lccc}
@@ -141,27 +175,49 @@ The GP-HOCBF filter operates as a minimally invasive safety overlay: when the RL
     \end{tabular}
 \end{table}
 
-Table~\ref{tab:metrics} reports process-level metrics for GP-HOCBF ($\epsilon_\kappa{=}0$), the configuration recommended for additive uncertainty scenarios (Sec.~\ref{sec:kappa}). The filter maintains consistent tracking across all three constraint-active perturbation scenarios: pressure RMSE varies within 3.65--4.57\,MPa, enthalpy RMSE within 27.92--27.94\,kJ/kg, and power RMSE is negligible on S1 and S3 (0.23\,MW) with the expected increase on the 5th-order-specific S5 valve degradation scenario. Control cost is stable across scenarios (4010--6560), confirming the GP mean correction incurs no excessive control penalty. The S3 column shows the limitation of $\epsilon_\kappa{=}0$ under state-dependent uncertainty (39.65\% violation), motivating the tuned $\kappa \in [0.1, 0.5]$ recommendation from the sensitivity sweep---the filter achieves zero violation on S3 at $\epsilon_\kappa{=}0.1$ with comparable control cost.
+Table~\ref{tab:metrics} reports process-level metrics for the mean-only operating point ($\epsilon_\kappa{=}0$), which is recommended for additive uncertainty scenarios (Sec.~\ref{sec:kappa}). The filter maintains consistent tracking across the three constraint-active perturbation scenarios: pressure RMSE remains within 3.65--4.57\,MPa, enthalpy RMSE within 27.92--27.94\,kJ/kg, and power RMSE is negligible on S1 and S3 (0.23\,MW), with the expected increase on the 5th-order-specific S5 valve degradation scenario. Control cost remains within 4010--6560, indicating that GP mean correction does not impose an excessive control penalty.
+
+The S3 column shows the limitation of $\epsilon_\kappa{=}0$ under state-dependent uncertainty (39.65\% violation), motivating the tuned $\kappa \in [0.1, 0.5]$ recommendation from the sensitivity sweep. In that sweep, $\epsilon_\kappa{=}0.1$ achieves zero violation on S3 with comparable control cost.
 
 \subsection{Deployment Considerations}
 
-The method is intended as a \textbf{commissioning-calibrated safety filter} with a tunable robustness factor $\epsilon_\kappa$. Deployment involves two independent decisions: how to train the GP, and how to set $\epsilon_\kappa$.
+RoCBF-Net is intended as a \textbf{commissioning-calibrated safety filter} with a tunable robustness factor $\epsilon_\kappa$. Pre-deployment commissioning requires four decisions: how to train the GP, how to validate the filter before online use, how to set $\epsilon_\kappa$, and when to trigger fallback. Table~\ref{tab:commissioning_protocol} summarizes the corresponding protocol.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Commissioning protocol for deploying RoCBF-Net as a safety-filter overlay.}
+    \label{tab:commissioning_protocol}
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}}
+        \toprule
+        Decision point & Diagnostic signal & Recommended action \\
+        \midrule
+        GP calibration & Held-out residual coverage and scenario-representative samples & Use a scenario-specific GP when commissioning data are available; use online adaptation only with transient monitoring. \\
+        Pre-deployment validation & Historian replay, hardware-in-the-loop checks, and protection-limit review & Enable online intervention only after the GP, QP fallback, and alarm logic pass offline and supervised commissioning tests. \\
+        Margin selection & CBF violation, QP intervention, and infeasibility over a short sweep & Start from the regime schedule in Table~\ref{tab:deployment_envelope}; reduce $\epsilon_\kappa$ if infeasibility rises without reducing violation. \\
+        Envelope check & Evidence of strong state-dependent amplification or repeated QP relaxation & Treat the unit as outside the calibrated envelope and switch to conservative operation instead of increasing $\epsilon_\kappa$. \\
+        Online monitoring & Drift in residual coverage, intervention rate, or active enthalpy margin & Recalibrate the GP, repeat the local $\epsilon_\kappa$ sweep, or hold the previous safe schedule until coverage recovers. \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Unsafe margin values are evaluated only in offline replay or supervised commissioning windows, not during ordinary plant operation. Once the plant is in service, updates to the GP or $\epsilon_\kappa$ schedule should be gated by residual-coverage checks, QP fallback thresholds, and operator-approved alarm logic.
 
 \textbf{GP calibration strategy.} Three modes define a clear deployment envelope:
 \begin{enumerate}[label=(\roman*)]
-    \item \textbf{Scenario-specific GP} (recommended): calibrated on commissioning data from the target operating condition. Provides the tightest residual model and enables the lowest practical $\epsilon_\kappa$.
-    \item \textbf{Online GP adaptation}: incrementally updated during operation. Enables deployment without prior scenario knowledge, at the cost of a transient period without full GP accuracy.
-    \item \textbf{Generic mixed GP}: trained on pooled data from multiple scenarios without scenario labeling. Defined as outside the deployment envelope---silent calibration failure produces 82.7--99.7\% violation (Phase~4, 3rd-order).
+    \item \textbf{Scenario-specific GP} (recommended): calibrate on commissioning data from the target operating condition. This gives the tightest residual model and enables the lowest practical $\epsilon_\kappa$.
+    \item \textbf{Online GP adaptation}: update incrementally during operation. This enables deployment without prior scenario knowledge, at the cost of a transient period before the GP becomes accurate.
+    \item \textbf{Generic mixed GP}: train on pooled data from multiple scenarios without scenario labels. This mode is outside the deployment envelope because silent calibration failure produces 82.7--99.7\% violation (Phase~4, 3rd-order).
 \end{enumerate}
 
 \textbf{$\epsilon_\kappa$ selection.} Once the GP is calibrated, $\epsilon_\kappa$ should be set according to the expected uncertainty structure and strength (Sec.~\ref{sec:envelope}):
 \begin{enumerate}[label=(\roman*)]
-    \item \textbf{Additive uncertainty} ($|\delta|$ bounded, scenarios S1, S2, S4--S6): $\epsilon_\kappa \in [0, 0.3]$. GP mean correction alone provides sufficient safety; the margin can be set to zero for minimal control intervention.
-    \item \textbf{State-dependent uncertainty in the $\epsilon_\kappa$-useful regime} ($0.5 \leq \gamma < 1.5$, scenario S3): $\epsilon_\kappa \in [0.1, 0.3]$. A positive margin is necessary---GP mean correction alone fails at $\gamma \geq 0.5$ ($>$8\% violation). As coupling strengthens, the safe $\kappa$ range narrows but the optimum remains within this narrow band; $\epsilon_\kappa{=}1.0$ always over-constrains the QP.
-    \item \textbf{Strong state-dependent uncertainty beyond the envelope} ($\gamma \geq 1.5$, scenario S3): the HOCBF Lie-derivative chain cannot compensate for the perturbation amplification rate. Adding $\epsilon_\kappa$ is counterproductive (75--99\% violation at any $\kappa{>}0$). The QP infeasibility diagnostic should trigger a fallback to a conservative operating regime rather than increasing $\kappa$.
-    \item \textbf{No uncertainty} (nominal, load following): $\epsilon_\kappa = 0$, and the GP can be omitted entirely (pure HOCBF suffices).
+    \item \textbf{Additive uncertainty} ($|\delta|$ bounded, scenarios S1, S2, S4--S6): use $\epsilon_\kappa \in [0, 0.3]$. GP mean correction alone provides sufficient safety in the tested regime, so the margin can be set to zero for minimal intervention.
+    \item \textbf{State-dependent uncertainty in the $\epsilon_\kappa$-useful regime} ($0.5 \leq \gamma < 1.5$, scenario S3): use $\epsilon_\kappa \in [0.1, 0.3]$. A positive margin is needed because GP mean correction alone fails at $\gamma \geq 0.5$ ($>$8\% violation). As coupling strengthens, the safe $\kappa$ range narrows; $\epsilon_\kappa{=}1.0$ over-constrains the QP in the tested cases.
+    \item \textbf{Strong state-dependent uncertainty beyond the envelope} ($\gamma \geq 1.5$, scenario S3): treat positive margins as counterproductive. The HOCBF Lie-derivative chain cannot compensate for the perturbation amplification rate, and any $\kappa{>}0$ produces 75--99\% violation in this diagnostic. QP infeasibility should trigger fallback to a conservative operating regime rather than increasing $\kappa$.
+    \item \textbf{No uncertainty} (nominal, load following): set $\epsilon_\kappa = 0$ and omit the GP when pure HOCBF is sufficient.
 \end{enumerate}
 
-Prior cross-scenario validation (Phase~4, 3rd-order) confirmed the out-of-distribution failure mode (S3$\to$S1: 99.9\% violation). This failure mode is explicitly characterized, not hidden: $\sigmaGP$ measures spatial distance to training data, not functional distance between perturbation structures. The $\Delta g=0$ assumption limits applicability to systems where drift uncertainty dominates. QP infeasibility serves as a one-sided diagnostic: it detects overestimated $\sigmaGP$ (overly conservative margin) but not underestimated $\sigmaGP$ (unsafe failure). The practical deployment recommendation is therefore: calibrate the GP on scenario-representative data (mode i), then select $\epsilon_\kappa$ from the regime schedule above, bounded by the coupling-strength deployment envelope established in Sec.~\ref{sec:envelope}.
+Prior cross-scenario validation (Phase~4, 3rd-order) confirmed the out-of-distribution failure mode (S3$\to$S1: 99.9\% violation). The mechanism is explicit: $\sigmaGP$ measures spatial distance to training data, not functional distance between perturbation structures. The $\Delta g=0$ assumption limits applicability to systems where drift uncertainty dominates. QP infeasibility is a one-sided diagnostic: it detects overestimated $\sigmaGP$ (overly conservative margin), but not underestimated $\sigmaGP$ (unsafe failure). The practical recommendation is to calibrate the GP on scenario-representative data, select $\epsilon_\kappa$ from the regime schedule above, and bound the final setting by the coupling-strength envelope in Sec.~\ref{sec:envelope}.
 
 Additional results (load-following AGC performance under $\Phi$-scaled dynamics, per-constraint violation decomposition across all methods and conditions, full $\epsilon_\kappa$ sweep data, PPO-Lagrangian and PPO-CBF baselines, and triple-integrator $m=3$ validation) are provided in the Supplemental Material.

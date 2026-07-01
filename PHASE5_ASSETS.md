@@ -1,7 +1,9 @@
 # Phase 5: 5th-Order CCS Fair Comparison — Complete Asset Inventory
 
-**Generated:** 2026-06-28  
-**Status:** Complete (361/365 experiments, 98.9% success rate)  
+> Historical note (2026-07-01): this file records an intermediate Phase 5 asset snapshot and is kept as process evidence. For the current M&C submission artifact, use `README.md`, `REPRODUCIBILITY.md`, `ARTIFACT_MANIFEST.md`, and `scripts/check_repro_artifacts.py` as the authoritative repository entry points. Some details below, including target-venue language and hardware notes, are superseded.
+
+**Generated:** 2026-06-28
+**Status:** Complete (361/365 experiments, 98.9% success rate)
 **Purpose:** Fair comparison of all 8 methods on 5th-order CCS dynamics for IEEE TAC manuscript revision
 
 ---

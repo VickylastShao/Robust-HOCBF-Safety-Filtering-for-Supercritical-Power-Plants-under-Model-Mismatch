@@ -1,0 +1,24 @@
+artifact:
+  name: rocbf-net-mc-submission
+  date: "2026-07-01"
+  manuscript: "A Tunable GP-HOCBF Safety Filter for Supercritical Boiler-Turbine Control under Model Mismatch"
+  target_journal: "Measurement and Control"
+  public_repository: "https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch"
+
+checks:
+  static_inventory: "python scripts/check_repro_artifacts.py"
+  unit_tests: "pytest tests/ -q"
+  main_analysis: "python experiments/phase5/analyze_results_5th.py"
+  kappa_plot: "python experiments/phase5/plot_kappa_sweep.py"
+  process_response_plot: "python experiments/phase5/plot_process_response_figure.py --display-steps 10"
+  model_mismatch_plot: "python experiments/phase5/plot_model_mismatch_figure.py --display-steps 10"
+
+expected_results:
+  main_seed_files: 320
+  method_condition_combinations: 64
+  seeds: [0, 1, 2, 3, 4]
+
+data_policy:
+  proprietary_plant_data: false
+  human_subject_data: false
+  third_party_operational_data: false

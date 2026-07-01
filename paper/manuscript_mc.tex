@@ -1,12 +1,15 @@
 \documentclass[12pt,a4paper]{article}
 
 \usepackage[margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
-\usepackage{booktabs,graphicx,multirow,makecell,bm,enumitem}
+\usepackage{booktabs,graphicx,multirow,makecell,bm,enumitem,array}
 \usepackage[numbers,comma]{natbib}
 \usepackage{hyperref}
 \usepackage{setspace}
 \onehalfspacing
+\setlength{\emergencystretch}{2em}
 \usepackage{lineno}
 \linenumbers
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
@@ -34,16 +37,16 @@
 \begin{document}
 
 \date{}
-\title{RoCBF-Net: A Tunable Safety Architecture for High-Order CBFs Under Uncertainty---GP Correction, Tunable Margins, and the Deployment Envelope}
+\title{A Tunable GP-HOCBF Safety Filter for Supercritical Boiler-Turbine Control under Model Mismatch}
 
 \author{
 Zhuang~Shao$^{1,*}$, Lijun~Lei$^{2}$, Peng~Wang$^{3}$, Liang~Zheng$^{2}$, Jie~Zhou$^{2}$\\[1em]
 $^{1}$China Resources Power Technology Research Institute Co., Ltd.,\\
-\hspace*{1em}Shenzhen 518000, China\\
+\hspace*{1em}Shenzhen 518000, Guangdong Province, China\\
 $^{2}$Rundian Energy Science and Technology Co., Ltd.,\\
-\hspace*{1em}Zhengzhou 450052, China\\
+\hspace*{1em}Zhengzhou 450052, Henan Province, China\\
 $^{3}$North China University of Water Resources and Electric Power,\\
-\hspace*{1em}Zhengzhou 450046, China\\[0.5em]
+\hspace*{1em}Zhengzhou 450046, Henan Province, China\\[0.5em]
 $^{*}$Corresponding author: \texttt{shaozhuang@crpower.com.cn},\\
 \hspace*{1em}ORCID: 0000-0003-2496-0797
 }
@@ -51,10 +54,10 @@ $^{*}$Corresponding author: \texttt{shaozhuang@crpower.com.cn},\\
 \maketitle
 
 \begin{abstract}
-Safety filters based on control barrier functions (CBFs) project control actions into the safe set, but their certificate relies on accurate dynamics---a condition routinely violated in industrial plants under coal quality drift, equipment aging, and unmodeled disturbances. This paper presents RoCBF-Net, a tunable safety filtering architecture that combines three components: high-order CBF (HOCBF) constraints with correct relative degrees, Gaussian process (GP) residual learning, and a scalar robustness factor $\epsilon_\kappa$ that scales the compositional uncertainty margin in the quadratic program constraint. The key finding is that GP mean correction---not the compositional $\epsilon(x)$ margin---is the dominant safety mechanism, reducing constraint violations by $>500\times$ versus uncorrected HOCBF across eight conditions on a 5th-order supercritical boiler-turbine benchmark. Moreover, the optimal $\epsilon_\kappa$ depends systematically on the uncertainty structure: $\epsilon_\kappa=0$ suffices for additive bounded perturbations, while $\epsilon_\kappa=0.1$ is required for state-dependent coupling (recovering zero violation from 33.5\% failure). Crucially, the theoretical worst-case $\epsilon_\kappa=1.0$ is never the optimal choice under any tested condition, and a coupling-strength sweep reveals a \emph{deployment envelope}---the safe $\epsilon_\kappa$ range collapses from $[0.1,1.0]$ at weak coupling to the singleton $\{0\}$ at strong coupling ($\gamma\geq1.5$), where any positive margin harms safety. These results motivate treating $\epsilon_\kappa$ as a tunable calibration parameter selected per uncertainty type and strength, rather than a fixed theoretical constant. The safety-filter pipeline runs at ${\sim}25$\,ms per step (GPU, JIT-compiled), approximately ten times faster than the implemented SLSQP-based NMPC baseline.
+Ultra-supercritical boiler-turbine units must keep main steam pressure, separator outlet enthalpy, and turbine power inside protection limits under coal-quality drift, fouling, actuator degradation, and other model mismatch. RoCBF-Net is a tunable safety-filter architecture for a 1000\,MW boiler-turbine measurement and control loop. At each sampling instant, an upstream controller proposes an action; a Gaussian-process (GP)-corrected high-order control barrier function (HOCBF) layer then solves a quadratic program to return the nearest action satisfying the process safety constraints. The implementation propagates GP posterior uncertainty through the HOCBF $\psi$-chain and scales the resulting compositional margin with a scalar factor $\epsilon_\kappa$, so the robustness margin can be commissioned rather than fixed a priori. Evaluation uses a 5th-order nonlinear boiler-turbine benchmark with $\Phi$-scaled control effectiveness, six disturbance scenarios, load-following operation, eight controller/filter variants, and 5 seeds $\times$ 50 episodes $\times$ 500 steps. GP mean correction reduces nominal HOCBF violations by more than 500 times and achieves $\leq0.18\%$ violation in six of seven uncertainty scenarios. Margin calibration is condition-dependent: $\epsilon_\kappa=0$ is sufficient for additive perturbations, $\epsilon_\kappa=0.1$ restores zero violation under state-dependent coupling, and the full theoretical margin $\epsilon_\kappa=1.0$ over-constrains the quadratic program in the tested benchmark. A coupling-strength sweep defines a deployment envelope in which positive margins help at moderate coupling but should be disabled beyond $\gamma\geq1.5$. The JIT-compiled filter runs at about 25\,ms per step, within the 1\,s sampling budget and approximately ten times faster than the implemented SLSQP-based NMPC benchmark. The results position RoCBF-Net as a pre-deployment, commissioning-calibrated safety layer for industrial process-control systems, not as a fixed worst-case robust controller.
 \end{abstract}
 
-\textbf{Keywords:} Control barrier functions; safety filtering; Gaussian processes; model mismatch; robustness margin calibration; deployment envelope; supercritical power plant
+\textbf{Keywords:} Supercritical boiler-turbine control; safety filter; high-order control barrier function; Gaussian process; model mismatch; robustness margin
 
 \input{sections_mc/intro}
 \input{sections_mc/related_work}
@@ -74,7 +77,7 @@ Not applicable.
 Not applicable.
 
 \subsection*{Declaration of conflicting interests}
-The authors declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.
+The authors declare no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.
 
 \subsection*{Funding}
 This work was supported by the Postdoctoral Research Project of China Resources Power Technology Research Institute Co., Ltd. (Internal Project No.\ 374322).
@@ -83,10 +86,10 @@ This work was supported by the Postdoctoral Research Project of China Resources 
 Zhuang Shao: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Visualization, Writing -- original draft, Writing -- review \& editing. Lijun Lei: Resources, Supervision, Project administration. Peng Wang: Formal analysis, Writing -- review \& editing. Liang Zheng: Resources, Supervision. Jie Zhou: Investigation, Data curation.
 
 \subsection*{Data availability}
-The source code, simulation scripts, trained GP configurations, and plotting scripts required to reproduce the results are available in the \href{https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch}{GitHub repository}.
+The source code, simulation scripts, trained GP configurations, and plotting scripts required to reproduce the results are available in the \href{https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch}{GitHub repository}. No proprietary plant historian data, human data, or third-party operational datasets were used in this study.
 
 \subsection*{Declaration of generative AI and AI-assisted technologies}
-During the preparation of this work, the authors used ChatGPT for language polishing and manuscript formatting. The authors reviewed and edited the content and take full responsibility for the published article.
+During the preparation of this work, the authors used ChatGPT for language polishing and manuscript formatting. The authors reviewed and edited all content and take full responsibility for the article.
 
 \bibliographystyle{SageV}
 \bibliography{refs}

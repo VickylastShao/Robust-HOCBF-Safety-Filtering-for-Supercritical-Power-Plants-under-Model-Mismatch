@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the associated Measurement and Control manuscript. Update the article metadata after acceptance."
+title: "RoCBF-Net: A Tunable GP-HOCBF Safety Filter for Supercritical Boiler-Turbine Control under Model Mismatch"
+authors:
+  - family-names: Shao
+    given-names: Zhuang
+    orcid: "https://orcid.org/0000-0003-2496-0797"
+  - family-names: Lei
+    given-names: Lijun
+  - family-names: Wang
+    given-names: Peng
+  - family-names: Zheng
+    given-names: Liang
+  - family-names: Zhou
+    given-names: Jie
+date-released: "2026-07-01"
+version: "mc-submission-2026-07-01"
+license: MIT
+repository-code: "https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch"
+keywords:
+  - control barrier functions
+  - Gaussian processes
+  - boiler-turbine control
+  - model mismatch
+  - safe reinforcement learning

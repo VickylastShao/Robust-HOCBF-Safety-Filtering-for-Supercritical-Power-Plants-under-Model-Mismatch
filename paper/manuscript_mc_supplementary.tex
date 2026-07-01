@@ -1,13 +1,16 @@
 \documentclass[12pt,a4paper]{article}
 
 \usepackage[margin=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{booktabs,graphicx,multirow,makecell,bm,enumitem}
 \usepackage[numbers,comma]{natbib}
-\usepackage{hyperref}
+\usepackage[hypertexnames=false]{hyperref}
 \usepackage{float}
 \usepackage{setspace}
 \onehalfspacing
+\setlength{\emergencystretch}{2em}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 
 \newtheorem{lemma}{Lemma}
@@ -41,19 +44,23 @@
 \renewcommand{\theequation}{S\arabic{equation}}
 \renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theHsection}{S\arabic{section}}
+\renewcommand{\theHequation}{S\arabic{equation}}
+\renewcommand{\theHtable}{S\arabic{table}}
+\renewcommand{\theHfigure}{S\arabic{figure}}
 
 \begin{document}
 
-\title{Supplemental Material for\\ ``RoCBF-Net: A Tunable Safety Architecture for High-Order CBFs Under Uncertainty---GP Correction, Tunable Margins, and the Deployment Envelope''}
+\title{Supplemental Material for\\ ``A Tunable GP-HOCBF Safety Filter for Supercritical Boiler-Turbine Control under Model Mismatch''}
 
 \author{
 Zhuang~Shao$^{1,*}$, Lijun~Lei$^{2}$, Peng~Wang$^{3}$, Liang~Zheng$^{2}$, Jie~Zhou$^{2}$\\[1em]
 $^{1}$China Resources Power Technology Research Institute Co., Ltd.,\\
-\hspace*{1em}Shenzhen 518000, China\\
+\hspace*{1em}Shenzhen 518000, Guangdong Province, China\\
 $^{2}$Rundian Energy Science and Technology Co., Ltd.,\\
-\hspace*{1em}Zhengzhou 450052, China\\
+\hspace*{1em}Zhengzhou 450052, Henan Province, China\\
 $^{3}$North China University of Water Resources and Electric Power,\\
-\hspace*{1em}Zhengzhou 450046, China\\[0.5em]
+\hspace*{1em}Zhengzhou 450046, Henan Province, China\\[0.5em]
 $^{*}$Corresponding author: \texttt{shaozhuang@crpower.com.cn}
 }
 

@@ -1,4 +1,59 @@
-\section{RoCBF-Net: Architecture and Theory}
+\section{RoCBF-Net Safety-Filter Architecture}
+\label{sec:method}
+
+\subsection{Industrial Safety-Filter Workflow}
+
+This section first describes the online safety-filter implementation and then gives the probabilistic margin certificate that supports it. The experiments in Section~\ref{sec:exp} determine how much of that margin should be applied under each mismatch regime.
+
+Figure~\ref{fig:architecture} summarizes the overlay architecture. The upstream controller produces a deviation command $v_{\mathrm{prop}}$ around the LQR-stabilized equilibrium controller. The safety filter then returns the closest command $v^*$ that satisfies the process safety constraints. The total actuator command applied to the boiler-turbine model is
+\begin{equation}
+    u = u_0 + K(x_0-x) + v^* ,
+    \label{eq:deviation_control}
+\end{equation}
+where $u=[u_B,D_{fw},u_t]^\top$ denotes coal feed, feedwater flow, and turbine-valve opening. This deviation-control form is used because the CCS dynamics are stiff. The HOCBF and QP operate on the stabilized linearized dynamics, while evaluation rollouts use the nonlinear 5th-order plant with $\Phi(p_m)$-scaled control effectiveness.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Measurement/control variables and implementation settings used by the RoCBF-Net safety filter on the 5th-order CCS benchmark.}
+    \label{tab:implementation_settings}
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.39\textwidth}}
+        \toprule
+        Item & Setting & Role in the filter \\
+        \midrule
+        Measured state & $[r_B,p_m,h_m,N_e,\tau_f]^\top$ & Boiler gas state, separator pressure, enthalpy, turbine power, and fuel-delay state used for CBF and GP evaluation. \\
+        Manipulated inputs & $[u_B,D_{fw},u_t]^\top$ & Coal feed, feedwater flow, and turbine valve opening; QP optimizes the deviation command $v$. \\
+        Pressure limit & $13$--$24$\,MPa, $m=2$ & High-order pressure CBF with two $\psi$-levels. \\
+        Enthalpy limit & $2670$--$2830$\,kJ\,kg$^{-1}$, $m=1$ & Active heat-absorption safety constraint. \\
+        Power limit & $1000\pm50$\,MW, $m=1$ & Load-following and turbine-output safety constraint. \\
+        Sampling and hold & $T_s=1$\,s, zero-order hold & Online QP solved once per measurement sample. \\
+        GP calibration & 500 samples per scenario, Mat\'{e}rn-5/2 residual GPs & Learns $\Delta f$ mean correction and posterior uncertainty. \\
+        QP implementation & qpax primal solve, row scaling, box constraints & Projects $v_{\mathrm{prop}}$ to the nearest admissible $v^*$. \\
+        Fallback behavior & Slack relaxation and LQR fallback & Invoked when the tightened CBF-QP is infeasible. \\
+        Runtime target & ${\sim}25$\,ms per step on RTX 4090 GPU & Fits within the 1\,s sampling budget of the benchmark loop. \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{Online filtering algorithm.}
+At each sampling instant, RoCBF-Net executes the following steps:
+\begin{enumerate}[label=\textbf{Step \arabic*:},leftmargin=*]
+    \item Read the measured state $x_k$ and obtain the proposed deviation action $v_{\mathrm{prop},k}$ from the upstream controller.
+    \item Evaluate the GP residual model at $x_k$ to obtain the mean correction $\mu_{\mathrm{GP}}(x_k)$ and posterior standard deviations $\sigma_{\mathrm{GP}}(x_k)$.
+    \item Build the mean-corrected HOCBF constraints using the correct relative degree for each process limit.
+    \item Propagate GP posterior uncertainty through the HOCBF $\psi$-chain to compute the compositional margin $\epsilon(x_k)$.
+    \item Solve the real-time QP
+    \begin{equation}
+        v_k^*=\argmin_v \|v-v_{\mathrm{prop},k}\|_2^2
+        \quad \mathrm{s.t.}\quad A(x_k)v \leq b(x_k)-\epsilon_\kappa\epsilon(x_k),
+        \label{eq:online_qp}
+    \end{equation}
+    with actuator box constraints and row scaling.
+    \item Apply $u_k=u_0+K(x_0-x_k)+v_k^*$ to the plant, and log intervention, feasibility, and constraint-margin diagnostics.
+\end{enumerate}
+
+\paragraph{Operating-point interpretation.}
+RoCBF-Net denotes the full safety-filter architecture in Fig.~\ref{fig:architecture}: HOCBF constraints with the correct relative degrees, GP residual mean correction, compositional uncertainty propagation, and a tunable scalar $\epsilon_\kappa$. The experimental rows labelled GP-HOCBF, RHOCBF, and online GP-RHOCBF are fixed operating points or ablations of this architecture, not separate proposed methods. Thus, $\epsilon_\kappa=0$ tests mean correction without an additional uncertainty margin, $\epsilon_\kappa=1$ tests the full worst-case margin, and the recommended operating point is selected from the commissioning schedule in Secs.~\ref{sec:kappa}--\ref{sec:envelope}.
 
 \subsection{Problem Formulation}
 
@@ -7,7 +62,7 @@ Consider a control-affine system with model mismatch:
     \dot{x} = \underbrace{f_0(x) + g_0(x)u}_{\text{nominal}} + \underbrace{\Deltaf(x)}_{\text{residual}}, \quad x \in \R^n, \; u \in \calU \subset \R^m
     \label{eq:true}
 \end{equation}
-where $\Deltaf$ represents unmodeled dynamics, parameter drift, and external disturbances. We assume the input matrix is known ($\Delta g = 0$), as actuator characteristics are typically well-characterized in industrial settings. For scenarios where actuator degradation primarily affects process variables through reduced throughput (e.g., valve fouling reducing steam extraction efficiency) rather than through changes in actuator gain, the dominant effect is captured by $\Deltaf$; the benchmark models actuator degradation scenarios (S5) in this form.
+where $\Deltaf$ represents unmodeled dynamics, parameter drift, and external disturbances. We assume that the input matrix is known ($\Delta g = 0$), consistent with settings in which actuator characteristics are well characterized. In scenarios where actuator degradation mainly affects process variables through reduced throughput (for example, valve fouling reducing steam extraction efficiency) rather than through actuator-gain changes, the dominant effect is captured by $\Deltaf$. The S5 benchmark scenario models actuator degradation in this form.
 
 For a constraint $h(x) \geq 0$ with relative degree $m$, the HOCBF $\psi$-chain is:
 \begin{equation}
@@ -19,13 +74,13 @@ With linear $\alpha_i(r) = k_i r$, the constraint $A_0(x)u \leq b_0(x)$ enforces
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.92\textwidth]{figures/Figure_1.pdf}
-    \caption{RoCBF-Net safety filtering architecture. The upstream controller (LQR, MPC, PID, or learned policy) proposes an action $u_{\mathrm{prop}}$; the RoCBF-Net filter evaluates it against current plant measurements and the GP residual model, projecting to the nearest certified-safe action $u^*$ via the QP constraint $Au \leq b - \epsilon_\kappa\epsilon(x)$. The three components---HOCBF (correct relative degrees), GP (scenario-specific, online, or omitted), and $\epsilon_\kappa$ (tuned per uncertainty regime)---are independently configurable.}
+    \caption{RoCBF-Net safety filtering architecture. The upstream controller (LQR, MPC, PID, or learned policy) proposes an action $u_{\mathrm{prop}}$. The filter evaluates it against current plant measurements and the GP residual model, then projects it to the nearest certified-safe action $u^*$ through the QP constraint $Au \leq b - \epsilon_\kappa\epsilon(x)$. HOCBF relative degrees, GP calibration mode, and $\epsilon_\kappa$ are independently configurable.}
     \label{fig:architecture}
 \end{figure}
 
 \subsection{GP Residual Model}
 
-Each component of $\Deltaf_j$ is modeled as an independent GP with Mat\'{e}rn-5/2 kernel. Given $N$ training points, the posterior provides mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The GP-UCB bound guarantees:
+Each component of $\Deltaf_j$ is modeled as an independent GP with a Mat\'{e}rn-5/2 kernel. Given $N$ training points, the posterior provides mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The GP-UCB bound gives:
 \begin{equation}
     |\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \sigma_{\mathrm{GP},j}(x), \quad \text{w.p.} \geq 1-\delta/n
     \label{eq:gp_bound}
@@ -42,19 +97,19 @@ The perturbation at level $i$ is $\delta_i = \psi_i - \hat{\psi}_i^0$, satisfyin
     \delta_i &= L_{\Delta\hat{f}}\hat{\psi}_{i-1}^0 + (L_{\fhat}+k_i)\delta_{i-1} + L_{\Delta\hat{f}}\delta_{i-1}, \; i\geq 2 \label{eq:di}
 \end{align}
 
-The compositional robustness margin is constructed via:
+The compositional margin is constructed as:
 \begin{align}
     \sigma_1(x) &= \beta \sum_j |\partial h/\partial x_j| \sigmaGPj{j}(x) \label{eq:s1}\\
     \sigma_i(x) &= \beta \sum_j |\partial \hat{\psi}_{i-1}^0/\partial x_j| \sigmaGPj{j}(x) + (\|L_{\fhat}\|_{\mathrm{op}} + k_i)\sigma_{i-1}(x) + \sigma_{\mathrm{cross}}^{(i)}(x) \label{eq:si}\\
     \sigmatotal(x) &= \sigma_m(x) + \sum_{j=1}^{m-1} c_j\sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) \label{eq:st}
 \end{align}
-where $\|L_{\fhat}\|_{\mathrm{op}}$ is the operator norm (spectral norm of the Jacobian $\partial \fhat / \partial x$ evaluated at the equilibrium operating point), $\sigma_{\mathrm{cross}}^{(i)}(x)$ bounds the cross term $|L_{\Delta\hat{f}}\delta_{i-1}|$ via Lemma~S1, and $c_j = \prod_{i=j+1}^{m-1} (\|L_{\fhat}\|_{\mathrm{op}} + k_i)$ are the chain coupling weights. The robust HOCBF constraint is $A_0(x)u \leq b_0(x) - \epsilonKappa\cdot\sigmatotal(x)$.
+Here, $\|L_{\fhat}\|_{\mathrm{op}}$ is the operator norm (the spectral norm of the Jacobian $\partial \fhat / \partial x$ at the equilibrium operating point), $\sigma_{\mathrm{cross}}^{(i)}(x)$ bounds the cross term $|L_{\Delta\hat{f}}\delta_{i-1}|$ via Lemma~S1, and $c_j = \prod_{i=j+1}^{m-1} (\|L_{\fhat}\|_{\mathrm{op}} + k_i)$ are the chain coupling weights. The resulting HOCBF constraint is $A_0(x)u \leq b_0(x) - \epsilonKappa\cdot\sigmatotal(x)$.
 
 \subsection{Theoretical Guarantee: Worst-Case Bound}
 
 \begin{theorem}[Probabilistic forward invariance]
 \label{thm:1}
-Suppose that the input matrix is exact ($\Delta g = 0$), each GP residual component satisfies the RKHS boundedness condition required by the GP-UCB confidence bound, the GP posterior is calibrated on fixed i.i.d.\ training data, the relative degree is known, the perturbation is sufficiently small and Lipschitz-in-perturbation, and the robust QP is feasible. For $\epsilonKappa = 1$, if $\epsilon(x) \geq |\Delta(x,u)|$ for all admissible $u$, then $\calC$ is forward invariant with probability at least $1-\delta$.
+Suppose that the input matrix is exact ($\Delta g = 0$), each GP residual component satisfies the RKHS boundedness condition required by the GP-UCB confidence bound, the GP posterior is calibrated on fixed i.i.d.\ training data, the relative degree is known, the residual dynamics are sufficiently small and Lipschitz on the operating set, and the robust QP is feasible. For $\epsilonKappa = 1$, if $\epsilon(x) \geq |\Delta(x,u)|$ for all admissible $u$, then $\calC$ is forward invariant with probability at least $1-\delta$.
 \end{theorem}
 
 \begin{proof}[Proof sketch]
@@ -65,11 +120,11 @@ Suppose that the input matrix is exact ($\Delta g = 0$), each GP residual compon
 \textbf{Step 3:} $|\Delta(x,u)| \leq \sigmatotal(x) = \epsilon(x)$ for $\epsilonKappa=1$, completing the certificate.
 \end{proof}
 
-Theorem~\ref{thm:1} provides the \emph{worst-case} theoretical guarantee: setting $\epsilon_\kappa=1$ applies the full compositional margin used in the certificate, so forward invariance holds with the stated probability whenever the tightened QP remains feasible under the actuator authority condition. Feasibility is not implied by the margin itself; it is governed by the safe-set geometry, actuator limits, and the feasible-control set $\calU$. The guarantee is conservative by construction---it covers the worst-case combination of GP posterior uncertainty and $\psi$-chain amplification. The following subsection introduces $\epsilon_\kappa$ as a tunable parameter that recovers this worst-case bound at $\epsilon_\kappa=1$ while permitting less conservative calibration for specific uncertainty regimes.
+Theorem~\ref{thm:1} is a \emph{worst-case} statement. Setting $\epsilon_\kappa=1$ applies the full compositional margin used in the certificate, so forward invariance holds with the stated probability whenever the tightened QP remains feasible under the actuator authority condition. Feasibility is not implied by the margin itself; it depends on the safe-set geometry, actuator limits, and feasible-control set $\calU$. The guarantee is conservative because it covers the worst-case combination of GP posterior uncertainty and $\psi$-chain amplification. The next subsection treats $\epsilon_\kappa$ as a tunable parameter that recovers this bound at $\epsilon_\kappa=1$ while permitting less conservative calibration for specific uncertainty regimes.
 
 \subsection{\texorpdfstring{$\epsilon_\kappa$}{epsilon-kappa} as a Tunable Safety Factor}
 
-The robustness scaling factor $\epsilon_\kappa$ in the QP constraint $A_0(x)u \leq b_0(x) - \epsilon_\kappa\cdot\epsilon(x)$ controls the trade-off between safety margin and control authority:
+The robustness scaling factor $\epsilon_\kappa$ in the QP constraint $A_0(x)u \leq b_0(x) - \epsilon_\kappa\cdot\epsilon(x)$ controls the safety-margin/control-authority trade-off:
 
 \begin{itemize}
     \item $\epsilon_\kappa = 0$: The QP enforces $A_0u \leq b_0$, i.e., the nominal HOCBF constraint with GP mean correction only. No robustness margin is applied beyond the mean correction itself.
@@ -77,12 +132,12 @@ The robustness scaling factor $\epsilon_\kappa$ in the QP constraint $A_0(x)u \l
     \item $0 < \epsilon_\kappa < 1$: The QP enforces a fraction of the compositional margin, trading theoretical coverage for reduced QP conservatism.
 \end{itemize}
 
-The central empirical question---and the primary contribution of this paper---is whether the worst-case setting ($\epsilon_\kappa=1$) is ever necessary in practice, and whether the optimal $\epsilon_\kappa$ depends on the structure and strength of the model mismatch. The experimental evaluation (Section~\ref{sec:exp}) demonstrates that: (i)~$\epsilon_\kappa=0$ (GP correction only) is sufficient for additive bounded perturbations, achieving $\leq0.18\%$ violation across six of seven uncertainty scenarios; (ii)~$\epsilon_\kappa=0.1$ is required for state-dependent coupling, recovering zero violation from 33.5\% failure; (iii)~$\epsilon_\kappa=1.0$ is never the optimal choice under any tested condition; and (iv)~the safe $\epsilon_\kappa$ range collapses as coupling strength increases, defining a deployment envelope that depends on the perturbation amplification rate $\gamma$.
+The empirical question is whether the worst-case setting ($\epsilon_\kappa=1$) is needed in the tested process-control benchmark, and whether the preferred $\epsilon_\kappa$ changes with the structure and strength of model mismatch. Section~\ref{sec:exp} shows that: (i)~$\epsilon_\kappa=0$ (GP correction only) is sufficient for additive bounded perturbations, achieving $\leq0.18\%$ violation across six of seven uncertainty scenarios; (ii)~$\epsilon_\kappa=0.1$ is required for state-dependent coupling, recovering zero violation from 33.5\% failure; (iii)~$\epsilon_\kappa=1.0$ is not the preferred choice under any tested condition; and (iv)~the safe $\epsilon_\kappa$ range collapses as coupling strength increases, defining a deployment envelope that depends on the perturbation amplification rate $\gamma$.
 
 \subsection{Data-Driven vs. Floor-Driven \texorpdfstring{$\epsilon(x)$}{epsilon(x)}}
 
-The GP posterior includes a regularization floor $\sigma_{\mathrm{floor}}=10^{-4}$. Under constant perturbations, $\sigmaGP$ is near-uniform and $\epsilon(x)$ is approximately constant per constraint---the margin is \emph{floor-driven}, with the GP contributing a near-constant safety buffer. Under state-dependent perturbations (S3: Coupled), $\sigmaGP$ becomes heterogeneous and $\epsilon(x)$ is genuinely state-dependent---the margin is \emph{data-driven}, reflecting the spatial structure of uncertainty. This distinction explains why additive perturbation scenarios can safely use $\epsilon_\kappa=0$: the GP mean correction already provides the necessary adjustment, and the floor-driven $\epsilon(x)$ only adds QP conservatism without meaningful additional protection.
+The GP posterior includes a regularization floor $\sigma_{\mathrm{floor}}=10^{-4}$. Under constant perturbations, $\sigmaGP$ is near-uniform and $\epsilon(x)$ is approximately constant per constraint; the margin is \emph{floor-driven}, with the GP contributing a near-constant safety buffer. Under state-dependent perturbations (S3: Coupled), $\sigmaGP$ becomes heterogeneous and $\epsilon(x)$ is state-dependent; the margin is \emph{data-driven}, reflecting the spatial structure of uncertainty. This distinction explains why additive perturbation scenarios can use $\epsilon_\kappa=0$ in the tested regime: the GP mean correction already provides the useful adjustment, and the floor-driven $\epsilon(x)$ mainly adds QP conservatism.
 
 \subsection{Sampled-Data Implementation}
 
-Theorem~\ref{thm:1} is a continuous-time result. The practical implementation uses discrete sampling ($T_s = 1$\,s, zero-order hold). The full safety-filter pipeline latency is ${\sim}25$\,ms (GPU, JIT-compiled, including PPO forward pass, GP inference, and QP solve). When the QP is infeasible, a slack-penalised relaxation with LQR fallback is invoked. Inter-sample constraint satisfaction is empirically verified (Section~\ref{sec:exp}). We do not claim a formal discrete-time invariance theorem.
+Theorem~\ref{thm:1} is a continuous-time result. The implementation uses discrete sampling ($T_s = 1$\,s, zero-order hold). The full safety-filter pipeline latency is ${\sim}25$\,ms on the GPU after JIT compilation, including the PPO forward pass, GP inference, and QP solve. When the QP is infeasible, the controller invokes a slack-penalised relaxation with LQR fallback. Inter-sample constraint satisfaction is checked empirically in Section~\ref{sec:exp}; a formal discrete-time invariance theorem is outside the present scope.

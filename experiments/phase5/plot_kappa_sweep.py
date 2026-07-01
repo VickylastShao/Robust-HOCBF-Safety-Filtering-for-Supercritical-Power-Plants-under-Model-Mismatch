@@ -29,10 +29,10 @@ S3_LABELS = {
 }
 
 S3_COLORS = {
-    's3_weak': '#4FC3F7',       # light blue
-    's3_coupled': '#2196F3',     # medium blue
-    's3_midstrong': '#F44336',   # red
-    's3_strong': '#880E4F',      # dark red
+    's3_weak': '#56B4E9',       # Okabe-Ito sky blue
+    's3_coupled': '#0072B2',     # Okabe-Ito blue
+    's3_midstrong': '#D55E00',   # Okabe-Ito vermillion
+    's3_strong': '#CC79A7',      # Okabe-Ito reddish purple
 }
 
 S3_GAMMAS = {
@@ -111,6 +111,16 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
         return
 
     os.makedirs(output_dir, exist_ok=True)
+    plt.rcParams.update({
+        'font.size': 8,
+        'axes.labelsize': 9,
+        'axes.titlesize': 9,
+        'legend.fontsize': 7,
+        'xtick.labelsize': 8,
+        'ytick.labelsize': 8,
+        'pdf.fonttype': 42,
+        'ps.fonttype': 42,
+    })
 
     data = load_kappa_results()
 
@@ -124,16 +134,18 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
         print("No kappa sweep data found — run run_kappa_sweep.py first")
         return
 
-    conditions = sorted(data[list(data.keys())[0]].keys(),
-                         key=lambda c: RESULT_LABELS.get(c, c))
+    # This figure is the three-scenario commissioning diagnostic. The same
+    # result directory also contains S3 coupling-gradient variants; those are
+    # reserved for the deployment-envelope figure below.
+    conditions = [c for c in RESULT_LABELS if any(c in data[k] for k in data)]
 
     kappas = sorted(data.keys())
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(7.2, 3.9))
 
-    colors = {'s2_pressure': '#2196F3',   # blue
-              's3_coupled': '#F44336',     # red
-              's4_nonlinear': '#4CAF50'}   # green
+    colors = {'s2_pressure': '#0072B2',    # Okabe-Ito blue
+              's3_coupled': '#D55E00',     # Okabe-Ito vermillion
+              's4_nonlinear': '#009E73'}   # Okabe-Ito bluish green
 
     markers = {'s2_pressure': 'o', 's3_coupled': 's', 's4_nonlinear': '^'}
 
@@ -158,20 +170,13 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
 
         ax.errorbar(ks, means, yerr=stds, label=label,
                     color=color, marker=marker, markersize=8,
-                    linewidth=2, capsize=4, alpha=0.85)
+                    linewidth=1.8, capsize=3.5, alpha=0.9)
 
         # Mark optimal κ
         opt_idx = np.argmin(means)
         opt_kappa = ks[opt_idx]
         opt_mean = means[opt_idx]
         optimal_kappas[condition] = (opt_kappa, opt_mean)
-
-        ax.annotate(f'κ*={opt_kappa}',
-                    xy=(opt_kappa, opt_mean),
-                    xytext=(opt_kappa + 0.05, opt_mean + 2),
-                    fontsize=9, color=color,
-                    arrowprops=dict(arrowstyle='->', color=color, lw=1.2),
-                    fontweight='bold')
 
     # Add reference points from main sweep
     # PPO-GP-HOCBF (κ=0 using different code path)
@@ -188,29 +193,23 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
                            xytext=(-0.08, gp_mean + 1), fontsize=7,
                            color=color, alpha=0.6)
 
-    ax.set_xlabel('ε_κ (Robustness Scaling Factor)', fontsize=13)
-    ax.set_ylabel('Violation Rate (%)', fontsize=13)
-    ax.set_title('ε_κ Sensitivity: Different Scenarios Require Different Configurations',
-                 fontsize=14)
-    ax.legend(loc='upper left', fontsize=10)
-    ax.grid(True, alpha=0.3)
+    ax.axhline(1.0, color='0.45', linestyle=':', linewidth=1.0)
+    ax.text(0.995, 1.6, '1% threshold', ha='right', va='bottom',
+            fontsize=7, color='0.35')
+    ax.set_xlabel(r'Robustness scaling $\epsilon_\kappa$')
+    ax.set_ylabel('Violation rate (%)')
+    ax.legend(loc='upper left', frameon=False, ncol=1)
+    ax.grid(True, alpha=0.22, linewidth=0.6)
     ax.set_xlim(-0.05, 1.05)
-
-    # Add annotation explaining the trade-off
-    ax.annotate('Lower κ → less conservative,\nmore control authority',
-                xy=(0.02, 0.98), xycoords='axes fraction',
-                fontsize=8, ha='left', va='top', color='gray',
-                bbox=dict(boxstyle='round', fc='white', alpha=0.7))
-    ax.annotate('Higher κ → more conservative,\ntighter safety margin',
-                xy=(0.98, 0.98), xycoords='axes fraction',
-                fontsize=8, ha='right', va='top', color='gray',
-                bbox=dict(boxstyle='round', fc='white', alpha=0.7))
+    ax.set_ylim(-3, 105)
 
     plt.tight_layout()
     fig.savefig(f'{output_dir}kappa_sensitivity.png', dpi=300,
                 bbox_inches='tight')
+    fig.savefig(f'{output_dir}kappa_sensitivity.pdf', bbox_inches='tight')
     plt.close(fig)
     print(f"  Saved: {output_dir}kappa_sensitivity.png")
+    print(f"  Saved: {output_dir}kappa_sensitivity.pdf")
 
     # Print optimal kappa summary
     print("\n--- Optimal κ by Condition ---")
@@ -429,8 +428,23 @@ def plot_kappa_gradient(output_dir='results/phase5/figures/'):
         print("No S3 gradient data found — run kappa sweep first")
         return
 
-    # ---- Plot 1: 4 curves overlaid (κ vs violation) ----
-    fig, ax = plt.subplots(figsize=(11, 7))
+    plt.rcParams.update({
+        'font.size': 8,
+        'axes.labelsize': 9,
+        'axes.titlesize': 9,
+        'legend.fontsize': 7,
+        'xtick.labelsize': 8,
+        'ytick.labelsize': 8,
+        'pdf.fonttype': 42,
+        'ps.fonttype': 42,
+    })
+
+    # ---- Combined plot: violation curves + deployment envelope ----
+    fig, (ax, ax2) = plt.subplots(
+        1, 2, figsize=(7.2, 3.6),
+        gridspec_kw={'width_ratios': [1.45, 1.0]},
+        constrained_layout=True,
+    )
 
     dev_envelope = []
     for condition in ['s3_weak', 's3_coupled', 's3_midstrong', 's3_strong']:
@@ -454,20 +468,13 @@ def plot_kappa_gradient(output_dir='results/phase5/figures/'):
         label = f'{S3_LABELS[condition]}'
 
         ax.errorbar(ks, means, yerr=stds, label=label,
-                    color=color, marker='o', markersize=8,
-                    linewidth=2.5, capsize=4, alpha=0.85)
+                    color=color, marker='o', markersize=6.5,
+                    linewidth=1.8, capsize=3.5, alpha=0.9)
 
         # Mark optimal κ
         opt_idx = np.argmin(means)
         opt_kappa = ks[opt_idx]
         opt_mean = means[opt_idx]
-
-        ax.annotate(f'κ*={opt_kappa}',
-                    xy=(opt_kappa, opt_mean),
-                    xytext=(opt_kappa + 0.03, opt_mean + 3),
-                    fontsize=9, color=color,
-                    arrowprops=dict(arrowstyle='->', color=color, lw=1.5),
-                    fontweight='bold')
 
         # Deployment envelope: track safe κ range per γ
         safe_kappas = [k for i, k in enumerate(ks)
@@ -478,63 +485,50 @@ def plot_kappa_gradient(output_dir='results/phase5/figures/'):
                 'safe_range': (min(safe_kappas), max(safe_kappas)),
             })
 
-    ax.set_xlabel('ε_κ (Robustness Scaling Factor)', fontsize=13)
-    ax.set_ylabel('Violation Rate (%)', fontsize=13)
-    ax.set_title('S3 Coupling Gradient: ε_κ Contribution Grows with Uncertainty Strength',
-                 fontsize=14)
-    ax.legend(loc='upper left', fontsize=11)
-    ax.grid(True, alpha=0.3)
+    ax.axhline(1.0, color='0.45', linestyle=':', linewidth=1.0)
+    ax.text(0.995, 1.6, '1% threshold', ha='right', va='bottom',
+            fontsize=7, color='0.35')
+    ax.set_xlabel(r'Robustness scaling $\epsilon_\kappa$')
+    ax.set_ylabel('Violation rate (%)')
+    ax.set_title('(a) Coupling-strength sweep', loc='left', pad=3)
+    ax.legend(loc='upper left', frameon=False)
+    ax.grid(True, alpha=0.22, linewidth=0.6)
     ax.set_xlim(-0.05, 1.05)
+    ax.set_ylim(-3, 105)
 
-    # Annotation
-    ax.annotate('Weak coupling: κ=0 suffices\n(GP alone handles it)',
-                xy=(0.02, 0.98), xycoords='axes fraction',
-                fontsize=9, ha='left', va='top', color=S3_COLORS['s3_weak'],
-                bbox=dict(boxstyle='round', fc='white', alpha=0.7))
-    ax.annotate('Strong coupling:\nε_κ essential but bounded',
-                xy=(0.98, 0.98), xycoords='axes fraction',
-                fontsize=9, ha='right', va='top', color=S3_COLORS['s3_strong'],
-                bbox=dict(boxstyle='round', fc='white', alpha=0.7))
-
-    plt.tight_layout()
-    fig.savefig(f'{output_dir}kappa_s3_gradient.png', dpi=300,
-                bbox_inches='tight')
-    plt.close(fig)
-    print(f"  Saved: {output_dir}kappa_s3_gradient.png")
-
-    # ---- Plot 2: Deployment envelope (γ vs safe κ range) ----
     if len(dev_envelope) >= 3:
-        fig2, ax2 = plt.subplots(figsize=(8, 5))
-
         gammas = [d['gamma'] for d in dev_envelope]
         kappa_mins = [d['safe_range'][0] for d in dev_envelope]
         kappa_maxs = [d['safe_range'][1] for d in dev_envelope]
 
-        # Fill the deployment envelope
         ax2.fill_between(gammas, kappa_mins, kappa_maxs,
-                         alpha=0.2, color='#4CAF50', label='Safe κ range (<1% violation)')
-        ax2.plot(gammas, kappa_mins, 'o-', color='#2196F3', linewidth=2,
-                label='Min κ', markersize=8)
-        ax2.plot(gammas, kappa_maxs, 's-', color='#F44336', linewidth=2,
-                label='Max κ', markersize=8)
-
-        ax2.set_xlabel('S3 Coupling Strength γ', fontsize=13)
-        ax2.set_ylabel('Safe ε_κ Range', fontsize=13)
-        ax2.set_title('Deployment Envelope: ε_κ vs. Coupling Strength',
-                      fontsize=14)
-        ax2.legend(loc='upper left', fontsize=10)
-        ax2.grid(True, alpha=0.3)
-
-        plt.tight_layout()
-        fig2.savefig(f'{output_dir}kappa_deployment_envelope.png', dpi=300,
-                     bbox_inches='tight')
-        plt.close(fig2)
-        print(f"  Saved: {output_dir}kappa_deployment_envelope.png")
+                         alpha=0.22, color='#009E73',
+                         label='Safe range')
+        ax2.plot(gammas, kappa_mins, 'o-', color='#0072B2',
+                 linewidth=1.6, label='Minimum safe', markersize=5.5)
+        ax2.plot(gammas, kappa_maxs, 's-', color='#D55E00',
+                 linewidth=1.6, label='Maximum safe', markersize=5.5)
+        ax2.set_xlabel(r'Coupling strength $\gamma$')
+        ax2.set_ylabel(r'Safe $\epsilon_\kappa$ range')
+        ax2.set_title('(b) Deployment envelope', loc='left', pad=3)
+        ax2.set_xlim(min(gammas) - 0.08, max(gammas) + 0.08)
+        ax2.set_ylim(-0.04, 1.04)
+        ax2.grid(True, alpha=0.22, linewidth=0.6)
+        ax2.legend(loc='upper right', frameon=False)
 
         # Print envelope summary
         print("\n--- Deployment Envelope ---")
         for d in dev_envelope:
             print(f"  γ={d['gamma']:.1f}: ε_κ ∈ [{d['safe_range'][0]:.1f}, {d['safe_range'][1]:.1f}]")
+    else:
+        ax2.axis('off')
+
+    fig.savefig(f'{output_dir}kappa_s3_gradient.png', dpi=300,
+                bbox_inches='tight')
+    fig.savefig(f'{output_dir}kappa_s3_gradient.pdf', bbox_inches='tight')
+    plt.close(fig)
+    print(f"  Saved: {output_dir}kappa_s3_gradient.png")
+    print(f"  Saved: {output_dir}kappa_s3_gradient.pdf")
 
     # ---- Print per-γ summary ----
     print("\n--- S3 Coupling Gradient Summary ---")

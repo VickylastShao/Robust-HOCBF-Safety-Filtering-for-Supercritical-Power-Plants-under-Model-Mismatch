@@ -1,5 +1,7 @@
 # 5th-Order CCS Experiment Report — Phase 5
 
+> Historical note (2026-07-01): this report captures an earlier Phase 5 analysis snapshot. The current M&C submission repository is indexed by the root `README.md`, `REPRODUCIBILITY.md`, `ARTIFACT_MANIFEST.md`, and `scripts/check_repro_artifacts.py`. Treat the numbers below as historical notes unless they are also present in the current manuscript tables or regenerated result summaries.
+
 ## 1. Experimental Setup
 
 - **Model**: USCCSDynamics5th (5 states: r_B, p_m, h_m, N_e, τ_f)

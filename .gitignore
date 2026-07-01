@@ -45,3 +45,10 @@ tmp_pdf_render/
 # Generated submission bundles
 paper/submission_mc_*/
 paper/*submission*.zip
+
+# Local/internal paper review notes not part of the public reproducibility package
+paper/mc_*_audit_*.md
+paper/mc_*_review_*.md
+paper/mc_benchmark_gap_analysis.md
+paper/mc_optimization_plan.md
+paper/mc_text_polish_audit_*.md

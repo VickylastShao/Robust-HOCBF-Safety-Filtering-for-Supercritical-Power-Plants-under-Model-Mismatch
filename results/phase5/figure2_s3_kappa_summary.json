@@ -1,0 +1,130 @@
+{
+  "seed_rows": [
+    {
+      "kappa": 0.0,
+      "seed": 0,
+      "violation_pct": 37.52799999999999
+    },
+    {
+      "kappa": 0.0,
+      "seed": 1,
+      "violation_pct": 35.42399999999999
+    },
+    {
+      "kappa": 0.0,
+      "seed": 2,
+      "violation_pct": 27.467999999999996
+    },
+    {
+      "kappa": 0.1,
+      "seed": 0,
+      "violation_pct": 0.0
+    },
+    {
+      "kappa": 0.1,
+      "seed": 1,
+      "violation_pct": 0.0
+    },
+    {
+      "kappa": 0.1,
+      "seed": 2,
+      "violation_pct": 0.0
+    },
+    {
+      "kappa": 0.3,
+      "seed": 0,
+      "violation_pct": 0.196
+    },
+    {
+      "kappa": 0.3,
+      "seed": 1,
+      "violation_pct": 0.0
+    },
+    {
+      "kappa": 0.3,
+      "seed": 2,
+      "violation_pct": 0.092
+    },
+    {
+      "kappa": 0.5,
+      "seed": 0,
+      "violation_pct": 0.30800000000000005
+    },
+    {
+      "kappa": 0.5,
+      "seed": 1,
+      "violation_pct": 0.22800000000000004
+    },
+    {
+      "kappa": 0.5,
+      "seed": 2,
+      "violation_pct": 0.22400000000000003
+    },
+    {
+      "kappa": 1.0,
+      "seed": 0,
+      "violation_pct": 42.948
+    },
+    {
+      "kappa": 1.0,
+      "seed": 1,
+      "violation_pct": 37.660000000000004
+    }
+  ],
+  "summary": [
+    {
+      "kappa": 0.0,
+      "n": 3,
+      "mean_violation_pct": 33.47333333333333,
+      "sd_violation_pct": 5.306102650093881,
+      "seed_values_pct": [
+        37.52799999999999,
+        35.42399999999999,
+        27.467999999999996
+      ]
+    },
+    {
+      "kappa": 0.1,
+      "n": 3,
+      "mean_violation_pct": 0.0,
+      "sd_violation_pct": 0.0,
+      "seed_values_pct": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "kappa": 0.3,
+      "n": 3,
+      "mean_violation_pct": 0.096,
+      "sd_violation_pct": 0.09806120537705011,
+      "seed_values_pct": [
+        0.196,
+        0.0,
+        0.092
+      ]
+    },
+    {
+      "kappa": 0.5,
+      "n": 3,
+      "mean_violation_pct": 0.25333333333333335,
+      "sd_violation_pct": 0.047384948383778304,
+      "seed_values_pct": [
+        0.30800000000000005,
+        0.22800000000000004,
+        0.22400000000000003
+      ]
+    },
+    {
+      "kappa": 1.0,
+      "n": 2,
+      "mean_violation_pct": 40.304,
+      "sd_violation_pct": 3.739180658914461,
+      "seed_values_pct": [
+        42.948,
+        37.660000000000004
+      ]
+    }
+  ]
+}

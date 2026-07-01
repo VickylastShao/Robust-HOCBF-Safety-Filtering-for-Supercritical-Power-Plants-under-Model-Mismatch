@@ -5,9 +5,9 @@
 
 \section{Evidence Base and Result Inventory}
 
-The Measurement and Control submission uses the 5th-order Phase~5 result inventory as the primary evidence base. The root-level inventory in \texttt{results/phase5/} contains the complete fair-comparison matrix: 8 methods, 8 conditions, and 5 seeds, for 320 JSON result files. The strict inventory audit reports 320/320 matched files, no missing root-level files, no extra root-level JSON files, and no JSON parsing errors.
+The study uses the 5th-order Phase~5 result inventory as the primary evidence base. The root-level inventory in \texttt{results/phase5/} contains the complete fair-comparison matrix: 8 methods, 8 conditions, and 5 seeds, for 320 JSON result files. The strict inventory audit reports 320/320 matched files, no missing root-level files, no extra root-level JSON files, and no JSON parsing errors.
 
-The older Phase~4 3rd-order results are retained only as historical and auxiliary material. Their inventory is intentionally not used as the primary M\&C evidence base because it is incomplete for PPO-GP-HOCBF on several conditions. Where Phase~4 is mentioned in the manuscript, it is used only to identify the previously observed generic-GP and out-of-distribution failure mode, not to support the main 5th-order safety comparison.
+The older Phase~4 3rd-order results are retained only as historical and auxiliary material. Their inventory is not used as the primary M\&C evidence base because it is incomplete for the mean-only RoCBF-Net operating point on several conditions. Where Phase~4 is mentioned in the manuscript, it identifies the previously observed generic-GP and out-of-distribution failure mode rather than supporting the main 5th-order safety comparison.
 
 \section{Full \texorpdfstring{$\epsilon_\kappa$}{epsilon-kappa} Sensitivity Data}
 
@@ -29,7 +29,7 @@ Table~\ref{tab:S_kappa_full} reports the numerical data behind the kappa-sensiti
     \end{tabular}
 \end{table}
 
-These data support three practical conclusions. First, additive perturbations (S2 and S4) require no robustness margin in the tested regime; GP mean correction alone is sufficient. Second, state-dependent coupling (S3) requires a small positive margin: $\kappa=0$ fails, while $\kappa=0.1$ restores zero observed violation. Third, the full theoretical margin $\kappa=1.0$ is not the empirical optimum in any tested scenario and can collapse the feasible set.
+These data support three practical conclusions. First, additive perturbations (S2 and S4) require no robustness margin in the tested regime; GP mean correction alone is sufficient. Second, state-dependent coupling (S3) requires a small positive margin: $\kappa=0$ fails, while $\kappa=0.1$ restores zero observed violation. Third, the full theoretical margin $\kappa=1.0$ is not the preferred empirical operating point in these scenarios and can collapse the feasible set.
 
 \section{Coupling-Strength Deployment Envelope}
 
@@ -96,8 +96,8 @@ The load-following AGC condition is included in the complete Phase~5 inventory b
         PPO-Lagrangian & 0.08 \\
         PPO-CBF & 0.08 \\
         PPO-HOCBF & 0.00 \\
-        PPO-GP-HOCBF & 0.00 \\
-        PPO-RHOCBF & 0.00 \\
+        RoCBF-Net mean-only & 0.00 \\
+        RoCBF-Net full margin & 0.00 \\
         RoCBF-Net & 0.00 \\
         NMPC & 0.00 \\
         \bottomrule

@@ -1,22 +1,25 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{parskip}
 \usepackage{hyperref}
 
 \begin{document}
+\raggedright
 
 \noindent\textbf{To:} The Editor-in-Chief\\
 Measurement and Control\\[1em]
 
 \noindent\textbf{From:}\\
 Zhuang~Shao\textsuperscript{1,*}, Lijun~Lei\textsuperscript{2}, Peng~Wang\textsuperscript{3}, Liang~Zheng\textsuperscript{2}, Jie~Zhou\textsuperscript{2}\\[0.5em]
-\textsuperscript{1}China Resources Power Technology Research Institute Co., Ltd., Shenzhen 518000, China\\
-\textsuperscript{2}Rundian Energy Science and Technology Co., Ltd., Zhengzhou 450052, China\\
-\textsuperscript{3}North China University of Water Resources and Electric Power, Zhengzhou 450046, China\\[0.5em]
+\textsuperscript{1}China Resources Power Technology Research Institute Co., Ltd., Shenzhen 518000, Guangdong Province, China\\
+\textsuperscript{2}Rundian Energy Science and Technology Co., Ltd., Zhengzhou 450052, Henan Province, China\\
+\textsuperscript{3}North China University of Water Resources and Electric Power, Zhengzhou 450046, Henan Province, China\\[0.5em]
 \textsuperscript{*}Corresponding author: \href{mailto:shaozhuang@crpower.com.cn}{shaozhuang@crpower.com.cn}, ORCID: 0000-0003-2496-0797\\[1em]
 
 \noindent\textbf{Re:} Submission of manuscript\\
-``\emph{RoCBF-Net: A Tunable Safety Architecture for High-Order CBFs Under Uncertainty---GP Correction, Tunable Margins, and the Deployment Envelope}''\\[1em]
+``\emph{A Tunable GP-HOCBF Safety Filter for Supercritical Boiler-Turbine Control under Model Mismatch}''\\[1em]
 
 \noindent Dear Editor,
 
@@ -26,20 +29,27 @@ We submit the enclosed manuscript for consideration at Measurement and Control. 
 The journal's scope encompasses measurement, control, and automation in industrial applications. Our work directly addresses this scope along four dimensions:
 
 \begin{enumerate}
-    \item \textbf{Industrial measurement and control relevance.} Supercritical boiler-turbine units require continuous monitoring and constraint-preserving control of steam pressure, separator enthalpy, and power output. Model mismatch from coal quality variation, equipment aging, and unmodeled operating disturbances is a daily operational reality. Our safety filter provides a principled, real-time mechanism for maintaining these industrial operating constraints.
-    \item \textbf{Real-time safety filtering.} The method functions as an online safety projection layer that can be superimposed after any upstream controller---LQR, MPC, or a learned policy---without modifying the existing control architecture. Per-step safety-filter pipeline latency is ${\sim}25$\,ms (GPU, JIT-compiled), including the PPO forward pass, GP inference, and QP solve, and is compatible with typical distributed control system (DCS) sampling rates.
-    \item \textbf{Constraint-preserving operation.} Under model mismatch, nominal safety filters may certify unsafe control actions as safe. Our framework transforms catastrophic filter failure ($>95\%$ constraint violation) to no observed violations across six static perturbation scenarios on a 5th-order supercritical benchmark.
-    \item \textbf{Model-mismatch-resilient control implementation.} The method quantifies and certifies model uncertainty through Gaussian process residual learning with compositional uncertainty propagation, supporting a high-probability forward-invariance certificate under fixed calibrated-GP assumptions, while remaining compatible with standard industrial control architectures.
+    \item \textbf{Industrial measurement and control relevance.} Supercritical boiler-turbine units require continuous monitoring and constraint-preserving control of steam pressure, separator enthalpy, and power output. Model mismatch from coal quality variation, equipment aging, and unmodeled operating disturbances is a common commissioning concern. Our safety filter provides a real-time mechanism for maintaining these industrial operating constraints.
+    \item \textbf{Real-time safety filtering.} The method functions as an online safety projection layer inserted downstream of any upstream controller (LQR, MPC, PID, or a learned policy) without modifying the existing control architecture. Per-step safety-filter pipeline latency is ${\sim}25$\,ms (GPU, JIT-compiled), including controller action generation, GP inference, and QP solve, and is compatible with the 1\,s sampling rate used in the benchmark loop.
+    \item \textbf{Constraint-preserving operation under model mismatch.} Under coal quality drift, fouling, valve degradation, and state-dependent coupling, nominal safety filters may certify unsafe actions as safe. GP mean correction reduces HOCBF violations by more than 500 times and achieves $\leq0.18\%$ violation in six of seven uncertainty scenarios.
+    \item \textbf{Commissioning-calibrated robustness.} The method quantifies model uncertainty through Gaussian process residual learning with compositional uncertainty propagation, but treats the robustness factor $\epsilon_\kappa$ as a tunable commissioning parameter rather than a fixed worst-case constant.
 \end{enumerate}
 
 \paragraph{Key contributions.}
 \begin{enumerate}
-    \item Compositional GP uncertainty propagation through the HOCBF $\psi$-chain, yielding a per-constraint robustness margin with a high-probability forward-invariance certificate (Theorem~1).
-    \item Controller-agnostic deployment validated with both LQR and PPO upstream controllers: identical safety outcomes across controller types.
-    \item Validation on a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics: nominal HOCBF fails ($>95\%$ violation); Robust HOCBF achieves no observed violations with per-step latency ${\sim}25$\,ms, approximately ten times faster than the implemented SLSQP-based NMPC baseline.
+    \item An industrial safety-filter architecture for a 1000\,MW supercritical boiler-turbine measurement and control loop.
+    \item Compositional GP uncertainty propagation through the HOCBF $\psi$-chain, yielding a per-constraint state-dependent margin with a high-probability forward-invariance certificate under fixed calibrated-GP assumptions.
+    \item A practical deployment envelope for the robustness factor $\epsilon_\kappa$: zero margin for additive mismatch, a small positive margin for moderate state-dependent coupling, and fallback diagnostics beyond the envelope.
+    \item Validation on a 5th-order supercritical boiler-turbine benchmark with $\Phi$-scaled nonlinear dynamics, eight controller/filter variants, six disturbance scenarios, and per-step latency of ${\sim}25$\,ms, approximately ten times faster than the implemented SLSQP-based NMPC baseline.
 \end{enumerate}
 
+\paragraph{Validation scope and transparency.}
+The manuscript reports simulation-benchmark validation and does not claim plant deployment. We state this boundary explicitly, provide reproducibility materials through the project repository, and identify hardware-in-the-loop validation and plant historian calibration as required next steps before field use.
+
 \paragraph{Conflicts of interest.} The authors declare no competing interests. The manuscript has not been published elsewhere and is not under simultaneous consideration by any other journal.
+
+\paragraph{Author approval and writing assistance.}
+All authors have read and approved the manuscript and consent to submission to Measurement and Control. During preparation of the manuscript, the authors used ChatGPT for language polishing and manuscript formatting. The authors reviewed and edited the content and take full responsibility for the submitted work.
 
 \vspace{1em}
 \begin{flushright}

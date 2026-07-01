@@ -8,6 +8,17 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.rcParams.update({
+    'pdf.fonttype': 42,
+    'ps.fonttype': 42,
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans'],
+    'font.size': 9,
+    'axes.labelsize': 10,
+    'xtick.labelsize': 8,
+    'ytick.labelsize': 8,
+})
+
 DATA_FILE = sys.argv[1] if len(sys.argv) > 1 else 'results/phase5'
 OUT_DIR = sys.argv[2] if len(sys.argv) > 2 else 'paper/figures'
 
@@ -48,11 +59,16 @@ ax1.set_xticklabels(labels)
 ax1.set_xlabel(r'Perturbation magnitude ($|\Delta f_h|$, kJ/kg)', fontsize=10)
 ax1.grid(True, axis='y', alpha=0.25, linewidth=0.5)
 
-# Annotations
-ax1.annotate('Safe envelope\n(0% violation)', xy=(1.5, 10), fontsize=9,
-            ha='center', color='#2CA25F', fontweight='bold')
-ax1.annotate('Filter collapse\nat Mag75+', xy=(4.5, 50), fontsize=9,
-            ha='center', color='#D62728', fontweight='bold')
+# Region annotations. Light boxes keep labels legible when the figure is reduced
+# to a single-column width in the manuscript PDF.
+label_box = dict(boxstyle='round,pad=0.22', facecolor='white',
+                 edgecolor='none', alpha=0.86)
+ax1.annotate('Safe envelope\n(0% violation)', xy=(1.5, 12), fontsize=9,
+            ha='center', va='center', color='#2CA25F',
+            fontweight='bold', bbox=label_box)
+ax1.annotate('Filter collapse\nat Mag75+', xy=(4.5, 72), fontsize=9,
+            ha='center', va='center', color='#D62728',
+            fontweight='bold', bbox=label_box)
 
 plt.tight_layout()
 out = os.path.join(OUT_DIR, 'Figure_4.pdf')

@@ -1,5 +1,5 @@
-Robust safety filtering for energy process control under model mismatch
-GP uncertainty propagation through high-order control barrier constraints
-Fixed scenario-calibrated GP supports high-probability safety certification
-Validated on 5th-order supercritical boiler-turbine benchmark (six constraints)
-Real-time QP filtering is ∼10× faster than the implemented NMPC baseline
+Tunable GP-HOCBF safety filter for supercritical boiler-turbine control
+Overlay architecture protects pressure, enthalpy, and power constraints
+GP mean correction reduces HOCBF violations by more than 500 times
+Deployment envelope calibrates the robustness factor epsilon_kappa
+Real-time QP filtering is about 10 times faster than the implemented NMPC baseline
