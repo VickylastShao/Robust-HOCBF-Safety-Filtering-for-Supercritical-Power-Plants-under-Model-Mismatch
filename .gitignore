@@ -52,3 +52,7 @@ paper/mc_*_review_*.md
 paper/mc_benchmark_gap_analysis.md
 paper/mc_optimization_plan.md
 paper/mc_text_polish_audit_*.md
+
+# Proprietary plant historian extracts
+data/private/
+results/production_validation/raw/

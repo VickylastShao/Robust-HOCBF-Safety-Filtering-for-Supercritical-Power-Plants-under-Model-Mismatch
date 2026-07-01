@@ -1,0 +1,154 @@
+{
+  "source": {
+    "database": "yulin",
+    "schema": "unit2",
+    "table": "unit2.report_hourly",
+    "date_start": "2026-06-24",
+    "date_end": "2026-07-02",
+    "sampling": "hourly report snapshots",
+    "raw_csv_public": false
+  },
+  "rows": 187,
+  "time_start": "2026-06-24T08:00",
+  "time_end": "2026-07-02T02:00",
+  "variables": {
+    "load_mw": {
+      "label": "Generator active power",
+      "unit": "MW",
+      "valid_count": 187,
+      "mean": 350.4412,
+      "std": 129.0036,
+      "min": 195.687,
+      "median": 335.6102,
+      "max": 624.5674,
+      "p05": 197.5182,
+      "p95": 594.8524
+    },
+    "main_pressure_mpa": {
+      "label": "Main steam pressure",
+      "unit": "MPa",
+      "valid_count": 187,
+      "mean": 19.1475,
+      "std": 5.0745,
+      "min": 12.7812,
+      "median": 18.5486,
+      "max": 28.7913,
+      "p05": 12.9767,
+      "p95": 27.8983
+    },
+    "main_temperature_c": {
+      "label": "Main steam temperature",
+      "unit": "degC",
+      "valid_count": 187,
+      "mean": 598.3018,
+      "std": 4.7321,
+      "min": 549.1977,
+      "median": 599.0582,
+      "max": 603.4611,
+      "p05": 594.7667,
+      "p95": 601.5345
+    },
+    "reheat_pressure_mpa": {
+      "label": "Reheat steam pressure",
+      "unit": "MPa",
+      "valid_count": 187,
+      "mean": 2.9667,
+      "std": 1.1963,
+      "min": 1.5117,
+      "median": 2.8399,
+      "max": 5.497,
+      "p05": 1.546,
+      "p95": 5.2077
+    },
+    "reheat_temperature_c": {
+      "label": "Reheat steam temperature",
+      "unit": "degC",
+      "valid_count": 187,
+      "mean": 606.6762,
+      "std": 11.8466,
+      "min": 558.9181,
+      "median": 611.5025,
+      "max": 622.2904,
+      "p05": 586.0126,
+      "p95": 619.8613
+    },
+    "fuel_flow_tph": {
+      "label": "Fuel flow",
+      "unit": "t/h",
+      "valid_count": 187,
+      "mean": 144.7033,
+      "std": 46.4801,
+      "min": 80.2884,
+      "median": 138.3172,
+      "max": 243.2474,
+      "p05": 86.7998,
+      "p95": 227.8606
+    },
+    "air_flow_tph": {
+      "label": "Total air flow",
+      "unit": "t/h",
+      "valid_count": 187,
+      "mean": 1749.5297,
+      "std": 419.0675,
+      "min": 1061.2769,
+      "median": 1714.556,
+      "max": 2683.096,
+      "p05": 1207.0236,
+      "p95": 2492.3032
+    }
+  },
+  "dynamic_features": {
+    "load_step_abs_p95_mw_per_h": 142.0985,
+    "load_step_abs_max_mw_per_h": 416.1612,
+    "pressure_step_abs_p95_mpa_per_h": 6.2887,
+    "pressure_step_abs_max_mpa_per_h": 14.3318
+  },
+  "correlations": {
+    "load_pressure": 0.9855,
+    "load_fuel": 0.9857
+  },
+  "point_metadata": {
+    "load_mw": {
+      "point_name": "DCS2_LOAD_3S",
+      "label": "发电机有功功率_3S",
+      "unit": "MW",
+      "report_context": "机组负荷 / /"
+    },
+    "fuel_flow_tph": {
+      "point_name": "DCS2_FUELFLOWRP",
+      "label": "实际燃料量",
+      "unit": "t/h",
+      "report_context": "汽水系统 / 总燃料量"
+    },
+    "air_flow_tph": {
+      "point_name": "DCS2_TOTALFLOW",
+      "label": "总风量",
+      "unit": "t/h",
+      "report_context": "汽水系统 / 总风量"
+    },
+    "main_temperature_c": {
+      "point_name": "DCS2_MAIN_TEMP",
+      "label": "主蒸汽管温度_2S",
+      "unit": "℃",
+      "report_context": "汽水系统 / 主汽温度"
+    },
+    "main_pressure_mpa": {
+      "point_name": "DCS2_MAIN_PRESS",
+      "label": "主蒸汽管压力_2S",
+      "unit": "MPa",
+      "report_context": "汽水系统 / 主汽压力"
+    },
+    "reheat_temperature_c": {
+      "point_name": "DCS2_REHEAT_TEMP",
+      "label": "再热蒸汽管温度_2S",
+      "unit": "℃",
+      "report_context": "汽水系统 / 再热汽温"
+    },
+    "reheat_pressure_mpa": {
+      "point_name": "DCS2_REHEAT_PRESS",
+      "label": "再热蒸汽管压力_2S",
+      "unit": "MPa",
+      "report_context": "汽水系统 / 再热汽压力"
+    }
+  }
+}

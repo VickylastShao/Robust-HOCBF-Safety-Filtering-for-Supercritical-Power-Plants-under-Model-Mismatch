@@ -11,6 +11,13 @@ Six static perturbation scenarios model realistic disturbances: S1 (coal quality
 
 The comparison isolates the safety layer. PPO, PPO-Lagrangian, PPO-CBF, and PPO-HOCBF use the same upstream learned action source and differ only in the post-controller constraint mechanism: no safety layer, dual-descent penalty, first-order CBF ($m{=}1$ for all constraints), and correct HOCBF relative degrees ($m{=}2,1,1$) without GP correction. The RoCBF-Net family is evaluated at fixed operating points: mean-corrected GP-HOCBF with no additional margin ($\epsilon_\kappa{=}0$), full-margin RHOCBF with scenario-specific GP ($\epsilon_\kappa{=}1.0$), and online GP-RHOCBF with uncalibrated full margin. The calibrated operating schedule is then assessed in Secs.~\ref{sec:kappa}--\ref{sec:envelope}. NMPC (SLSQP solver, $N{=}5$ horizon) is included as a strong optimization-based reference. GP pretraining uses $N=500$ points per scenario, and evaluation uses 5 seeds $\times$ 50 episodes $\times$ 500 steps. The study is a simulation-benchmark validation of a pre-deployment safety-filter design and commissioning protocol. Plant historian replay, hardware-in-the-loop tests, and site-specific protection reviews remain required before field deployment.
 
+\subsection{Plant-Historian Grounding}
+\label{sec:historian}
+
+To connect the benchmark to actual measurement-and-control records, we queried the China Resources Xiantao Unit~2 hourly DCS operating log through the plant PostgreSQL historian interface. The extracted interval covers a continuous loaded operating window from 24~June~2026 08:00 to 2~July~2026 02:00 ($n=187$ hourly records). The raw historian data are proprietary and are not used as closed-loop field validation. They are used here to document that the pressure, power, steam-temperature, fuel-flow, and air-flow channels needed for commissioning diagnostics are available in the plant information system and exhibit substantial operating variability.
+
+During this interval, generator active power varied from 195.7 to 624.6\,MW, with a 95th-percentile absolute hourly load change of 142.1\,MW\,h$^{-1}$ and a maximum hourly change of 416.2\,MW\,h$^{-1}$ (Fig.~\ref{fig:production_historian}). Main-steam pressure ranged from 12.78 to 28.79\,MPa, while main-steam temperature remained tightly regulated around 598.3$\pm$4.7\,$^\circ$C. Load was strongly correlated with both main-steam pressure ($r=0.986$) and fuel flow ($r=0.986$), confirming that load-following operation couples the measured pressure channel to the combustion-side actuation variables. The PostgreSQL hourly report does not expose every calculated state used by the 5th-order benchmark, especially separator enthalpy, so this historian evidence is treated as measurement grounding rather than a full plant replay dataset.
+
 \subsection{Safety Performance}
 
 \begin{table}[htbp]
@@ -151,6 +158,13 @@ Figure~\ref{fig:qp} shows violation rate as a function of perturbation magnitude
     \includegraphics[width=0.85\textwidth]{figures/Figure_3.pdf}
     \caption{State-dependent enthalpy robustness margin $\epsilon_h(x)$ under S3 (Coupled, state-dependent perturbation). Left: $\epsilon_h$ (enthalpy low margin, log scale) evaluated over the operating enthalpy range $h_m^0 \pm 50$\,kJ/kg under $\Phi$-scaled nonlinear dynamics with scenario-specific GP. The margin varies by more than one order of magnitude, reflecting the sensitivity of $\sigma_{\mathrm{GP}}$ to the perturbation structure (CV 105\%). Right: distribution of $\epsilon_h$ over the operating range, centred at the equilibrium enthalpy $h_m^0 = 2698$\,kJ/kg. The pressure low margin $\epsilon_p$ exhibits CV 71\% over the corresponding operating sweep. Under constant perturbations (S1, S2, S4--S6), $\epsilon(x)$ is approximately constant per constraint and dominated by the GP regularization floor.}
     \label{fig:epsilon}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/Figure_9_production_historian.pdf}
+    \caption{Plant-historian grounding from China Resources Xiantao Unit~2. The panels show hourly generator active power, main-steam pressure, main/reheat steam temperature, and fuel/air flow during a loaded operating interval. The record is used to ground measurement availability and operating variability; it is not a plant-trial evaluation of the proposed safety filter.}
+    \label{fig:production_historian}
 \end{figure}
 
 Per-step computation is reported for the implemented research code, not as a hardware-normalized solver benchmark. The safety-filter pipeline (PPO+GP+QP) requires ${\sim}25$\,ms after GPU JIT compilation (p95: 27\,ms), including the PPO forward pass, GP inference, and QP solve. The NMPC reference (CPU, scipy SLSQP) averages 254\,ms. The implemented filter therefore fits within the 1\,s sampling budget and is faster than the implemented SLSQP baseline. Optimized industrial MPC packages may have different timing. For CPU-only deployment, the distilled policy achieves 1.8\,ms inference, but this is an empirical policy surrogate without the certified robustness-margin calculation.
