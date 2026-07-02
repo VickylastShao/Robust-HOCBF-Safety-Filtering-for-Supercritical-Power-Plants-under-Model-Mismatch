@@ -7,6 +7,8 @@ Ultra-supercritical thermal power units operate close to equipment protection bo
 
 The model used for controller design is imperfect in service. Coal quality varies across shipments, heat absorption changes as heat-transfer surfaces foul, valve and fuel-delivery characteristics drift, and unmodeled coupling becomes more visible during load following. These effects create persistent mismatch between the controller model and the true process response. A controller that appears feasible under the nominal model, whether PID, LQR, MPC, or a learned policy, can still drive the measured plant state toward a pressure, enthalpy, or power violation.
 
+Recent applied measurement-and-control studies show the same practical pattern across different systems: pressure regulation deteriorates under delay and disturbances~\cite{wu2026pressure}, controller parameters are often selected from desired response behavior~\cite{teke2026reference}, stochastic nonlinear plants must respect actuator saturation~\cite{fang2026adaptive}, and energy-system controllers are increasingly judged by communication and update burden as well as tracking accuracy~\cite{feng2026event}. The common requirement is not only a better nominal controller, but a measured-loop mechanism that remains interpretable when the plant deviates from the design model. This paper addresses that requirement for a supercritical boiler-turbine loop by treating model mismatch as a commissioning problem for a safety filter.
+
 \subsection{Safety-Filter View}
 
 This paper studies an overlay safety filter, not a replacement for the plant controller. The filter receives the measured state $x=[r_B,p_m,h_m,N_e,\tau_f]^\top$ and the upstream controller's proposed action $u_{\mathrm{prop}}$, checks that action against process safety constraints, and returns the nearest admissible action $u^*$. This placement suits industrial measurement and control because it separates the tracking task from the protection task: the existing controller handles load following and economic operation, while the safety layer handles last-mile constraint enforcement.
@@ -21,7 +23,7 @@ For high-relative-degree constraints, the answer is not obvious because uncertai
 
 \subsection{Contributions}
 
-We introduce RoCBF-Net, a commissioning-calibrated GP-HOCBF safety filter for supercritical boiler-turbine control. The paper makes four contributions:
+We introduce RoCBF-Net, a commissioning-calibrated GP-HOCBF safety filter for supercritical boiler-turbine control. The paper makes four contributions for readers concerned with industrial measurement, constrained control, and real-time deployment:
 
 \begin{enumerate}
     \item \textbf{Industrial safety-filter architecture for boiler-turbine measurement and control.} RoCBF-Net is formulated as an overlay between any upstream controller and the actuators. It uses measured boiler-turbine states, correct HOCBF relative degrees, GP residual correction, and a QP projection to enforce pressure, enthalpy, and power constraints without modifying the upstream control law.
