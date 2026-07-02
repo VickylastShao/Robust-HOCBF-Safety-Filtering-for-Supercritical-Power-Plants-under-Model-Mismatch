@@ -90,7 +90,7 @@ Figure~\ref{fig:model_mismatch} makes the model mismatch explicit. For the same 
     \label{fig:kappa_sweep}
 \end{figure}
 
-To quantify the practical safety--performance trade-off, we swept $\epsilon_\kappa \in \{0, 0.1, 0.3, 0.5, 1.0\}$ across three representative 5th-order CCS conditions: S2 (additive oscillation), S3 (state-dependent coupled), and S4 (nonlinear fouling). Each setting uses 2--3 seeds. This sweep is a commissioning diagnostic, not a replacement for the 5-seed safety table; the Supplemental Material reports the seed counts behind each cell.
+To quantify the practical safety--performance trade-off, we swept $\epsilon_\kappa \in \{0, 0.1, 0.3, 0.5, 1.0\}$ across three representative 5th-order CCS conditions: S2 (additive oscillation), S3 (state-dependent coupled), and S4 (nonlinear fouling). Figure~\ref{fig:kappa_sweep} summarizes the resulting scenario-dependent safety response. Each setting uses 2--3 seeds. This sweep is a commissioning diagnostic, not a replacement for the 5-seed safety table; the Supplemental Material reports the seed counts behind each cell.
 
 \textbf{Additive uncertainty (S2, S4):} $\kappa{=}0$ achieves zero violation. GP mean correction alone compensates for bounded, non-amplifying perturbations. Increasing $\kappa$ to $0.5$ collapses QP feasibility on S2 (99.4\% violation), while S4 remains safe (0.10\%). The nonlinear fouling perturbation preserves a larger feasible set than the pressure oscillation. $\kappa^*_{\mathrm{S2}}{=}0$, $\kappa^*_{\mathrm{S4}}{=}0$.
 
@@ -111,7 +111,7 @@ Section~\ref{sec:kappa} established that the preferred $\epsilon_\kappa$ differs
     \label{fig:kappa_gradient}
 \end{figure}
 
-Three regimes emerge from the coupling gradient. In the GP-sufficient regime ($\gamma < 0.5$), GP mean correction alone provides near-perfect safety because the state-dependent perturbation is weak enough for the GP prediction to track without a robustness margin.
+Figure~\ref{fig:kappa_gradient} shows that three regimes emerge from the coupling gradient. In the GP-sufficient regime ($\gamma < 0.5$), GP mean correction alone provides near-perfect safety because the state-dependent perturbation is weak enough for the GP prediction to track without a robustness margin.
 
 In the $\epsilon_\kappa$-useful regime ($0.5 \leq \gamma < 1.5$), the perturbation outgrows the GP correction at $\kappa{=}0$, and a small positive margin ($\kappa \in [0.1, 0.3]$) restores zero-violation safety. The safe $\kappa$ range narrows as $\gamma$ increases: $\kappa \in [0.1, 1.0]$ at $\gamma{=}0.5$ and $\kappa \in [0.1, 0.5]$ at $\gamma{=}1.0$.
 
