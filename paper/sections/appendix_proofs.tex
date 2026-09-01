@@ -38,7 +38,7 @@ The implementation proxy is not substituted for $G_\delta^{(i-1)}$ in this proof
 
 \textbf{Step 3 (Total perturbation).} Combining the inductive bounds from Step~2 with the coupling-coefficient bound in Eq.~\eqref{eq:sigma_ctrl_app} yields $|\Delta_{\psi}(x,v)| \leq \sigma_m(x) + \sum_{j=1}^{m-1} c_j \sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) = \sigmatotal(x)$ for every admissible deviation input $v$. For $\epsilonKappa = 1$, the applied margin is $\sigmatotal(x)$.
 
-\textbf{Step 4 (Forward invariance).} For $v^*$ satisfying $A_0(x)v^* \leq b_0(x)-\sigmatotal(x)$: $\psi_m^{\mathrm{true}}(x,v^*) = \hat{\psi}_m^0(x,v^*) + \Delta_{\psi}(x,v^*) \geq \sigmatotal(x) - |\Delta_{\psi}(x,v^*)| \geq 0$. By the HOCBF forward-invariance theorem cited in the main article, the safe set $\calC$ is forward invariant.
+\textbf{Step 4 (Forward invariance).} For $v^*$ satisfying $A(x)v^* \leq b(x)-\sigmatotal(x)$, the definition $\hat{\psi}_m^0(x,v)=b(x)-A(x)v$ gives $\hat{\psi}_m^0(x,v^*)\geq\sigmatotal(x)$. Hence $\psi_m^{\mathrm{true}}(x,v^*) = \hat{\psi}_m^0(x,v^*) + \Delta_{\psi}(x,v^*) \geq \sigmatotal(x) - |\Delta_{\psi}(x,v^*)| \geq 0$. Because $x(0)\in\calC$, all lower-order recursive conditions in the main article's definition of $\calC$ are satisfied initially. The HOCBF forward-invariance theorem cited there therefore renders $\calC$ forward invariant.
 \end{proof}
 
 \subsection{Coupling Coefficient Gap Bound}
@@ -48,4 +48,4 @@ The coupling coefficient gap is bounded by:
     \sigma_{\mathrm{ctrl}}(x) = \beta \sum_{j} \left|\frac{\partial (L_g L_{\fhat}^{m-1} h)}{\partial x_j}\right| \sigmaGPj{j}(x) \cdot u_{\max}
     \label{eq:sigma_ctrl_app}
 \end{equation}
-where $u_{\max} = \sup_{u \in \calU} \|u\|$. For the CCS benchmark, $\sigma_{\mathrm{ctrl}} / \sigmatotal < 0.15$ for both constraints.
+where $u_{\max} = \sup_{u \in \calU} \|u\|$. This term is evaluated separately for each barrier row and included in that row's total margin; Theorem~1 does not assume a fixed ratio between $\sigma_{\mathrm{ctrl}}$ and $\sigmatotal$.

@@ -39,14 +39,14 @@ where a sample is counted once if any enforced pressure, separator-enthalpy, or 
         HOCBF, no GP ($m{=}2,1,1$) & 0.00 & 78.64 & 68.56 & 67.28 & 68.56 & 68.56 & 78.64 \\
         NMPC ($N{=}5$) & 0.00 & 0.20 & 0.20 & 0.40 & 0.20 & 0.20 & 0.20 \\
         GP-HOCBF mean-only ($\epsilon_\kappa{=}0$) & 0.00 & 0.00 & 0.00 & 1.44 & 0.00 & 0.00 & 0.00 \\
-        RoCBF-SF commissioned ($\epsilon_\kappa{=}0.02$ in S3; 0 otherwise) & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
+        RoCBF-SF composite primary row ($\epsilon_\kappa{=}0.02$ in S3; 0 otherwise) & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
         Full implemented-margin endpoint ($\epsilon_\kappa{=}1.0$) & 0.00 & 0.00 & 0.00 & 16.76 & 0.48 & 0.00 & 0.00 \\
         \bottomrule
     \end{tabular}
     }
 \end{table}
 
-Table~\ref{tab:safety} reports the drift-only $\Delta g=0$ validation. The unfiltered proposal violates 10{,}756 of 15{,}000 perturbation samples. Correct relative degree removes all 112 nominal violations but does not compensate drift mismatch: no-GP HOCBF retains the same 10{,}756 perturbation-sample violations. GP mean correction reduces this count to 36/15{,}000, all in S3. The scenario-wise commissioned row applies the independently selected $\epsilon_\kappa=0.02$ in S3 and 0 otherwise, giving 0/17{,}500 observed violations across the nominal and six mismatch conditions. Each condition is a separate offline commissioning regime with its own frozen scenario-specific GP; this row compares commissioned operating points across prescribed residual regimes rather than switching $\epsilon_\kappa$ by observing the true scenario online. NMPC is also effective, with 35/17{,}500 violations and no solver failure, but does not eliminate the short boundary transients in the six mismatch cases.
+Table~\ref{tab:safety} reports the drift-only $\Delta g=0$ validation. The unfiltered proposal violates 10{,}756 of 15{,}000 perturbation samples. Correct relative degree removes all 112 nominal violations but does not compensate drift mismatch: no-GP HOCBF retains the same 10{,}756 perturbation-sample violations. GP mean correction reduces this count to 36/15{,}000, all in S3. The composite primary row applies the independently tune-selected $\epsilon_\kappa=0.02$ in S3 and the mean-only endpoint $\epsilon_\kappa=0$ in the nominal case and the other five mismatch conditions, giving 0/17{,}500 observed violations. Only S3 underwent tune/test factor selection; the zero-margin entries in the other six conditions are not presented as separate held-out calibrations. Each condition retains its own frozen scenario-specific GP, so the row compares prescribed offline operating points rather than switching $\epsilon_\kappa$ by observing the true scenario online. NMPC is also effective, with 35/17{,}500 violations and no solver failure, but does not eliminate the short boundary transients in the six mismatch cases.
 
 The full implemented-margin row shows why $\epsilon_\kappa$ must be commissioned rather than set mechanically to its largest value. The endpoint remains safe in nominal, S1, S2, S5, and S6, but it produces 419 S3 violations and 12 S4 violations when the actuator-bounded robust QP loses feasibility. This does not contradict Theorem~\ref{thm:1}, which requires both full-row feasibility and independently valid residual and derivative bounds.
 
@@ -80,9 +80,7 @@ The results indicate a mechanism hierarchy: correct HOCBF structure handles nomi
     \label{fig:process_response}
 \end{figure}
 
-In this representative rollout, the no-GP HOCBF records 203/300 violations, GP mean correction reduces the count to 30/300, and the calibrated setting records 0/300. The corresponding minimum enthalpy margins are $-51.993$, $-0.01996$, and $+0.01028$\,kJ/kg. This single-trajectory diagnostic illustrates the mechanism and is not used in place of the five-seed aggregate in Tables~\ref{tab:safety} and \ref{tab:qp_endpoint_diagnostic}.
-
-Figure~\ref{fig:process_response} shows the enthalpy bottleneck directly in a representative S3 rollout. HOCBF without GP correction produces 203/300 violating samples and a minimum enthalpy margin of $-51.993$\,kJ/kg. GP mean correction limits the excursion to $-0.01996$\,kJ/kg but still leaves 30 samples below the stated numerical tolerance, whereas the calibrated $\epsilon_\kappa=0.02$ margin keeps the minimum positive at $+0.01028$\,kJ/kg. The correction and event panels show that this change is produced by sustained QP intervention rather than by a different upstream proposal.
+Figure~\ref{fig:process_response} shows the enthalpy bottleneck directly in a representative S3 rollout. HOCBF without GP correction produces 203/300 violating samples and a minimum enthalpy margin of $-51.993$\,kJ/kg. GP mean correction limits the excursion to $-0.01996$\,kJ/kg but still leaves 30 samples below the stated numerical tolerance, whereas the calibrated $\epsilon_\kappa=0.02$ margin records 0/300 violations and keeps the minimum positive at $+0.01028$\,kJ/kg. The correction and event panels show that this change is produced by sustained QP intervention rather than by a different upstream proposal. This single-trajectory diagnostic illustrates the mechanism and is not used in place of the five-seed aggregate in Tables~\ref{tab:safety} and \ref{tab:qp_endpoint_diagnostic}.
 
 \begin{figure}[htbp]
     \centering

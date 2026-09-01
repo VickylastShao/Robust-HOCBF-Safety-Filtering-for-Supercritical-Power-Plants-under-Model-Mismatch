@@ -62,7 +62,7 @@ At each sampling instant, RoCBF-SF performs the following operations:
 \end{enumerate}
 
 \paragraph{Notation summary.}
-The benchmark state is $x=[r_B,p_m,h_m,N_e,\tau_f]^\top$, and $\xi=x-x_0$ is the deviation state. The physical actuator command is $u$, while $v$ is the deviation input optimized by the safety filter. The upstream controller proposes $v_{\mathrm{prop},k}$, the QP returns $v_k^*$, and Eq.~\eqref{eq:deviation_control} maps $v_k^*$ back to the physical actuator command. The HOCBF rows are written as $A(x)v\leq b(x)$ in deviation-input form. The term $\sigmatotal(x)$ is the compositional GP-HOCBF margin, and $\epsilon_\kappa$ is the commissioning factor multiplying that margin.
+The benchmark state is $x=[r_B,p_m,h_m,N_e,\tau_f]^\top$, and $\xi=x-x_0$ is the deviation state. The physical actuator command is $u$, while $v$ is the deviation input optimized by the safety filter. The upstream controller proposes $v_{\mathrm{prop},k}$, the QP returns $v_k^*$, and Eq.~\eqref{eq:deviation_control} maps $v_k^*$ back to the physical actuator command. The GP-mean-corrected HOCBF rows are written as $A(x)v\leq b(x)$ in deviation-input form; $A_0(x)v\leq b_0(x)$ is reserved for the no-GP nominal-model ablation. The term $\sigmatotal(x)$ is the compositional GP-HOCBF margin, and $\epsilon_\kappa$ is the commissioning factor multiplying that margin.
 
 Both the benchmark and plant implementations use the measured-output vector
 \begin{equation}
@@ -96,7 +96,15 @@ For a constraint $h(x) \geq 0$ with relative degree $m$, the HOCBF $\psi$-chain 
     \psi_0 = h(x), \quad \psi_i = \dot{\psi}_{i-1} + \alpha_i(\psi_{i-1}), \;\; i=1,\ldots,m
     \label{eq:psi}
 \end{equation}
-With linear $\alpha_i(r)=k_i r$, substituting Eq.~\eqref{eq:deviation_control} into the stabilized model gives exact-model rows in deviation-input form, $A_0(x)v \leq b_0(x)$. This preserves the bookkeeping between pressure ($m=2$) and enthalpy/power ($m=1$) constraints while keeping the QP decision variable equal to $v$.
+For the six barriers indexed by $c$, with relative degree $m_c$, define the recursive HOCBF admissible set under the true dynamics as
+\begin{equation}
+    \mathcal{C}_{c,i}=\{x\in\calX_{\mathrm{op}}:\psi_{c,i}^{\mathrm{true}}(x)\geq 0\},
+    \quad i=0,\ldots,m_c-1,
+    \qquad
+    \calC=\bigcap_{c=1}^{6}\bigcap_{i=0}^{m_c-1}\mathcal{C}_{c,i}.
+    \label{eq:hocbf_safe_set}
+\end{equation}
+With linear $\alpha_i(r)=k_i r$, substituting Eq.~\eqref{eq:deviation_control} into the stabilized model gives a top-level affine row. For the GP-mean-corrected drift $\fhat=f_0+\muGP$, this row is defined by $\hat{\psi}_{c,m_c}^0(x,v)=b_c(x)-A_c(x)v$ and is stacked as $A(x)v\leq b(x)$. Applying the same construction to $f_0$ without GP correction gives $A_0(x)v\leq b_0(x)$, which is used only for the no-GP ablation. This convention preserves the bookkeeping between pressure ($m=2$) and enthalpy/power ($m=1$) constraints while keeping the QP decision variable equal to $v$.
 
 \begin{figure}[htbp]
     \centering
@@ -142,7 +150,7 @@ The three margin relations above define the quantity scaled by $\epsilon_\kappa$
     \sigma_{\mathrm{ctrl}}(x)=\beta\sum_j\left|\frac{\partial(L_gL_{\fhat}^{m-1}h)}{\partial x_j}\right|\sigmaGPj{j}(x)u_{\max},
     \label{eq:sigma_ctrl_main}
 \end{equation}
-where $u_{\max}=\sup_{u\in\calU}\|u\|$. The chain weights are $c_j=\prod_{\ell=j+1}^{m-1}(\|L_{\fhat}\|_{\mathrm{op}}+k_\ell)$, with the empty product equal to one; thus $c_1=1$ for the pressure barriers with $m=2$. The resulting HOCBF constraint is $A_0(x)v \leq b_0(x)-\epsilonKappa\sigmatotal(x)$.
+where $u_{\max}=\sup_{u\in\calU}\|u\|$. The chain weights are $c_j=\prod_{\ell=j+1}^{m-1}(\|L_{\fhat}\|_{\mathrm{op}}+k_\ell)$, with the empty product equal to one; thus $c_1=1$ for the pressure barriers with $m=2$. The resulting mean-corrected HOCBF constraint is $A(x)v \leq b(x)-\epsilonKappa\sigmatotal(x)$.
 
 \subsection{Commissioning Factor and Implementation Boundary}
 
@@ -168,7 +176,7 @@ For every $x\in\calX_{\mathrm{op}}$ considered by the certificate, there exists 
 
 \begin{theorem}[Conditional probabilistic forward invariance]
 \label{thm:1}
-Let $\Delta_{\psi}(x,v)=\psi_m^{\mathrm{true}}(x,v)-\hat{\psi}_m^0(x,v)$ denote the induced top-level HOCBF residual after substituting the deviation-input model. Under Assumptions~\ref{ass:operating_set}--\ref{ass:qp_feasible}, the QP in Eq.~\eqref{eq:online_qp} with $\epsilonKappa=1$ renders $\calC$ forward invariant with probability at least $1-\delta$.
+Let $\Delta_{\psi}(x,v)=\psi_m^{\mathrm{true}}(x,v)-\hat{\psi}_m^0(x,v)$ denote the induced top-level HOCBF residual after substituting the deviation-input model. If $x(0)\in\calC$, then, under Assumptions~\ref{ass:operating_set}--\ref{ass:qp_feasible}, the QP in Eq.~\eqref{eq:online_qp} with $\epsilonKappa=1$ renders the set $\calC$ in Eq.~\eqref{eq:hocbf_safe_set} forward invariant with probability at least $1-\delta$.
 \end{theorem}
 
 \noindent\textit{Proof.}
@@ -179,7 +187,7 @@ Theorem~\ref{thm:1} is a conditional worst-case statement. The margin itself doe
 The robustness scaling factor $\epsilon_\kappa$ controls the safety-margin/control-authority trade-off:
 
 \begin{itemize}
-    \item $\epsilon_\kappa = 0$: The QP enforces $A_0(x)v \leq b_0(x)$, i.e., the nominal HOCBF constraint with GP mean correction only. No robustness margin is applied beyond the mean correction itself.
+    \item $\epsilon_\kappa = 0$: The QP enforces $A(x)v \leq b(x)$, i.e., the GP-mean-corrected HOCBF constraint without an additional robustness margin. The separate $A_0(x)v\leq b_0(x)$ notation denotes the no-GP ablation.
     \item $\epsilon_\kappa = 1$: The QP enforces the full implemented compositional margin $\sigmatotal(x)$. It recovers the worst-case certificate only when the residual event, derivative bounds, $\Delta g=0$, and full-row QP feasibility required by Theorem~\ref{thm:1} all hold.
     \item $0 < \epsilon_\kappa < 1$: The QP enforces a fraction of the compositional margin, trading theoretical coverage for reduced QP conservatism.
 \end{itemize}
@@ -192,4 +200,4 @@ Theorem~\ref{thm:1} is continuous-time, whereas the implementation uses $T_s = 1
 
 For field commissioning, approximately 14 days of 1\,Hz data are divided into days 1--10 for the training candidate pool, day 11 as a 24\,h isolation gap, and days 12--14 for validation. Five fixed load strata cover 180--660\,MW; each contributes 100 training and 40 validation transitions. Within each stratum, candidates are thinned to at least 60\,s spacing and selected by deterministic farthest-point coverage in standardized $(p_m,h_m,N_e)$ coordinates, without quota borrowing. The deployed dictionary is frozen at 500 points. Plant-specific training-block replay fixes $\epsilon_\kappa=0.1$, after which the 200 time-isolated validation points are evaluated once without retuning. The public controller exports confirm the implemented value and online execution; the record-level plant replay remains a restricted enterprise asset and is not reconstructed from those exports.
 
-Coverage monitoring combines the input z-score and 0.5th--99.5th training quantiles, the validation-set 99th percentile of posterior standard deviation, and the standardized one-step innovation. Moderate OOD enters full-row nominal-HOCBF operation for at most ten 1\,s cycles; GP operation resumes only after ten consecutive healthy cycles. A persistent coverage failure enters latched live-DCS bypass. Innovation above 5, invalid measurements or communication, non-finite/model-load faults, nominal-QP or actuator-constraint infeasibility, violation of a direct physical bound, pressure-low physical margin below 2.0\,MPa, or QP/task timeout bypasses the degraded stage immediately. This nominal-HOCBF interval is a bounded transition mode without a GP coverage claim, not a certified substitute for the GP-RHOCBF mode.
+Coverage monitoring combines the input z-score and 0.5th--99.5th training quantiles, the validation-set 99th percentile of posterior standard deviation, and the standardized one-step residual-rate innovation. Moderate OOD enters full-row nominal-HOCBF operation for at most ten 1\,s cycles; GP operation resumes only after ten consecutive healthy cycles. A persistent coverage failure enters latched live-DCS bypass. Innovation above 5, invalid measurements or communication, non-finite/model-load faults, nominal-QP or actuator-constraint infeasibility, violation of a direct physical bound, pressure-low physical margin below 2.0\,MPa, or QP/task timeout bypasses the degraded stage immediately. This nominal-HOCBF interval is a bounded transition mode without a GP coverage claim, not a certified substitute for the GP-RHOCBF mode.

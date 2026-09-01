@@ -135,9 +135,10 @@ The online input-coverage statistic and standardized innovation are
     \frac{|r_{j,k+1}-\mu_j(x_k^{\mathrm{GP}})|}
     {\sqrt{\sigma_j^2(x_k^{\mathrm{GP}})+\sigma_{n,j}^2}},
     \quad
-    r_{j,k+1}=x_{j,k+1}-\hat{x}^{\mathrm{nom}}_{j,k+1|k}.
+    r_{j,k+1}=\frac{x_{j,k+1}-\hat{x}^{\mathrm{nom}}_{j,k+1|k}}{T_s}.
     \label{eq:S_innovation}
 \end{align}
+Here $r_{j,k+1}$, $\mu_j$, $\sigma_j$, and $\sigma_{n,j}$ all have residual-rate units. Because the deployed sampling period is $T_s=1$\,s, this notation correction does not change the reported numerical thresholds.
 
 \begin{table}[htbp]
     \centering
@@ -161,14 +162,15 @@ The online input-coverage statistic and standardized innovation are
 Moderate coverage loss follows
 \begin{equation}
 \begin{aligned}
-\mathsf{GP\!\text{-}\!RoCBF\!\text{-}\!SF}
-&\rightarrow \mathsf{nominal\ HOCBF}_{\leq 10\ \mathrm{cycles}},\\
-\mathsf{nominal\ HOCBF}
-&\rightarrow \mathsf{GP\!\text{-}\!RoCBF\!\text{-}\!SF}
-&&\text{after 10 healthy cycles},\\
-\mathsf{nominal\ HOCBF}
-&\rightarrow \mathsf{BYPASS}\rightarrow\text{live DCS}
-&&\text{otherwise}.
+\text{GP-RoCBF-SF}
+&\rightarrow \text{nominal HOCBF}
+\quad(\text{for at most 10 cycles}),\\
+\text{nominal HOCBF}
+&\rightarrow \text{GP-RoCBF-SF}
+\quad(\text{after 10 healthy cycles}),\\
+\text{nominal HOCBF}
+&\rightarrow \text{BYPASS}\rightarrow\text{live DCS}
+\quad(\text{otherwise}).
 \end{aligned}
 \label{eq:S_degraded_state}
 \end{equation}
