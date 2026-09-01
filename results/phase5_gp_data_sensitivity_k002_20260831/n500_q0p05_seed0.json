@@ -1,0 +1,192 @@
+{
+  "experiment": "controlled_gp_data_quantity_quality_sensitivity",
+  "scenario": "s3_coupled",
+  "seed": 0,
+  "training_pool_size": 1000,
+  "validation_size": 200,
+  "training_sample_size": 500,
+  "contamination_fraction": 0.05,
+  "contamination_definition": "signed_3_training_target_sd_offsets",
+  "gp_input_output": "[p_m,h_m,N_e] residual rates",
+  "commissioned_epsilon_kappa": 0.02,
+  "jax_precision": "float64",
+  "prediction": {
+    "fit_time_s": 6.993848273996264,
+    "rmse_physical": [
+      0.04425405329677724,
+      2.1324371950268923,
+      1.9901677414726043e-08
+    ],
+    "nrmse_by_validation_sd": [
+      0.46246508719256463,
+      0.6072953838596361,
+      0.019901677414726045
+    ],
+    "predictive_interval_95_coverage": [
+      0.91,
+      0.92,
+      1.0
+    ],
+    "mean_posterior_std": [
+      0.03673121929173049,
+      2.012001720606485,
+      0.010000000000132448
+    ],
+    "input_mean": [
+      20.53446051327969,
+      2651.069872778022,
+      1000.0002010980793
+    ],
+    "input_std": [
+      0.20284438709967686,
+      24.808962416209326,
+      0.14767456851003652
+    ]
+  },
+  "closed_loop": {
+    "epsilon_kappa_0": {
+      "method": "rocbf_mean",
+      "method_label": "RoCBF-SF mean-only",
+      "condition": "s3_coupled",
+      "condition_label": "S3:Coupled",
+      "seed": 0,
+      "rollout_mode": "drift_only_delta_g0",
+      "input_matrix_assumption": "delta_g_equals_zero",
+      "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+      "violation_tolerance_raw_margin": 0.01,
+      "n_episodes": 1,
+      "n_steps": 500,
+      "n_pretrain": 500,
+      "violation_rate": [
+        0.02,
+        0.0
+      ],
+      "cbf_violation_rate": [
+        0.02,
+        0.0
+      ],
+      "violation_count": 10,
+      "total_samples": 500,
+      "cumulative_reward": [
+        -7510.53503832707,
+        0.0
+      ],
+      "control_cost": [
+        3299.7976904600196,
+        0.0
+      ],
+      "min_barrier_value": [
+        -0.11472773175137263,
+        0.0
+      ],
+      "online_time_ms": [
+        2.5509550841525197,
+        0.2912962057586104
+      ],
+      "qp_intervention_rate": 0.704,
+      "qp_attempt_count": 500,
+      "qp_infeasible_count": 0,
+      "qp_infeasible_rate": 0.0,
+      "qp_fallback_count": 0,
+      "qp_fallback_rate": 0.0,
+      "max_normalized_qp_residual": 0.0,
+      "weak_authority_row_drop_enabled": false,
+      "qp_backend": "qpax",
+      "jax_precision": "float64",
+      "qpax_algorithm": "implicit_pdip",
+      "qpax_solver_tolerance": 1e-06,
+      "qpax_max_iterations": 100,
+      "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+      "epsilon_kappa": 0.0,
+      "per_constraint_type": {
+        "pressure": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        },
+        "enthalpy": {
+          "violation_rate": 0.02,
+          "violation_count": 10,
+          "total_steps": 500
+        },
+        "power": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        }
+      }
+    },
+    "commissioned": {
+      "method": "rocbf_mean",
+      "method_label": "RoCBF-SF mean-only",
+      "condition": "s3_coupled",
+      "condition_label": "S3:Coupled",
+      "seed": 0,
+      "rollout_mode": "drift_only_delta_g0",
+      "input_matrix_assumption": "delta_g_equals_zero",
+      "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+      "violation_tolerance_raw_margin": 0.01,
+      "n_episodes": 1,
+      "n_steps": 500,
+      "n_pretrain": 500,
+      "violation_rate": [
+        0.658,
+        0.0
+      ],
+      "cbf_violation_rate": [
+        0.658,
+        0.0
+      ],
+      "violation_count": 329,
+      "total_samples": 500,
+      "cumulative_reward": [
+        -8477.424763198054,
+        0.0
+      ],
+      "control_cost": [
+        2942.1620028336324,
+        0.0
+      ],
+      "min_barrier_value": [
+        -57.447805417417385,
+        0.0
+      ],
+      "online_time_ms": [
+        10.12082211766392,
+        0.5458485330173534
+      ],
+      "qp_intervention_rate": 0.0,
+      "qp_attempt_count": 500,
+      "qp_infeasible_count": 500,
+      "qp_infeasible_rate": 1.0,
+      "qp_fallback_count": 500,
+      "qp_fallback_rate": 1.0,
+      "max_normalized_qp_residual": 2693.9509572176867,
+      "weak_authority_row_drop_enabled": false,
+      "qp_backend": "qpax",
+      "jax_precision": "float64",
+      "qpax_algorithm": "implicit_pdip",
+      "qpax_solver_tolerance": 1e-06,
+      "qpax_max_iterations": 100,
+      "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+      "epsilon_kappa": 0.02,
+      "per_constraint_type": {
+        "pressure": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        },
+        "enthalpy": {
+          "violation_rate": 0.658,
+          "violation_count": 329,
+          "total_steps": 500
+        },
+        "power": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        }
+      }
+    }
+  }
+}

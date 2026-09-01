@@ -1,0 +1,281 @@
+{
+  "n100_q0.00": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.0018404632439815033,
+    "nrmse_sd": 0.0005017223047542712,
+    "coverage_mean": 1.0,
+    "coverage_sd": 0.0,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 190,
+        "total_samples": 2500,
+        "violation_rate": 0.076,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 0,
+        "total_samples": 2500,
+        "violation_rate": 0.0,
+        "rejected_count": 4,
+        "attempts": 2500,
+        "rejected_rate": 0.0016
+      }
+    }
+  },
+  "n100_q0.05": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.4354718872393931,
+    "nrmse_sd": 0.04877314296849938,
+    "coverage_mean": 0.9686666666666668,
+    "coverage_sd": 0.012400716825158812,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 27,
+        "total_samples": 2500,
+        "violation_rate": 0.0108,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 1624,
+        "total_samples": 2500,
+        "violation_rate": 0.6496,
+        "rejected_count": 2391,
+        "attempts": 2500,
+        "rejected_rate": 0.9564
+      }
+    }
+  },
+  "n100_q0.10": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.49337124844259106,
+    "nrmse_sd": 0.10324660421519571,
+    "coverage_mean": 0.9763333333333332,
+    "coverage_sd": 0.016275407487644954,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 32,
+        "total_samples": 2500,
+        "violation_rate": 0.0128,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 1662,
+        "total_samples": 2500,
+        "violation_rate": 0.6648,
+        "rejected_count": 2469,
+        "attempts": 2500,
+        "rejected_rate": 0.9876
+      }
+    }
+  },
+  "n250_q0.00": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.0020822660255604567,
+    "nrmse_sd": 0.0011428899646375244,
+    "coverage_mean": 1.0,
+    "coverage_sd": 0.0,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 198,
+        "total_samples": 2500,
+        "violation_rate": 0.0792,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 0,
+        "total_samples": 2500,
+        "violation_rate": 0.0,
+        "rejected_count": 4,
+        "attempts": 2500,
+        "rejected_rate": 0.0016
+      }
+    }
+  },
+  "n250_q0.05": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.37979957074121995,
+    "nrmse_sd": 0.043919101939756434,
+    "coverage_mean": 0.9536666666666667,
+    "coverage_sd": 0.01596524001977076,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 33,
+        "total_samples": 2500,
+        "violation_rate": 0.0132,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 1657,
+        "total_samples": 2500,
+        "violation_rate": 0.6628,
+        "rejected_count": 2466,
+        "attempts": 2500,
+        "rejected_rate": 0.9864
+      }
+    }
+  },
+  "n250_q0.10": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.490150770855729,
+    "nrmse_sd": 0.08385077288508758,
+    "coverage_mean": 0.951,
+    "coverage_sd": 0.020618222792256148,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 26,
+        "total_samples": 2500,
+        "violation_rate": 0.0104,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 1675,
+        "total_samples": 2500,
+        "violation_rate": 0.67,
+        "rejected_count": 2484,
+        "attempts": 2500,
+        "rejected_rate": 0.9936
+      }
+    }
+  },
+  "n500_q0.00": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.002426712723867038,
+    "nrmse_sd": 0.001624923891341238,
+    "coverage_mean": 1.0,
+    "coverage_sd": 0.0,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 174,
+        "total_samples": 2500,
+        "violation_rate": 0.0696,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 0,
+        "total_samples": 2500,
+        "violation_rate": 0.0,
+        "rejected_count": 4,
+        "attempts": 2500,
+        "rejected_rate": 0.0016
+      }
+    }
+  },
+  "n500_q0.05": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.2570031743609257,
+    "nrmse_sd": 0.062320490784275796,
+    "coverage_mean": 0.9733333333333333,
+    "coverage_sd": 0.01646545204697127,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 28,
+        "total_samples": 2500,
+        "violation_rate": 0.0112,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 1672,
+        "total_samples": 2500,
+        "violation_rate": 0.6688,
+        "rejected_count": 2486,
+        "attempts": 2500,
+        "rejected_rate": 0.9944
+      }
+    }
+  },
+  "n500_q0.10": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.42204911437114856,
+    "nrmse_sd": 0.049672134344988614,
+    "coverage_mean": 0.968,
+    "coverage_sd": 0.007774602526460399,
+    "closed_loop": {
+      "epsilon_kappa_0": {
+        "violation_count": 17,
+        "total_samples": 2500,
+        "violation_rate": 0.0068,
+        "rejected_count": 0,
+        "attempts": 2500,
+        "rejected_rate": 0.0
+      },
+      "commissioned": {
+        "violation_count": 1680,
+        "total_samples": 2500,
+        "violation_rate": 0.672,
+        "rejected_count": 2497,
+        "attempts": 2500,
+        "rejected_rate": 0.9988
+      }
+    }
+  }
+}

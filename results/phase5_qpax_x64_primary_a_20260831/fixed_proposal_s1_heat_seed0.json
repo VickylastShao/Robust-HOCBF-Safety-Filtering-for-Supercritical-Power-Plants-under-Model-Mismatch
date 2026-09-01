@@ -1,0 +1,72 @@
+{
+  "method": "fixed_proposal",
+  "method_label": "Unfiltered fixed upstream proposal",
+  "condition": "s1_heat",
+  "condition_label": "S1:Heat",
+  "seed": 0,
+  "rollout_mode": "drift_only_delta_g0",
+  "input_matrix_assumption": "delta_g_equals_zero",
+  "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+  "violation_tolerance_raw_margin": 0.01,
+  "n_episodes": 1,
+  "n_steps": 500,
+  "n_pretrain": 500,
+  "violation_rate": [
+    0.794,
+    0.0
+  ],
+  "cbf_violation_rate": [
+    0.794,
+    0.0
+  ],
+  "violation_count": 397,
+  "total_samples": 500,
+  "cumulative_reward": [
+    -11472.539131035082,
+    0.0
+  ],
+  "control_cost": [
+    2942.1620028336324,
+    0.0
+  ],
+  "min_barrier_value": [
+    -55.500038255670916,
+    0.0
+  ],
+  "online_time_ms": [
+    0.0,
+    0.0
+  ],
+  "qp_intervention_rate": 0.0,
+  "qp_attempt_count": 0,
+  "qp_infeasible_count": 0,
+  "qp_infeasible_rate": 0.0,
+  "qp_fallback_count": 0,
+  "qp_fallback_rate": 0.0,
+  "max_normalized_qp_residual": 0.0,
+  "weak_authority_row_drop_enabled": false,
+  "qp_backend": "qpax",
+  "jax_precision": "float64",
+  "qpax_algorithm": "implicit_pdip",
+  "qpax_solver_tolerance": 1e-06,
+  "qpax_max_iterations": 100,
+  "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+  "epsilon_kappa": null,
+  "per_constraint_type": {
+    "pressure": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 500
+    },
+    "enthalpy": {
+      "violation_rate": 0.794,
+      "violation_count": 397,
+      "total_steps": 500
+    },
+    "power": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 500
+    }
+  }
+}

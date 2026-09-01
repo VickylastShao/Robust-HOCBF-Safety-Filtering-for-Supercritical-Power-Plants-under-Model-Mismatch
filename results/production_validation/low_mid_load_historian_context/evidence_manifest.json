@@ -1,0 +1,29 @@
+{
+  "evidence_role": "low-to-mid-load plant-historian operating context",
+  "field_semantics": {
+    "generator_active_power_mw": "historian generator active-power channel",
+    "main_steam_pressure_mpa": "DCS2_MAIN_PRESS; not controller state PM"
+  },
+  "windows": [
+    {
+      "window": "MW01",
+      "private_source_basename": "MW01_post_20260625_1230_5s.csv",
+      "private_source_sha256": "54a477bb5bbbef193b5d96c9011820f1edacdbfe01072e45b0ffad325897839f",
+      "rows": 1440
+    },
+    {
+      "window": "MW02",
+      "private_source_basename": "MW02_post_20260628_0200_5s_from_300s.csv",
+      "private_source_sha256": "1ad45295ed7ddf86fdd0d4f645c5761f2522da064b0e6ba55ce97397e35d7191",
+      "rows": 1440
+    },
+    {
+      "window": "MW03",
+      "private_source_basename": "MW03_post_20260703_0200_5s_from_300s.csv",
+      "private_source_sha256": "7830c1d6309d33e45e246996750e7348bd93daae3d0b36fe006fdacb0601b675",
+      "rows": 1440
+    }
+  ],
+  "public_context_file": "MW01_MW03_historian_context.csv",
+  "public_context_sha256": "f6468dacb9233b520354b595ebd478db566d3a73cff01669107faf8888b6c715"
+}

@@ -1,6 +1,6 @@
 """Systematic inter-sample safety analysis for reviewer response.
 
-Extends the existing jpc_process_metrics.py inter-sample check to cover:
+Extends the earlier process-metrics inter-sample check to cover:
 - All 6 static perturbation scenarios (S1-S6) + Nominal
 - 5 seeds per scenario
 - New metrics: maximum inter-sample excursion magnitude, violation duration

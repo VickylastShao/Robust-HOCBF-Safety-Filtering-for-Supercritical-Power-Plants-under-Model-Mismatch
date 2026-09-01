@@ -138,6 +138,39 @@ def test_mean_correction_improves_accuracy():
         f"Mean-corrected f̂ error ({err_hat}) should be <= nominal error ({err_nom})"
 
 
+def test_gp_residual_scattered_to_configured_state_rows():
+    """A three-output GP can correct non-leading rows of a five-state drift."""
+    from rocbf.cbf.robust_hocbf import RobustHOCBF
+    from rocbf.gp.gp_residual import GPResidual
+
+    X_gp = jnp.array([
+        [15.0, 2700.0, 500.0],
+        [18.0, 2750.0, 600.0],
+        [21.0, 2800.0, 700.0],
+    ])
+    Y_gp = jnp.tile(jnp.array([[1.0, 2.0, 3.0]]), (3, 1))
+    gp = GPResidual(n_dims=3, sigma_floor=1e-8)
+    gp.fit(X_gp, Y_gp, n_optim_iters=3)
+
+    hocbf = RobustHOCBF(
+        h_fn=lambda x: x[3],
+        f_fn=lambda x: jnp.zeros(5),
+        g_fn=lambda x: jnp.ones((5, 1)),
+        relative_degree=1,
+        k_gains=[1.0],
+        gp_residual=gp,
+        use_mean_correction=True,
+        gp_state_indices=(1, 2, 3),
+    )
+    x = jnp.array([10.0, 18.0, 2750.0, 600.0, 20.0])
+    corrected_drift = hocbf.f_fn(x)
+
+    np.testing.assert_allclose(
+        corrected_drift[jnp.array([0, 4])], 0.0, atol=1e-7)
+    np.testing.assert_allclose(
+        corrected_drift[jnp.array([1, 2, 3])], [1.0, 2.0, 3.0], atol=1e-5)
+
+
 def test_epsilon_oracle_bound():
     """ε(x) is of same order as oracle ε* for known Δf."""
     hocbf, env, gp, nominal_env, constraint = _make_robust_hocbf(n_gp_points=100)

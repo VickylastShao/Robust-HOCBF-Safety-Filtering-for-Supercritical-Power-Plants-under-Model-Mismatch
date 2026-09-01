@@ -1,24 +1,19 @@
 #!/usr/bin/env python3
-"""Static reproducibility inventory check for the RoCBF-Net M&C artifact.
+"""Static inventory check for the RoCBF-SF M&C major-revision artifact.
 
-The script intentionally uses only the Python standard library. It verifies
-the repository inventory without importing JAX, rocbf, or GPU libraries.
+The check intentionally imports neither JAX nor project modules. It verifies
+the current revision evidence inventory, JSON readability, and obvious
+non-public artifact patterns. It does not independently establish provenance
+for proprietary plant-controller exports or recompute manuscript statistics.
 """
 
 from __future__ import annotations
 
-import re
-import sys
+import json
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RESULTS = ROOT / "results" / "phase5"
-
-EXPECTED_SEEDS = {0, 1, 2, 3, 4}
-EXPECTED_MAIN_RESULT_COUNT = 320
-EXPECTED_COMBO_COUNT = 64
-
 
 REQUIRED_PATHS = [
     "README.md",
@@ -30,54 +25,73 @@ REQUIRED_PATHS = [
     ".gitattributes",
     "pyproject.toml",
     "requirements.txt",
-    "configs/phase5.yaml",
+    "configs/phase5_drift_only.yaml",
     "rocbf/cbf",
     "rocbf/qp",
     "rocbf/gp",
-    "rocbf/rl",
-    "rocbf/baselines",
+    "rocbf/deployment/supervisor.py",
     "envs/ccs",
     "tests",
+    "experiments/phase5/common_5th.py",
+    "experiments/phase5/methods_5th.py",
     "experiments/phase5/run_experiment_5th.py",
-    "experiments/phase5/analyze_results_5th.py",
-    "experiments/phase5/run_kappa_sweep.py",
-    "experiments/phase5/plot_kappa_sweep.py",
+    "experiments/phase5/run_commissioning_kappa_validation.py",
+    "experiments/phase5/select_commissioning_kappa.py",
+    "experiments/phase5/run_gp_data_sensitivity.py",
     "experiments/phase5/collect_process_response_figure.py",
-    "experiments/phase5/plot_process_response_figure.py",
     "experiments/phase5/collect_model_mismatch_figure.py",
-    "experiments/phase5/plot_model_mismatch_figure.py",
-    "experiments/phase5/plot_figure2_mechanism.py",
-    "results/phase5",
-    "results/phase5/e2_kappa_sweep",
-    "results/phase5/kappa_sweep",
-    "results/phase5/figure2_mechanism_trajectories.json",
-    "results/phase5/figure2_s3_kappa_summary.json",
+    "academic-paper-template.docx",
+    "scripts/build_mc_docx.sh",
+    "scripts/simplify_mc_docx_tables.py",
+    "scripts/postprocess_mc_docx.py",
+    "scripts/pandoc/vancouver.csl",
     "results/phase5/process_response_trajectories.json",
     "results/phase5/model_mismatch_diagnostic.json",
+    "results/phase5_commissioning_kappa_tune_20260831/selection_summary.json",
+    "results/phase5_gp_data_sensitivity_k002_20260831/summary.json",
+    "results/production_validation/matched_window_cohort_summary_20260706.json",
+    "results/production_validation/figure10_production_retrofit_metrics.json",
+    "results/production_validation/figure11_high_load_controller_metrics.json",
+    "results/production_validation/PRODUCTION_EVIDENCE_INDEX.md",
+    "results/production_validation/low_mid_load_historian_context/MW01_MW03_historian_context.csv",
+    "results/production_validation/low_mid_load_historian_context/evidence_manifest.json",
+    "results/production_validation/controller_exports_public/MW04_CONTROLLER_EXPORT_5S.csv",
+    "results/production_validation/controller_exports_public/MW05_CONTROLLER_EXPORT_5S.csv",
+    "results/production_validation/controller_exports_public/MW06_CONTROLLER_EXPORT_5S.csv",
+    "results/production_validation/controller_exports_public/controller_export_field_map.csv",
+    "results/production_validation/controller_exports_public/evidence_manifest.json",
     "paper/manuscript_mc.tex",
-    "paper/manuscript_mc.pdf",
     "paper/manuscript_mc_supplementary.tex",
-    "paper/manuscript_mc_supplementary.pdf",
-    "paper/cover_letter_mc.tex",
-    "paper/cover_letter_mc.pdf",
-    "paper/submission_metadata_mc.md",
+    "paper/response_to_reviewers_mc.md",
     "paper/refs.bib",
     "paper/SageV.bst",
 ]
 
-
 REQUIRED_FIGURES = [
     "paper/figures/Figure_1.pdf",
-    "paper/figures/Figure_2.pdf",
-    "paper/figures/Figure_3.pdf",
-    "paper/figures/Figure_4.pdf",
-    "paper/figures/Figure_5.pdf",
     "paper/figures/Figure_6_process_response.pdf",
-    "paper/figures/kappa_sensitivity.pdf",
-    "paper/figures/kappa_s3_gradient.pdf",
     "paper/figures/Figure_8_model_mismatch.pdf",
+    "paper/figures/Figure_2.pdf",
+    "paper/figures/Figure_GP_data_sensitivity.pdf",
+    "paper/figures/Figure_9_production_historian.pdf",
+    "paper/figures/Figure_10_production_retrofit_evidence.pdf",
+    "paper/figures/Figure_11_controller_log_validation.pdf",
 ]
 
+RESULT_INVENTORIES = {
+    "primary drift-only": (
+        "results/phase5_qpax_x64_primary_a_20260831",
+        100,
+    ),
+    "calibrated S3": (
+        "results/phase5_primary_kappa002_20260831",
+        5,
+    ),
+    "constrained NMPC": (
+        "results/phase5_drift_only_nmpc_x64_20260831",
+        35,
+    ),
+}
 
 SUSPICIOUS_PATTERNS = [
     "*.env",
@@ -92,47 +106,58 @@ SUSPICIOUS_PATTERNS = [
 ]
 
 
-MAIN_RESULT_RE = re.compile(r"^(?P<combo>.+)_seed(?P<seed>[0-9]+)\.json$")
-
-
 def rel(path: Path) -> str:
     return str(path.relative_to(ROOT))
 
 
 def check_required_paths(errors: list[str]) -> None:
-    missing = [p for p in REQUIRED_PATHS + REQUIRED_FIGURES if not (ROOT / p).exists()]
+    missing = [path for path in REQUIRED_PATHS + REQUIRED_FIGURES if not (ROOT / path).exists()]
     if missing:
         errors.append("Missing required artifact paths:\n  - " + "\n  - ".join(missing))
 
 
-def check_main_result_matrix(errors: list[str]) -> None:
-    files = sorted(RESULTS.glob("*_seed*.json"))
-    if len(files) != EXPECTED_MAIN_RESULT_COUNT:
-        errors.append(
-            f"Expected {EXPECTED_MAIN_RESULT_COUNT} root-level seed result files, found {len(files)}."
-        )
+def check_json(path: Path, errors: list[str]) -> None:
+    try:
+        with path.open(encoding="utf-8") as handle:
+            json.load(handle)
+    except (OSError, json.JSONDecodeError) as error:
+        errors.append(f"Invalid JSON: {rel(path)} ({error})")
 
-    combos: dict[str, set[int]] = {}
-    unparsable = []
-    for path in files:
-        match = MAIN_RESULT_RE.match(path.name)
-        if match is None:
-            unparsable.append(path.name)
-            continue
-        combo = match.group("combo")
-        seed = int(match.group("seed"))
-        combos.setdefault(combo, set()).add(seed)
 
-    if unparsable:
-        errors.append("Unparsable root-level seed result filenames:\n  - " + "\n  - ".join(unparsable))
+def check_result_inventories(errors: list[str]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for label, (relative_dir, expected_count) in RESULT_INVENTORIES.items():
+        directory = ROOT / relative_dir
+        files = sorted(directory.glob("*.json")) if directory.is_dir() else []
+        counts[label] = len(files)
+        if len(files) != expected_count:
+            errors.append(
+                f"Expected {expected_count} JSON files in {relative_dir}, found {len(files)}."
+            )
+        for path in files:
+            check_json(path, errors)
 
-    if len(combos) != EXPECTED_COMBO_COUNT:
-        errors.append(f"Expected {EXPECTED_COMBO_COUNT} method-condition combinations, found {len(combos)}.")
+    for relative_path in (
+        "results/phase5/process_response_trajectories.json",
+        "results/phase5/model_mismatch_diagnostic.json",
+        "results/phase5_commissioning_kappa_tune_20260831/selection_summary.json",
+        "results/phase5_gp_data_sensitivity_k002_20260831/summary.json",
+        "results/production_validation/matched_window_cohort_summary_20260706.json",
+        "results/production_validation/figure10_production_retrofit_metrics.json",
+        "results/production_validation/figure11_high_load_controller_metrics.json",
+        "results/production_validation/low_mid_load_historian_context/evidence_manifest.json",
+        "results/production_validation/controller_exports_public/evidence_manifest.json",
+    ):
+        path = ROOT / relative_path
+        if path.exists():
+            check_json(path, errors)
+    return counts
 
-    incomplete = {combo: seeds for combo, seeds in combos.items() if seeds != EXPECTED_SEEDS}
-    if incomplete:
-        lines = [f"{combo}: seeds={sorted(seeds)}" for combo, seeds in sorted(incomplete.items())]
-        errors.append("Incomplete seed coverage:\n  - " + "\n  - ".join(lines))
+
+def check_gp_semantics(errors: list[str]) -> None:
+    common = (ROOT / "experiments/phase5/common_5th.py").read_text(encoding="utf-8")
+    if "GP_STATE_INDICES" not in common or "(1, 2, 3)" not in common:
+        errors.append("The current benchmark does not expose GP_STATE_INDICES = (1, 2, 3).")
 
 
 def check_suspicious_files(errors: list[str]) -> None:
@@ -147,32 +172,26 @@ def check_suspicious_files(errors: list[str]) -> None:
         errors.append("Potentially non-public files found:\n  - " + "\n  - ".join(sorted(set(hits))))
 
 
-def summarize() -> None:
-    main_files = sorted(RESULTS.glob("*_seed*.json"))
-    figure_files = sorted((ROOT / "paper" / "figures").glob("*"))
-    result_jsons = sorted(RESULTS.rglob("*.json"))
-
-    print("RoCBF-Net reproducibility artifact check")
-    print(f"  root: {ROOT}")
-    print(f"  main seed files: {len(main_files)}")
-    print(f"  phase5 JSON files: {len(result_jsons)}")
-    print(f"  paper figure files: {len([p for p in figure_files if p.is_file()])}")
-
-
 def main() -> int:
     errors: list[str] = []
     check_required_paths(errors)
-    check_main_result_matrix(errors)
+    inventory_counts = check_result_inventories(errors)
+    check_gp_semantics(errors)
     check_suspicious_files(errors)
-    summarize()
+
+    print("RoCBF-SF major-revision reproducibility artifact check")
+    print(f"  root: {ROOT}")
+    for label, count in inventory_counts.items():
+        print(f"  {label} JSON files: {count}")
+    print(f"  required figures: {len(REQUIRED_FIGURES)}")
 
     if errors:
         print("\nFAIL")
-        for idx, error in enumerate(errors, start=1):
-            print(f"\n[{idx}] {error}")
+        for index, error in enumerate(errors, start=1):
+            print(f"\n[{index}] {error}")
         return 1
 
-    print("\nPASS: repository inventory is ready for public reproducibility review.")
+    print("\nPASS: current major-revision inventory is present and JSON-readable.")
     return 0
 
 

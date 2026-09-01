@@ -42,6 +42,7 @@ from rocbf.baselines.nmpc_5th import NMPCController5th
 from envs.ccs.dynamics import USCCSDynamics5th, UncertainUSCCSDynamics5th
 from envs.ccs.constraints import CCSConstraints5th
 from envs.ccs.agc_schedule import AGCSchedule
+from experiments.phase5.common_5th import GP_STATE_IDX
 from experiments.phase5.methods_5th import (
     NX, N_GP_DIMS,
     METHODS_5TH, METHOD_LABELS,
@@ -132,6 +133,8 @@ def run_single(method_name, condition, seed, config):
     eval_cfg = cfg.get('evaluation', {})
     method_cfg = cfg.get('methods_config', {}).get(method_name, {})
     hocbf_cfg = cfg.get('hocbf', {})
+    dyn_cfg = cfg.get('dynamics', {})
+    use_phi_scaled_rollout = dyn_cfg.get('use_phi_scaled_rollout', True)
 
     load_ratio = 1.0
     scenario = CONDITION_SCENARIO_MAP.get(condition)
@@ -258,14 +261,14 @@ def run_single(method_name, condition, seed, config):
                         u_max=method_cfg.get('u_max', 100.0),
                         use_mean_correction=method_cfg.get('use_mean_correction', True),
                         epsilon_floor=method_cfg.get('epsilon_floor', 0.0),
-                        use_phi_scaled_g=True)
+                        use_phi_scaled_g=method_cfg.get('use_phi_scaled_g', True))
 
                 # Log epsilon values
                 if safety_layer is not None and hasattr(safety_layer, 'robust_hocbf_list'):
                     eps_vals = []
                     for hocbf in safety_layer.robust_hocbf_list:
                         try:
-                            eps_vals.append(float(hocbf.compute_epsilon(x0[:3])))
+                            eps_vals.append(float(hocbf.compute_epsilon(x0)))
                         except Exception:
                             pass
                     if eps_vals:
@@ -277,7 +280,7 @@ def run_single(method_name, condition, seed, config):
                         }
                         if gp is not None:
                             try:
-                                mu, sigma = gp.predict(x0[:3].reshape(1, -1))
+                                mu, sigma = gp.predict(x0[GP_STATE_IDX].reshape(1, -1))
                                 log_entry['sigma_gp_mean'] = float(jnp.mean(sigma))
                                 log_entry['sigma_gp_max'] = float(jnp.max(sigma))
                             except Exception:
@@ -316,12 +319,15 @@ def run_single(method_name, condition, seed, config):
         method_cfg=method_cfg,
         hocbf_cfg=hocbf_cfg,
         gp=gp,
-        is_nmpc=is_nmpc)
+        is_nmpc=is_nmpc,
+        use_phi_scaled_rollout=use_phi_scaled_rollout)
 
     eval_results['convergence_episode'] = convergence_episode
     eval_results['n_training_episodes'] = convergence_episode if is_nmpc else len(reward_history)
     eval_results['reward_history'] = reward_history[-100:] if len(reward_history) > 100 else reward_history
     eval_results['epsilon_log'] = epsilon_log
+    eval_results['rollout_mode'] = 'phi_scaled' if use_phi_scaled_rollout else 'drift_only_delta_g0'
+    eval_results['input_matrix_assumption'] = 'phi_scaled_control_effectiveness' if use_phi_scaled_rollout else 'delta_g_equals_zero'
 
     return eval_results
 
@@ -333,7 +339,8 @@ def _evaluate(model, trainer, safety_layer, qp_solver,
               n_episodes=10, n_steps=300,
               agc_schedule=None, method_name='ppo',
               condition='nominal', method_cfg=None,
-              hocbf_cfg=None, gp=None, is_nmpc=False):
+              hocbf_cfg=None, gp=None, is_nmpc=False,
+              use_phi_scaled_rollout=True):
     """Evaluate a trained policy across episodes, compute metrics."""
     # JIT-compile QP matrices function for fast evaluation
     jit_qp_fn = None
@@ -351,6 +358,9 @@ def _evaluate(model, trainer, safety_layer, qp_solver,
     all_control_costs = []
     all_min_barrier = []
     all_online_times = []
+    solver_attempts = 0
+    solver_failures = 0
+    max_solver_constraint_residual = 0.0
     per_type_violations = {
         'pressure': {'count': 0, 'steps': 0},
         'enthalpy': {'count': 0, 'steps': 0},
@@ -367,6 +377,7 @@ def _evaluate(model, trainer, safety_layer, qp_solver,
 
         if is_nmpc:
             nmpc = safety_layer  # NMPCController5th stored as safety_layer
+            nmpc.reset()
             x = x0
             violations = 0
             cbf_violations = 0
@@ -386,8 +397,18 @@ def _evaluate(model, trainer, safety_layer, qp_solver,
                 else:
                     v_opt = nmpc.compute_action(x)
                 online_times.append((time.perf_counter() - t0) * 1000)
+                solver_attempts += 1
+                if not nmpc.last_success:
+                    solver_failures += 1
+                max_solver_constraint_residual = max(
+                    max_solver_constraint_residual,
+                    float(nmpc.last_constraint_residual),
+                )
 
-                next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_opt)
+                if use_phi_scaled_rollout:
+                    next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_opt)
+                else:
+                    next_x = dynamics.step_stabilized(x[:NX], v_opt)
                 constraint_vals = constraint.check_all(next_x)
 
                 if any(v < 0 for v in constraint_vals.values()):
@@ -441,11 +462,13 @@ def _evaluate(model, trainer, safety_layer, qp_solver,
             if has_qp:
                 rollout, ep_reward, violations, cbf_violations, qp_times = _rollout_with_qp_5th(
                     model, dynamics, safety_layer, qp_solver, constraint,
-                    x0, u0, ep_key, n_steps, jit_qp_fn=jit_qp_fn)
+                    x0, u0, ep_key, n_steps, jit_qp_fn=jit_qp_fn,
+                    use_phi_scaled_rollout=use_phi_scaled_rollout)
                 all_online_times.extend(qp_times)
             else:
                 rollout, ep_reward, violations, cbf_violations, _ = _rollout_no_qp_5th(
-                    model, dynamics, constraint, x0, u0, ep_key, n_steps)
+                    model, dynamics, constraint, x0, u0, ep_key, n_steps,
+                    use_phi_scaled_rollout=use_phi_scaled_rollout)
 
             n_actual = rollout['obs'].shape[0]
             all_violation_rates.append(violations / max(n_actual, 1))
@@ -505,6 +528,10 @@ def _evaluate(model, trainer, safety_layer, qp_solver,
         'min_barrier_value': _mean_std(all_min_barrier),
         'online_time_ms': _mean_std(all_online_times) if all_online_times else (0.0, 0.0),
         'per_constraint_type': per_type_rates,
+        'solver_attempt_count': solver_attempts,
+        'solver_failure_count': solver_failures,
+        'solver_failure_rate': solver_failures / max(solver_attempts, 1),
+        'max_solver_constraint_residual': max_solver_constraint_residual,
     }
     return result
 
@@ -520,6 +547,8 @@ def run_lqr_rhocbf(condition, seed, config):
     eval_cfg = cfg.get('evaluation', {})
     hocbf_cfg = cfg.get('hocbf', {})
     method_cfg = cfg.get('methods_config', {}).get('ppo_rhocbf', {})
+    dyn_cfg = cfg.get('dynamics', {})
+    use_phi_scaled_rollout = dyn_cfg.get('use_phi_scaled_rollout', True)
 
     load_ratio = 1.0
     scenario = CONDITION_SCENARIO_MAP.get(condition)
@@ -548,14 +577,15 @@ def run_lqr_rhocbf(condition, seed, config):
         epsilon_floor=method_cfg.get('epsilon_floor', 0.0),
         k_pressure=k_p, k_enthalpy=k_h, k_power=k_n,
         u_max=method_cfg.get('u_max', 100.0),
-        use_mean_correction=method_cfg.get('use_mean_correction', True))
+        use_mean_correction=method_cfg.get('use_mean_correction', True),
+        use_phi_scaled_g=method_cfg.get('use_phi_scaled_g', True))
 
     qp_solver = DifferentiableQP(v_max=5.0)
 
     # JIT QP matrices
     try:
         jit_qp_fn = jax.jit(safety_layer.qp_matrices)
-        _ = jit_qp_fn(x0[:3])
+        _ = jit_qp_fn(x0)
     except Exception:
         jit_qp_fn = None
 
@@ -572,7 +602,8 @@ def run_lqr_rhocbf(condition, seed, config):
     for ep in range(n_episodes):
         violations, cbf_violations, qp_times = _rollout_lqr_5th(
             dynamics, safety_layer, qp_solver, constraint,
-            x0, u0, key, n_steps, jit_qp_fn=jit_qp_fn)
+            x0, u0, key, n_steps, jit_qp_fn=jit_qp_fn,
+            use_phi_scaled_rollout=use_phi_scaled_rollout)
         all_violation_rates.append(violations / n_steps)
         all_cbf_violation_rates.append(cbf_violations / n_steps)
         all_online_times.extend(qp_times)
@@ -581,6 +612,8 @@ def run_lqr_rhocbf(condition, seed, config):
         'violation_rate': _mean_std(all_violation_rates),
         'cbf_violation_rate': _mean_std(all_cbf_violation_rates),
         'online_time_ms': _mean_std(all_online_times),
+        'rollout_mode': 'phi_scaled' if use_phi_scaled_rollout else 'drift_only_delta_g0',
+        'input_matrix_assumption': 'phi_scaled_control_effectiveness' if use_phi_scaled_rollout else 'delta_g_equals_zero',
     }
 
 
@@ -624,9 +657,25 @@ def save_result(result, method_name, condition, seed, results_dir='results/phase
 # ---------- Main entry point ----------
 
 def run_all(config_path=None, methods=None, conditions=None,
-            seeds=None, results_dir='results/phase5/'):
+            seeds=None, results_dir='results/phase5/', overrides=None):
     """Run all experiments: methods × conditions × seeds."""
     config = load_config(config_path)
+    if overrides:
+        if any(k in overrides for k in ('max_episodes', 'min_episodes', 'n_steps_train')):
+            config.setdefault('training', {})
+            if 'max_episodes' in overrides:
+                config['training']['max_episodes'] = overrides['max_episodes']
+            if 'min_episodes' in overrides:
+                config['training']['min_episodes'] = overrides['min_episodes']
+            if 'n_steps_train' in overrides:
+                config['training']['n_steps'] = overrides['n_steps_train']
+        if any(k in overrides for k in ('n_episodes_eval', 'n_steps_eval')):
+            config.setdefault('evaluation', {})
+            if 'n_episodes_eval' in overrides:
+                config['evaluation']['n_episodes'] = overrides['n_episodes_eval']
+            if 'n_steps_eval' in overrides:
+                config['evaluation']['n_steps'] = overrides['n_steps_eval']
+                config['evaluation']['load_following_steps'] = overrides['n_steps_eval']
 
     if methods is None:
         methods = config.get('methods', list(METHODS_5TH.keys()))
@@ -684,8 +733,28 @@ if __name__ == "__main__":
                         help='Path to config YAML')
     parser.add_argument('--results-dir', type=str, default='results/phase5/',
                         help='Results directory')
+    parser.add_argument('--max-episodes', type=int, default=None,
+                        help='Override training max_episodes for this run')
+    parser.add_argument('--min-episodes', type=int, default=None,
+                        help='Override training min_episodes for this run')
+    parser.add_argument('--n-steps-train', type=int, default=None,
+                        help='Override training n_steps for this run')
+    parser.add_argument('--n-episodes-eval', type=int, default=None,
+                        help='Override evaluation n_episodes for this run')
+    parser.add_argument('--n-steps-eval', type=int, default=None,
+                        help='Override evaluation n_steps for this run')
     args = parser.parse_args()
+
+    overrides = {
+        k: v for k, v in {
+            'max_episodes': args.max_episodes,
+            'min_episodes': args.min_episodes,
+            'n_steps_train': args.n_steps_train,
+            'n_episodes_eval': args.n_episodes_eval,
+            'n_steps_eval': args.n_steps_eval,
+        }.items() if v is not None
+    }
 
     run_all(config_path=args.config, methods=args.methods,
             conditions=args.conditions, seeds=args.seeds,
-            results_dir=args.results_dir)
+            results_dir=args.results_dir, overrides=overrides)

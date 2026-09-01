@@ -1,5 +1,5 @@
-Tunable GP-HOCBF safety filter for supercritical boiler-turbine control
+Tunable GP-HOCBF safety filter for ultra-supercritical boiler-turbine control
 Overlay architecture protects pressure, enthalpy, and power constraints
-GP mean correction reduces HOCBF violations by more than 500 times
+GP mean correction reduces HOCBF violations by more than 500-fold
 Deployment envelope calibrates the robustness factor epsilon_kappa
 Real-time QP filtering is about 10 times faster than the implemented NMPC baseline

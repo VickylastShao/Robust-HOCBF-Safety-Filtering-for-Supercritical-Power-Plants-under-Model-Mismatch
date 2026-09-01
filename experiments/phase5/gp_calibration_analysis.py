@@ -16,7 +16,7 @@ sys.path.insert(0, os.getcwd())
 
 import jax, jax.numpy as jnp, numpy as np
 from envs.ccs.dynamics import USCCSDynamics5th, UncertainUSCCSDynamics5th
-from experiments.phase5.common_5th import train_gp_5th
+from experiments.phase5.common_5th import GP_STATE_IDX, train_gp_5th
 
 LOAD_RATIO = 1.0
 N_TRAIN = 2000          # Match paper: N=2000 pretraining points
@@ -34,7 +34,7 @@ SCENARIOS = {
     'S6: Fuel':       'fuel_quality',
 }
 
-DIM_NAMES = ['r_B (fuel)', 'p_m (pressure)', 'h_m (enthalpy)']
+DIM_NAMES = ['p_m (pressure)', 'h_m (enthalpy)', 'N_e (power)']
 
 
 def compute_beta(gamma_N, n_dims=3, delta=0.01):
@@ -55,7 +55,7 @@ def evaluate_coverage(gp, env, n_steps=N_HELDOUT, key=None):
 
     dynamics = USCCSDynamics5th(load_ratio=LOAD_RATIO)
     x0, u0 = dynamics.equilibrium(LOAD_RATIO)
-    n_dims = 3  # CCS 3rd-order core states
+    n_dims = 3
 
     beta = compute_beta(gp._gamma_N, n_dims=n_dims)
 
@@ -65,7 +65,7 @@ def evaluate_coverage(gp, env, n_steps=N_HELDOUT, key=None):
     sum_residual = np.zeros(n_dims)
 
     x = x0.copy()
-    max_dev_3d = jnp.array([30.0, 5.0, 300.0])
+    max_dev_gp = jnp.array([5.0, 300.0, 300.0])
     reset_noise_5d = jnp.array([5.0, 0.5, 50.0, 10.0, 1.0])
 
     for _ in range(n_steps):
@@ -80,15 +80,19 @@ def evaluate_coverage(gp, env, n_steps=N_HELDOUT, key=None):
         x_next = env.step_stabilized(x, v)
 
         # Linearized prediction (5th-order model: A_d is (5,5), B_d is (5,3))
-        A_d_core = dynamics._A_d[:3, :3]
-        B_d_core = dynamics._B_d[:3, :]
-        x_pred_core = dynamics._x0[:3] + A_d_core @ (x[:3] - dynamics._x0[:3]) + B_d_core @ v
+        x_pred = (
+            dynamics._x0
+            + dynamics._A_d @ (x - dynamics._x0)
+            + dynamics._B_d @ v
+        )
 
         # True residual
-        residual_true = (x_next[:3] - x_pred_core) / dynamics.dt
+        residual_true = (
+            x_next[GP_STATE_IDX] - x_pred[GP_STATE_IDX]
+        ) / dynamics.dt
 
         # GP prediction at current state
-        mu, sigma = gp.predict(x[:3])
+        mu, sigma = gp.predict(x[GP_STATE_IDX])
         residual_hat = residual_true - mu  # Δf̂ = true - mean
 
         # Check coverage: |Δf̂_j| ≤ β σ_j
@@ -101,7 +105,8 @@ def evaluate_coverage(gp, env, n_steps=N_HELDOUT, key=None):
         total += 1
 
         # Reset if drifted too far
-        if jnp.any(jnp.abs(x_next[:3] - x0[:3]) > max_dev_3d):
+        if jnp.any(
+                jnp.abs(x_next[GP_STATE_IDX] - x0[GP_STATE_IDX]) > max_dev_gp):
             key, reset_key = jax.random.split(key)
             x = x0 + reset_noise_5d * jax.random.normal(reset_key, (5,))
         else:

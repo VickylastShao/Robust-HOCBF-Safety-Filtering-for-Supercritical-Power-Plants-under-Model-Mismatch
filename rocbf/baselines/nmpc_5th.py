@@ -106,6 +106,20 @@ class NMPCController5th:
         self._prev_v = None
         self._prev_solution = None
         self._last_solve_time = 0.0
+        self._last_success = True
+        self._last_constraint_residual = 0.0
+        self._solve_count = 0
+        self._failure_count = 0
+
+    def reset(self):
+        """Reset disturbance estimation and warm-start state for a new episode."""
+        self._d_x = np.zeros(self.n_x)
+        self._prev_x = None
+        self._prev_v = None
+        self._prev_solution = None
+        self._last_solve_time = 0.0
+        self._last_success = True
+        self._last_constraint_residual = 0.0
 
     def update_disturbance(self, x_actual):
         """Update 5D state disturbance estimate from observed state transition.
@@ -211,10 +225,23 @@ class NMPCController5th:
             bounds=bounds, constraints=constraints,
             options={'maxiter': 50, 'ftol': 1e-4})
 
-        self._prev_solution = result.x.copy()
         self._last_solve_time = (time.perf_counter() - t0) * 1000
-
-        v_opt = result.x[:self.n_u]
+        finite = bool(np.all(np.isfinite(result.x)))
+        min_constraint = (
+            min(float(item['fun'](result.x)) for item in constraints)
+            if finite and constraints else 0.0
+        )
+        self._last_constraint_residual = max(0.0, -min_constraint)
+        self._last_success = bool(
+            result.success and finite and self._last_constraint_residual <= 1e-6)
+        self._solve_count += 1
+        if self._last_success:
+            self._prev_solution = result.x.copy()
+            v_opt = result.x[:self.n_u]
+        else:
+            self._failure_count += 1
+            self._prev_solution = None
+            v_opt = np.zeros(self.n_u)
 
         # Store for disturbance estimation at next step
         self._prev_x = x_np.copy()
@@ -226,3 +253,15 @@ class NMPCController5th:
     def last_solve_time_ms(self):
         """Return solve time of the last compute_action call (ms)."""
         return self._last_solve_time
+
+    @property
+    def last_success(self):
+        return self._last_success
+
+    @property
+    def last_constraint_residual(self):
+        return self._last_constraint_residual
+
+    @property
+    def solver_failure_rate(self):
+        return self._failure_count / max(self._solve_count, 1)

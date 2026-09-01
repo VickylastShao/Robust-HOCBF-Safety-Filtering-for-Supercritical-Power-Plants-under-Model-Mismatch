@@ -1,0 +1,73 @@
+{
+  "violation_rate": [
+    0.002,
+    0.0
+  ],
+  "cbf_violation_rate": [
+    0.002,
+    0.0
+  ],
+  "cumulative_reward": [
+    -13350.471796623997,
+    0.0
+  ],
+  "tracking_rmse": {
+    "pressure": [
+      5.162768422244036,
+      0.0
+    ],
+    "enthalpy": [
+      5.888557346213114,
+      0.0
+    ],
+    "power": [
+      0.003257067683388629,
+      0.0
+    ]
+  },
+  "control_cost": [
+    60452.98911653231,
+    0.0
+  ],
+  "min_barrier_value": [
+    -17.0,
+    0.0
+  ],
+  "online_time_ms": [
+    32.167820860631764,
+    2.142518527485842
+  ],
+  "per_constraint_type": {
+    "pressure": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 500
+    },
+    "enthalpy": {
+      "violation_rate": 0.002,
+      "violation_count": 1,
+      "total_steps": 500
+    },
+    "power": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 500
+    }
+  },
+  "solver_attempt_count": 500,
+  "solver_failure_count": 0,
+  "solver_failure_rate": 0.0,
+  "max_solver_constraint_residual": 1.6605194019803093e-07,
+  "convergence_episode": 0,
+  "n_training_episodes": 0,
+  "reward_history": [],
+  "epsilon_log": [],
+  "rollout_mode": "drift_only_delta_g0",
+  "input_matrix_assumption": "delta_g_equals_zero",
+  "method": "nmpc",
+  "condition": "s2_pressure",
+  "seed": 3,
+  "n_episodes": 1,
+  "n_steps": 500,
+  "prediction_horizon": 5
+}

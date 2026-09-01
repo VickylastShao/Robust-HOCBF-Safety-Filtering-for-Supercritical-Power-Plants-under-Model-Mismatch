@@ -1,0 +1,119 @@
+{
+  "windows": [
+    {
+      "window": "MW04",
+      "source_file": "MW04_CONTROLLER_EXPORT_5S.csv",
+      "rows": 1440,
+      "time_start": "2026-06-29T19:00:00+08:00",
+      "time_end": "2026-06-29T20:59:55+08:00",
+      "load_range_mw": [
+        562.9534,
+        621.1749
+      ],
+      "minimum_direct_margins": {
+        "separator_pressure_low_mpa": 2.216539000000001,
+        "main_pressure_upper_mpa": 2.173458,
+        "enthalpy_nearest_kjkg": 62.28369999999995,
+        "power_band_mw": 36.72907000000009
+      },
+      "minimum_logged_hocbf_margin": -0.032655737,
+      "qp_status_counts": {
+        "optimal": 1397,
+        "optimal_recovered": 43
+      },
+      "recovered_records": 43,
+      "fallback_or_recovery_records": 43,
+      "saturation_records": 1,
+      "recovered_pressure_low_margin_range_mpa": [
+        2.216539000000001,
+        2.363059
+      ],
+      "recovered_mg_plo_range": [
+        -0.032655737,
+        -0.005605127
+      ],
+      "qp_time_ms": {
+        "median": 3.5795000000000003,
+        "p95": 4.1949499999999995,
+        "max": 6.234
+      },
+      "task_time_ms": {
+        "median": 24.5935,
+        "p95": 26.23805,
+        "max": 28.665
+      }
+    },
+    {
+      "window": "MW05",
+      "source_file": "MW05_CONTROLLER_EXPORT_5S.csv",
+      "rows": 1440,
+      "time_start": "2026-06-30T14:00:00+08:00",
+      "time_end": "2026-06-30T15:59:55+08:00",
+      "load_range_mw": [
+        547.8807,
+        629.6958
+      ],
+      "minimum_direct_margins": {
+        "separator_pressure_low_mpa": 3.437540000000002,
+        "main_pressure_upper_mpa": 1.4832639999999984,
+        "enthalpy_nearest_kjkg": 20.353999999999814,
+        "power_band_mw": 37.053100000000086
+      },
+      "minimum_logged_hocbf_margin": 0.262098984,
+      "qp_status_counts": {
+        "optimal": 1440
+      },
+      "recovered_records": 0,
+      "fallback_or_recovery_records": 0,
+      "saturation_records": 0,
+      "recovered_pressure_low_margin_range_mpa": null,
+      "recovered_mg_plo_range": null,
+      "qp_time_ms": {
+        "median": 3.539,
+        "p95": 4.0741,
+        "max": 4.536
+      },
+      "task_time_ms": {
+        "median": 24.5895,
+        "p95": 26.13875,
+        "max": 27.678
+      }
+    },
+    {
+      "window": "MW06",
+      "source_file": "MW06_CONTROLLER_EXPORT_5S.csv",
+      "rows": 1440,
+      "time_start": "2026-06-26T23:00:00+08:00",
+      "time_end": "2026-06-27T00:59:55+08:00",
+      "load_range_mw": [
+        480.675,
+        619.3364
+      ],
+      "minimum_direct_margins": {
+        "separator_pressure_low_mpa": 2.7049410000000016,
+        "main_pressure_upper_mpa": 0.46338200000000285,
+        "enthalpy_nearest_kjkg": 0.3593999999998232,
+        "power_band_mw": 40.27148
+      },
+      "minimum_logged_hocbf_margin": 0.115845421,
+      "qp_status_counts": {
+        "optimal": 1440
+      },
+      "recovered_records": 0,
+      "fallback_or_recovery_records": 0,
+      "saturation_records": 0,
+      "recovered_pressure_low_margin_range_mpa": null,
+      "recovered_mg_plo_range": null,
+      "qp_time_ms": {
+        "median": 3.557,
+        "p95": 4.06225,
+        "max": 4.59
+      },
+      "task_time_ms": {
+        "median": 24.5245,
+        "p95": 26.159,
+        "max": 27.691
+      }
+    }
+  ]
+}

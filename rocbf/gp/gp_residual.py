@@ -19,10 +19,17 @@ class GPResidual:
         State dimension (2 for double integrator).
     noise_variance : float
         Observation noise σ_n² (shared across dimensions).
+    input_ranges : array-like, optional
+        Engineering ranges used only to floor each training-input standard
+        deviation at range × 1e-6.
+    standardize_inputs : bool
+        If true, compute the kernel on a frozen per-input training z-score.
     """
 
     def __init__(self, n_dims: int, noise_variance: float = 1e-4,
-                 sigma_floor: float | None = None):
+                 sigma_floor: float | None = None,
+                 input_ranges: jnp.ndarray | None = None,
+                 standardize_inputs: bool = True):
         self.n_dims = n_dims
         self.noise_variance = noise_variance
         # Separate floor for predict-time uncertainty (accounts for model
@@ -30,13 +37,26 @@ class GPResidual:
         # Decoupling allows small noise_variance for fit quality while
         # keeping a larger floor to prevent ε from dropping too low.
         self.sigma_floor = sigma_floor if sigma_floor is not None else noise_variance
+        self.standardize_inputs = standardize_inputs
+
+        if input_ranges is not None:
+            input_ranges = jnp.asarray(input_ranges)
+            if input_ranges.shape != (n_dims,):
+                raise ValueError(
+                    f"input_ranges must have shape ({n_dims},), got {input_ranges.shape}")
+            if bool(jnp.any(input_ranges <= 0)):
+                raise ValueError("input_ranges must be strictly positive")
+        self._input_ranges = input_ranges
 
         # Hyperparameters per dimension: (length_scale, signal_variance)
         # Initialized during fit()
         self._hyperparams = None
 
         # Posterior quantities (set by fit)
-        self._X = None
+        self._X = None       # standardized training inputs used by the kernel
+        self._X_raw = None   # physical-unit inputs retained for incremental updates
+        self._x_mean = None
+        self._x_std = None
         self._L = None       # Cholesky factor of K + σ_n² I
         self._alpha = None   # L⁻ᵀ L⁻¹ y for each dim
         self._N = 0
@@ -88,7 +108,8 @@ class GPResidual:
         return nll
 
     def fit(self, X: jnp.ndarray, Y: jnp.ndarray, jitter: float = 1e-3,
-            n_optim_iters: int = 100, lr: float = 0.01):
+            n_optim_iters: int = 100, lr: float = 0.01,
+            _reuse_normalization: bool = False):
         """Fit per-dimension GP models on residual data.
 
         Parameters
@@ -99,14 +120,40 @@ class GPResidual:
         n_optim_iters : gradient descent steps for hyperparameter optimization
         lr : learning rate for hyperparameter optimization
         """
+        X = jnp.asarray(X)
+        Y = jnp.asarray(Y)
         N, n_dims = X.shape
-        assert n_dims == self.n_dims
+        if n_dims != self.n_dims:
+            raise ValueError(
+                f"X must have {self.n_dims} columns, got {n_dims}")
+        if Y.shape != (N, self.n_dims):
+            raise ValueError(
+                f"Y must have shape ({N}, {self.n_dims}), got {Y.shape}")
+
+        if _reuse_normalization:
+            if self._x_mean is None or self._x_std is None:
+                raise RuntimeError("Cannot reuse input normalization before fit()")
+        else:
+            self._x_mean = jnp.mean(X, axis=0)
+            observed_range = jnp.ptp(X, axis=0)
+            reference_range = (
+                self._input_ranges
+                if self._input_ranges is not None
+                else jnp.maximum(observed_range, 1.0)
+            )
+            std_floor = jnp.maximum(reference_range * 1e-6, 1e-12)
+            self._x_std = jnp.maximum(jnp.std(X, axis=0), std_floor)
+
+        X_raw = X
+        X = self._transform_inputs(X_raw)
+        self._X_raw = X_raw
         self._X = X
         self._N = N
 
         # Normalize targets: zero mean, unit variance per dimension
-        self._y_mean = jnp.mean(Y, axis=0)
-        self._y_std = jnp.maximum(jnp.std(Y, axis=0), 1e-6)
+        if not _reuse_normalization:
+            self._y_mean = jnp.mean(Y, axis=0)
+            self._y_std = jnp.maximum(jnp.std(Y, axis=0), 1e-6)
         Y_norm = (Y - self._y_mean) / self._y_std
 
         # Initialize hyperparameters per dimension
@@ -218,6 +265,14 @@ class GPResidual:
         # cho_solve reconstruction from normalized alpha)
         self._Y = Y
 
+    def _transform_inputs(self, X: jnp.ndarray) -> jnp.ndarray:
+        """Apply the frozen training-input transform used by the kernel."""
+        if not self.standardize_inputs:
+            return X
+        if self._x_mean is None or self._x_std is None:
+            raise RuntimeError("Input normalization is unavailable before fit()")
+        return (X - self._x_mean) / self._x_std
+
     def predict(self, x_new: jnp.ndarray) -> tuple[jnp.ndarray, jnp.ndarray]:
         """Predict GP posterior mean and std at new point(s).
 
@@ -233,9 +288,14 @@ class GPResidual:
         if self._X is None:
             raise RuntimeError("GP not fitted yet. Call fit() first.")
 
+        x_new = jnp.asarray(x_new)
         single = x_new.ndim == 1
         if single:
             x_new = x_new[None, :]  # (1, n_dims)
+        if x_new.shape[-1] != self.n_dims:
+            raise ValueError(
+                f"x_new must have {self.n_dims} columns, got {x_new.shape[-1]}")
+        x_new = self._transform_inputs(x_new)
 
         B = x_new.shape[0]
         mu_all = []
@@ -306,16 +366,22 @@ class GPResidual:
         # numerically unstable for CCS data with large y_norm values)
         Y_old = self._Y
 
-        X_combined = jnp.concatenate([self._X, X_new], axis=0)
+        X_new = jnp.asarray(X_new)
+        Y_new = jnp.asarray(Y_new)
+        X_combined_raw = jnp.concatenate([self._X_raw, X_new], axis=0)
         Y_combined = jnp.concatenate([jnp.array(Y_old), Y_new], axis=0)
 
         if reoptimize_hyperparams:
-            self.fit(X_combined, Y_combined, jitter=jitter,
-                     n_optim_iters=n_optim_iters, lr=lr)
+            self.fit(X_combined_raw, Y_combined, jitter=jitter,
+                     n_optim_iters=n_optim_iters, lr=lr,
+                     _reuse_normalization=True)
         else:
             # Keep existing hyperparameters and normalization — only
             # recompute the Cholesky posterior with the larger dataset.
+            X_combined = jnp.concatenate(
+                [self._X, self._transform_inputs(X_new)], axis=0)
             self._X = X_combined
+            self._X_raw = X_combined_raw
             self._N = X_combined.shape[0]
             self._Y = Y_combined
 
@@ -380,6 +446,20 @@ class GPResidual:
     def gamma_N(self) -> float:
         """Maximum information gain computed from the kernel matrix."""
         return self._gamma_N
+
+    @property
+    def input_mean(self) -> jnp.ndarray:
+        """Frozen training-input mean in physical units."""
+        if self._x_mean is None:
+            raise RuntimeError("GP not fitted yet. Call fit() first.")
+        return self._x_mean
+
+    @property
+    def input_std(self) -> jnp.ndarray:
+        """Frozen training-input standard deviation in physical units."""
+        if self._x_std is None:
+            raise RuntimeError("GP not fitted yet. Call fit() first.")
+        return self._x_std
 
 
 def collect_gp_data(dynamics, n_transitions: int = 5000,

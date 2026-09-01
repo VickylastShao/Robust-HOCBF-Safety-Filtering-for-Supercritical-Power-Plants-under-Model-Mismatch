@@ -6,10 +6,15 @@ Generates:
 3. Quantitative recommendation table (LaTeX)
 """
 
-import json, os
+import json, os, sys
 import numpy as np
 from pathlib import Path
 from collections import defaultdict
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+
+from scripts.mc_figure_style import apply_times_new_roman_style
 
 
 # ---- Configuration ----
@@ -33,6 +38,20 @@ S3_COLORS = {
     's3_coupled': '#0072B2',     # Okabe-Ito blue
     's3_midstrong': '#D55E00',   # Okabe-Ito vermillion
     's3_strong': '#CC79A7',      # Okabe-Ito reddish purple
+}
+
+S3_MARKERS = {
+    's3_weak': 'o',
+    's3_coupled': 's',
+    's3_midstrong': '^',
+    's3_strong': 'D',
+}
+
+S3_LINESTYLES = {
+    's3_weak': '-',
+    's3_coupled': '--',
+    's3_midstrong': '-.',
+    's3_strong': ':',
 }
 
 S3_GAMMAS = {
@@ -111,15 +130,15 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
         return
 
     os.makedirs(output_dir, exist_ok=True)
+    apply_times_new_roman_style(base_size=8)
     plt.rcParams.update({
         'font.size': 8,
-        'axes.labelsize': 9,
-        'axes.titlesize': 9,
-        'legend.fontsize': 7,
-        'xtick.labelsize': 8,
-        'ytick.labelsize': 8,
-        'pdf.fonttype': 42,
-        'ps.fonttype': 42,
+        'axes.labelsize': 8.5,
+        'axes.titlesize': 8.5,
+        'legend.fontsize': 6.8,
+        'xtick.labelsize': 7.5,
+        'ytick.labelsize': 7.5,
+        'axes.linewidth': 0.7,
     })
 
     data = load_kappa_results()
@@ -141,7 +160,11 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
 
     kappas = sorted(data.keys())
 
-    fig, ax = plt.subplots(figsize=(7.2, 3.9))
+    fig, (ax, ax_hm) = plt.subplots(
+        1, 2, figsize=(7.2, 3.65),
+        gridspec_kw={'width_ratios': [1.35, 1.0]},
+        constrained_layout=True,
+    )
 
     colors = {'s2_pressure': '#0072B2',    # Okabe-Ito blue
               's3_coupled': '#D55E00',     # Okabe-Ito vermillion
@@ -168,9 +191,18 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
         marker = markers.get(condition, 'x')
         label = RESULT_LABELS.get(condition, condition)
 
+        for kappa, vals in ((k, data[k][condition]) for k in ks):
+            offsets = np.linspace(-0.014, 0.014, max(len(vals), 1))
+            for offset, val in zip(offsets, vals):
+                ax.scatter(kappa + offset, val * 100,
+                           color=color, marker=marker, s=20,
+                           edgecolor='white', linewidth=0.35,
+                           alpha=0.76, zorder=3)
+
         ax.errorbar(ks, means, yerr=stds, label=label,
-                    color=color, marker=marker, markersize=8,
-                    linewidth=1.8, capsize=3.5, alpha=0.9)
+                    color=color, marker=marker, markersize=5.0,
+                    linewidth=1.35, capsize=3.0, alpha=0.95,
+                    zorder=4)
 
         # Mark optimal κ
         opt_idx = np.argmin(means)
@@ -198,12 +230,62 @@ def plot_kappa_curves(output_dir='results/phase5/figures/'):
             fontsize=7, color='0.35')
     ax.set_xlabel(r'Robustness scaling $\epsilon_\kappa$')
     ax.set_ylabel('Violation rate (%)')
-    ax.legend(loc='upper left', frameon=False, ncol=1)
-    ax.grid(True, alpha=0.22, linewidth=0.6)
+    ax.legend(loc='upper left', frameon=False, ncol=1, handlelength=2.0)
+    ax.grid(True, axis='y', alpha=0.24, linewidth=0.55)
     ax.set_xlim(-0.05, 1.05)
     ax.set_ylim(-3, 105)
 
-    plt.tight_layout()
+    heat_conditions = conditions
+    heat_matrix = np.full((len(heat_conditions), len(kappas)), np.nan)
+    for i, condition in enumerate(heat_conditions):
+        for j, kappa in enumerate(kappas):
+            vals = data[kappa].get(condition, [])
+            if vals:
+                heat_matrix[i, j] = np.mean(vals) * 100
+
+    im = ax_hm.imshow(
+        heat_matrix,
+        aspect='auto',
+        cmap='cividis',
+        vmin=0,
+        vmax=100,
+        interpolation='nearest',
+    )
+    ax_hm.set_xticks(np.arange(len(kappas)))
+    ax_hm.set_xticklabels([f'{k:g}' for k in kappas])
+    ax_hm.set_yticks(np.arange(len(heat_conditions)))
+    ax_hm.set_yticklabels([
+        RESULT_LABELS.get(c, c).replace('S2: ', 'S2\n')
+        .replace('S3: ', 'S3\n')
+        .replace('S4: ', 'S4\n')
+        for c in heat_conditions
+    ])
+    ax_hm.set_xlabel(r'$\epsilon_\kappa$')
+    ax_hm.set_title('Mean violation heatmap', loc='left', pad=3)
+
+    from matplotlib.patches import Rectangle
+    for i, condition in enumerate(heat_conditions):
+        for j, kappa in enumerate(kappas):
+            value = heat_matrix[i, j]
+            if np.isnan(value):
+                continue
+            text_color = 'white' if value < 60 else 'black'
+            ax_hm.text(j, i, f'{value:.1f}' if value < 10 else f'{value:.0f}',
+                       ha='center', va='center', fontsize=6.6,
+                       color=text_color)
+            if value < 1.0:
+                ax_hm.add_patch(
+                    Rectangle((j - 0.5, i - 0.5), 1, 1,
+                              fill=False, edgecolor='#009E73',
+                              linewidth=1.25)
+                )
+    ax_hm.tick_params(length=0)
+    for spine in ax_hm.spines.values():
+        spine.set_visible(False)
+    cbar = fig.colorbar(im, ax=ax_hm, fraction=0.052, pad=0.035)
+    cbar.ax.tick_params(labelsize=6.5, length=2)
+    cbar.set_label('Mean violation (%)', fontsize=7)
+
     fig.savefig(f'{output_dir}kappa_sensitivity.png', dpi=300,
                 bbox_inches='tight')
     fig.savefig(f'{output_dir}kappa_sensitivity.pdf', bbox_inches='tight')
@@ -428,6 +510,7 @@ def plot_kappa_gradient(output_dir='results/phase5/figures/'):
         print("No S3 gradient data found — run kappa sweep first")
         return
 
+    apply_times_new_roman_style(base_size=8)
     plt.rcParams.update({
         'font.size': 8,
         'axes.labelsize': 9,
@@ -435,13 +518,11 @@ def plot_kappa_gradient(output_dir='results/phase5/figures/'):
         'legend.fontsize': 7,
         'xtick.labelsize': 8,
         'ytick.labelsize': 8,
-        'pdf.fonttype': 42,
-        'ps.fonttype': 42,
     })
 
     # ---- Combined plot: violation curves + deployment envelope ----
     fig, (ax, ax2) = plt.subplots(
-        1, 2, figsize=(7.2, 3.6),
+        1, 2, figsize=(7.2, 3.75),
         gridspec_kw={'width_ratios': [1.45, 1.0]},
         constrained_layout=True,
     )
@@ -464,12 +545,16 @@ def plot_kappa_gradient(output_dir='results/phase5/figures/'):
             continue
 
         color = S3_COLORS[condition]
+        marker = S3_MARKERS[condition]
+        linestyle = S3_LINESTYLES[condition]
         gamma = S3_GAMMAS[condition]
         label = f'{S3_LABELS[condition]}'
 
         ax.errorbar(ks, means, yerr=stds, label=label,
-                    color=color, marker='o', markersize=6.5,
-                    linewidth=1.8, capsize=3.5, alpha=0.9)
+                    color=color, marker=marker, linestyle=linestyle,
+                    markersize=6.5, linewidth=1.8, capsize=3.5,
+                    alpha=0.94, markeredgecolor='white',
+                    markeredgewidth=0.45)
 
         # Mark optimal κ
         opt_idx = np.argmin(means)
@@ -491,7 +576,17 @@ def plot_kappa_gradient(output_dir='results/phase5/figures/'):
     ax.set_xlabel(r'Robustness scaling $\epsilon_\kappa$')
     ax.set_ylabel('Violation rate (%)')
     ax.set_title('(a) Coupling-strength sweep', loc='left', pad=3)
-    ax.legend(loc='upper left', frameon=False)
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        loc='upper center',
+        bbox_to_anchor=(0.42, 1.035),
+        ncol=4,
+        frameon=False,
+        handlelength=1.8,
+        columnspacing=1.2,
+    )
     ax.grid(True, alpha=0.22, linewidth=0.6)
     ax.set_xlim(-0.05, 1.05)
     ax.set_ylim(-3, 105)

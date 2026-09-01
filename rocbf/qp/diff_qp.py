@@ -137,22 +137,55 @@ class DifferentiableQP:
 
         return qpax.solve_qp_primal(P_reg, q, A_eq, b_eq, G, h)
 
+    def solve_checked_jax(self, u_proposed: jnp.ndarray,
+                          G: jnp.ndarray, h: jnp.ndarray,
+                          fallback_v: jnp.ndarray | None = None,
+                          feasibility_tol: float = 1e-6,
+                          backend: str = "i",
+                          solver_tol: float = 1e-6,
+                          max_iter: int = 100):
+        """Solve with qpax and return JAX-compatible acceptance diagnostics."""
+        import qpax
+
+        if fallback_v is None:
+            fallback_v = jnp.zeros_like(u_proposed)
+        n = u_proposed.shape[0]
+        P = jnp.eye(n) + self.regularization * jnp.eye(n)
+        q = -u_proposed
+        if self.scale_constraints:
+            G, h = self._scale_constraints(G, h)
+        G, h = self._add_box_constraints(G, h, n)
+        A_eq = jnp.zeros((0, n))
+        b_eq = jnp.zeros(0)
+        candidate, _, _, _, converged, iterations = qpax.solve_qp(
+            P, q, A_eq, b_eq, G, h,
+            backend=backend, solver_tol=solver_tol, max_iter=max_iter)
+        finite = jnp.all(jnp.isfinite(candidate))
+        residual = jnp.max(G @ candidate - h)
+        residual = jnp.where(finite, residual, jnp.inf)
+        success = converged & finite & (residual <= feasibility_tol)
+        accepted = jnp.where(success, candidate, fallback_v)
+        if self.v_max is not None and self.v_max > 0:
+            accepted = jnp.clip(accepted, -self.v_max, self.v_max)
+        return accepted, success, residual, iterations
+
     def solve_with_rl_action(self, u_rl: jnp.ndarray,
                               G: jnp.ndarray, h: jnp.ndarray,
                               differentiable: bool = True,
                               fallback_v: jnp.ndarray | None = None,
-                              weak_authority_threshold: float = 0.01):
+                              weak_authority_threshold: float | None = None,
+                              droppable_mask: jnp.ndarray | None = None,
+                              feasibility_tol: float = 1e-6,
+                              return_info: bool = False):
         """Convenience method: solve min ‖u - u_rl‖² s.t. Gu ≤ h, -v_max ≤ u ≤ v_max.
 
         For non-differentiable solves, uses scipy SLSQP which handles
         ill-conditioned constraints better than qpax.
         For differentiable solves, uses qpax with NaN fallback to 0.
 
-        When QP is infeasible due to constraints with negligible control
-        authority (||G_i|| < threshold), those constraints are dropped and
-        the QP is re-solved without them. This prevents SLSQP from finding
-        a least-violated solution that is worse than no action for
-        near-zero-authority constraints (e.g., CCS pressure CBF).
+        Weak-authority row removal is opt-in. A row can be removed only when
+        both ``weak_authority_threshold`` and an explicit ``droppable_mask``
+        are supplied. The default solves the original full-row QP.
 
         Parameters
         ----------
@@ -165,8 +198,14 @@ class DifferentiableQP:
         fallback_v : (n,) or None
             Action to use when solver fails. Default: zeros (LQR-only).
         weak_authority_threshold : float
-            Constraints with ||G_i|| below this and h_i < 0 are dropped
-            as they have negligible control authority and make QP infeasible.
+            Optional authority threshold for explicitly whitelisted rows.
+        droppable_mask : (p,) bool array or None
+            Explicit whitelist. Rows marked false are never removed.
+        feasibility_tol : float
+            Maximum normalized primal residual accepted for a successful
+            non-differentiable solve.
+        return_info : bool
+            If true for a non-differentiable solve, append a diagnostic dict.
 
         Returns
         -------
@@ -176,23 +215,40 @@ class DifferentiableQP:
         if fallback_v is None:
             fallback_v = jnp.zeros_like(u_rl)
 
-        # Drop infeasible constraints with negligible control authority.
-        # These constraints have ||G_i|| ≈ 0 (can't influence the action)
-        # and h_i < 0 (already violated). Including them makes QP infeasible
-        # and SLSQP's least-violation solution can be worse than v=0.
-        # Constraints with significant authority (||G_i|| > threshold) are
-        # kept even if infeasible — SLSQP can find recovery actions for them.
-        row_norms = jnp.linalg.norm(G, axis=1)
-        keep = jnp.where(
-            (h >= 0) | (row_norms >= weak_authority_threshold),
-            True, False
-        )
-        if not jnp.all(keep):
+        dropped_rows = jnp.zeros(G.shape[0], dtype=bool)
+        if weak_authority_threshold is not None and droppable_mask is not None:
+            droppable_mask = jnp.asarray(droppable_mask, dtype=bool)
+            if droppable_mask.shape != (G.shape[0],):
+                raise ValueError(
+                    f"droppable_mask must have shape ({G.shape[0]},), "
+                    f"got {droppable_mask.shape}")
+            row_norms = jnp.linalg.norm(G, axis=1)
+            dropped_rows = (
+                droppable_mask
+                & (h < -feasibility_tol)
+                & (row_norms < weak_authority_threshold)
+            )
+            keep = ~dropped_rows
             G = G[keep]
             h = h[keep]
 
         if not differentiable:
-            return self._solve_scipy(u_rl, G, h, fallback_v)
+            result = self._solve_scipy(
+                u_rl, G, h, fallback_v,
+                feasibility_tol=feasibility_tol,
+                return_info=return_info,
+            )
+            if return_info:
+                u_star, lambda_star, info = result
+                info["dropped_row_indices"] = [
+                    int(i) for i in jnp.where(dropped_rows)[0]
+                ]
+                return u_star, lambda_star, info
+            return result
+
+        if return_info:
+            raise ValueError(
+                "return_info is available only for non-differentiable solves")
 
         # Differentiable path: use qpax with fallback
         n = u_rl.shape[0]
@@ -207,7 +263,9 @@ class DifferentiableQP:
 
     def _solve_scipy(self, u_rl: jnp.ndarray,
                      G: jnp.ndarray, h: jnp.ndarray,
-                     fallback_v: jnp.ndarray | None = None):
+                     fallback_v: jnp.ndarray | None = None,
+                     feasibility_tol: float = 1e-6,
+                     return_info: bool = False):
         """Solve QP using scipy SLSQP (robust but not differentiable).
 
         Solves: min ||u - u_rl||^2  s.t. G u <= h, -v_max <= u <= v_max
@@ -251,14 +309,46 @@ class DifferentiableQP:
             constraints=constraints_scipy, bounds=bounds,
             options={'ftol': 1e-12, 'maxiter': 500})
 
-        u_star = jnp.array(result.x)
+        u_candidate = jnp.array(result.x)
         lambda_star = jnp.zeros(len(h_np))
 
-        if not jnp.all(jnp.isfinite(u_star)):
-            u_star = fallback_v
-
-        # Safety clip
+        # Apply the same box projection used by the online layer before
+        # evaluating primal feasibility.
         if self.v_max is not None and self.v_max > 0:
-            u_star = jnp.clip(u_star, -self.v_max, self.v_max)
+            u_candidate = jnp.clip(u_candidate, -self.v_max, self.v_max)
+
+        finite = bool(jnp.all(jnp.isfinite(u_candidate)))
+        if G.shape[0] > 0 and finite:
+            G_eval, h_eval = self._scale_constraints(G, h)
+            max_constraint_residual = float(jnp.max(G_eval @ u_candidate - h_eval))
+        else:
+            max_constraint_residual = 0.0 if finite else float("inf")
+        if self.v_max is not None and self.v_max > 0 and finite:
+            max_box_residual = float(
+                jnp.max(jnp.abs(u_candidate) - float(self.v_max)))
+        else:
+            max_box_residual = 0.0 if finite else float("inf")
+
+        feasible = (
+            bool(result.success)
+            and finite
+            and max_constraint_residual <= feasibility_tol
+            and max_box_residual <= feasibility_tol
+        )
+        u_star = u_candidate if feasible else fallback_v
+
+        if return_info:
+            info = {
+                "success": feasible,
+                "solver_success": bool(result.success),
+                "status": "optimal" if feasible else "infeasible_or_failed",
+                "solver_status_code": int(result.status),
+                "solver_message": str(result.message),
+                "iterations": int(getattr(result, "nit", 0)),
+                "max_normalized_constraint_residual": max_constraint_residual,
+                "max_box_residual": max_box_residual,
+                "fallback_used": not feasible,
+            }
+            return u_star, lambda_star, info
 
         return u_star, lambda_star

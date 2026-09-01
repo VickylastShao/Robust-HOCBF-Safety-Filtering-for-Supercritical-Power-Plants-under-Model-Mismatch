@@ -35,13 +35,13 @@ State x → Actor (PPO) → u_rl → CBF constraint matrices (A,b,ε) → QP pro
 - `rocbf/baselines/` — PPO-Lagrangian (dual descent), NMPC (scipy SLSQP with disturbance correction), PPO-CBF (first-order CBF ablation), LQR-RHOCBF
 - `rocbf/policy/` — SafePolicy and RobustSafePolicy wrappers (actor + CBF + QP)
 - `envs/safe_navigation/` — Double integrator with circular keep-out zone (Phase 1-2)
-- `envs/ccs/` — 1000 MW USC CCS boiler-turbine: 3rd-order (r_B, p_m, h_m) and 5th-order (+ N_e, τ_f dynamics). Padé fuel delay, LQR stabilization, configurable uncertainty scenarios
+- `envs/ccs/` — USC CCS boiler-turbine benchmark: 3rd-order (r_B, p_m, h_m) and 5th-order (+ N_e, τ_f dynamics). Padé fuel delay, LQR stabilization, configurable uncertainty scenarios
 - `envs/triple_integrator/` — Triple integrator for m=3 HOCBF testing
 - `experiments/phase1_validation/` through `experiments/phase5/` — Phase-specific training/validation scripts
 - `experiments/phase4/` — The big experiment runner: `methods.py` (method registry + rollout), `run_experiment.py` (main orchestrator), `analyze_results.py`
 - `configs/` — YAML configs per phase (`phase1.yaml` through `phase4.yaml`)
 - `tests/` — Unit tests mirroring the core modules
-- `paper/` — LaTeX manuscript for IEEE TAC
+- `paper/` — active Measurement and Control manuscript and major-revision sources
 - `results/phase4/` — Experiment output (JSON result files)
 
 ## Development
@@ -129,7 +129,7 @@ Defined in `envs/ccs/dynamics.py`:
 - **S4: Nonlinear fouling** — quadratic pressure dependence (simulates heat exchanger degradation)
 - **S5: Valve degradation** — affects pressure + enthalpy + power (5th-order model only)
 - **S6: Fuel quality variation** — reduced heat release + power drop (5th-order model only)
-- **Load following** — AGC schedule ramping between 750 MW and 1000 MW
+- **Load following** — AGC schedule ramping over the configured benchmark load range
 
 ## Phase Progress
 
@@ -137,4 +137,4 @@ Defined in `envs/ccs/dynamics.py`:
 - [x] Phase 2: Robustness Injection (GP + Robust HOCBF)
 - [x] Phase 3: CCS Scenario Deployment
 - [ ] Phase 4: Full Experiments (8 methods × 6 conditions × 5 seeds)
-- [ ] Phase 5: Paper Writing (IEEE TAC)
+- [ ] Phase 5: Measurement and Control major revision and submission package

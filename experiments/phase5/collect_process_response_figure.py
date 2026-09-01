@@ -23,10 +23,13 @@ RESULTS_DIR = ROOT / "results" / "phase5"
 OUT_JSON = RESULTS_DIR / "process_response_trajectories.json"
 
 LOAD_RATIO = 1.0
-N_STEPS = 300
+DT_SEC = 1.0
+TOTAL_TIME_SEC = 300.0
+N_STEPS = int(round(TOTAL_TIME_SEC / DT_SEC))
 V_MAX = 5.0
 INTERVENTION_THRESHOLD = 0.01
 H_LOW = 2670.0
+VIOLATION_TOL = 1e-2
 H_HIGH = 2830.0
 
 
@@ -53,8 +56,8 @@ METHODS = [
     ),
     MethodSpec(
         key="gp_k01",
-        label="RoCBF-Net calibrated (epsilon_kappa=0.1)",
-        epsilon_kappa=0.1,
+        label="RoCBF-SF calibrated (epsilon_kappa=0.02)",
+        epsilon_kappa=0.02,
         use_gp=True,
     ),
 ]
@@ -125,11 +128,20 @@ def _summarize_rollout(record: dict, n_steps: int) -> dict[str, float | int | di
     }
     first = np.flatnonzero(violations)
     summary["first_violation_step"] = int(first[0]) if first.size else -1
+    summary["first_violation_time_s"] = (
+        float(record["time_action_s"][int(first[0])]) if first.size else -1.0
+    )
     return summary
 
 
-def _build_filters():
+def _time_grid(n_steps: int, dt_sec: float, *, include_endpoint: bool) -> list[float]:
+    n = n_steps + 1 if include_endpoint else n_steps
+    return [round(i * dt_sec, 10) for i in range(n)]
+
+
+def _build_filters(dt_sec: float, gp_seed: int):
     import jax
+    jax.config.update("jax_enable_x64", True)
 
     from envs.ccs.constraints import CCSConstraints5th
     from envs.ccs.dynamics import USCCSDynamics5th
@@ -139,7 +151,7 @@ def _build_filters():
         _pretrain_gp_5th,
     )
 
-    dynamics = USCCSDynamics5th(load_ratio=LOAD_RATIO)
+    dynamics = USCCSDynamics5th(dt=dt_sec, load_ratio=LOAD_RATIO)
     x0, u0 = dynamics.equilibrium(LOAD_RATIO)
     constraint = CCSConstraints5th(
         p_bounds=(13.0, 24.0),
@@ -153,16 +165,17 @@ def _build_filters():
         dynamics,
         constraint,
         u0,
-        use_phi_scaled_g=True,
+        use_phi_scaled_g=False,
     )
 
     print("Pretraining scenario-specific GP for S3 coupled (N=500)...", flush=True)
     gp = _pretrain_gp_5th(
         LOAD_RATIO,
         n_pretrain=500,
-        key=jax.random.key(42),
+        key=jax.random.key(gp_seed),
         scenario="coupled",
         scenario_specific=True,
+        dt_sec=dt_sec,
     )
 
     print("Building GP-HOCBF filters for epsilon_kappa=0 and 0.1...", flush=True)
@@ -173,7 +186,7 @@ def _build_filters():
         u0,
         use_mean_correction=True,
         epsilon_kappa=0.0,
-        use_phi_scaled_g=True,
+        use_phi_scaled_g=False,
     )
     gp_k01 = _make_robust_hocbf_5th(
         dynamics,
@@ -181,8 +194,8 @@ def _build_filters():
         gp,
         u0,
         use_mean_correction=True,
-        epsilon_kappa=0.1,
-        use_phi_scaled_g=True,
+        epsilon_kappa=0.02,
+        use_phi_scaled_g=False,
     )
 
     filters = {
@@ -197,13 +210,18 @@ def _build_filters():
     return dynamics, constraint, filters
 
 
-def _reference_action(reference: str, dynamics, x, x0, v_max: float):
+def _reference_action(reference: str, dynamics, x, x0, v_max: float,
+                      *, step: int, seed: int, key):
     import jax.numpy as jnp
+
+    from experiments.phase5.run_drift_only_fixed_proposal import proposal_action
 
     if reference == "zero":
         v_ref = jnp.zeros(3)
     elif reference == "lqr_residual":
         v_ref = -dynamics.K @ (x - x0)
+    elif reference == "fixed_proposal":
+        v_ref = proposal_action(step, 0, seed, key)
     else:
         raise ValueError(f"Unknown reference action: {reference}")
     return jnp.clip(v_ref, -v_max, v_max)
@@ -220,23 +238,35 @@ def _rollout_method(
     reference: str,
     v_max: float,
     intervention_threshold: float,
+    dt_sec: float,
+    rollout_seed: int,
 ) -> dict:
+    import jax
     import jax.numpy as jnp
 
     from envs.ccs.dynamics import UncertainUSCCSDynamics5th
+    from experiments.phase5.run_drift_only_fixed_proposal import sample_initial_state
     from rocbf.qp.diff_qp import DifferentiableQP
 
     env = UncertainUSCCSDynamics5th(
+        dt=dt_sec,
         load_ratio=LOAD_RATIO,
         uncertainty_scenario="coupled",
     )
     qp = DifferentiableQP(v_max=v_max, scale_constraints=True)
+    checked_qp = jax.jit(
+        lambda v_prop, A, b: qp.solve_checked_jax(
+            v_prop, A, b, fallback_v=v_prop, feasibility_tol=1e-6))
     x0, _ = nominal_dynamics.equilibrium(LOAD_RATIO)
-    x = x0.copy()
+    key = jax.random.key(rollout_seed)
+    key, init_key = jax.random.split(key)
+    x, key = sample_initial_state(nominal_dynamics, constraint, init_key)
 
     outputs0 = env.output(x)
     record = {
         "label": method_label,
+        "time_state_s": _time_grid(n_steps, dt_sec, include_endpoint=True),
+        "time_action_s": _time_grid(n_steps, dt_sec, include_endpoint=False),
         "state": {
             "r_B": [float(x[0])],
             "p_m": [float(x[1])],
@@ -257,21 +287,19 @@ def _rollout_method(
         "u_safe": [],
         "qp_correction_norm": [],
         "intervened": [],
+        "qp_accepted": [],
         "violation": [],
         "constraint_values": _constraint_series_template(),
     }
 
     t0 = time.perf_counter()
     for step in range(n_steps):
-        v_ref = _reference_action(reference, nominal_dynamics, x, x0, v_max)
+        key, action_key = jax.random.split(key)
+        v_ref = _reference_action(
+            reference, nominal_dynamics, x, x0, v_max,
+            step=step, seed=rollout_seed, key=action_key)
         A, b = hocbf._qp_matrices_jit(x)
-        solved = qp.solve_with_rl_action(
-            v_ref,
-            A,
-            b,
-            differentiable=False,
-        )
-        v_safe = solved[0] if isinstance(solved, tuple) else solved
+        v_safe, qp_accepted, _, _ = checked_qp(v_ref, A, b)
         v_safe = jnp.asarray(v_safe)
         v_safe = jnp.clip(v_safe, -v_max, v_max)
 
@@ -281,10 +309,12 @@ def _rollout_method(
 
         u_ref = nominal_dynamics.compute_total_control(x, v_ref)
         u_safe = nominal_dynamics.compute_total_control(x, v_safe)
-        next_x = env.step_stabilized_phi_scaled(x, v_safe)
+        next_x = env.step_stabilized(x, v_safe)
         outputs = env.output(next_x)
         constraint_vals = constraint.check_all(next_x)
-        violated = any(float(value) < 0.0 for value in constraint_vals.values())
+        violated = any(
+            float(value) < -VIOLATION_TOL for value in constraint_vals.values()
+        )
 
         record["v_ref"].append(_to_float_list(v_ref))
         record["v_safe"].append(_to_float_list(v_safe))
@@ -293,6 +323,7 @@ def _rollout_method(
         record["u_safe"].append(_to_float_list(u_safe))
         record["qp_correction_norm"].append(correction_norm)
         record["intervened"].append(bool(intervened))
+        record["qp_accepted"].append(bool(qp_accepted))
         record["violation"].append(bool(violated))
         for name, value in constraint_vals.items():
             record["constraint_values"][name].append(float(value))
@@ -325,8 +356,10 @@ def _rollout_method(
 def collect(
     *,
     n_steps: int = N_STEPS,
+    dt_sec: float = DT_SEC,
     reference: str = "zero",
     v_max: float = V_MAX,
+    rollout_seed: int = 1,
     force: bool = False,
 ) -> dict:
     if OUT_JSON.exists() and not force:
@@ -334,7 +367,8 @@ def collect(
             return json.load(f)
 
     _configure_runtime()
-    nominal_dynamics, constraint, filters = _build_filters()
+    gp_seed = rollout_seed * 1000 + 17
+    nominal_dynamics, constraint, filters = _build_filters(dt_sec, gp_seed)
 
     methods = {}
     for spec in METHODS:
@@ -349,6 +383,8 @@ def collect(
             reference=reference,
             v_max=v_max,
             intervention_threshold=INTERVENTION_THRESHOLD,
+            dt_sec=dt_sec,
+            rollout_seed=rollout_seed,
         )
 
     data = {
@@ -358,12 +394,19 @@ def collect(
             "uncertainty_scenario": "coupled",
             "load_ratio": LOAD_RATIO,
             "n_steps": n_steps,
-            "dt_sec": 1.0,
-            "time_state_s": list(range(n_steps + 1)),
-            "time_action_s": list(range(n_steps)),
+            "dt_sec": dt_sec,
+            "rollout_mode": "drift_only_delta_g0",
+            "input_matrix_assumption": "delta_g_equals_zero",
+            "gp_state_vector": "[p_m,h_m,N_e] residual rates",
+            "qp_backend": "qpax implicit_pdip, float64",
+            "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+            "total_time_s": round(n_steps * dt_sec, 10),
+            "time_state_s": _time_grid(n_steps, dt_sec, include_endpoint=True),
+            "time_action_s": _time_grid(n_steps, dt_sec, include_endpoint=False),
             "gp_pretrain_points": 500,
-            "gp_seed": 42,
+            "gp_seed": gp_seed,
             "reference_action": reference,
+            "rollout_seed": rollout_seed,
             "v_max": v_max,
             "intervention_threshold": INTERVENTION_THRESHOLD,
             "bounds": {
@@ -394,13 +437,15 @@ def collect(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--n-steps", type=int, default=N_STEPS)
+    parser.add_argument("--dt-sec", type=float, default=DT_SEC)
     parser.add_argument(
         "--reference",
-        choices=("lqr_residual", "zero"),
-        default="zero",
+        choices=("fixed_proposal", "lqr_residual", "zero"),
+        default="fixed_proposal",
         help="Upstream deviation action used before QP projection.",
     )
     parser.add_argument("--v-max", type=float, default=V_MAX)
+    parser.add_argument("--rollout-seed", type=int, default=1)
     parser.add_argument(
         "--force",
         action="store_true",
@@ -413,8 +458,10 @@ def main() -> None:
     args = parse_args()
     collect(
         n_steps=args.n_steps,
+        dt_sec=args.dt_sec,
         reference=args.reference,
         v_max=args.v_max,
+        rollout_seed=args.rollout_seed,
         force=args.force,
     )
 

@@ -1,0 +1,177 @@
+{
+  "source": {
+    "interface": "CRICP FastAPI historian adapter",
+    "endpoint": "/gethistrange_millisecondtimestamp",
+    "sampling_interval_sec": 5,
+    "raw_data_public": false,
+    "note": "VMware bounded multi-day scan: historical_pre_fine_match_20251105_1100"
+  },
+  "rows": 1440,
+  "time_start": "2025-11-05 11:00:00+08:00",
+  "time_end": "2025-11-05 12:59:55+08:00",
+  "timestamp_quality": {
+    "null_timestamps": 0,
+    "duplicate_timestamps": 0,
+    "monotonic_increasing": true,
+    "fixed_interval": true,
+    "observed_interval_sec_min": 5.0,
+    "observed_interval_sec_max": 5.0
+  },
+  "variables": {
+    "load_mw": {
+      "point_name": "DCS2_LOAD_3S",
+      "required_for_replay": true,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 200.810007,
+      "std": 7.987944,
+      "min": 193.9609,
+      "median": 198.224615,
+      "max": 236.97604
+    },
+    "pressure_mpa": {
+      "point_name": "DCS2_MAIN_PRESS",
+      "required_for_replay": true,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 12.448784,
+      "std": 0.464417,
+      "min": 11.929819,
+      "median": 12.282303,
+      "max": 14.075862
+    },
+    "pressure_setpoint_mpa": {
+      "point_name": "DCS2_20MST_PRESS_SET",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 12.986032,
+      "std": 0.226915,
+      "min": 12.869518,
+      "median": 12.909424,
+      "max": 13.989183
+    },
+    "fuel_flow": {
+      "point_name": "DCS2_FUELFLOWRP",
+      "required_for_replay": true,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 89.024027,
+      "std": 4.954504,
+      "min": 76.09233,
+      "median": 87.90585,
+      "max": 108.86687
+    },
+    "air_flow": {
+      "point_name": "DCS2_TOTALFLOW",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 1158.005826,
+      "std": 59.769846,
+      "min": 985.28534,
+      "median": 1150.07795,
+      "max": 1407.6655
+    },
+    "turbine_valve": {
+      "point_name": "DCS2_20CV_DMD",
+      "required_for_replay": true,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 80.749401,
+      "std": 2.686068,
+      "min": 71.27973,
+      "median": 81.119995,
+      "max": 88.51634
+    },
+    "load_setpoint_mw": {
+      "point_name": "DCS2_20LOAD_SET",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 200.610983,
+      "std": 7.484615,
+      "min": 198.0111,
+      "median": 198.0111,
+      "max": 233.70801
+    },
+    "air_coal_ratio_b": {
+      "point_name": "DCS2_AIRCOALRATIO_B",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 2.635112,
+      "std": 0.116479,
+      "min": 2.209953,
+      "median": 2.647381,
+      "max": 3.066174
+    },
+    "air_coal_ratio_c": {
+      "point_name": "DCS2_AIRCOALRATIO_C",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 2.600395,
+      "std": 0.116426,
+      "min": 2.181419,
+      "median": 2.611127,
+      "max": 3.040558
+    },
+    "air_coal_ratio_e": {
+      "point_name": "DCS2_AIRCOALRATIO_E",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 2.595613,
+      "std": 0.115114,
+      "min": 2.185491,
+      "median": 2.608299,
+      "max": 3.017755
+    },
+    "secondary_air_flow_a": {
+      "point_name": "DCS2_AIRFLOW_A3S",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 494.399493,
+      "std": 41.131832,
+      "min": 348.83923,
+      "median": 493.490025,
+      "max": 658.6159
+    },
+    "secondary_air_flow_b": {
+      "point_name": "DCS2_AIRFLOW_B3S",
+      "required_for_replay": false,
+      "valid_count": 1440,
+      "null_rate": 0.0,
+      "mean": 431.964365,
+      "std": 24.732686,
+      "min": 375.91232,
+      "median": 429.120485,
+      "max": 544.6109
+    }
+  },
+  "field_coverage": {
+    "missing_required": [
+      "enthalpy_kjkg",
+      "feedwater_flow"
+    ],
+    "high_null_required": [],
+    "required_definitions": {
+      "load_mw": "generator active power / load",
+      "pressure_mpa": "main steam or separator pressure",
+      "enthalpy_kjkg": "separator enthalpy or reconstructed enthalpy",
+      "fuel_flow": "fuel or coal command/flow",
+      "feedwater_flow": "feedwater flow or command",
+      "turbine_valve": "turbine valve opening or command"
+    }
+  },
+  "evidence_readiness": {
+    "offline_replay_ready": false,
+    "residual_calibration_ready": false,
+    "reason_if_not_ready": [
+      "missing required canonical fields: enthalpy_kjkg, feedwater_flow",
+      "sampling interval is >1 s, so offline replay is not supported"
+    ]
+  }
+}

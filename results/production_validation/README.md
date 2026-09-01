@@ -1,87 +1,55 @@
-# Production Validation Snapshot
+# Production Validation Evidence
 
-This directory stores derived artifacts from China Resources Xiantao Unit 2
-plant-historian queries used to ground the manuscript's measurement channels
-and operating variability.
+This directory contains the bounded evidence used for the manuscript's
+measured-operation claims for a 660 MW ultra-supercritical unit. Public
+derivatives are separated from proprietary originals and from historical
+development packages.
 
-## Current Figure Source
+## Canonical Evidence Layers
 
-- Interface: CRICP FastAPI historian adapter
-- Endpoint: `/gethistrange_millisecondtimestamp`
-- Unit: Xiantao Unit 2
-- Query window: `2026-07-01T02:33:56+08:00` to `2026-07-02T02:28:56+08:00`
-- Sampling: 300 s history samples
-- Public raw data: no
+1. **Matched-window cohort screening**
+   - `matched_window_cohort_summary_20260706.json`
+   - 1950 retained loaded two-hour windows; aggregate historian context only.
+2. **Native 5 s pre/post historian pair**
+   - `figure10_production_retrofit_metrics.json`
+   - supports the plotted pressure-response comparison and its exact counts.
+3. **Low-to-mid-load historian context**
+   - `low_mid_load_historian_context/MW01_MW03_historian_context.csv`
+   - supplies generator active power and **main-steam pressure** for Figure 6.
+   - these records do not contain or support controller-internal QP fields.
+4. **Confirmed high-load plant-controller exports**
+   - `controller_exports_public/MW04_CONTROLLER_EXPORT_5S.csv`
+   - `controller_exports_public/MW05_CONTROLLER_EXPORT_5S.csv`
+   - `controller_exports_public/MW06_CONTROLLER_EXPORT_5S.csv`
+   - supports the reported operation mode, QP/recovery status, direct and
+     logged margins, saturation flags, and execution timing.
 
-The current Fig. 9 is generated from
-`results/production_validation/xiantao_unit2_fastapi_24h_summary.json` and the
-private raw files under `results/production_validation/raw/`.
+`PRODUCTION_EVIDENCE_INDEX.md` is the claim-to-artifact index. The two JSON
+manifests under the public evidence directories record source and derivative
+SHA-256 values.
 
-## PostgreSQL Report Fallback
+## Corrected Field Semantics
 
-- Database: `yulin`
-- Schema/table: `unit2.report_hourly`
-- Query window: `2026-06-24T08:00` to `2026-07-02T02:00`
-- Sampling: hourly DCS operating report snapshots
-- Public raw data: no
+The current controller-export mapping is:
 
-The PostgreSQL hourly report can still be used as a low-frequency fallback, but
-the manuscript figure now uses the FastAPI history snapshot above.
+| Controller symbol | Exported plant field | Meaning |
+|---|---|---|
+| `PM` | `DCS2_20HAG10CP101` | separator pressure |
+| `HM` | `DCS2_SEPARATOUT_ENTH` | separator-outlet specific enthalpy |
+| `NE` | `20CQTP_MW` | generator active power |
+| not `PM` | `DCS2_MAIN_PRESS` | independent main-steam pressure |
+| replay bound | `PST_HI` | main-steam-pressure upper replay bound |
 
-## Data Boundary
+The public high-load excerpts preserve all timestamps, measured values,
+commands, status fields, margins, and timing values. Only `UNIT` and `CTRL_VER`
+are replaced by public identifiers. The field-level mapping is recorded in
+`controller_exports_public/controller_export_field_map.csv`.
 
-Raw historian CSV/JSON files are written under
-`results/production_validation/raw/`, which is intentionally ignored by Git
-because it contains proprietary plant operating records. The committed JSON
-summaries contain only derived statistics and point metadata needed to audit the
-manuscript figure.
+## Evidence Boundary
 
-## Reproduction
-
-If the FastAPI base URL is directly reachable, run:
-
-```bash
-CRICP_BASE_URL='<site FastAPI base URL>' \
-python3 scripts/production_data/extract_xiantao_fastapi_history.py \
-  --start-sec 1782844436 \
-  --end-sec 1782930836 \
-  --interval-sec 300 \
-  --raw-output results/production_validation/raw/xiantao_unit2_fastapi_24h_300s.csv \
-  --summary-output results/production_validation/xiantao_unit2_fastapi_24h_summary.json \
-  --figure-output paper/figures/Figure_9_production_historian.pdf
-```
-
-When WSL cannot directly reach the site network, fetch a bounded response via
-the VMware guest and run the same script with `--input-json`:
-
-```bash
-python3 scripts/production_data/extract_xiantao_fastapi_history.py \
-  --input-json results/production_validation/raw/xiantao_unit2_fastapi_24h_300s.json \
-  --interval-sec 300 \
-  --raw-output results/production_validation/raw/xiantao_unit2_fastapi_24h_300s.csv \
-  --summary-output results/production_validation/xiantao_unit2_fastapi_24h_summary.json \
-  --figure-output paper/figures/Figure_9_production_historian.pdf
-```
-
-For the PostgreSQL report fallback, start the local VMware/PostgreSQL relay,
-then run:
-
-```bash
-PGHOST=127.0.0.1 \
-PGPORT=15432 \
-PGUSER=postgres \
-PGPASSWORD='<local password>' \
-PGDATABASE=yulin \
-python3 scripts/production_data/extract_xiantao_hourly_report.py \
-  --schema unit2 \
-  --start 2026-06-24 \
-  --end 2026-07-02 \
-  --start-ts 2026-06-24T08:00 \
-  --end-ts 2026-07-02T02:00 \
-  --raw-output results/production_validation/raw/xiantao_unit2_loaded_hourly_2026-06-24T08_2026-07-02T02.csv \
-  --summary-output results/production_validation/xiantao_unit2_loaded_hourly_summary.json \
-  --figure-output paper/figures/Figure_9_production_historian.pdf
-```
-
-The figure is also copied into the current M&C submission source folder before
-building the manuscript package.
+The proprietary originals are retained outside the public evidence boundary
+and are excluded by `.gitignore`. Their basenames and SHA-256 values are
+recorded in the public manifests. No controller-internal values are assigned to
+the pre-retrofit PID period. The MW01--MW03 legacy mixed package is preserved in
+a restricted archive and is not part of the current public controller-evidence
+chain.

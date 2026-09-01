@@ -1,0 +1,47 @@
+{
+  "evidence_role": "confirmed high-load plant-controller export excerpts",
+  "unit_description": "a 660 MW ultra-supercritical unit",
+  "export_spacing_s": 5,
+  "controller_period_s": 1,
+  "anonymization": {
+    "UNIT": "660MW-USC-Unit",
+    "CTRL_VER": "RoCBF-SF-v2-public",
+    "other_fields": "copied verbatim"
+  },
+  "field_semantics": {
+    "PM": "separator pressure",
+    "HM": "separator-outlet specific enthalpy",
+    "NE": "generator active power",
+    "DCS2_MAIN_PRESS": "independent main-steam pressure",
+    "PST_HI": "main-steam-pressure replay upper bound"
+  },
+  "windows": [
+    {
+      "window": "MW04",
+      "private_original_basename": "MW04_DEPLOYMENT_CONTROLLER_LOG__5S.csv",
+      "private_original_sha256": "9f5fab00da8b938d4c407b98a9ba9a16f4d0a2d5def337d645e6a1bcb6d9e385",
+      "public_excerpt": "MW04_CONTROLLER_EXPORT_5S.csv",
+      "public_excerpt_sha256": "1f58b1aa9019966442232876a1ebd978b8f0712f81e4a42a08ea089950d089c2",
+      "rows": 1440,
+      "columns": 84
+    },
+    {
+      "window": "MW05",
+      "private_original_basename": "MW05_DEPLOYMENT_CONTROLLER_LOG__5S.csv",
+      "private_original_sha256": "011d567c0b15cb21f014f061b4989fbb3d9ca24e37c1dd44fb3ea7260684e59f",
+      "public_excerpt": "MW05_CONTROLLER_EXPORT_5S.csv",
+      "public_excerpt_sha256": "0a49e70dd2bd0a3295d8c0ec582f2d9a2e71edcf4b5c008959546e3863af54e3",
+      "rows": 1440,
+      "columns": 84
+    },
+    {
+      "window": "MW06",
+      "private_original_basename": "MW06_DEPLOYMENT_CONTROLLER_LOG_5S.csv",
+      "private_original_sha256": "7a86576fe8c9c3ec7164e95ea973407f2800740d5b8db5f11e533aa3a2c01883",
+      "public_excerpt": "MW06_CONTROLLER_EXPORT_5S.csv",
+      "public_excerpt_sha256": "92377148258d56c3d5dd7123bad10788723cf59d675ebabbef2c65bd7c4c7496",
+      "rows": 1440,
+      "columns": 84
+    }
+  ]
+}

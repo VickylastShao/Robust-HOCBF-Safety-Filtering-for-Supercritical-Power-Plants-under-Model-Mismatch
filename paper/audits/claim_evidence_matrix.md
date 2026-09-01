@@ -1,38 +1,32 @@
-# M&C Claim-Evidence Matrix
+# M&C Major-Revision Claim-Evidence Matrix
 
-Date: 2026-06-30
+Date: 2026-08-31
 
-Primary evidence base: `results/phase5/` root-level JSON inventory.
+## Evidence Boundary
 
-Inventory status: 8 methods x 8 conditions x 5 seeds = 320 expected root JSON files; 320 matched, 0 missing, 0 extra root JSON, 0 invalid JSON after remote synchronization on `gpu205`.
+The current simulation evidence uses the certificate-aligned fifth-order benchmark with a fixed input matrix ($\Delta g=0$). Its GP input is $[p_m,h_m,N_e]^\top$ and its three targets are nominal-model residual rates. The full five-state predictor and proposed fuel, feedwater, and turbine-valve commands are not GP-kernel inputs. The earlier root-level `results/phase5/` matrix is retained for traceability but is not a numerical source for the revision.
 
-## Main Numerical Claims
+Plant-controller exports directly support time stamps, operating modes, QP/recovery status, logged margins, saturation flags, and timing. GP lifecycle, DCS permission, Kubernetes lease, and fallback-state-machine details are deployment configuration specifications, not per-record controller-export fields.
 
-| Claim | Manuscript location | Evidence | Status |
+## Main Claims
+
+| Claim | Manuscript location | Current evidence | Status |
 |---|---|---|---|
-| Phase 5 fair comparison has 8 methods, 8 conditions, 5 seeds | Methods / Experimental Validation | `configs/phase5.yaml`; remote strict audit | Supported |
-| PPO, PPO-Lagrangian, and PPO-CBF exceed 99% violation under static perturbations | Table 1 and text | `results/phase5/{ppo,ppo_lagr,ppo_cbf}_s*_seed*.json`; remote `analyze_results_5th.py` | Supported |
-| HOCBF without GP is safe nominally but fails under model mismatch | Table 1 and text | `results/phase5/ppo_hocbf_*_seed*.json` | Supported |
-| GP mean correction reduces HOCBF violations to <=0.18% on six of seven uncertainty scenarios | Abstract, Results, Conclusion | `ppo_gp_hocbf`: S1 0.12, S2 0.04, S4 0.04, S5 0.15, S6 0.18, load-following 0.00; S3 exception 39.65 | Supported |
-| Improvement is >500x versus uncorrected HOCBF on the six non-S3 uncertainty scenarios | Abstract, Intro, Results, Conclusion | Ratios versus PPO-HOCBF: S1 855x, S2 2393x, S4 2476x, S5 656x, S6 545x; load-following denominator is 0 and is not used for the ratio | Supported, but interpret as static non-S3 uncertainty scenarios |
-| Full margin `epsilon_kappa=1.0` is not empirically optimal | Abstract, Results, Conclusion | Main Phase 5 table plus kappa sweep: S2 and S4 collapse at high kappa; S3 best at 0.1 | Supported |
-| S3 kappa=0 failure is 33.5% and kappa=0.1 restores 0% | Abstract, Results, Conclusion | `results/phase5/kappa_sweep/kappa0.0_s3_coupled_seed*.json` mean 33.47%; `kappa0.1` mean 0.00% | Supported |
-| Additive S2/S4 are safe at kappa=0 | Results | `results/phase5/kappa_sweep/kappa0.0_s2_pressure_seed*.json`; `kappa0.0_s4_nonlinear_seed*.json` | Supported |
-| Deployment envelope collapses to `{0}` at gamma >= 1.5 | Results, Conclusion | `results/phase5/kappa_sweep/kappa*_s3_midstrong_seed*.json`; `kappa*_s3_strong_seed*.json` | Supported |
-| Pressure and power show no observed violations; violations are enthalpy-dominated | Results, Supplement | `per_constraint_type` logs in 318/320 Phase 5 root files; two S1 rerun files have aggregate-only logs | Supported with caveat now stated in supplement |
-| Safety-filter latency is about 25 ms and NMPC is about 254 ms | Abstract, Results, Supplement | `paper/figures/Figure_5.pdf`; prior timing analysis; main text now avoids machine-specific GPU model | Supported as implemented-baseline comparison |
-| Phase 4 generic mixed GP failure is 82.7--99.7% | Deployment Considerations | Historical Phase 4 auxiliary results; not primary M&C evidence | Supported as historical/auxiliary claim only |
+| The formal endpoint remains conditional on $\epsilon_\kappa=1$, the GP-UCB event, compositional residual bound, $\Delta g=0$, and full-row robust-QP feasibility. | Section 3.4; Conclusion | Theorem 1 and proof; `sections_mc/methodology.tex` | Formal conditional result |
+| No-GP HOCBF records 10,756 violations in 15,000 mismatch samples; GP mean correction reduces this count to 36. | Abstract; Section 4.2; Conclusion | `results/phase5_qpax_x64_primary_a_20260831/` | Stored primary aggregation |
+| The tune rule selects $\epsilon_\kappa=0.02$ before confirmation; the primary sweep records 0/17,500 observed violations. | Sections 4.3--4.4; Supplemental Material | `results/phase5_commissioning_kappa_tune_20260831/selection_summary.json`; `results/phase5_primary_kappa002_20260831/` | Stored tune/test evidence |
+| The fixed selected setting has 66/50,000 violations and 72/50,000 QP rejections on held-out seeds. | Sections 4.3--4.4; Supplemental Material | `selection_summary.json` | Stored held-out evidence; not a zero-probability claim |
+| Full-margin operation can lose feasibility under actuator limits. | Section 4.2; Supplemental Material | Primary S3 endpoint records in `results/phase5_qpax_x64_primary_a_20260831/` | Stored mechanism diagnostic |
+| Constrained NMPC is an effective reference with 35/17,500 violations and no solver failure in the implemented test. | Section 4.2; Supplemental Material | `results/phase5_drift_only_nmpc_x64_20260831/` | Stored reference result |
+| Clean 100/250/500-point GPs pass the controlled commissioning gate; deliberately corrupted fits fail it. | Section 4.5; Supplemental Material | `results/phase5_gp_data_sensitivity_k002_20260831/summary.json` | Controlled synthetic fault-injection diagnostic |
+| The matched historian cohort contains 1,950 loaded two-hour windows and reports 12.6%/23.4% cohort reductions. | Section 4.6 | `results/production_validation/matched_window_cohort_summary_20260706.json` | Observational historian evidence |
+| The representative pre/post pair changes pressure-error standard deviation from 0.375 to 0.156 MPa under matched load movement. | Section 4.6; Figure 7 | `results/production_validation/figure10_production_retrofit_metrics.json` | Observational historian evidence |
+| MW04--MW06 cover 4,320 exported records over 480.7--629.7 MW; controller-export timing remains below the 1,000 ms deadline. | Section 4.6; Figure 8; Table 4 | `results/production_validation/figure11_high_load_controller_metrics.json`; confirmed original plant-controller exports | Direct export evidence |
+| The 43 MW04 rows establish only reduced-QP recovery after a guarded pressure-low-row removal. | Section 4.6; Supplemental Material | Confirmed original plant-controller exports; `figure11_high_load_controller_metrics.json` | Direct export evidence; excluded from full-row certificate |
 
-## Claims Patched During Closeout
+## Excluded or Qualified Claims
 
-- Removed the statement that the full margin makes the tightened QP "always feasible".
-- Changed kappa sensitivity sample count from "3 seeds each" to "2--3 seeds per setting" because three auxiliary cells currently have only two completed seeds.
-- Removed bold formatting from poor RoCBF-Net table values.
-- Changed "Four key findings" to "Five key findings".
-- Rewrote the supplement to remove older JPC/TAC claims that contradicted the M&C result table.
-
-## Remaining Evidence Risks
-
-- The kappa sweep is auxiliary and has 2 completed seeds for S3/S4 at some high-kappa settings. The manuscript now states this explicitly.
-- Timing numbers should be treated as implementation-latency measurements, not universal hardware benchmarks.
-- Phase 4 is not complete and should not be used as a main evidence base.
+- The current revision makes no full-load causal claim from the historian comparison. Routine outage maintenance occurred with strategy integration; the comparison is observational.
+- A 2.0 MPa pressure-low recovery guard is an engineering gate derived from the observed MW04 direct-margin range. It is not a theorem-derived safety boundary.
+- A controller export at 5 s spacing is not an internal 1 s control-cycle trace. The exported records establish reported status and timing summaries, not every control action.
+- The current benchmark does not claim a formal certificate for actuator-gain uncertainty or sampled-data forward invariance.

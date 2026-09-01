@@ -45,6 +45,27 @@ tmp_pdf_render/
 # Generated submission bundles
 paper/submission_mc_*/
 paper/*submission*.zip
+paper/revision_submission/latex_build/
+paper/revision_submission/tmp/
+
+# Local submission-portal downloads and administrative records
+/*.mhtml
+/decision letter.pdf
+/Invoice_*.pdf
+/NUL
+/Title_Page.docx
+/manuscript_mc.docx
+/manuscript_mc_supplementary.docx
+/华润电力logo.png
+/华润电力信纸模板.pdf
+/附件：*.pdf
+/paper/cover_letter_mc.docx
+/paper/cover_letter_mc_from_docx.pdf
+/paper/Title_Page.docx
+/paper/manuscript_mc.docx
+/paper/manuscript_mc_supplementary.docx
+/paper/manuscript_mc_from_docx.pdf
+/paper/manuscript_mc_supplementary_from_docx.pdf
 
 # Local/internal paper review notes not part of the public reproducibility package
 paper/mc_*_audit_*.md
@@ -52,7 +73,63 @@ paper/mc_*_review_*.md
 paper/mc_benchmark_gap_analysis.md
 paper/mc_optimization_plan.md
 paper/mc_text_polish_audit_*.md
+paper/audits/mc_*_audit_*.md
+paper/audits/mc_major_revision_*.md
+paper/audits/mc_new_high_load_export_audit_*.md
+paper/audits/mc_*.md
+paper/assets/
+
+# Local agent plans and run logs
+/tasks/
+experiments/phase5/*.log
 
 # Proprietary plant historian extracts
 data/private/
 results/production_validation/raw/
+
+# Proprietary original plant exports and internal discovery workspaces. Public
+# manuscript artifacts use only anonymized summaries, normalized excerpts, and
+# hash-based provenance records derived from these directories.
+results/production_validation/new/
+results/production_validation/现场二次导出/
+results/production_validation/现场三时段historian/
+results/production_validation/现场三时段控制器日志/
+results/production_validation/tag_discovery/
+results/production_validation/production_validation_required_tag_candidates.csv
+results/production_validation/production_validation_required_tag_candidates.md
+data/private/legacy_low_mid_controller_exports/
+
+# Superseded or transport-duplicate experiment inventories retained locally.
+results/phase5_drift_only_fixedproposal/
+results/phase5_drift_only_fixedproposal_gpu205/
+results/phase5_drift_only_fixedproposal_gpu206/
+results/phase5_drift_only_fixedproposal_summary.json
+results/phase5_drift_only_fixedproposal_table.tex
+results/phase5_drift_only_nmpc_20260831/
+results/phase5_gp_data_sensitivity_20260831/
+results/phase5_gp_phn_std_fullrow_primary_20260831/
+results/phase5_qpax_x64_primary_b_20260831/
+results/remote_gpu*_20260831/
+results/remote_gpu*_baselines_20260831/
+results/remote_gpu*_nmpc_20260831/
+
+# Internal evidence-discovery requests, reconstructed-log prototypes, and
+# database/VMware acquisition helpers are not part of the public artifact.
+results/production_validation/controller_log_example.jsonl
+results/production_validation/controller_log_format_request.md
+results/production_validation/controller_log_schema_template.csv
+results/production_validation/replay_*_template.*
+results/production_validation/unit_replay_data_request_*.md
+scripts/production_data/build_estimated_controller_header_views.py
+scripts/production_data/build_exact_historian_alignment_package.py
+scripts/production_data/build_full_english_controller_header_views.py
+scripts/production_data/build_paper_algorithm_reconstructed_controller_logs.py
+scripts/production_data/build_pointname_header_tables.py
+scripts/production_data/build_tag_short_full_english_header_views.py
+scripts/production_data/discover_unit_replay_tags.py
+scripts/production_data/evaluate_replay_evidence_gate.py
+scripts/production_data/export_unit_direct_hm_windows.py
+scripts/production_data/extract_unit_hourly_report.py
+scripts/production_data/extract_unit_replay_window.py
+scripts/production_data/fetch_unit_history_via_vmware.py
+scripts/production_data/pgwire_minimal.py

@@ -13,18 +13,22 @@ Usage:
 import os
 os.environ['XLA_PYTHON_CLIENT_MEM_FRACTION'] = '0.80'
 import sys
-sys.path.insert(0, '.')
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 import jax
 import jax.numpy as jnp
 import numpy as np
 from scipy.optimize import minimize
 import time
-from pathlib import Path
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+from scripts.mc_figure_style import apply_times_new_roman_style
 
 from rocbf.gp.gp_residual import GPResidual
 from rocbf.cbf.robust_hocbf import RobustHOCBF
@@ -33,7 +37,7 @@ from envs.ccs.dynamics import USCCSDynamics5th, UncertainUSCCSDynamics5th
 from envs.ccs.constraints import CCSConstraints5th
 from experiments.phase5.methods_5th import _pretrain_gp_5th
 
-FIGURES_DIR = Path('/home/gpu/sz_workspace/RoCBF-Net/paper/figures')
+FIGURES_DIR = ROOT / 'paper' / 'figures'
 
 
 def solve_qp_scipy(A, b, v_ref):
@@ -259,6 +263,7 @@ def main():
     # ================================================================
     print("\n[4/4] Generating Figure_3.pdf...")
 
+    apply_times_new_roman_style(base_size=10)
     fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(12, 5))
 
     # --- Left panel: ε_h(x) vs enthalpy h_m ---

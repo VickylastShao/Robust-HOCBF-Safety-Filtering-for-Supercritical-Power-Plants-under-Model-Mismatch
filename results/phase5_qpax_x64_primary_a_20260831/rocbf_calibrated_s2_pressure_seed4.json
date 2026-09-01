@@ -1,0 +1,72 @@
+{
+  "method": "rocbf_calibrated",
+  "method_label": "RoCBF-SF calibrated",
+  "condition": "s2_pressure",
+  "condition_label": "S2:Pressure",
+  "seed": 4,
+  "rollout_mode": "drift_only_delta_g0",
+  "input_matrix_assumption": "delta_g_equals_zero",
+  "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+  "violation_tolerance_raw_margin": 0.01,
+  "n_episodes": 1,
+  "n_steps": 500,
+  "n_pretrain": 500,
+  "violation_rate": [
+    0.0,
+    0.0
+  ],
+  "cbf_violation_rate": [
+    0.0,
+    0.0
+  ],
+  "violation_count": 0,
+  "total_samples": 500,
+  "cumulative_reward": [
+    -15697.463174384435,
+    0.0
+  ],
+  "control_cost": [
+    2963.7833095884844,
+    0.0
+  ],
+  "min_barrier_value": [
+    2.409824446658604e-07,
+    0.0
+  ],
+  "online_time_ms": [
+    38.69927291106433,
+    7.711082610997305
+  ],
+  "qp_intervention_rate": 0.7,
+  "qp_attempt_count": 500,
+  "qp_infeasible_count": 0,
+  "qp_infeasible_rate": 0.0,
+  "qp_fallback_count": 0,
+  "qp_fallback_rate": 0.0,
+  "max_normalized_qp_residual": 0.0,
+  "weak_authority_row_drop_enabled": false,
+  "qp_backend": "qpax",
+  "jax_precision": "float64",
+  "qpax_algorithm": "implicit_pdip",
+  "qpax_solver_tolerance": 1e-06,
+  "qpax_max_iterations": 100,
+  "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+  "epsilon_kappa": 0.0,
+  "per_constraint_type": {
+    "pressure": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 500
+    },
+    "enthalpy": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 500
+    },
+    "power": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 500
+    }
+  }
+}

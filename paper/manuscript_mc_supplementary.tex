@@ -4,7 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
-\usepackage{booktabs,graphicx,multirow,makecell,bm,enumitem}
+\usepackage{booktabs,graphicx,multirow,makecell,bm,enumitem,array}
 \usepackage[numbers,comma]{natbib}
 \usepackage[hypertexnames=false]{hyperref}
 \usepackage{float}
@@ -15,6 +15,9 @@
 
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
+\renewcommand{\thelemma}{S\arabic{lemma}}
+\providecommand{\theHlemma}{}
+\renewcommand{\theHlemma}{S\arabic{lemma}}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\E}{\mathbb{E}}
@@ -51,27 +54,14 @@
 
 \begin{document}
 
-\title{Supplemental Material for\\ ``A Tunable GP-HOCBF Safety Filter for Supercritical Boiler-Turbine Control under Model Mismatch''}
+\title{Supplemental Material for\\ ``Commissioning-Calibrated GP-HOCBF Safety Filtering for Ultra-Supercritical Boiler-Turbine Control under Model Mismatch''}
 
-\author{
-Zhuang~Shao$^{1,*}$, Lijun~Lei$^{2}$, Peng~Wang$^{3}$, Liang~Zheng$^{2}$, Jie~Zhou$^{2}$\\[1em]
-$^{1}$China Resources Power Technology Research Institute Co., Ltd.,\\
-\hspace*{1em}Shenzhen 518000, Guangdong Province, China\\
-$^{2}$Rundian Energy Science and Technology Co., Ltd.,\\
-\hspace*{1em}Zhengzhou 450052, Henan Province, China\\
-$^{3}$North China University of Water Resources and Electric Power,\\
-\hspace*{1em}Zhengzhou 450046, Henan Province, China\\[0.5em]
-$^{*}$Corresponding author: \texttt{shaozhuang@crpower.com.cn}
-}
+\author{}
 
 \date{}
 \maketitle
 
 \input{sections/supplementary}
-\input{sections/triple_integrator_appendix}
-\input{sections_jpc/appendix_proofs}
-
-\bibliographystyle{SageV}
-\bibliography{refs}
+\input{sections/appendix_proofs}
 
 \end{document}

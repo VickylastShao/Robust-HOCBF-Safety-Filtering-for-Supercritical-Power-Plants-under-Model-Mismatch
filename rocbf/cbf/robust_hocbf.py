@@ -40,6 +40,9 @@ class RobustHOCBF(HOCBF):
         norm of the Jacobian of f_fn at x0.
     x0 : optional, equilibrium state for automatic op_norm computation
     use_mean_correction : bool, if True use f̂ = f₀ + μ_GP in psi chain
+    gp_state_indices : sequence of int, optional
+        State rows represented by the GP inputs and residual outputs. Defaults
+        to the first gp_residual.n_dims rows for backward compatibility.
     """
 
     @staticmethod
@@ -70,7 +73,8 @@ class RobustHOCBF(HOCBF):
                  u0=None,
                  epsilon_kappa: float = 1.0,
                  epsilon_floor: float = 0.0,
-                 use_mean_correction: bool = False):
+                 use_mean_correction: bool = False,
+                 gp_state_indices=None):
         self.f_nominal = f_fn
         self.gp_residual = gp_residual
         self.u_max = u_max
@@ -91,14 +95,22 @@ class RobustHOCBF(HOCBF):
         self.epsilon_kappa = epsilon_kappa
         self.epsilon_floor = epsilon_floor
         self.use_mean_correction = use_mean_correction
+        if gp_state_indices is None:
+            gp_state_indices = tuple(range(gp_residual.n_dims))
+        self.gp_state_indices = tuple(int(i) for i in gp_state_indices)
+        if len(self.gp_state_indices) != gp_residual.n_dims:
+            raise ValueError(
+                "gp_state_indices must contain one state index per GP dimension")
+        if len(set(self.gp_state_indices)) != len(self.gp_state_indices):
+            raise ValueError("gp_state_indices must be unique")
+        if any(i < 0 for i in self.gp_state_indices):
+            raise ValueError("gp_state_indices must be non-negative")
 
         if use_mean_correction:
             def f_hat(x):
-                # GP is trained on core 3 states (r_B, p_m, h_m);
-                # slice x[:3] for 5th-order compatibility (no-op for 3rd-order).
-                mu_gp, _ = gp_residual.predict(x[:3])
                 f_nom = f_fn(x)
-                return f_nom.at[:3].add(mu_gp)
+                mu_gp, _ = self._gp_prediction_in_state(x)
+                return f_nom + mu_gp
             drift_fn = f_hat
         else:
             drift_fn = f_fn
@@ -110,6 +122,18 @@ class RobustHOCBF(HOCBF):
         # These always use f_nominal so that epsilon only propagates σ
         # uncertainty, not μ_GP's large/unreliable gradients.
         self._build_nominal_functions()
+
+    def _gp_prediction_in_state(self, x: jnp.ndarray):
+        """Scatter GP mean and uncertainty into their physical state rows."""
+        if max(self.gp_state_indices) >= x.shape[0]:
+            raise ValueError(
+                f"GP state index {max(self.gp_state_indices)} is invalid for "
+                f"state dimension {x.shape[0]}")
+        indices = jnp.asarray(self.gp_state_indices)
+        mu_gp, sigma_gp = self.gp_residual.predict(x[indices])
+        mu_full = jnp.zeros_like(x).at[indices].set(mu_gp)
+        sigma_full = jnp.zeros_like(x).at[indices].set(sigma_gp)
+        return mu_full, sigma_full
 
     def _build_nominal_functions(self):
         """Build Lie derivative and psi-chain functions using f_nominal.
@@ -151,10 +175,7 @@ class RobustHOCBF(HOCBF):
         Returns list [σ₁, σ₂, ..., σ_m] (not including σ_ctrl or σ_total).
         """
         m = self.m
-        _, sigma_gp_3d = self.gp_residual.predict(x[:3])
-        # Pad to full state dimension: GP only models core 3 states;
-        # extended states (N_e, τ_f) have zero uncertainty.
-        sigma_gp = jnp.pad(sigma_gp_3d, (0, max(0, x.shape[0] - sigma_gp_3d.shape[0])))
+        _, sigma_gp = self._gp_prediction_in_state(x)
         beta = GPResidual.compute_beta(self.gp_residual.n_dims,
                                        self.gp_residual.n_training_points,
                                        gamma_N=self.gp_residual.gamma_N)
@@ -206,10 +227,7 @@ class RobustHOCBF(HOCBF):
         """
         m = self.m
 
-        _, sigma_gp_3d = self.gp_residual.predict(x[:3])  # (n_dims,)
-        # Pad to full state dimension: GP only models core 3 states;
-        # extended states (N_e, τ_f) have zero uncertainty.
-        sigma_gp = jnp.pad(sigma_gp_3d, (0, max(0, x.shape[0] - sigma_gp_3d.shape[0])))
+        _, sigma_gp = self._gp_prediction_in_state(x)
         beta = GPResidual.compute_beta(self.gp_residual.n_dims,
                                        self.gp_residual.n_training_points,
                                        gamma_N=self.gp_residual.gamma_N)
@@ -302,7 +320,7 @@ class RobustHOCBF(HOCBF):
         # Compute true psi_1 with Δf added
         if self.use_mean_correction:
             def f_true(x_):
-                mu_gp, _ = self.gp_residual.predict(x_[:3])
+                mu_gp, _ = self._gp_prediction_in_state(x_)
                 return self.f_nominal(x_) + mu_gp + delta_f_fn(x_)
         else:
             def f_true(x_):
@@ -314,7 +332,9 @@ class RobustHOCBF(HOCBF):
         delta_1_actual = psi_1_true - psi_1_nom
 
         if self.use_mean_correction:
-            Lf_psi1_nom = jax.grad(self._psi_fns[1])(x) @ (lambda x_: self.f_nominal(x_) + self.gp_residual.predict(x_[:3])[0])(x)
+            Lf_psi1_nom = jax.grad(self._psi_fns[1])(x) @ (
+                lambda x_: self.f_nominal(x_) + self._gp_prediction_in_state(x_)[0]
+            )(x)
         else:
             Lf_psi1_nom = jax.grad(self._psi_fns[1])(x) @ self.f_nominal(x)
         Lf_psi1_true = jax.grad(self._psi_fns[1])(x) @ f_true(x)
@@ -354,13 +374,15 @@ class ConstantEpsilonRobustHOCBF(RobustHOCBF):
                  u0=None,
                  epsilon_kappa: float = 1.0,
                  epsilon_floor: float = 0.0,
-                 use_mean_correction: bool = False):
+                 use_mean_correction: bool = False,
+                 gp_state_indices=None):
         self.epsilon_constant = epsilon_constant
         super().__init__(
             h_fn, f_fn, g_fn, relative_degree, k_gains, gp_residual,
             u_max=u_max, op_norm_estimate=op_norm_estimate, x0=x0, u0=u0,
             epsilon_kappa=epsilon_kappa, epsilon_floor=epsilon_floor,
-            use_mean_correction=use_mean_correction)
+            use_mean_correction=use_mean_correction,
+            gp_state_indices=gp_state_indices)
 
     def compute_epsilon(self, x: jnp.ndarray) -> jnp.ndarray:
         """Return constant epsilon regardless of state x."""

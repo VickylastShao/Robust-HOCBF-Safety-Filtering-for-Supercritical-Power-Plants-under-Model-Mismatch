@@ -11,7 +11,7 @@ from experiments.phase5.methods_5th import (
     _pretrain_gp_5th, _make_robust_hocbf_5th,
 )
 
-OUT = '/home/gpu/sz_workspace/RoCBF-Net/results/phase5/jpc_metrics'
+OUT = '/home/gpu/sz_workspace/RoCBF-Net/results/phase5/process_metrics'
 os.makedirs(OUT, exist_ok=True)
 
 LOAD_RATIO = 1.0

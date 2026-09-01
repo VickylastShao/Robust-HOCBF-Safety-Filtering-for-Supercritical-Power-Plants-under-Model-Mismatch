@@ -1,165 +1,226 @@
 \section*{Supplemental Material}
 \label{sec:supplementary}
 
-\textit{Reference numbers follow the numbering of the main manuscript.}
+\textit{Citation numbers follow the numbering of the main article.}
 
-\section{Evidence Base and Result Inventory}
+\section{Native-Sample Safety and QP Diagnostics}
+\label{sec:supp_safety}
 
-The study uses the 5th-order Phase~5 result inventory as the primary evidence base. The root-level inventory in \texttt{results/phase5/} contains the complete fair-comparison matrix: 8 methods, 8 conditions, and 5 seeds, for 320 JSON result files. The strict inventory audit reports 320/320 matched files, no missing root-level files, no extra root-level JSON files, and no JSON parsing errors.
-
-The older Phase~4 3rd-order results are retained only as historical and auxiliary material. Their inventory is not used as the primary M\&C evidence base because it is incomplete for the mean-only RoCBF-Net operating point on several conditions. Where Phase~4 is mentioned in the manuscript, it identifies the previously observed generic-GP and out-of-distribution failure mode rather than supporting the main 5th-order safety comparison.
-
-\section{Full \texorpdfstring{$\epsilon_\kappa$}{epsilon-kappa} Sensitivity Data}
-
-Table~\ref{tab:S_kappa_full} reports the numerical data behind the kappa-sensitivity figure in the main manuscript. Values are mean CBF violation rates over the available kappa-sweep seeds. Unless otherwise noted, each cell uses three seeds.
+All benchmark violation rates are evaluated at the native 1\,s controller instants. A controller sample is counted once when any enforced pressure, separator-enthalpy, or power barrier satisfies $\min_j h_j(x_k)<-10^{-2}$ in raw barrier units. The tolerance excludes numerical boundary roundoff; the unrounded minimum barrier is retained separately. Episode-level event probabilities are not combined with these sample rates.
 
 \begin{table}[htbp]
     \centering
-    \caption{$\epsilon_\kappa$ sensitivity sweep on three representative 5th-order CCS scenarios. Violation rates are percentages; values in parentheses report the number of seeds when fewer than three completed results are available.}
-    \label{tab:S_kappa_full}
+    \caption{Count-level S3 diagnostics for the primary $\Delta g=0$ validation. Each row aggregates five 500-sample rollouts. A rejected QP is non-converged, non-finite, or has maximum normalized primal residual above $10^{-6}$.}
+    \label{tab:S_primary_s3}
     \small
-    \begin{tabular}{lccccc}
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.34\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}}
         \toprule
-        Scenario & $\kappa=0$ & $\kappa=0.1$ & $\kappa=0.3$ & $\kappa=0.5$ & $\kappa=1.0$ \\
+        Method & Violating samples & QP rejected & QP intervention \\
         \midrule
-        S2: Pressure & 0.00 & 0.00 & 0.00 & 99.36 & 99.42 \\
-        S3: Coupled & 33.47 & 0.00 & 0.10 & 0.25 & 40.30 (2) \\
-        S4: Nonlinear & 0.00 & 0.00 & 0.00 & 0.10 (2) & 46.83 (2) \\
+        HOCBF, no GP & 1682/2500 & 0/2500 & 4.48\% \\
+        GP-HOCBF, $\epsilon_\kappa=0$ & 36/2500 & 0/2500 & 67.08\% \\
+        RoCBF-SF, $\epsilon_\kappa=0.02$ & 0/2500 & 4/2500 & 67.12\% \\
+        Full-margin endpoint, $\epsilon_\kappa=1$ & 419/2500 & 628/2500 & 51.12\% \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-These data support three practical conclusions. First, additive perturbations (S2 and S4) require no robustness margin in the tested regime; GP mean correction alone is sufficient. Second, state-dependent coupling (S3) requires a small positive margin: $\kappa=0$ fails, while $\kappa=0.1$ restores zero observed violation. Third, the full theoretical margin $\kappa=1.0$ is not the preferred empirical operating point in these scenarios and can collapse the feasible set.
+The four rejected $\epsilon_\kappa=0.02$ candidates occur at the initial step of four seeds; the live upstream proposal is used on those cycles, and no subsequent state-limit violation is observed. At $\epsilon_\kappa=1$, 628 rejected QPs coincide with the actuator-limited loss of full-row feasibility. This endpoint does not satisfy the robust-QP-feasibility assumption of Theorem~1.
 
-\section{Coupling-Strength Deployment Envelope}
+\section{Robustness-Factor Tune/Test Separation}
+\label{sec:supp_kappa}
 
-Table~\ref{tab:S_kappa_gradient} gives the data behind the main manuscript coupling-gradient figure. Each cell is the mean CBF violation rate over two seeds, with 50 episodes and 500 steps per episode.
+Tune seeds 0--2 each contain 50 episodes of 500 controller samples. Thus, each $\epsilon_\kappa$ setting contains 15{,}000 tune samples. The predeclared selector is the smallest setting for which both pooled and maximum-per-seed violation rates are below 1\% and both pooled and maximum-per-seed QP-rejection rates are below 0.5\%.
 
 \begin{table}[htbp]
     \centering
-    \caption{S3 coupling-strength gradient: violation rate (\%) versus $\epsilon_\kappa$. Safe cells are those below 1\% violation.}
-    \label{tab:S_kappa_gradient}
+    \caption{Tune-seed selection data. Rates are percentages of native controller samples. Wilson upper limits are descriptive Bernoulli-reference values; adjacent samples are serially correlated.}
+    \label{tab:S_kappa_tune}
     \small
-    \begin{tabular}{lccccc}
+    \begin{tabular}{>{\centering\arraybackslash}p{0.10\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}>{\centering\arraybackslash}p{0.15\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}>{\centering\arraybackslash}p{0.15\textwidth}>{\centering\arraybackslash}p{0.10\textwidth}}
         \toprule
-        Coupling strength & $\kappa=0$ & $\kappa=0.1$ & $\kappa=0.3$ & $\kappa=0.5$ & $\kappa=1.0$ \\
+        $\epsilon_\kappa$ & Violation count (rate) & Max. seed violation & QP rejection count (rate) & Max. seed rejection & Pass \\
         \midrule
-        $\gamma=0.5$ & 8.32 & 0.00 & 0.00 & 0.19 & 0.56 \\
-        $\gamma=1.0$ & 33.47 & 0.00 & 0.10 & 0.25 & 40.30 \\
-        $\gamma=1.5$ & 0.51 & 75.26 & 94.69 & 94.84 & 97.28 \\
-        $\gamma=2.0$ & 0.19 & 98.92 & 99.83 & 99.98 & 99.98 \\
+        0 & 412 (2.747) & 8.240 & 0 (0.000) & 0.000 & No \\
+        0.02 & 19 (0.127) & 0.380 & 20 (0.133) & 0.160 & Yes \\
+        0.05 & 0 (0.000) & 0.000 & 26 (0.173) & 0.200 & Yes \\
+        0.10 & 0 (0.000) & 0.000 & 27 (0.180) & 0.200 & Yes \\
+        0.20 & 0 (0.000) & 0.000 & 92 (0.613) & 1.460 & No \\
+        0.50 & 204 (1.360) & 3.580 & 439 (2.927) & 5.900 & No \\
+        1.00 & 1047 (6.980) & 11.080 & 1792 (11.947) & 17.220 & No \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The safe $\epsilon_\kappa$ interval narrows with coupling strength and collapses to $\{0\}$ once the perturbation amplification rate reaches $\gamma \geq 1.5$. In that regime, adding margin primarily tightens an already difficult QP; infeasibility becomes a diagnostic signal for fallback rather than a reason to increase $\epsilon_\kappa$.
+The selector fixes $\epsilon_\kappa=0.02$ before evaluating seeds 3--4. Each held-out seed contains 25{,}000 samples. Seed 3 records 42 violations and 34 rejected QPs; seed 4 records 24 violations and 38 rejected QPs. The pooled rates are therefore 66/50{,}000 (0.132\%) and 72/50{,}000 (0.144\%), respectively. No holdout result is used to change $\epsilon_\kappa$.
 
-\section{Perturbation Magnitude Sweep}
+\section{GP Residual Definition and Commissioning Data}
+\label{sec:supp_gp_data}
 
-Table~\ref{tab:S_magnitude} reports the S1 heat-absorption magnitude sweep for GP-HOCBF with $\epsilon_\kappa=0$. This experiment isolates the GP mean-correction envelope without adding a robustness margin.
+The benchmark and deployed GP use the same three-dimensional kernel input,
+\begin{equation}
+    x_k^{\mathrm{GP}}=[p_{m,k},h_{m,k},N_{e,k}]^\top .
+    \label{eq:S_gp_input}
+\end{equation}
+The nominal predictor uses the complete five-state vector and all three proposed control commands. The three learning targets are residual rates,
+\begin{equation}
+    y_{j,k+1}^{\mathrm{GP}}=
+    \frac{x_{j,k+1}-\hat{x}^{\mathrm{nom}}_{j,k+1|k}}{T_s},
+    \qquad j\in\{p_m,h_m,N_e\}.
+    \label{eq:S_gp_target}
+\end{equation}
+Kernel distances use the frozen training transform $(x_i-\mu_i^{\mathrm{train}})/s_i^{\mathrm{train}}$, and each residual target is standardized by its training mean and standard deviation. The transforms are not updated online.
+
+The plant commissioning record contains approximately 14 days of 1\,Hz historian and commissioning data (about 1.21 million state transitions). Stops, manual operation, communication faults, stale measurements, interlock action, missing values, and identified bad points are removed, leaving approximately 250{,}000 candidate transitions. Days 1--10 form the training candidate pool; day 11 is a 24\,h isolation gap; and days 12--14 form the independent validation pool. Normalization parameters and kernel hyperparameters use only days 1--10.
 
 \begin{table}[htbp]
     \centering
-    \caption{Perturbation magnitude sweep for GP-HOCBF ($\epsilon_\kappa=0$). Violation and intervention rates are percentages.}
-    \label{tab:S_magnitude}
+    \caption{Fixed plant-GP load strata and quotas. Candidates are separated by at least 60\,s and selected by deterministic farthest-point coverage in standardized $(p_m,h_m,N_e)$ space. Quotas are not borrowed between strata.}
+    \label{tab:S_gp_strata}
     \small
-    \begin{tabular}{lccc}
+    \begin{tabular}{>{\centering\arraybackslash}p{0.22\textwidth}>{\centering\arraybackslash}p{0.22\textwidth}>{\centering\arraybackslash}p{0.22\textwidth}}
         \toprule
-        Magnitude & $\Delta f_h$ (kJ/kg) & CBF violation & QP intervention \\
+        Generator-load stratum (MW) & Training points & Validation points \\
         \midrule
-        Mag10 & $-10$ & 0.0 & 100.0 \\
-        Moderate & $-15$ & 0.0 & 100.0 \\
-        Mag25 & $-25$ & 0.0 & 100.0 \\
-        Mag50 & $-50$ & 0.0 & 100.0 \\
-        Mag75 & $-75$ & 100.0 & 100.0 \\
-        Mag100 & $-100$ & 100.0 & 100.0 \\
+        180--264 & 100 & 40 \\
+        264--363 & 100 & 40 \\
+        363--462 & 100 & 40 \\
+        462--561 & 100 & 40 \\
+        561--660 & 100 & 40 \\
+        \midrule
+        Total & 500 & 200 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The GP-only configuration remains safe through Mag50 and fails sharply at Mag75 and above, supporting the deployment-envelope interpretation in the main manuscript.
+Three independent exact Mat\'{e}rn-5/2 GPs are trained and frozen after offline replay. The deployed dictionary remains at $N=500$; online sample growth is zero. Models are reviewed quarterly and after major maintenance or a material coal-source change. The current and previous stable versions are retained for rollback. Exact-GP storage is $\mathcal{O}(qN^2)$ and offline retraining is $\mathcal{O}(qN^3)$ for $q=3$ outputs. Three float32 Cholesky factors occupy approximately 3\,MB; training arrays, coefficients, and kernel parameters occupy approximately 10--20\,MB. The deployed JAX process has a larger runtime resident set (approximately 0.5--2\,GB), but this does not grow with online operation because the dictionary is frozen.
 
-\section{Load-Following and Constraint Decomposition}
-
-The load-following AGC condition is included in the complete Phase~5 inventory but omitted from the main safety table to keep that table focused on static perturbation scenarios. Table~\ref{tab:S_load_following} reports the corresponding mean CBF violation rates.
+The controlled sensitivity experiment uses five independent seeds. Each of the nine dictionary-size--corruption settings therefore comprises five seeded fit-and-evaluation runs (45 runs in total). Each run fits three scalar-output GPs, one for each component of $[p_m,h_m,N_e]$, giving 135 scalar GP fits. It then evaluates 200 held-out transitions and one 500-sample S3 closed-loop rollout. Corruption replaces 5\% or 10\% of selected training targets by signed three-training-standard-deviation offsets; it does not represent a measured plant bad-point rate.
 
 \begin{table}[htbp]
     \centering
-    \caption{Load-following AGC condition: mean CBF violation rate (\%) over 5 seeds.}
-    \label{tab:S_load_following}
-    \small
-    \begin{tabular}{lc}
+    \caption{GP quantity/quality sensitivity. NRMSE and interval coverage are averaged over outputs and seeds. Closed-loop columns aggregate 2500 native controller samples per cell.}
+    \label{tab:S_gp_sensitivity}
+    \scriptsize
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{>{\centering\arraybackslash}p{0.09\textwidth}>{\centering\arraybackslash}p{0.12\textwidth}>{\centering\arraybackslash}p{0.13\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}}
         \toprule
-        Method & CBF violation \\
+        $N$ & Target corruption & Held-out NRMSE & 95\% interval coverage & Violation, $\epsilon_\kappa=0$ & Violation, $\epsilon_\kappa=0.02$ & QP rejection, $\epsilon_\kappa=0.02$ \\
         \midrule
-        PPO & 0.08 \\
-        PPO-Lagrangian & 0.08 \\
-        PPO-CBF & 0.08 \\
-        PPO-HOCBF & 0.00 \\
-        RoCBF-Net mean-only & 0.00 \\
-        RoCBF-Net full margin & 0.00 \\
-        RoCBF-Net & 0.00 \\
-        NMPC & 0.00 \\
+        100 & 0\% & 0.00184 & 100.00\% & 7.60\% & 0.00\% & 0.16\% \\
+        250 & 0\% & 0.00208 & 100.00\% & 7.92\% & 0.00\% & 0.16\% \\
+        500 & 0\% & 0.00243 & 100.00\% & 6.96\% & 0.00\% & 0.16\% \\
+        \midrule
+        100 & 5\% & 0.43547 & 96.87\% & 1.08\% & 64.96\% & 95.64\% \\
+        250 & 5\% & 0.37980 & 95.37\% & 1.32\% & 66.28\% & 98.64\% \\
+        500 & 5\% & 0.25700 & 97.33\% & 1.12\% & 66.88\% & 99.44\% \\
+        100 & 10\% & 0.49337 & 97.63\% & 1.28\% & 66.48\% & 98.76\% \\
+        250 & 10\% & 0.49015 & 95.10\% & 1.04\% & 67.00\% & 99.36\% \\
+        500 & 10\% & 0.42205 & 96.80\% & 0.68\% & 67.20\% & 99.88\% \\
+        \bottomrule
+    \end{tabular}
+    }
+\end{table}
+
+The corrupted fits are deliberately evaluated without the pre-enable data-quality gate to expose the failure mode. Their inflated uncertainty tightens the QP until most candidates are rejected; the controller then uses the upstream proposal, producing the 64.96--67.20\% violation rates in Table~\ref{tab:S_gp_sensitivity}. In deployment, the held-out residual and QP-feasibility checks reject these models before they receive write authority.
+
+\section{Coverage Monitoring and Fallback State Machine}
+\label{sec:supp_fallback}
+
+The online input-coverage statistic and standardized innovation are
+\begin{align}
+    z_{i,k} &= \frac{x^{\mathrm{GP}}_{i,k}-\mu^{\mathrm{train}}_{x_i}}
+    {s^{\mathrm{train}}_{x_i}}, \label{eq:S_z}\\
+    e_{j,k+1} &=
+    \frac{|r_{j,k+1}-\mu_j(x_k^{\mathrm{GP}})|}
+    {\sqrt{\sigma_j^2(x_k^{\mathrm{GP}})+\sigma_{n,j}^2}},
+    \quad
+    r_{j,k+1}=x_{j,k+1}-\hat{x}^{\mathrm{nom}}_{j,k+1|k}.
+    \label{eq:S_innovation}
+\end{align}
+
+\begin{table}[htbp]
+    \centering
+    \caption{GP coverage and degradation thresholds used by the deployed supervisor.}
+    \label{tab:S_coverage_thresholds}
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}}
+        \toprule
+        Monitor & Trigger & Action \\
+        \midrule
+        Input coverage & Any $|z_i|>3$ or outside the training 0.5th--99.5th percentile & Enter full-row nominal-HOCBF mode. \\
+        Posterior uncertainty & Above the validation-set 99th percentile & Withdraw GP mean correction. \\
+        Standardized innovation & Any $e_j>3$ for three cycles & Withdraw GP mean correction and alarm. \\
+        Severe innovation & Any $e_j>5$ once & Immediate live-DCS bypass. \\
+        Persistent OOD & More than 1\% of cycles in one hour & Create an offline recalibration task. \\
+        Recovery & Ten consecutive cycles with valid input, innovation, and variance checks & Permit GP-mode recovery subject to controller authorization. \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Per-constraint logs show no observed pressure or power violations in the Phase~5 inventory. The observed aggregate violations are therefore enthalpy-dominated. Two S1 rerun files store aggregate rates without the per-constraint breakdown; they are included in aggregate safety statistics and excluded from the per-constraint decomposition statement.
+Moderate coverage loss follows
+\begin{equation}
+\begin{aligned}
+\mathsf{GP\!\text{-}\!RoCBF\!\text{-}\!SF}
+&\rightarrow \mathsf{nominal\ HOCBF}_{\leq 10\ \mathrm{cycles}},\\
+\mathsf{nominal\ HOCBF}
+&\rightarrow \mathsf{GP\!\text{-}\!RoCBF\!\text{-}\!SF}
+&&\text{after 10 healthy cycles},\\
+\mathsf{nominal\ HOCBF}
+&\rightarrow \mathsf{BYPASS}\rightarrow\text{live DCS}
+&&\text{otherwise}.
+\end{aligned}
+\label{eq:S_degraded_state}
+\end{equation}
+Invalid measurements or communication, non-finite/model-load faults, nominal-QP or actuator-constraint infeasibility, a direct physical-bound exceedance, pressure-low physical margin below 2.0\,MPa, or a QP/task timeout bypasses the bounded degraded stage immediately. The nominal-HOCBF interval has no GP coverage claim.
 
-\section{GP Calibration Diagnostics}
+An initially infeasible QP permits one reduced-QP retry only for the whitelisted \texttt{pressure\_low} row. Let $v=S_u\tilde v$, $\tilde G_i=G_iS_u$, and $a_i=\|\tilde G_i\|_2$. Row removal requires
+\begin{equation}
+    i=\texttt{pressure\_low},\quad
+    a_i<0.01,\quad h_i<-10^{-6},\quad
+    PM-PLO\geq2.0\ \mathrm{MPa},
+    \label{eq:S_row_drop_guard}
+\end{equation}
+with valid measurements and no active protection or interlock. The authority norm is evaluated after actuator normalization but before unit-row scaling. No actuator box/rate row or second CBF row can be removed, and only one retry is permitted. A successful reduced QP is reported as \texttt{optimal\_recovered}; it is outside the full-row certificate.
 
-Table~\ref{tab:S_gp_calib} summarizes the held-out GP calibration diagnostics. A scenario-specific GP is trained from $N_{\mathrm{train}}=500$ transitions and evaluated on $N_{\mathrm{held}}=200$ held-out transitions. The empirical coverage is the fraction of held-out residual errors satisfying the GP-UCB interval $|\Delta \hat{f}_j| \leq \beta\sigma_{\mathrm{GP},j}$.
+The deployed task deadline is 1000\,ms, equal to the controller period. The field QP timeout is 200\,ms. A timeout, non-finite result, or failed retry returns the current live DCS command rather than the previous algorithm command. Three consecutive solve failures, communication loss beyond 3\,s, a process restart, or a model-load fault latches bypass. Re-entry requires valid measurements, heartbeats, and dry-run QPs for ten cycles, DCS automatic mode, inactive protection/interlocks, operator reset acknowledgement, and the active Kubernetes lease. A 10\,s linear blend is then used for bumpless transfer, provided the QP and DCS commands differ by no more than 2\% of actuator range and both lie in the current feasible set.
+
+Kubernetes uses a 3\,s Lease renewed every 1\,s. Only the lease holder may assert the local write permit; standby Pods connect to Modbus TCP read-only. The DCS remains the final write-permission owner and requires enable, automatic mode, no manual mode, valid echoed heartbeat with age no greater than 2\,s, active lease ownership, and a fresh command sequence. Loss of any condition selects the live coordinated-control command.
+
+\section{Plant Historian and Controller-Export Evidence}
+\label{sec:supp_plant}
+
+The public production-evidence index separates historian context from controller execution. MW01--MW03 are post-retrofit low-to-mid-load historian windows used only to position measured load and main-steam pressure in the operating-envelope figure; they do not supply controller-internal QP fields. MW04--MW06 are confirmed two-hour plant-controller exports covering 480.7--629.7\,MW. Each contains 1440 records at 5\,s export spacing from a controller executing at 1\,s, giving 4320 exported records rather than 4320 controller cycles. These exports directly support the timestamps, operating mode, QP/recovery status, logged margins, saturation flags, and timing statistics reported below. GP lifecycle, Kubernetes lease ownership, heartbeat/sequence checks, and DCS write-permission rules are deployment-configuration specifications; the exports do not expose every internal handshake transition.
+
+The confirmed controller/historian mappings used in the revision are $NE\leftrightarrow\texttt{20CQTP\_MW}$, $PM\leftrightarrow\texttt{DCS2\_20HAG10CP101}$, and $HM\leftrightarrow\texttt{DCS2\_SEPARATOUT\_ENTH}$. The independent tag \texttt{DCS2\_MAIN\_PRESS} is main-steam pressure. The exported \texttt{PST\_HI} value is a main-steam-pressure replay bound, not the separator-pressure upper limit.
 
 \begin{table}[htbp]
     \centering
-    \caption{GP calibration diagnostics on held-out residuals. Coverage is averaged over the three modeled residual dimensions.}
-    \label{tab:S_gp_calib}
-    \small
-    \begin{tabular}{lccc}
+    \caption{High-load controller-export evidence. Direct margins are minima over all 1440 records in each window. ``None'' denotes no fallback or saturation event.}
+    \label{tab:S_high_load}
+    \scriptsize
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.09\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}>{\centering\arraybackslash}p{0.13\textwidth}>{\centering\arraybackslash}p{0.13\textwidth}>{\centering\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\centering\arraybackslash}p{0.13\textwidth}}
         \toprule
-        Scenario & Mean coverage & Mean $\sigma_{\mathrm{GP}}$ & $\beta$ \\
+        Window & Load (MW) & Sep.-pressure low margin (MPa) & Main-pressure high margin (MPa) & Nearest enthalpy margin (kJ/kg) & QP/recovery record & QP/task p95 (ms) \\
         \midrule
-        S1: Heat & 100.0\% & 0.104 & 38.15 \\
-        S2: Pressure & 100.0\% & 0.142 & 49.29 \\
-        S3: Coupled & 100.0\% & 0.101 & 31.84 \\
-        S4: Nonlinear & 100.0\% & 0.100 & 5.73 \\
-        S5: Valve & 100.0\% & 0.100 & 5.74 \\
-        S6: Fuel & 100.0\% & 0.100 & 5.77 \\
+        MW04 & 563.0--621.2 & 2.217 & 2.173 & 62.284 & 1397 optimal; 43 recovered; 1 fuel-sat. & 4.195 / 26.238 \\
+        MW05 & 547.9--629.7 & 3.438 & 1.483 & 20.354 & 1440 optimal; none & 4.074 / 26.139 \\
+        MW06 & 480.7--619.3 & 2.705 & 0.463 & 0.359 & 1440 optimal; none & 4.062 / 26.159 \\
         \bottomrule
     \end{tabular}
+    }
 \end{table}
 
-The GP-UCB intervals are conservative in the held-out data, so the empirical limitation observed in the main results is not lack of pointwise GP coverage. The limiting factor is how the chosen margin scale reshapes the feasible QP set under each perturbation structure.
+All 43 MW04 recovery records have \texttt{FB\_RSN=weak\_authority\_constraint\_drop}, \texttt{ACT\_CSTR=pressure\_low}, and negative \texttt{MG\_PLO}. The diagnostic row ranges from $-0.03266$ to $-0.00561$, while the direct physical margin $PM-PLO$ ranges from 2.21654 to 2.36306\,MPa and the other five exported HOCBF margins remain positive. MW05--MW06 contain no reduced-QP record. Across MW04--MW06, QP time has median/p95/maximum values 3.557/4.095/6.234\,ms, and total task time has corresponding values 24.564/26.183/28.665\,ms.
 
-\section{Computation Time Analysis}
+The plant value $\epsilon_\kappa=0.1$ is fixed after training-block replay and passes the one-pass time-isolated validation gate without retuning; it is not copied from the benchmark S3 selection. Record-level plant replay remains a restricted enterprise asset and is not inferred from the high-load controller exports. The original PID gains, output limits, anti-windup, sliding-pressure curve, coordinated-control logic, and fuel/feedwater/turbine-valve base loops are unchanged; RoCBF-SF is added downstream with enable, bypass, heartbeat, command-quality, and DCS-selection logic. The outage also includes instrument calibration, actuator inspection, combustion-equipment maintenance, and heat-surface cleaning, so the historian before/after comparison is observational. The controller exports separately establish that the proposed filter executed after restart.
 
-Figure~\ref{fig:comp_time} compares the per-step computation time of the safety-filter pipeline (PPO forward pass, GP inference, and QP solve) against the implemented SLSQP-based NMPC baseline. The comparison is with the implemented research baseline, not with optimized industrial NMPC software.
+The public reproducibility package contains source code, simulation results, derived historian metrics, bounded anonymized controller-export excerpts, field maps, and source/public hashes. Complete raw historian and original controller exports are enterprise assets. Qualified researchers may request restricted access from the corresponding author, subject to data-owner approval and the applicable data-use conditions.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{figures/Figure_5.pdf}
-    \caption{Per-step computation time comparison (log scale). PPO+GP+QP with GPU JIT compilation: ${\sim}25$\,ms (p95: 27\,ms); NMPC (CPU, SLSQP, $N{=}5$ horizon): 254\,ms average.}
-    \label{fig:comp_time}
-\end{figure}
+\section{Computation and Sampled-Data Boundary}
+\label{sec:supp_computation}
 
-\section{GP--CBF Structural Comparison}
+The NMPC reference uses a warm-started SLSQP solve with horizon $N=5$, output weights $\mathrm{diag}(1,0.001,0.01)$, input weights $\mathrm{diag}(0.01,0.01,0.01)$, deviation-input bounds $[-10,10]^3$, six prediction constraints, additive disturbance correction with gain 0.5, \texttt{maxiter}$=50$, and \texttt{ftol}$=10^{-4}$. All 17{,}500 solves converge and pass the $10^{-6}$ prediction-residual check. Mean per-step solve time ranges from 3.50\,ms in the nominal case to 31.99\,ms in the tested perturbation scenarios. These values describe the implemented reference rather than an optimized industrial MPC package.
 
-Table~\ref{tab:S_gp_cbf} summarizes the structural differences between the proposed robust HOCBF formulation and representative GP-augmented safe-control methods.
-
-\begin{table}[htbp]
-    \centering
-    \caption{GP-augmented safety methods compared on structural axes.}
-    \label{tab:S_gp_cbf}
-    \resizebox{\columnwidth}{!}{%
-    \begin{tabular}{lccc}
-        \toprule
-        & \multicolumn{3}{c}{Structural axis} \\
-        \cmidrule(lr){2-4}
-        Method & \begin{tabular}{c}Uncertainty\\propagation depth\end{tabular} & \begin{tabular}{c}Per-constraint\\differentiation\end{tabular} & \begin{tabular}{c}GP-UCB\\guarantee type\end{tabular} \\
-        \midrule
-        Cheng et al.~\cite{cheng2019guaranteed} & Top-level CBF only & No & Per-step CBF ($m{=}1$) \\
-        Hewing et al.~\cite{hewing2020cautious} & MPC prediction horizon & Partial & Chance-constrained horizon \\
-        \textbf{Ours} & Full HOCBF $\psi$-chain & Yes & Per-step invariance ($m \geq 1$) \\
-        \bottomrule
-    \end{tabular}}
-\end{table}
+The theorem is continuous-time. The controller applies zero-order hold with $T_s=1$\,s because 1\,s is the deployed coordinated-control task period; the safety filter therefore evaluates each upstream command update before the command-selection stage. This implementation choice does not assign a 1\,s time constant to the slower boiler thermal dynamics. The field exports retain one record every 5\,s, so their spacing is a logging interval rather than the internal control period. Field task timing establishes computational fit within the 1\,s period but does not establish inter-sample forward invariance. Theorem~1 therefore is not presented as a sampled-data certificate; deriving such a certificate is retained as future work.

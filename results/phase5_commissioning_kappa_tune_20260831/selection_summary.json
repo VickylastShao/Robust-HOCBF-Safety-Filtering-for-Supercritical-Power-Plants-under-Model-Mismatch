@@ -1,0 +1,156 @@
+{
+  "experiment": "commissioning_kappa_selection",
+  "selection_scope": "tune_seeds_only",
+  "rule": "smallest epsilon_kappa passing aggregate and per-seed gates",
+  "gates": {
+    "violation_rate_strictly_below": 0.01,
+    "qp_rejection_rate_strictly_below": 0.005
+  },
+  "selected_epsilon_kappa": 0.02,
+  "rows": [
+    {
+      "epsilon_kappa": 0.0,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 412,
+      "total_samples": 15000,
+      "violation_rate": 0.027466666666666667,
+      "descriptive_wilson_95_upper": 0.03020563014202753,
+      "maximum_seed_violation_rate": 0.0824,
+      "qp_rejected_count": 0,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0,
+      "maximum_seed_qp_rejection_rate": 0.0,
+      "passes": false
+    },
+    {
+      "epsilon_kappa": 0.02,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 19,
+      "total_samples": 15000,
+      "violation_rate": 0.0012666666666666666,
+      "descriptive_wilson_95_upper": 0.001977625844240923,
+      "maximum_seed_violation_rate": 0.0038,
+      "qp_rejected_count": 20,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0013333333333333333,
+      "maximum_seed_qp_rejection_rate": 0.0016,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.05,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 26,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0017333333333333333,
+      "maximum_seed_qp_rejection_rate": 0.002,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.1,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 27,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0018,
+      "maximum_seed_qp_rejection_rate": 0.002,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.2,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 92,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0061333333333333335,
+      "maximum_seed_qp_rejection_rate": 0.0146,
+      "passes": false
+    },
+    {
+      "epsilon_kappa": 0.5,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 204,
+      "total_samples": 15000,
+      "violation_rate": 0.0136,
+      "descriptive_wilson_95_upper": 0.015582000897840799,
+      "maximum_seed_violation_rate": 0.0358,
+      "qp_rejected_count": 439,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.029266666666666667,
+      "maximum_seed_qp_rejection_rate": 0.059,
+      "passes": false
+    },
+    {
+      "epsilon_kappa": 1.0,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 1047,
+      "total_samples": 15000,
+      "violation_rate": 0.0698,
+      "descriptive_wilson_95_upper": 0.07398883909918322,
+      "maximum_seed_violation_rate": 0.1108,
+      "qp_rejected_count": 1792,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.11946666666666667,
+      "maximum_seed_qp_rejection_rate": 0.1722,
+      "passes": false
+    }
+  ],
+  "statistical_boundary": "Wilson values are descriptive Bernoulli-reference bounds; serially correlated controller samples are not independent trials.",
+  "holdout_test": {
+    "epsilon_kappa": 0.02,
+    "seeds": [
+      3,
+      4
+    ],
+    "violation_count": 66,
+    "total_samples": 50000,
+    "violation_rate": 0.00132,
+    "maximum_seed_violation_rate": 0.00168,
+    "qp_rejected_count": 72,
+    "qp_attempts": 50000,
+    "qp_rejection_rate": 0.00144,
+    "maximum_seed_qp_rejection_rate": 0.00152,
+    "passes_fixed_gates": true,
+    "retuning_after_holdout": false
+  }
+}

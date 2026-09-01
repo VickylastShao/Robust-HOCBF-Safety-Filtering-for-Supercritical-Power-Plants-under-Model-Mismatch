@@ -37,59 +37,23 @@
 \begin{document}
 
 \date{}
-\title{Commissioning-Calibrated GP-HOCBF Safety Filtering for Supercritical Boiler-Turbine Control under Model Mismatch}
+\title{Commissioning-Calibrated GP-HOCBF Safety Filtering for Ultra-Supercritical Boiler-Turbine Control under Model Mismatch}
 
-\author{
-Zhuang~Shao$^{1,*}$, Lijun~Lei$^{2}$, Peng~Wang$^{3}$, Liang~Zheng$^{2}$, Jie~Zhou$^{2}$\\[1em]
-$^{1}$China Resources Power Technology Research Institute Co., Ltd.,\\
-\hspace*{1em}Shenzhen 518000, Guangdong Province, China\\
-$^{2}$Rundian Energy Science and Technology Co., Ltd.,\\
-\hspace*{1em}Zhengzhou 450052, Henan Province, China\\
-$^{3}$North China University of Water Resources and Electric Power,\\
-\hspace*{1em}Zhengzhou 450046, Henan Province, China\\[0.5em]
-$^{*}$Corresponding author: \texttt{shaozhuang@crpower.com.cn},\\
-\hspace*{1em}ORCID: 0000-0003-2496-0797
-}
+\author{}
 
 \maketitle
 
 \begin{abstract}
-Ultra-supercritical boiler-turbine units must keep main steam pressure, separator outlet enthalpy, and turbine power inside protection limits under coal-quality drift, fouling, actuator degradation, and other model mismatch. RoCBF-Net is a commissioning-calibrated safety-filter architecture for a 1000\,MW boiler-turbine measurement and control loop. At each sampling instant, an upstream controller proposes an action; a Gaussian-process (GP)-corrected high-order control barrier function (HOCBF) layer then solves a quadratic program to return the nearest action satisfying the process safety constraints. The implementation propagates GP posterior uncertainty through the HOCBF $\psi$-chain and scales the resulting compositional margin with a scalar factor $\epsilon_\kappa$, so the robustness margin can be commissioned rather than fixed a priori. Evaluation uses a 5th-order nonlinear boiler-turbine benchmark with $\Phi$-scaled control effectiveness, six disturbance scenarios, load-following operation, eight controller/filter variants, and 5 seeds $\times$ 50 episodes $\times$ 500 steps; a plant-historian snapshot from China Resources Xiantao Unit 2 is used to ground the measured channels and operating variability. GP mean correction reduces nominal HOCBF violations by more than 500 times and achieves $\leq0.18\%$ violation in six of seven uncertainty scenarios. Margin calibration is condition-dependent: $\epsilon_\kappa=0$ is sufficient for additive perturbations, $\epsilon_\kappa=0.1$ restores zero violation under state-dependent coupling, and the full theoretical margin $\epsilon_\kappa=1.0$ over-constrains the quadratic program in the tested benchmark. A coupling-strength sweep defines a deployment envelope in which positive margins help at moderate coupling but should be disabled beyond $\gamma\geq1.5$. The JIT-compiled filter runs at about 25\,ms per step, within the 1\,s sampling budget and approximately ten times faster than the implemented SLSQP-based NMPC benchmark. The results position RoCBF-Net as a pre-deployment, commissioning-calibrated safety layer for industrial process-control systems, not as a fixed worst-case robust controller.
+Ultra-supercritical power-unit control must enforce pressure, separator-enthalpy, and power limits despite residual errors caused by changing coal quality, heat absorption, and process dynamics. These errors can make a command that is acceptable to the nominal coordinated controller unsafe for the measured plant. This paper proposes RoCBF-SF, a commissioning-calibrated Gaussian-process high-order control barrier function (GP-HOCBF) safety filter placed between an existing coordinated controller and the actuators. It corrects the nominal drift with three GP residual models, propagates posterior uncertainty through the HOCBF chain, and projects each proposed command through a one-step quadratic program. In a fifth-order benchmark aligned with the certificate assumption $\Delta g=0$, the no-GP HOCBF produces 10{,}756 violations in 15{,}000 mismatch samples; GP mean correction reduces this count to 36. The calibrated setting $\epsilon_\kappa=0.02$ gives 0/17{,}500 observed violations in the primary sweep, while an independent 50{,}000-sample holdout test reports a 0.132\% violation rate and 0.144\% QP-rejection rate. The full-margin endpoint $\epsilon_\kappa=1$ can over-tighten the actuator-limited QP. Plant evidence from a 660\,MW ultra-supercritical unit includes 1950 load-matched historian windows and confirmed controller exports. In a representative matched pair, pressure-error standard deviation decreases from 0.375 to 0.156\,MPa. Three high-load exports contain 4320 records over 480.7--629.7\,MW: direct pressure, enthalpy, and power margins remain positive; two windows use the full QP throughout, and one records 43 guarded reduced-QP recoveries. The maximum total task time is 28.665\,ms against a 1000\,ms deadline. The results support a deployable safety-filter workflow with explicit calibration, coverage, feasibility, and fallback boundaries.
 \end{abstract}
 
-\textbf{Keywords:} Supercritical boiler-turbine control; industrial process control; safety filter; high-order control barrier function; Gaussian process uncertainty; commissioning calibration
+\textbf{Keywords:} Ultra-supercritical boiler-turbine control; model mismatch; safety filter; high-order control barrier function; Gaussian process residual learning; robustness-margin calibration
 
 \input{sections_mc/intro}
 \input{sections_mc/related_work}
 \input{sections_mc/methodology}
 \input{sections_mc/experimental}
 \input{sections_mc/conclusion}
-
-\section*{Statements and Declarations}
-
-\subsection*{Ethical considerations}
-Not applicable. This study did not involve human participants, human data, human tissue, or animal experiments.
-
-\subsection*{Consent to participate}
-Not applicable.
-
-\subsection*{Consent for publication}
-Not applicable.
-
-\subsection*{Declaration of conflicting interests}
-The authors declare no potential conflicts of interest with respect to the research, authorship, and/or publication of this article.
-
-\subsection*{Funding}
-This work was supported by the Postdoctoral Research Project of China Resources Power Technology Research Institute Co., Ltd. (Internal Project No.\ 374322).
-
-\subsection*{Author contributions}
-Zhuang Shao: Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Visualization, Writing -- original draft, Writing -- review \& editing. Lijun Lei: Resources, Supervision, Project administration. Peng Wang: Formal analysis, Writing -- review \& editing. Liang Zheng: Resources, Supervision. Jie Zhou: Investigation, Data curation.
-
-\subsection*{Data availability}
-The source code, simulation scripts, trained GP configurations, plotting scripts, and the derived plant-historian summaries used for Fig.~\ref{fig:production_historian} are available in the \href{https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch}{GitHub repository}. The raw Xiantao plant historian records are proprietary operational data of the plant owner and cannot be publicly released; they are used only for measurement-channel and operating-variability grounding, not to reproduce the closed-loop simulation benchmark. No human data or third-party operational datasets were used.
-
-\subsection*{Declaration of generative AI and AI-assisted technologies}
-During the preparation of this work, the authors used ChatGPT for language polishing and manuscript formatting. The authors reviewed and edited all content and take full responsibility for the article.
 
 \bibliographystyle{SageV}
 \bibliography{refs}

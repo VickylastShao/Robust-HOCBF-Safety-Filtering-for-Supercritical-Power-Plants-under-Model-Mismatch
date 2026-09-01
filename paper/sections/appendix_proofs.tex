@@ -1,0 +1,56 @@
+\section{Proofs of Theoretical Results}
+\label{sec:appendix_proofs}
+
+\subsection{Residual/RKHS Gradient Bound}
+
+\noindent\textbf{Lemma S1 (Residual/RKHS gradient bound).}
+\label{lem:residual_gradient}
+Let $\delta_i = \psi_i - \hat{\psi}_i^0$ with $\delta_0 \equiv 0$. Suppose Assumptions~1--3 of the main article hold, the Mat\'{e}rn-5/2 commissioning GP induces a differentiable RKHS residual class, and $\hat{f}$ is smooth on the compact operating region $\calX_{\mathrm{op}}$. Then, for each HOCBF level $i$, there exists $G_\delta^{(i)}$ such that $\|\nabla_x \delta_i(x)\| \leq G_\delta^{(i)}$ for all $x \in \calX_{\mathrm{op}}$. One recursive choice is
+\begin{equation}
+\begin{aligned}
+    G_\delta^{(0)} &= 0, \\
+    G_\delta^{(i)}
+    &= \bigl(H_\psi^{(i-1)} + H_\delta^{(i-1)}\bigr)\|\Delta \hat{f}\|_\infty
+     + \bigl(G_\psi^{(i-1)} + G_\delta^{(i-1)}\bigr)G_f \\
+    &\quad + (L_{\hat f,i} + k_i) G_\delta^{(i-1)} .
+\end{aligned}
+\label{eq:G_delta_recursive_app}
+\end{equation}
+
+Here, $H_\psi^{(i-1)} = \sup_{x\in\calX_{\mathrm{op}}}\|\nabla_x^2 \hat{\psi}_{i-1}^0(x)\|_{\mathrm{op}}$, $H_\delta^{(i-1)} = \sup_{x\in\calX_{\mathrm{op}}}\|\nabla_x^2 \delta_{i-1}(x)\|_{\mathrm{op}}$, $G_\psi^{(i-1)} = \sup_{x\in\calX_{\mathrm{op}}}\|\nabla_x \hat{\psi}_{i-1}^0(x)\|$, and $G_f$ is the residual-gradient bound from Assumption~3 of the main article. These constants are finite on $\calX_{\mathrm{op}}$ by the compositional residual-bound assumption. The constant $L_{\hat f,i}$ bounds the contribution of the nominal Lie-derivative operator to $\nabla_x(L_{\hat f}\delta_{i-1})$ on $\calX_{\mathrm{op}}$.
+
+\begin{proof}
+Differentiate $\delta_i = L_{\Delta\hat f}\hat\psi_{i-1}^0 + (L_{\hat f}+k_i)\delta_{i-1} + L_{\Delta\hat f}\delta_{i-1}$ term by term.
+\begin{enumerate}
+    \item[(i)] $\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0) = \nabla_x^2\hat\psi_{i-1}^0 \Delta\hat f + (\nabla_x\Delta\hat f)^\top \nabla_x\hat\psi_{i-1}^0$. By Cauchy-Schwarz and the residual-gradient bound in Assumption~3 of the main article, $\|\nabla_x(L_{\Delta\hat f}\hat\psi_{i-1}^0)\| \leq H_\psi^{(i-1)}\|\Delta\hat f\|_\infty + G_\psi^{(i-1)} G_f$.
+    \item[(ii)] $\nabla_x((L_{\hat f}+k_i)\delta_{i-1})$ contributes $(L_{\hat f,i} + k_i) G_\delta^{(i-1)}$.
+    \item[(iii)] $\nabla_x(L_{\Delta\hat f}\delta_{i-1}) = \nabla_x^2\delta_{i-1} \Delta\hat f + (\nabla_x\Delta\hat f)^\top \nabla_x\delta_{i-1}$, bounded by $H_\delta^{(i-1)}\|\Delta\hat f\|_\infty + G_\delta^{(i-1)} G_f$.
+\end{enumerate}
+Summing yields~Eq.~\eqref{eq:G_delta_recursive_app}. Under Assumption~3 of the main article, the residual-gradient bound satisfies $G_f=\calO(\|\Delta\hat f\|)$. By induction, $G_\delta^{(i)}=\calO(\|\Delta\hat f\|)$ at every level, so $|L_{\Delta\hat f}\delta_{i-1}| \leq G_\delta^{(i-1)}\|\Delta\hat f\| = \calO(\|\Delta\hat f\|^2)=\calO(\rho^2)$.
+\end{proof}
+
+\subsection{Full Proof of Theorem~1}
+
+\begin{proof}[Proof of Theorem~1]
+\textbf{Step 1 (GP calibration).} By Assumption~2 of the main article and the GP-UCB concentration inequality of Srinivas et al.\ [4], $|\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \cdot \sigmaGPj{j}(x)$ for all $x \in \calX_{\mathrm{op}}$ holds with probability $\geq 1 - \delta/n$ per dimension. By union bound over $j = 1,\ldots,n$, this holds simultaneously with probability $\geq 1 - \delta$. Condition on this event.
+
+\textbf{Step 2 (Compositional bound).} We show $|\delta_i(x)| \leq \sigma_i(x)$ by induction on $i$.
+\begin{itemize}
+    \item \emph{Base case ($i=1$):} $\delta_1 = \sum_j (\partial h/\partial x_j) \Delta \hat{f}_j$. By Step~1 and triangle inequality, $|\delta_1| \leq \beta \sum_j |\partial h/\partial x_j| \sigmaGPj{j} = \sigma_1$.
+    \item \emph{Inductive step ($i \geq 2$):} Assume $|\delta_{i-1}| \leq \sigma_{i-1}$. The residual recursion in the main article gives $|\delta_i| \leq |L_{\Delta \hat{f}} \hat{\psi}_{i-1}^0| + (|L_{\fhat}|_{\mathrm{op}} + k_i)|\delta_{i-1}| + |L_{\Delta \hat{f}} \delta_{i-1}|$. The first term is bounded as in the base case. The second term is bounded by the induction hypothesis. The third term is bounded using Lemma~S1: $|L_{\Delta \hat{f}} \delta_{i-1}| \leq G_\delta^{(i-1)} \beta \|\sigmaGP\|_2 = \sigma_{\mathrm{cross}}^{(i)}$. Summing the three bounds gives $|\delta_i| \leq \sigma_i$.
+\end{itemize}
+The cross term is retained at full weight. Under Assumption~3 of the main article, it is formally $\calO(\rho^2)$.
+
+\textbf{Step 3 (Total perturbation).} Combining the inductive bounds from Step~2 with the coupling-coefficient bound in Eq.~\eqref{eq:sigma_ctrl_app} yields $|\Delta_{\psi}(x,v)| \leq \sigma_m(x) + \sum_{j=1}^{m-1} c_j \sigma_j(x) + \sigma_{\mathrm{ctrl}}(x) = \sigmatotal(x)$ for every admissible deviation input $v$. For $\epsilonKappa = 1$, the applied margin is $\sigmatotal(x)$.
+
+\textbf{Step 4 (Forward invariance).} For $v^*$ satisfying $A_0(x)v^* \leq b_0(x)-\sigmatotal(x)$: $\psi_m^{\mathrm{true}}(x,v^*) = \hat{\psi}_m^0(x,v^*) + \Delta_{\psi}(x,v^*) \geq \sigmatotal(x) - |\Delta_{\psi}(x,v^*)| \geq 0$. By Theorem~2 of~Xiao et al.\ [2], the safe set $\calC$ is forward invariant.
+\end{proof}
+
+\subsection{Coupling Coefficient Gap Bound}
+
+The coupling coefficient gap is bounded by:
+\begin{equation}
+    \sigma_{\mathrm{ctrl}}(x) = \beta \sum_{j} \left|\frac{\partial (L_g L_{\fhat}^{m-1} h)}{\partial x_j}\right| \sigmaGPj{j}(x) \cdot u_{\max}
+    \label{eq:sigma_ctrl_app}
+\end{equation}
+where $u_{\max} = \sup_{u \in \calU} \|u\|$. For the CCS benchmark, $\sigma_{\mathrm{ctrl}} / \sigmatotal < 0.15$ for both constraints.

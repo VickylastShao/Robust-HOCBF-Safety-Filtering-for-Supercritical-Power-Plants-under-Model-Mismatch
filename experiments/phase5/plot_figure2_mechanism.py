@@ -1,11 +1,9 @@
-"""Generate Figure 2: S3 failure mechanism and kappa calibration.
+"""Generate the S3 safety-factor calibration figure.
 
-The figure focuses on the enthalpy bottleneck rather than all process states:
-
-1. Representative S3 enthalpy trajectories for HOCBF, GP-HOCBF k=0, and
-   GP-HOCBF k=0.1.
-2. The corresponding enthalpy safety margin, h_m - h_min.
-3. Seed-level S3 violation rates from the kappa sweep.
+The closed-loop signal mechanism is shown in Figure_6_process_response. This
+figure deliberately avoids repeating the same trajectory evidence; it uses the
+seed-level S3 kappa sweep to show why a small positive margin is the calibrated
+operating point and why the full theoretical margin is not used as a default.
 
 Run on a GPU host for trajectory generation. Re-running locally without JAX is
 supported after the trajectory JSON has been generated.
@@ -33,14 +31,21 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+
+from scripts.mc_figure_style import apply_times_new_roman_style
+
 RESULTS_DIR = ROOT / "results" / "phase5"
 FIGURE_DIR = ROOT / "paper" / "figures"
 TRAJECTORY_JSON = RESULTS_DIR / "figure2_mechanism_trajectories.json"
 KAPPA_SUMMARY_JSON = RESULTS_DIR / "figure2_s3_kappa_summary.json"
 
 LOAD_RATIO = 1.0
-N_STEPS = 300
+DT_SEC = 1.0
+TOTAL_TIME_SEC = 300.0
+N_STEPS = int(round(TOTAL_TIME_SEC / DT_SEC))
 DISPLAY_STEPS = 10
+DISPLAY_DT_SEC = 0.1
 H_LOW = 2670.0
 H_HIGH = 2830.0
 
@@ -91,10 +96,9 @@ METHODS = [
 
 
 def configure_style() -> None:
+    apply_times_new_roman_style(base_size=8)
     plt.rcParams.update(
         {
-            "font.family": "sans-serif",
-            "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
             "font.size": 8,
             "axes.labelsize": 8,
             "axes.titlesize": 8,
@@ -108,10 +112,6 @@ def configure_style() -> None:
             "savefig.bbox": "tight",
             "axes.spines.top": False,
             "axes.spines.right": False,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-            "svg.fonttype": "none",
-            "axes.unicode_minus": False,
         }
     )
 
@@ -128,7 +128,16 @@ def _require_jax():
     return jax, jnp
 
 
-def generate_trajectories(n_steps: int = N_STEPS, force: bool = False) -> dict:
+def _time_grid(n_steps: int, dt_sec: float, *, include_endpoint: bool) -> list[float]:
+    n = n_steps + 1 if include_endpoint else n_steps
+    return [round(i * dt_sec, 10) for i in range(n)]
+
+
+def generate_trajectories(
+    n_steps: int = N_STEPS,
+    dt_sec: float = DT_SEC,
+    force: bool = False,
+) -> dict:
     """Generate representative trajectories under S3 coupled perturbation."""
     if TRAJECTORY_JSON.exists() and not force:
         with TRAJECTORY_JSON.open() as f:
@@ -150,7 +159,7 @@ def generate_trajectories(n_steps: int = N_STEPS, force: bool = False) -> dict:
         _pretrain_gp_5th,
     )
 
-    dynamics = USCCSDynamics5th(load_ratio=LOAD_RATIO)
+    dynamics = USCCSDynamics5th(dt=dt_sec, load_ratio=LOAD_RATIO)
     x0, u0 = dynamics.equilibrium(LOAD_RATIO)
     constraint = CCSConstraints5th(
         p_bounds=(13.0, 24.0),
@@ -169,6 +178,7 @@ def generate_trajectories(n_steps: int = N_STEPS, force: bool = False) -> dict:
         key=jax.random.key(42),
         scenario="coupled",
         scenario_specific=True,
+        dt_sec=dt_sec,
     )
 
     print("Building GP-HOCBF filters (k=0 and k=0.1)...", flush=True)
@@ -192,22 +202,39 @@ def generate_trajectories(n_steps: int = N_STEPS, force: bool = False) -> dict:
     )
 
     qp = DifferentiableQP(v_max=5.0, scale_constraints=True)
+    filters = {
+        "hocbf": hocbf,
+        "gp_k0": gp_k0,
+        "gp_k01": gp_k01,
+    }
+    for key, filt in filters.items():
+        filt._qp_matrices_jit = jax.jit(filt.qp_matrices)
+        print(f"  JIT-ready: {key}", flush=True)
+
     env = UncertainUSCCSDynamics5th(
-        load_ratio=LOAD_RATIO, uncertainty_scenario="coupled"
+        dt=dt_sec,
+        load_ratio=LOAD_RATIO,
+        uncertainty_scenario="coupled",
     )
 
     def rollout(hocbf_obj, label: str) -> dict:
         x = x0.copy()
+        y0 = dynamics.output(x)
         out = {
-            "h_m": [],
-            "h_margin": [],
-            "pressure": [],
-            "power": [],
+            "time_state_s": _time_grid(n_steps, dt_sec, include_endpoint=True),
+            "time_action_s": _time_grid(n_steps, dt_sec, include_endpoint=False),
+            "h_m": [float(y0[1])],
+            "h_margin": [float(y0[1] - H_LOW)],
+            "pressure": [float(y0[0])],
+            "power": [float(y0[2])],
             "violation": [],
         }
-        for _ in range(n_steps):
+        for step in range(n_steps):
             v_rl = jnp.zeros(3)
-            a_mat, b_vec = hocbf_obj.qp_matrices(x)
+            if hasattr(hocbf_obj, "_qp_matrices_jit"):
+                a_mat, b_vec = hocbf_obj._qp_matrices_jit(x)
+            else:
+                a_mat, b_vec = hocbf_obj.qp_matrices(x)
             v_safe = qp.solve_with_rl_action(
                 v_rl, a_mat, b_vec, differentiable=False
             )
@@ -225,6 +252,8 @@ def generate_trajectories(n_steps: int = N_STEPS, force: bool = False) -> dict:
             out["power"].append(float(next_x[3]))
             out["violation"].append(bool(violated))
             x = next_x
+            if (step + 1) % 100 == 0:
+                print(f"    {label}: completed {step + 1}/{n_steps}", flush=True)
 
         n_viol = int(sum(out["violation"]))
         out["n_violations"] = n_viol
@@ -241,6 +270,10 @@ def generate_trajectories(n_steps: int = N_STEPS, force: bool = False) -> dict:
             "scenario": "S3: Coupled",
             "load_ratio": LOAD_RATIO,
             "n_steps": n_steps,
+            "dt_sec": dt_sec,
+            "total_time_s": round(n_steps * dt_sec, 10),
+            "time_state_s": _time_grid(n_steps, dt_sec, include_endpoint=True),
+            "time_action_s": _time_grid(n_steps, dt_sec, include_endpoint=False),
             "gp_pretrain_points": 500,
             "gp_seed": 42,
             "rl_action": "zero deviation action",
@@ -264,6 +297,12 @@ def load_kappa_seed_data() -> tuple[list[dict], list[dict]]:
     """Load seed-level kappa sweep data for S3 coupled perturbation."""
     seed_rows = []
     pattern = re.compile(r"kappa([0-9.]+)_s3_coupled_seed(\d+)\.json$")
+
+    def first_metric(value, default=np.nan) -> float:
+        if isinstance(value, list):
+            return float(value[0]) if value else float(default)
+        return float(value) if value is not None else float(default)
+
     for path in sorted((RESULTS_DIR / "kappa_sweep").glob("kappa*_s3_coupled_seed*.json")):
         match = pattern.match(path.name)
         if not match:
@@ -273,12 +312,14 @@ def load_kappa_seed_data() -> tuple[list[dict], list[dict]]:
         with path.open() as f:
             result = json.load(f)
         value = result.get("violation_rate", [np.nan])
-        violation_rate = value[0] if isinstance(value, list) else value
+        violation_rate = first_metric(value)
         seed_rows.append(
             {
                 "kappa": kappa,
                 "seed": seed,
                 "violation_pct": float(violation_rate) * 100.0,
+                "min_barrier_value": first_metric(result.get("min_barrier_value")),
+                "control_cost": first_metric(result.get("control_cost")),
             }
         )
 
@@ -299,6 +340,23 @@ def load_kappa_seed_data() -> tuple[list[dict], list[dict]]:
                 "mean_violation_pct": mean(values),
                 "sd_violation_pct": stdev(values) if len(values) > 1 else 0.0,
                 "seed_values_pct": values,
+                "mean_min_barrier_value": mean(
+                    row["min_barrier_value"]
+                    for row in seed_rows
+                    if row["kappa"] == kappa
+                ),
+                "sd_min_barrier_value": stdev(
+                    [
+                        row["min_barrier_value"]
+                        for row in seed_rows
+                        if row["kappa"] == kappa
+                    ]
+                )
+                if len(values) > 1
+                else 0.0,
+                "mean_control_cost": mean(
+                    row["control_cost"] for row in seed_rows if row["kappa"] == kappa
+                ),
             }
         )
 
@@ -320,87 +378,20 @@ def panel_label(ax, label: str) -> None:
     )
 
 
+def _display_grid(display_steps: int, dt: float = DISPLAY_DT_SEC) -> np.ndarray:
+    return np.round(np.arange(0.0, display_steps + 0.5 * dt, dt), 10)
+
+
+def _interp_series(t_src: np.ndarray, y_src: np.ndarray, t_dst: np.ndarray) -> np.ndarray:
+    """Return a display-only interpolation of 1 s rollout samples."""
+    return np.interp(t_dst, t_src, y_src)
+
+
 def plot_figure(trajectories: dict, seed_rows: list[dict], summary_rows: list[dict]) -> None:
     configure_style()
 
-    fig = plt.figure(figsize=(7.2, 5.0), constrained_layout=True)
-    grid = fig.add_gridspec(2, 2, height_ratios=[1.08, 1.0])
-    ax_traj = fig.add_subplot(grid[0, :])
-    ax_margin = fig.add_subplot(grid[1, 0])
-    ax_kappa = fig.add_subplot(grid[1, 1])
-
-    total_steps = trajectories["metadata"]["n_steps"]
-    t = np.arange(total_steps)
-    all_h = []
-    all_margin = []
-    for spec in METHODS:
-        data = trajectories["methods"][spec.key]
-        h_vals = np.asarray(data["h_m"], dtype=float)
-        margins = np.asarray(data["h_margin"], dtype=float)
-        all_h.extend(h_vals.tolist())
-        all_margin.extend(margins.tolist())
-
-        ax_traj.plot(
-            t,
-            h_vals,
-            color=spec.color,
-            linestyle=spec.linestyle,
-            linewidth=spec.linewidth,
-            label=spec.label,
-        )
-        ax_margin.plot(
-            t,
-            margins,
-            color=spec.color,
-            linestyle=spec.linestyle,
-            linewidth=spec.linewidth,
-        )
-
-    y_min = min(min(all_h) - 3.0, H_LOW - 5.0)
-    y_max = max(max(all_h) + 3.0, H_LOW + 25.0)
-    ax_traj.axhspan(y_min, H_LOW, color="#F4A582", alpha=0.22, linewidth=0)
-    ax_traj.axhline(H_LOW, color="0.15", linestyle=":", linewidth=1.1)
-    ax_traj.text(
-        0.995,
-        H_LOW + 0.6,
-        r"$h_{\min}=2670$",
-        transform=ax_traj.get_yaxis_transform(),
-        ha="right",
-        va="bottom",
-        fontsize=7,
-        color="0.2",
-    )
-    ax_traj.set_ylim(y_min, y_max)
-    ax_traj.set_xlim(0, DISPLAY_STEPS)
-    ax_traj.set_xticks(np.arange(0, DISPLAY_STEPS + 1, 5))
-    ax_traj.set_ylabel(r"Separator enthalpy $h_m$ (kJ kg$^{-1}$)")
-    ax_traj.set_xlabel(
-        f"Time step (first {DISPLAY_STEPS} of {total_steps}-step rollout)"
-    )
-    ax_traj.grid(axis="y", color="0.88", linewidth=0.5)
-    ax_traj.legend(
-        loc="lower center",
-        bbox_to_anchor=(0.5, 1.02),
-        ncol=3,
-        frameon=False,
-        handlelength=2.7,
-        columnspacing=1.6,
-    )
-    panel_label(ax_traj, "a")
-
-    m_min = min(min(all_margin) - 2.0, -5.0)
-    m_max = max(max(all_margin) + 2.0, 20.0)
-    ax_margin.axhspan(m_min, 0.0, color="#F4A582", alpha=0.22, linewidth=0)
-    ax_margin.axhline(0.0, color="0.15", linestyle="-", linewidth=0.9)
-    ax_margin.set_ylim(m_min, m_max)
-    ax_margin.set_xlim(0, DISPLAY_STEPS)
-    ax_margin.set_xticks(np.arange(0, DISPLAY_STEPS + 1, 5))
-    ax_margin.set_ylabel(r"Enthalpy margin $h_m-h_{\min}$ (kJ kg$^{-1}$)")
-    ax_margin.set_xlabel(
-        f"Time step (first {DISPLAY_STEPS} of {total_steps}-step rollout)"
-    )
-    ax_margin.grid(axis="y", color="0.88", linewidth=0.5)
-    panel_label(ax_margin, "b")
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.05), constrained_layout=True)
+    ax_kappa, ax_barrier = axes
 
     kappas = [row["kappa"] for row in summary_rows]
     means = [row["mean_violation_pct"] for row in summary_rows]
@@ -408,7 +399,7 @@ def plot_figure(trajectories: dict, seed_rows: list[dict], summary_rows: list[di
     ax_kappa.plot(
         kappas,
         means,
-        color="0.25",
+        color="0.20",
         linestyle="-",
         linewidth=0.9,
         marker="o",
@@ -444,12 +435,13 @@ def plot_figure(trajectories: dict, seed_rows: list[dict], summary_rows: list[di
         )
 
     ax_kappa.annotate(
-        r"$\kappa=0.1$ restores zero violation",
+        r"$\epsilon_\kappa=0.1$ restores zero violation",
         xy=(0.1, 0.0),
         xytext=(0.24, 12.0),
         fontsize=7,
         ha="left",
         va="center",
+        bbox=dict(facecolor="white", edgecolor="none", alpha=0.78, pad=1.2),
         arrowprops=dict(arrowstyle="->", lw=0.7, color="0.25"),
     )
     ax_kappa.text(
@@ -469,7 +461,77 @@ def plot_figure(trajectories: dict, seed_rows: list[dict], summary_rows: list[di
     ax_kappa.set_xlabel(r"Robustness scaling $\epsilon_\kappa$")
     ax_kappa.set_ylabel("S3 violation rate (%)")
     ax_kappa.grid(axis="y", color="0.88", linewidth=0.5)
-    panel_label(ax_kappa, "c")
+    panel_label(ax_kappa, "a")
+
+    barrier_means = [row["mean_min_barrier_value"] for row in summary_rows]
+    barrier_all = [row["min_barrier_value"] for row in seed_rows]
+    y_min = min(min(barrier_all) - 2.0, -42.0)
+    y_max = max(max(barrier_all) + 2.0, 6.0)
+    ax_barrier.axhspan(0.0, y_max, color=OKABE_ITO["green"], alpha=0.10, linewidth=0)
+    ax_barrier.axhline(0.0, color="0.15", linewidth=0.9)
+    ax_barrier.plot(
+        kappas,
+        barrier_means,
+        color="0.20",
+        linestyle="-",
+        linewidth=0.9,
+        marker="o",
+        markersize=3.5,
+        label="mean",
+    )
+    for row in seed_rows:
+        same_k = [r for r in seed_rows if r["kappa"] == row["kappa"]]
+        same_k = sorted(same_k, key=lambda x: x["seed"])
+        idx = [r["seed"] for r in same_k].index(row["seed"])
+        jitter = 0.018 * (idx - (len(same_k) - 1) / 2.0)
+        ax_barrier.scatter(
+            row["kappa"] + jitter,
+            row["min_barrier_value"],
+            s=18,
+            color=OKABE_ITO["green"],
+            edgecolor="white",
+            linewidth=0.35,
+            zorder=3,
+        )
+    for row in summary_rows:
+        kappa = row["kappa"]
+        val = row["mean_min_barrier_value"]
+        ax_barrier.hlines(
+            val,
+            kappa - 0.035,
+            kappa + 0.035,
+            colors="0.1",
+            linewidth=1.1,
+            zorder=4,
+        )
+    ax_barrier.annotate(
+        "positive barrier\nwithout feasibility collapse",
+        xy=(0.1, barrier_means[kappas.index(0.1)]),
+        xytext=(0.29, -9.0),
+        fontsize=7,
+        ha="left",
+        va="center",
+        bbox=dict(facecolor="white", edgecolor="none", alpha=0.78, pad=1.2),
+        arrowprops=dict(arrowstyle="->", lw=0.7, color="0.25"),
+    )
+    ax_barrier.text(
+        0.98,
+        0.93,
+        "nonnegative barrier",
+        transform=ax_barrier.transAxes,
+        ha="right",
+        va="top",
+        fontsize=7,
+        color=OKABE_ITO["green"],
+    )
+    ax_barrier.set_xlim(-0.04, 1.04)
+    ax_barrier.set_ylim(y_min, y_max)
+    ax_barrier.set_xticks(kappas)
+    ax_barrier.set_xticklabels(["0", "0.1", "0.3", "0.5", "1.0"])
+    ax_barrier.set_xlabel(r"Robustness scaling $\epsilon_\kappa$")
+    ax_barrier.set_ylabel("Minimum barrier value")
+    ax_barrier.grid(axis="y", color="0.88", linewidth=0.5)
+    panel_label(ax_barrier, "b")
 
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     base = FIGURE_DIR / "Figure_2"
@@ -490,6 +552,8 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Regenerate trajectory JSON even if it already exists.",
     )
+    parser.add_argument("--dt-sec", type=float, default=DT_SEC)
+    parser.add_argument("--n-steps", type=int, default=N_STEPS)
     parser.add_argument(
         "--plot-only",
         action="store_true",
@@ -506,7 +570,11 @@ def main() -> None:
         with TRAJECTORY_JSON.open() as f:
             trajectories = json.load(f)
     else:
-        trajectories = generate_trajectories(force=args.force_rollout)
+        trajectories = generate_trajectories(
+            n_steps=args.n_steps,
+            dt_sec=args.dt_sec,
+            force=args.force_rollout,
+        )
     seed_rows, summary_rows = load_kappa_seed_data()
     plot_figure(trajectories, seed_rows, summary_rows)
 

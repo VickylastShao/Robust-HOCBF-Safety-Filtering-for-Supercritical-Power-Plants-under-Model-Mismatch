@@ -6,7 +6,7 @@
 Key differences from 3rd-order methods.py:
 - n_obs=5 (was 3)
 - 6 CBF constraints including power (was 4, power was rd=0)
-- GP n_dims=3 (models core state residuals only; RobustHOCBF slices x[:3])
+- GP n_dims=3 for the constrained measured outputs (p_m, h_m, N_e)
 - No delay_order needed (τ_f is explicit state)
 - constraint.check_all(x) without u argument (power is state-based)
 - step_stabilized_phi_scaled for nonlinear Φ-scaled rollout (vs linear in Phase 4)
@@ -27,7 +27,11 @@ from rocbf.baselines.ppo_lagrangian import PPOTrainerLagrangian, compute_step_co
 from rocbf.baselines.nmpc_5th import NMPCController5th
 from envs.ccs.dynamics import USCCSDynamics5th, UncertainUSCCSDynamics5th
 from envs.ccs.constraints import CCSConstraints5th
-from experiments.phase5.common_5th import collect_gp_data_5th as _collect_gp_core_5th
+from experiments.phase5.common_5th import (
+    GP_INPUT_RANGES,
+    GP_STATE_INDICES,
+    collect_gp_data_5th as _collect_gp_core_5th,
+)
 
 SCENARIOS = [None, "heat_absorption", "pressure_oscillation", "coupled", "nonlinear",
              "valve_degradation", "fuel_quality"]
@@ -35,7 +39,7 @@ SCENARIO_LABELS = ["Nominal", "S1:Heat", "S2:Pressure", "S3:Coupled", "S4:Nonlin
                    "S5:Valve", "S6:Fuel"]
 
 NX = 5          # State dimension for 5th-order model
-N_GP_DIMS = 3   # GP models residuals on core states (r_B, p_m, h_m) only
+N_GP_DIMS = 3   # GP models residuals on constrained outputs (p_m, h_m, N_e)
 
 
 def _make_ccs_env_5th(load_ratio, scenario=None):
@@ -101,44 +105,50 @@ def _make_robust_hocbf_5th(dynamics, constraint, gp, u0, epsilon_kappa=1.0,
                      g_fn=g_fn, relative_degree=2, k_gains=list(k_pressure),
                      gp_residual=gp, u_max=u_max, u0=u0, x0=x0,
                      epsilon_kappa=epsilon_kappa,
-                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction),
+                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction,
+                     gp_state_indices=GP_STATE_INDICES),
         RobustHOCBF(h_fn=constraint.h_pressure_low, f_fn=dynamics.f_linear_stabilized,
                      g_fn=g_fn, relative_degree=2, k_gains=list(k_pressure),
                      gp_residual=gp, u_max=u_max, u0=u0, x0=x0,
                      epsilon_kappa=epsilon_kappa,
-                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction),
+                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction,
+                     gp_state_indices=GP_STATE_INDICES),
         RobustHOCBF(h_fn=constraint.h_enthalpy_high, f_fn=dynamics.f_linear_stabilized,
                      g_fn=g_fn, relative_degree=1, k_gains=list(k_enthalpy),
                      gp_residual=gp, u_max=u_max, u0=u0, x0=x0,
                      epsilon_kappa=epsilon_kappa,
-                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction),
+                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction,
+                     gp_state_indices=GP_STATE_INDICES),
         RobustHOCBF(h_fn=constraint.h_enthalpy_low, f_fn=dynamics.f_linear_stabilized,
                      g_fn=g_fn, relative_degree=1, k_gains=list(k_enthalpy),
                      gp_residual=gp, u_max=u_max, u0=u0, x0=x0,
                      epsilon_kappa=epsilon_kappa,
-                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction),
+                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction,
+                     gp_state_indices=GP_STATE_INDICES),
         RobustHOCBF(h_fn=constraint.h_power_high, f_fn=dynamics.f_linear_stabilized,
                      g_fn=g_fn, relative_degree=1, k_gains=list(k_power),
                      gp_residual=gp, u_max=u_max, u0=u0, x0=x0,
                      epsilon_kappa=epsilon_kappa,
-                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction),
+                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction,
+                     gp_state_indices=GP_STATE_INDICES),
         RobustHOCBF(h_fn=constraint.h_power_low, f_fn=dynamics.f_linear_stabilized,
                      g_fn=g_fn, relative_degree=1, k_gains=list(k_power),
                      gp_residual=gp, u_max=u_max, u0=u0, x0=x0,
                      epsilon_kappa=epsilon_kappa,
-                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction),
+                     epsilon_floor=epsilon_floor, use_mean_correction=use_mean_correction,
+                     gp_state_indices=GP_STATE_INDICES),
     ]
     return MultiConstraintRobustHOCBF(hocbf_list)
 
 
 def _pretrain_gp_5th(load_ratio, n_pretrain=500, key=None,
                       sigma_floor=1e-4, scenario=None, scenario_specific=False,
-                      gp_coverage='full'):
+                      gp_coverage='full', dt_sec=1.0):
     """Pre-train GP on 5th-order CCS scenarios.
 
-    GP models residuals on the 3 core states (r_B, p_m, h_m) only.
-    RobustHOCBF slices x[:3] when calling gp.predict(), so the GP MUST
-    be trained with n_dims=3.
+    GP models residual rates for the three constrained measured outputs
+    (p_m, h_m, N_e). The full five-state predictor still uses all states and
+    all three control deviations.
 
     Uses collect_gp_data_5th from common_5th.py which correctly handles
     5D → 3D state slicing during data collection.
@@ -154,6 +164,8 @@ def _pretrain_gp_5th(load_ratio, n_pretrain=500, key=None,
         'full': wide coverage (default n_pretrain)
         'sparse': near-equilibrium only (n_pretrain ≤ 200)
         'moderate': intermediate coverage (n_pretrain ≤ 500)
+    dt_sec : float
+        Simulation/control sample time used during GP residual collection.
     """
     if key is None:
         key = jax.random.key(42)
@@ -172,10 +184,10 @@ def _pretrain_gp_5th(load_ratio, n_pretrain=500, key=None,
     per_scenario = n_pretrain // len(scenarios_to_train)
     for sc in scenarios_to_train:
         if sc is None:
-            env = USCCSDynamics5th(dt=1.0, load_ratio=load_ratio)
+            env = USCCSDynamics5th(dt=dt_sec, load_ratio=load_ratio)
         else:
             env = UncertainUSCCSDynamics5th(
-                dt=1.0, load_ratio=load_ratio,
+                dt=dt_sec, load_ratio=load_ratio,
                 uncertainty_scenario=sc)
         key, data_key = jax.random.split(key)
         X, Y = _collect_gp_core_5th(env, n_transitions=per_scenario,
@@ -186,7 +198,8 @@ def _pretrain_gp_5th(load_ratio, n_pretrain=500, key=None,
     X_combined = jnp.concatenate(X_all, axis=0)
     Y_combined = jnp.concatenate(Y_all, axis=0)
     gp = GPResidual(n_dims=N_GP_DIMS, noise_variance=1e-4,
-                     sigma_floor=sigma_floor)
+                     sigma_floor=sigma_floor,
+                     input_ranges=GP_INPUT_RANGES)
     gp.fit(X_combined, Y_combined)
     return gp
 
@@ -210,12 +223,13 @@ def _count_violations_5th(constraint_vals, protected_only=False):
 # ---------- Rollout functions ----------
 
 def _rollout_with_qp_5th(model, dynamics, multi_hocbf, qp_solver, constraint,
-                          x0, u0, key, n_steps=300, jit_qp_fn=None):
+                          x0, u0, key, n_steps=300, jit_qp_fn=None,
+                          use_phi_scaled_rollout=True):
     """Rollout with 6-constraint QP safety filter on 5th-order CCS.
 
     State handling:
     - Actor sees full 5D state x[:NX]
-    - CBF QP matrices use core 3D state x[:3] (GP + constraints on core states)
+    - CBF QP matrices use the full 5D state; GP rows are selected explicitly
     - Dynamics step uses full 5D state x[:NX]
     """
     rollout = {'obs': [], 'actions': [], 'rewards': [],
@@ -243,8 +257,10 @@ def _rollout_with_qp_5th(model, dynamics, multi_hocbf, qp_solver, constraint,
         v_safe = jnp.clip(v_safe, -v_max, v_max)
         qp_times.append((time.perf_counter() - t0) * 1000)
 
-        # Φ-scaled nonlinear rollout with full 5D state
-        next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_safe)
+        if use_phi_scaled_rollout:
+            next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_safe)
+        else:
+            next_x = dynamics.step_stabilized(x[:NX], v_safe)
         constraint_vals = constraint.check_all(next_x)
 
         y = dynamics.output(next_x)
@@ -277,7 +293,8 @@ def _rollout_with_qp_5th(model, dynamics, multi_hocbf, qp_solver, constraint,
     return rollout, total_reward, violations, cbf_violations, qp_times
 
 
-def _rollout_no_qp_5th(model, dynamics, constraint, x0, u0, key, n_steps=300):
+def _rollout_no_qp_5th(model, dynamics, constraint, x0, u0, key, n_steps=300,
+                        use_phi_scaled_rollout=True):
     """Rollout WITHOUT safety filter on 5th-order CCS."""
     rollout = {'obs': [], 'actions': [], 'rewards': [],
                'log_probs': [], 'values': [], 'dones': [],
@@ -292,7 +309,10 @@ def _rollout_no_qp_5th(model, dynamics, constraint, x0, u0, key, n_steps=300):
         key, action_key = jax.random.split(key)
         v_rl, log_prob, value = model.get_action(x[:NX], action_key)
 
-        next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_rl)
+        if use_phi_scaled_rollout:
+            next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_rl)
+        else:
+            next_x = dynamics.step_stabilized(x[:NX], v_rl)
         constraint_vals = constraint.check_all(next_x)
 
         y = dynamics.output(next_x)
@@ -326,7 +346,8 @@ def _rollout_no_qp_5th(model, dynamics, constraint, x0, u0, key, n_steps=300):
 
 
 def _rollout_lqr_5th(dynamics, multi_hocbf, qp_solver, constraint,
-                      x0, u0, key, n_steps=300, jit_qp_fn=None):
+                      x0, u0, key, n_steps=300, jit_qp_fn=None,
+                      use_phi_scaled_rollout=True):
     """LQR-only rollout: v_rl = 0, QP filter does all safety work.
 
     This is the controller-agnostic baseline: can the safety filter
@@ -349,7 +370,10 @@ def _rollout_lqr_5th(dynamics, multi_hocbf, qp_solver, constraint,
         v_safe = jnp.clip(v_safe, -v_max, v_max)
         qp_times.append((time.perf_counter() - t0) * 1000)
 
-        next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_safe)
+        if use_phi_scaled_rollout:
+            next_x = dynamics.step_stabilized_phi_scaled(x[:NX], v_safe)
+        else:
+            next_x = dynamics.step_stabilized(x[:NX], v_safe)
         constraint_vals = constraint.check_all(next_x)
 
         if _count_violations_5th(constraint_vals, protected_only=False):
@@ -439,7 +463,7 @@ def train_ppo_hocbf_5th(config, dynamics, constraint, key, gp=None):
     k_n = tuple(config.get('power_k_gains', (1.0,)))
     safety_layer = _make_hocbf_5th(dynamics, constraint, u0,
                                     k_pressure=k_p, k_enthalpy=k_h, k_power=k_n,
-                                    use_phi_scaled_g=True)
+                                    use_phi_scaled_g=config.get('use_phi_scaled_g', True))
     return model, trainer, safety_layer
 
 
@@ -469,7 +493,7 @@ def train_ppo_gp_hocbf_5th(config, dynamics, constraint, key, gp=None):
         epsilon_kappa=0.0, k_pressure=k_p, k_enthalpy=k_h, k_power=k_n,
         u_max=config.get('u_max', 100.0),
         use_mean_correction=True, epsilon_floor=0.0,
-        use_phi_scaled_g=True)
+        use_phi_scaled_g=config.get('use_phi_scaled_g', True))
     return model, trainer, safety_layer
 
 
@@ -501,7 +525,7 @@ def train_ppo_rhocbf_5th(config, dynamics, constraint, key, gp=None):
         u_max=config.get('u_max', 100.0),
         use_mean_correction=config.get('use_mean_correction', True),
         epsilon_floor=config.get('epsilon_floor', 0.0),
-        use_phi_scaled_g=True)
+        use_phi_scaled_g=config.get('use_phi_scaled_g', True))
     return model, trainer, safety_layer
 
 
@@ -533,14 +557,15 @@ def train_rocbf_net_5th(config, dynamics, constraint, key, gp=None):
         u_max=config.get('u_max', 100.0),
         use_mean_correction=config.get('use_mean_correction', True),
         epsilon_floor=config.get('epsilon_floor', 0.0),
-        use_phi_scaled_g=True)
+        use_phi_scaled_g=config.get('use_phi_scaled_g', True))
     return model, trainer, safety_layer
 
 
 def make_lqr_rhocbf_5th(dynamics, constraint, gp, u0,
                           epsilon_kappa=1.0, epsilon_floor=0.0,
                           k_pressure=(0.5, 0.5), k_enthalpy=(1.0,), k_power=(1.0,),
-                          u_max=100.0, use_mean_correction=True):
+                          u_max=100.0, use_mean_correction=True,
+                          use_phi_scaled_g=True):
     """LQR-RHOCBF: LQR controller (v=0) + Robust HOCBF safety filter.
 
     This is the controller-agnostic baseline: purely reactive safety
@@ -551,7 +576,7 @@ def make_lqr_rhocbf_5th(dynamics, constraint, gp, u0,
         epsilon_kappa=epsilon_kappa,
         k_pressure=k_pressure, k_enthalpy=k_enthalpy, k_power=k_power,
         u_max=u_max, use_mean_correction=use_mean_correction,
-        epsilon_floor=epsilon_floor, use_phi_scaled_g=True)
+        epsilon_floor=epsilon_floor, use_phi_scaled_g=use_phi_scaled_g)
     return safety_layer
 
 

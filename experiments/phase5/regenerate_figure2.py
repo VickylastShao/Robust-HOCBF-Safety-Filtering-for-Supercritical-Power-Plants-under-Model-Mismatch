@@ -15,6 +15,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
+from scripts.mc_figure_style import apply_times_new_roman_style
+
 from rocbf.qp.diff_qp import DifferentiableQP
 from envs.ccs.dynamics import USCCSDynamics5th, UncertainUSCCSDynamics5th
 from envs.ccs.constraints import CCSConstraints5th
@@ -82,6 +84,7 @@ n_viol_gp = sum(gp_data['violation'])
 print(f"  GP-HOCBF violations: {n_viol_gp}/{N_STEPS} ({100*n_viol_gp/N_STEPS:.1f}%)")
 
 # Plot
+apply_times_new_roman_style(base_size=9)
 fig, axes = plt.subplots(3, 1, figsize=(10, 7.5), sharex=True)
 t = np.arange(N_STEPS)
 

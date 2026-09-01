@@ -56,6 +56,70 @@ def test_gp_fit_predict():
     np.testing.assert_allclose(np.array(mu), np.array(Y[0]), atol=0.5)
 
 
+def test_input_standardization_is_unit_invariant():
+    """Equivalent physical coordinate scalings produce the same GP fit."""
+    from rocbf.gp.gp_residual import GPResidual
+
+    X_unit = jnp.array([
+        [-1.0, -0.5, 0.0],
+        [-0.5, 0.0, 0.5],
+        [0.0, 0.5, 1.0],
+        [0.5, 1.0, -1.0],
+        [1.0, -1.0, -0.5],
+    ])
+    offset = jnp.array([20.0, 2700.0, 500.0])
+    scale = jnp.array([2.0, 100.0, 300.0])
+    X_physical = offset + X_unit * scale
+    Y = jnp.stack([
+        0.2 * X_unit[:, 0],
+        -0.3 * X_unit[:, 1],
+        0.1 * X_unit[:, 2],
+    ], axis=-1)
+
+    gp_unit = GPResidual(n_dims=3, sigma_floor=1e-8)
+    gp_physical = GPResidual(
+        n_dims=3, sigma_floor=1e-8, input_ranges=2.0 * scale)
+    gp_unit.fit(X_unit, Y, n_optim_iters=5)
+    gp_physical.fit(X_physical, Y, n_optim_iters=5)
+
+    x_unit = jnp.array([0.25, -0.25, 0.75])
+    mu_unit, sigma_unit = gp_unit.predict(x_unit)
+    mu_physical, sigma_physical = gp_physical.predict(offset + x_unit * scale)
+
+    np.testing.assert_allclose(mu_physical, mu_unit, rtol=1e-5, atol=1e-6)
+    np.testing.assert_allclose(sigma_physical, sigma_unit, rtol=1e-5, atol=1e-6)
+
+
+def test_incremental_update_freezes_input_transform():
+    """Online posterior updates retain the commissioning input scaler."""
+    from rocbf.gp.gp_residual import GPResidual
+
+    X = jnp.array([
+        [15.0, 2650.0, 200.0],
+        [18.0, 2750.0, 400.0],
+        [21.0, 2850.0, 600.0],
+    ])
+    Y = jnp.array([
+        [-1.0, -10.0, -2.0],
+        [0.0, 0.0, 0.0],
+        [1.0, 10.0, 2.0],
+    ])
+    gp = GPResidual(
+        n_dims=3, input_ranges=jnp.array([27.0, 700.0, 800.0]))
+    gp.fit(X, Y, n_optim_iters=3)
+    mean_before = np.array(gp.input_mean)
+    std_before = np.array(gp.input_std)
+
+    gp.incremental_update(
+        jnp.array([[24.0, 3000.0, 900.0]]),
+        jnp.array([[2.0, 20.0, 4.0]]),
+        reoptimize_hyperparams=False,
+    )
+
+    np.testing.assert_allclose(gp.input_mean, mean_before)
+    np.testing.assert_allclose(gp.input_std, std_before)
+
+
 def test_gp_uncertainty_decreases():
     """More training data → lower posterior uncertainty σ_GP."""
     from rocbf.gp.gp_residual import GPResidual

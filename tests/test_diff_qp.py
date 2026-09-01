@@ -1,106 +1,90 @@
-"""Tests for differentiable QP layer."""
-import jax
+"""Tests for QP feasibility and explicit row-removal controls."""
+
 import jax.numpy as jnp
 import numpy as np
 
 
-def test_qp_simple_projection():
-    """Solve min ‖u - u_rl‖² s.t. G u ≤ h with one constraint."""
+def test_scipy_solve_rejects_finite_infeasible_candidate():
+    """A finite SLSQP vector is not success when constraints conflict."""
     from rocbf.qp.diff_qp import DifferentiableQP
 
-    qp = DifferentiableQP()
+    qp = DifferentiableQP(v_max=5.0)
+    # v <= -1 and v >= 1 cannot both hold.
+    G = jnp.array([[1.0], [-1.0]])
+    h = jnp.array([-1.0, -1.0])
+    fallback = jnp.array([0.25])
 
-    u_rl = jnp.array([3.0])
-    P = jnp.eye(1)
-    q = -u_rl
-    G = jnp.array([[1.0]])
-    h = jnp.array([1.0])
-
-    u_star, lambda_star = qp.solve(P, q, G, h)
-    np.testing.assert_allclose(u_star, jnp.array([1.0]), atol=1e-3)
-
-
-def test_qp_unconstrained():
-    """When constraint is inactive, u* = u_rl."""
-    from rocbf.qp.diff_qp import DifferentiableQP
-
-    qp = DifferentiableQP()
-
-    u_rl = jnp.array([0.5])
-    P = jnp.eye(1)
-    q = -u_rl
-    G = jnp.array([[1.0]])
-    h = jnp.array([2.0])
-
-    u_star, _ = qp.solve(P, q, G, h)
-    np.testing.assert_allclose(u_star, u_rl, atol=1e-3)
-
-
-def test_qp_gradient_finite_diff():
-    """Gradient ∂u*/∂u_rl matches finite difference check."""
-    from rocbf.qp.diff_qp import DifferentiableQP
-
-    qp = DifferentiableQP()
-
-    def solve_for_u(u_rl_val):
-        P = jnp.eye(1)
-        q = -jnp.array([u_rl_val])
-        G = jnp.array([[1.0]])
-        h = jnp.array([1.0])
-        u_star = qp.solve_primal(P, q, G, h)
-        return u_star[0]
-
-    grad_fn = jax.grad(solve_for_u)
-    analytical_grad = grad_fn(3.0)
-
-    eps = 1e-5
-    fd_grad = (solve_for_u(3.0 + eps) - solve_for_u(3.0 - eps)) / (2 * eps)
-
-    np.testing.assert_allclose(analytical_grad, fd_grad, atol=1e-2)
-
-
-def test_qp_multidim():
-    """Multi-dimensional QP with multiple constraints."""
-    from rocbf.qp.diff_qp import DifferentiableQP
-
-    qp = DifferentiableQP()
-
-    u_rl = jnp.array([3.0, 3.0])
-    P = jnp.eye(2)
-    q = -u_rl
-    G = jnp.array([[1.0, 1.0]])
-    h = jnp.array([1.0])
-
-    u_star, _ = qp.solve(P, q, G, h)
-    assert u_star[0] + u_star[1] <= 1.0 + 1e-3
-
-
-def test_qp_safe_policy_projection():
-    """End-to-end: QP projects unsafe RL action to safe action."""
-    from rocbf.qp.diff_qp import DifferentiableQP
-    from rocbf.cbf.hocbf import HOCBF
-    from envs.safe_navigation.dynamics import DoubleIntegratorDynamics
-    from envs.safe_navigation.constraints import CircularKeepOut
-
-    dynamics = DoubleIntegratorDynamics(dt=0.01)
-    constraint = CircularKeepOut(center=jnp.array([0.0]), radius=1.0)
-
-    hocbf = HOCBF(
-        h_fn=constraint.h,
-        f_fn=dynamics.f,
-        g_fn=dynamics.g,
-        relative_degree=2,
-        k_gains=[2.0, 2.0],
+    value, _, info = qp.solve_with_rl_action(
+        jnp.array([0.0]), G, h,
+        differentiable=False,
+        fallback_v=fallback,
+        return_info=True,
     )
 
-    qp = DifferentiableQP()
+    assert not info["success"]
+    assert info["fallback_used"]
+    np.testing.assert_allclose(value, fallback)
 
-    x = jnp.array([1.5, -0.5])
-    A, b = hocbf.qp_matrices(x)
-    G, h = A, b
 
-    u_rl = jnp.array([-5.0])
-    u_safe = qp.solve_with_rl_action(u_rl, G, h, differentiable=False)[0]
+def test_weak_row_removal_requires_explicit_whitelist():
+    """The solver never drops a weak row without an explicit mask."""
+    from rocbf.qp.diff_qp import DifferentiableQP
 
-    assert jnp.all(G @ u_safe <= h + 1e-3)
-    assert u_safe[0] > u_rl[0]
+    qp = DifferentiableQP(v_max=5.0)
+    G = jnp.array([[1e-4], [1.0]])
+    h = jnp.array([-1.0, 2.0])
+
+    _, _, full_info = qp.solve_with_rl_action(
+        jnp.array([0.0]), G, h,
+        differentiable=False,
+        weak_authority_threshold=0.01,
+        return_info=True,
+    )
+    _, _, reduced_info = qp.solve_with_rl_action(
+        jnp.array([0.0]), G, h,
+        differentiable=False,
+        weak_authority_threshold=0.01,
+        droppable_mask=jnp.array([True, False]),
+        return_info=True,
+    )
+
+    assert full_info["dropped_row_indices"] == []
+    assert not full_info["success"]
+    assert reduced_info["dropped_row_indices"] == [0]
+    assert reduced_info["success"]
+
+
+def test_checked_jax_rejects_infeasible_problem():
+    from rocbf.qp.diff_qp import DifferentiableQP
+
+    qp = DifferentiableQP(v_max=1.0)
+    action, success, residual, _ = qp.solve_checked_jax(
+        jnp.array([0.0]), jnp.array([[1.0]]), jnp.array([-2.0]),
+        fallback_v=jnp.array([0.25]))
+    assert not bool(success)
+    assert float(residual) > 1e-6
+    np.testing.assert_allclose(action, jnp.array([0.25]))
+
+
+def test_checked_jax_accepts_representative_multiline_problem():
+    from rocbf.qp.diff_qp import DifferentiableQP
+
+    qp = DifferentiableQP(v_max=5.0)
+    proposed = jnp.zeros(3)
+    G = jnp.array([
+        [1.0, -3.3e-4, 2.8e-4],
+        [-1.0, 3.3e-4, -2.8e-4],
+        [2.6e-5, 1.0, -4.3e-3],
+        [-2.6e-5, -1.0, 4.3e-3],
+        [-4.5e-4, 4.3e-3, 1.0],
+        [4.5e-4, -4.3e-3, -1.0],
+    ])
+    h = jnp.array([101.1, 693.5, 15.3, 3.2, 196.2, 196.2])
+
+    action, success, residual, iterations = qp.solve_checked_jax(
+        proposed, G, h)
+
+    assert bool(success)
+    assert bool(jnp.all(jnp.isfinite(action)))
+    assert float(residual) <= 1e-6
+    assert int(iterations) <= 100

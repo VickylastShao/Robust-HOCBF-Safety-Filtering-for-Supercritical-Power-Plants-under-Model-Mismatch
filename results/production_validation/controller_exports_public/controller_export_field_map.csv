@@ -1,0 +1,85 @@
+column_index,source_code,definition,semantic_role
+1,millisecondtimestamp,Historian Sample Timestamp Epoch Milliseconds,exported plant-controller field
+2,20CQTP_MW,Generator Active Power Measured Megawatts,measured generator active power
+3,DCS2_LOAD_3S,Unit Load Three Second Signal Measured Megawatts,exported plant-controller field
+4,DCS2_20HAG10CP101,Separator Pressure Measured Megapascals,measured separator pressure
+5,DCS2_MAIN_PRESS,Main Steam Pressure Measured Megapascals,independent measured main-steam pressure; not PM
+6,DCS2_SEPARATOUT_ENTH,Separator Outlet Specific Enthalpy Measured Kilojoules Per Kilogram,measured separator-outlet specific enthalpy
+7,DCS2_SEPARATOUT_ENTHBAD,Separator Outlet Enthalpy Bad Quality Flag,exported plant-controller field
+8,DCS2_SEPARATOROUT_DMDH,Separator Outlet Specific Enthalpy Demand Kilojoules Per Kilogram,exported plant-controller field
+9,DCS2_SEPARATOROUT_DSGH,Separator Outlet Specific Enthalpy Design Value Kilojoules Per Kilogram,exported plant-controller field
+10,DCS2_FUELFLOWRP,Actual Fuel Flow Measured Tonnes Per Hour,exported plant-controller field
+11,DCS2_WTRFLOW_3S,Main Feedwater Flow Three Second Signal Measured Tonnes Per Hour,exported plant-controller field
+12,DCS2_DEHDM,Turbine Side Valve Demand Two Second Signal Percent,exported plant-controller field
+13,DCS2_20MAY25DU400_XE67_HW,Turbine Side Valve Command One To Coordination Percent,exported plant-controller field
+14,DCS2_20MAY25DU400_XE66_HW,Turbine Side Valve Command Two To Coordination Percent,exported plant-controller field
+15,DCS2_20MST_PRESS_SET,Main Steam Pressure Setpoint Megapascals,exported plant-controller field
+16,DCS2_20LOAD_SET,Unit Load Setpoint Megawatts,exported plant-controller field
+17,DCS2_FLOW_SP,Flow Setpoint Engineering Units,exported plant-controller field
+18,DCS2_FW_CO,Feedwater Flow Control Command Engineering Units,exported plant-controller field
+19,DCS2_FW_MA_MODE,Feedwater Related Analog Signal Unresolved Engineering Units,exported plant-controller field
+20,millisecondtimestamp/TS,Controller Sample Timestamp Asia Shanghai,exported plant-controller field
+21,CMD_TS,Controller Command Publish Timestamp Asia Shanghai,exported plant-controller field
+22,millisecondtimestamp/EPOCH_MS,Controller Sample Timestamp Epoch Milliseconds,exported plant-controller field
+23,UNIT,Generating Unit Identifier,public anonymized unit identifier
+24,CTRL_VER,Controller Software Version,public anonymized controller-version identifier
+25,CTRL_MODE,Controller Operating Mode,exported plant-controller field
+26,IDX,Controller Export Sample Index,exported plant-controller field
+27,DT_S,Controller Task Period Seconds,exported plant-controller field
+28,EXPORT_DT_S,Controller Log Export Period Seconds,exported plant-controller field
+29,EN,Controller Enabled Flag,exported plant-controller field
+30,AUTO,Automatic Control Mode Flag,exported plant-controller field
+31,MAN,Manual Control Mode Flag,exported plant-controller field
+32,FB,Fallback Or Recovery Active Flag,exported plant-controller field
+33,FB_RSN,Fallback Or Recovery Reason,exported plant-controller field
+34,OP_MODE,Resolved Controller Operation Mode,exported plant-controller field
+35,HB_SEQ,Controller Heartbeat Sequence Counter,exported plant-controller field
+36,HB_TX,Controller Heartbeat Transmit Bit,exported plant-controller field
+37,HB_RX,Controller Heartbeat Receive Echo Bit,exported plant-controller field
+38,HB_OK,Controller Heartbeat Healthy Flag,exported plant-controller field
+39,HB_AGE_MS,Controller Heartbeat Echo Age Milliseconds,exported plant-controller field
+40,TASK_MS,Controller Task Execution Time Milliseconds,exported plant-controller field
+41,TASK_TIMEOUT,Controller Task Timeout Flag,exported plant-controller field
+42,TASK_DEADLINE_MS,Controller Task Deadline Milliseconds,exported plant-controller field
+43,CYCLE_JITTER_MS,Controller Cycle Start Jitter Milliseconds,exported plant-controller field
+44,DCS2_FUELFLOWRP/RB,Boiler Fuel Combustion Rate State Kilograms Per Second,exported plant-controller field
+45,DCS2_20HAG10CP101/PM,Separator Pressure Controller State Megapascals,controller state PM; exact copy of separator pressure
+46,DCS2_SEPARATOUT_ENTH/HM,Separator Outlet Specific Enthalpy Controller State Kilojoules Per Kilogram,controller state HM; exact copy of separator enthalpy
+47,20CQTP_MW/NE,Generator Active Power Controller State Megawatts,controller state NE; exact copy of generator active power
+48,TAUF,Fuel Delay State Kilograms Per Second,exported plant-controller field
+49,DCS2_20MST_PRESS_SET/PSET,Pressure Reference Setpoint Megapascals,exported plant-controller field
+50,DCS2_20LOAD_SET/NSET,Power Reference Setpoint Megawatts,exported plant-controller field
+51,DCS2_SEPARATOROUT_DMDH/HLO,Separator Enthalpy Lower Safety Limit Kilojoules Per Kilogram,exported plant-controller field
+52,DCS2_SEPARATOROUT_DSGH/HHI,Separator Enthalpy Upper Safety Limit Kilojoules Per Kilogram,exported plant-controller field
+53,PLO,Separator Pressure Lower Safety Limit Megapascals,exported plant-controller field
+54,PST_HI,Main Steam Pressure Model Output Upper Replay Bound,main-steam-pressure replay upper bound; not a PM limit
+55,DCS2_FUELFLOWRP/UP_FUEL,Proposed Fuel Action Before Quadratic Program Kilograms Per Second,exported plant-controller field
+56,DCS2_FW_CO/UP_FW,Proposed Feedwater Action Before Quadratic Program Kilograms Per Second,exported plant-controller field
+57,DCS2_20MAY25DU400_XE67_HW/UP_TV,Proposed Turbine Valve Action Before Quadratic Program Percent,exported plant-controller field
+58,US_FUEL,Safe Fuel Action After Quadratic Program Kilograms Per Second,exported plant-controller field
+59,US_FW,Safe Feedwater Action After Quadratic Program Kilograms Per Second,exported plant-controller field
+60,US_TV,Safe Turbine Valve Action After Quadratic Program Percent,exported plant-controller field
+61,UA_FUEL,Applied Fuel Command To Actuator Kilograms Per Second,exported plant-controller field
+62,UA_FW,Applied Feedwater Command To Actuator Kilograms Per Second,exported plant-controller field
+63,UA_TV,Applied Turbine Valve Command To Actuator Percent,exported plant-controller field
+64,DCS2_FUELFLOWRP/ACT_FB_FUEL,Fuel Flow Actuator Feedback Kilograms Per Second,exported plant-controller field
+65,DCS2_WTRFLOW_3S/ACT_FB_FW,Feedwater Flow Actuator Feedback Kilograms Per Second,exported plant-controller field
+66,ACT_FB_TV,Turbine Valve Position Actuator Feedback Percent,exported plant-controller field
+67,QP_ST,Quadratic Program Solver Status,exported plant-controller field
+68,QP_OBJ,Quadratic Program Objective Value,exported plant-controller field
+69,QP_MS,Quadratic Program Solve Time Milliseconds,exported plant-controller field
+70,QP_IT,Quadratic Program Solver Iteration Count,exported plant-controller field
+71,ACT_CSTR,Quadratic Program Active Constraint Identifiers,exported plant-controller field
+72,MCBF,Minimum High Order Control Barrier Function Margin After Projection,exported plant-controller field
+73,MG_PLO,Separator Pressure Lower High Order Control Barrier Function Margin After Projection,exported plant-controller field
+74,MG_PST_HI,Main Steam Pressure Output Upper HOCBF Margin After Projection,exported plant-controller field
+75,MG_HLO,Separator Enthalpy Lower High Order Control Barrier Function Margin After Projection,exported plant-controller field
+76,MG_HHI,Separator Enthalpy Upper High Order Control Barrier Function Margin After Projection,exported plant-controller field
+77,MG_NLO,Generator Power Lower High Order Control Barrier Function Margin After Projection,exported plant-controller field
+78,MG_NHI,Generator Power Upper High Order Control Barrier Function Margin After Projection,exported plant-controller field
+79,EPS_K,Robustness Margin Scaling Factor Epsilon Kappa,exported plant-controller field
+80,SAT_FUEL,Fuel Action Saturation Flag,exported plant-controller field
+81,SAT_FW,Feedwater Action Saturation Flag,exported plant-controller field
+82,SAT_TV,Turbine Valve Action Saturation Flag,exported plant-controller field
+83,DCS2_SEPARATOUT_ENTHBAD/MEAS_Q,Controller State Measurement Quality,exported plant-controller field
+84,CMD_Q,Controller Command Quality,exported plant-controller field

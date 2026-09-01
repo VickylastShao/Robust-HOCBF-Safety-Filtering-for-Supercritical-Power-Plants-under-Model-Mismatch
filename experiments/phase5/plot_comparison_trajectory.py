@@ -13,7 +13,7 @@ from experiments.phase5.methods_5th import (
 
 LOAD_RATIO = 1.0
 N_EVAL = 300
-OUT = '/home/gpu/sz_workspace/RoCBF-Net/results/phase5/jpc_metrics'
+OUT = '/home/gpu/sz_workspace/RoCBF-Net/results/phase5/process_metrics'
 
 dynamics = USCCSDynamics5th(load_ratio=LOAD_RATIO)
 x0, u0 = dynamics.equilibrium(LOAD_RATIO)

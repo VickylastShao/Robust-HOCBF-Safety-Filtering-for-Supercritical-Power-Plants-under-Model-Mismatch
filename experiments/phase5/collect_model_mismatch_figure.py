@@ -72,11 +72,13 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
     _configure_runtime()
 
     import jax
+    jax.config.update("jax_enable_x64", True)
     import jax.numpy as jnp
     import numpy as np
 
     from envs.ccs.constraints import CCSConstraints5th
     from envs.ccs.dynamics import UncertainUSCCSDynamics5th, USCCSDynamics5th
+    from experiments.phase5.common_5th import GP_STATE_IDX
     from experiments.phase5.methods_5th import _pretrain_gp_5th
     from rocbf.gp.gp_residual import GPResidual
 
@@ -129,34 +131,34 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
         "pressure_nominal_one_step": [],
         "pressure_true_one_step": [],
         "actual_residual": {
-            "r_B": [],
             "p_m": [],
             "h_m": [],
+            "N_e": [],
         },
         "delta_f": {
-            "r_B": [],
             "p_m": [],
             "h_m": [],
+            "N_e": [],
         },
         "gp_mu": {
-            "r_B": [],
             "p_m": [],
             "h_m": [],
+            "N_e": [],
         },
         "gp_sigma": {
-            "r_B": [],
             "p_m": [],
             "h_m": [],
+            "N_e": [],
         },
         "gp_bound": {
-            "r_B": [],
             "p_m": [],
             "h_m": [],
+            "N_e": [],
         },
         "normalized_abs_error": {
-            "r_B": [],
             "p_m": [],
             "h_m": [],
+            "N_e": [],
         },
         "constraint_values_true_next": {
             "pressure_high": [],
@@ -172,14 +174,16 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
     v_zero = jnp.zeros(3)
 
     for step in range(n_steps):
-        x_nom_next = nominal.step_stabilized_phi_scaled(x, v_zero)
-        x_true_next = true_env.step_stabilized_phi_scaled(x, v_zero)
+        x_nom_next = nominal.step_stabilized(x, v_zero)
+        x_true_next = true_env.step_stabilized(x, v_zero)
 
         y_nom = nominal.output(x_nom_next)
         y_true = true_env.output(x_true_next)
-        residual_realized = (x_true_next[:3] - x_nom_next[:3]) / nominal.dt
-        delta_f = true_env.delta_f(x)[:3]
-        mu, sigma = gp.predict(x[:3])
+        residual_realized = (
+            x_true_next[GP_STATE_IDX] - x_nom_next[GP_STATE_IDX]
+        ) / nominal.dt
+        delta_f = true_env.delta_f(x)[GP_STATE_IDX]
+        mu, sigma = gp.predict(x[GP_STATE_IDX])
         bound = beta * sigma
         normalized_error = jnp.abs(residual_realized - mu) / jnp.maximum(bound, 1e-12)
 
@@ -188,7 +192,7 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
         record["pressure_nominal_one_step"].append(float(y_nom[0]))
         record["pressure_true_one_step"].append(float(y_true[0]))
 
-        for name, idx in (("r_B", 0), ("p_m", 1), ("h_m", 2)):
+        for name, idx in (("p_m", 0), ("h_m", 1), ("N_e", 2)):
             record["actual_residual"][name].append(float(residual_realized[idx]))
             record["delta_f"][name].append(float(delta_f[idx]))
             record["gp_mu"][name].append(float(mu[idx]))
@@ -229,7 +233,7 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
     }
     coverage = {
         key: _coverage_summary(actual[key], mu[key], sigma[key], beta)
-        for key in ("r_B", "p_m", "h_m")
+        for key in ("p_m", "h_m", "N_e")
     }
     violations = np.asarray(
         [v < 0.0 for v in record["constraint_values_true_next"]["enthalpy_low"]],
@@ -242,6 +246,9 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
             "scenario": "S3: Coupled state-dependent perturbation",
             "uncertainty_scenario": "coupled",
             "diagnostic_input": "zero deviation around LQR-stabilized equilibrium",
+            "rollout_mode": "drift_only_delta_g0",
+            "input_matrix_assumption": "delta_g_equals_zero",
+            "gp_state_vector": "[p_m,h_m,N_e] residual rates",
             "load_ratio": LOAD_RATIO,
             "n_steps": n_steps,
             "dt_sec": float(nominal.dt),

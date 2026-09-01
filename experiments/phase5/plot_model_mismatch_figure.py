@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -16,6 +17,10 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+
+from scripts.mc_figure_style import apply_times_new_roman_style
+
 RESULTS_DIR = ROOT / "results" / "phase5"
 FIGURE_DIR = ROOT / "paper" / "figures"
 INPUT_JSON = RESULTS_DIR / "model_mismatch_diagnostic.json"
@@ -36,29 +41,24 @@ OKABE_ITO = {
 
 
 def configure_style() -> None:
+    apply_times_new_roman_style(base_size=8)
     plt.rcParams.update(
         {
-            "font.family": "sans-serif",
-            "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
-            "font.size": 6,
-            "axes.labelsize": 6,
-            "axes.titlesize": 6,
-            "xtick.labelsize": 5.5,
-            "ytick.labelsize": 5.5,
-            "legend.fontsize": 5.4,
-            "axes.linewidth": 0.5,
-            "lines.linewidth": 0.85,
-            "lines.markersize": 2.5,
+            "font.size": 8,
+            "axes.labelsize": 8,
+            "axes.titlesize": 8,
+            "xtick.labelsize": 7,
+            "ytick.labelsize": 7,
+            "legend.fontsize": 6.6,
+            "axes.linewidth": 0.65,
+            "lines.linewidth": 1.05,
+            "lines.markersize": 3.0,
             "figure.dpi": 300,
             "savefig.dpi": 300,
             "savefig.bbox": "tight",
-            "savefig.pad_inches": 0.02,
+            "savefig.pad_inches": 0.03,
             "axes.spines.top": False,
             "axes.spines.right": False,
-            "pdf.fonttype": 42,
-            "ps.fonttype": 42,
-            "svg.fonttype": "none",
-            "axes.unicode_minus": False,
         }
     )
 
@@ -146,7 +146,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
     fig, axes = plt.subplots(
         2,
         2,
-        figsize=(7.2, 4.65),
+        figsize=(7.2, 4.9),
         constrained_layout=True,
     )
     ax_a, ax_b, ax_c, ax_d = axes.ravel()
@@ -187,7 +187,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         transform=ax_a.transAxes,
         ha="left",
         va="top",
-        fontsize=5.4,
+        fontsize=6.9,
         color="0.35",
         bbox=dict(facecolor="white", edgecolor="none", alpha=0.72, pad=0.6),
     )
@@ -198,7 +198,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         transform=ax_a.transAxes,
         ha="left",
         va="bottom",
-        fontsize=5.4,
+        fontsize=6.9,
         color="0.35",
     )
     ax_a.grid(axis="y", color="0.90", linewidth=0.35)
@@ -208,7 +208,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         "Nominal model",
         ha="right",
         va="bottom",
-        fontsize=5.5,
+        fontsize=6.8,
         color=OKABE_ITO["blue"],
     )
     ax_a.text(
@@ -217,7 +217,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         "True S3 plant",
         ha="right",
         va="bottom",
-        fontsize=5.5,
+        fontsize=6.8,
         color=OKABE_ITO["vermillion"],
     )
     panel_label(ax_a, "a")
@@ -272,7 +272,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         OKABE_ITO["blue"],
     )
     ax_b.legend(
-        loc="lower right",
+        loc="upper right",
         frameon=False,
         handlelength=2.6,
         borderaxespad=0.15,
