@@ -35,9 +35,11 @@ class RobustHOCBF(HOCBF):
     f_fn : nominal drift f₀
     gp_residual : GPResidual instance (fitted)
     u_max : float, maximum control magnitude for σ_ctrl computation
-    op_norm_estimate : float, estimate of ‖L_f̂‖_op operator norm.
-        If None and x0 is provided, computed automatically from the spectral
-        norm of the Jacobian of f_fn at x0.
+    op_norm_estimate : float, bound or engineering estimate of the nominal
+        drift Jacobian norm.  A formal operating-set certificate requires a
+        valid uniform bound.  If None and x0 is provided, the code computes a
+        local Jacobian norm; that value is exact for the linear stabilized
+        benchmark but is only a local estimate for a nonlinear drift.
     x0 : optional, equilibrium state for automatic op_norm computation
     use_mean_correction : bool, if True use f̂ = f₀ + μ_GP in psi chain
     gp_state_indices : sequence of int, optional
@@ -47,7 +49,7 @@ class RobustHOCBF(HOCBF):
 
     @staticmethod
     def compute_operator_norm(f_fn, x0: jnp.ndarray) -> float:
-        """Compute ‖L_f̂‖_op as the spectral norm of ∂f/∂x at equilibrium.
+        """Compute a local drift-Jacobian norm at ``x0``.
 
         For a linear(ized) system f(x) = A_cl x, this is ‖A_cl‖₂ (maximum
         singular value). For nonlinear f, the Jacobian at the operating point
@@ -79,7 +81,7 @@ class RobustHOCBF(HOCBF):
         self.gp_residual = gp_residual
         self.u_max = u_max
 
-        # Compute or use provided operator norm estimate
+        # Use a supplied operating-set bound or compute a local estimate.
         if op_norm_estimate is not None:
             self.op_norm_estimate = op_norm_estimate
         elif x0 is not None:
@@ -187,8 +189,9 @@ class RobustHOCBF(HOCBF):
         for i in range(2, m + 1):
             grad_psi = jax.grad(self._psi_fns_nominal[i - 1])(x)
             sigma_i_direct = beta * jnp.sum(jnp.abs(grad_psi) * sigma_gp)
-            # σ_cross^(i) = G_δ^{(i-1)} · β · ‖σ_GP‖_2  (Lemma S1, appendix_proofs.tex)
-            # L2 norms: operator-norm bound on the accumulated perturbation effect
+            # Commissioning proxy for the higher-order residual cross term.
+            # This is not the theoretical G_delta bound from Lemma S1 unless
+            # the compositional dominance assumption is verified separately.
             grad_psi_norm = jnp.sqrt(jnp.sum(grad_psi ** 2) + 1e-12)
             sigma_gp_norm = jnp.sqrt(jnp.sum(sigma_gp ** 2) + 1e-12)
             sigma_cross = beta * grad_psi_norm * sigma_gp_norm
@@ -204,8 +207,9 @@ class RobustHOCBF(HOCBF):
         Implements the recursive compositional sigma chain from
         eqs (10)-(12) for arbitrary relative degree m >= 1.
 
-        The recursion propagates GP uncertainty through the psi-chain
-        using a direct L1 term plus the L2 cross term from Lemma S1:
+        The numerical recursion propagates posterior uncertainty through the
+        nominal psi-chain using a direct L1 term and a commissioning cross-term
+        proxy:
           σ₁ = β Σ_j |∂h/∂x_j| σ_GP,j
           σ_direct_i = β Σ_j |∂ψ_{i-1}/∂x_j| σ_GP,j
           σ_cross_i = β ‖∇ψ_{i-1}‖₂ ‖σ_GP‖₂
@@ -215,7 +219,9 @@ class RobustHOCBF(HOCBF):
           where c_j = Π_{i=j+1}^{m-1} (‖L_f̂‖_op + k_i) are the chain coupling weights
 
         Uses f_nominal for gradient propagation so that epsilon only
-        quantifies residual σ uncertainty, not μ_GP gradient effects.
+        quantifies residual sigma uncertainty, not mu_GP gradient effects.
+        A formal certificate additionally requires the resulting total margin
+        to dominate the true HOCBF residual on the stated operating set.
 
         Parameters
         ----------
@@ -247,12 +253,13 @@ class RobustHOCBF(HOCBF):
 
         # Recursive levels i = 2, ..., m
         # Uses nominal psi functions to avoid μ_GP gradient amplification.
-        # σ_cross^(i) term is computed explicitly per Lemma S1 (appendix_proofs.tex).
+        # The cross term is an implementation proxy; Lemma S1 states the
+        # separate derivative-bound condition needed for a formal certificate.
         sigmas = [sigma_1]  # sigmas[i-1] = σ_i
         for i in range(2, m + 1):
             grad_psi = jax.grad(self._psi_fns_nominal[i - 1])(x)
             sigma_i_direct = beta * jnp.sum(jnp.abs(grad_psi) * sigma_gp)
-            # σ_cross^(i) = G_δ^{(i-1)} · β · ‖σ_GP‖_2  (Lemma S1)
+            # Commissioning proxy: beta * ||grad psi_hat||_2 * ||sigma_GP||_2.
             grad_psi_norm = jnp.sqrt(jnp.sum(grad_psi ** 2) + 1e-12)
             sigma_gp_norm = jnp.sqrt(jnp.sum(sigma_gp ** 2) + 1e-12)
             sigma_cross = beta * grad_psi_norm * sigma_gp_norm

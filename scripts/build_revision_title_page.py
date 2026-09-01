@@ -14,9 +14,16 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
-NS = {"w": W_NS, "m": M_NS}
+R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+PKG_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
+XML_NS = "http://www.w3.org/XML/1998/namespace"
+HYPERLINK_REL_TYPE = (
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+)
+NS = {"w": W_NS, "m": M_NS, "r": R_NS}
 ET.register_namespace("w", W_NS)
 ET.register_namespace("m", M_NS)
+ET.register_namespace("r", R_NS)
 
 
 REPOSITORY_URL = (
@@ -58,6 +65,86 @@ def replace_paragraph_text(paragraph: ET.Element, text: str) -> None:
     text_node = ET.SubElement(run, w("t"))
     text_node.text = text
     paragraph.append(run)
+
+
+def add_external_hyperlink_relationship(entries: dict[str, bytes], url: str) -> str:
+    """Return a document relationship id for an external hyperlink."""
+    rels_name = "word/_rels/document.xml.rels"
+    root = ET.fromstring(entries[rels_name])
+    relationship_tag = f"{{{PKG_REL_NS}}}Relationship"
+    used_ids: set[str] = set()
+    for relationship in root.findall(relationship_tag):
+        rel_id = relationship.get("Id", "")
+        used_ids.add(rel_id)
+        if (
+            relationship.get("Type") == HYPERLINK_REL_TYPE
+            and relationship.get("Target") == url
+            and relationship.get("TargetMode") == "External"
+        ):
+            return rel_id
+
+    number = 1
+    while f"rId{number}" in used_ids:
+        number += 1
+    rel_id = f"rId{number}"
+    ET.SubElement(
+        root,
+        relationship_tag,
+        {
+            "Id": rel_id,
+            "Type": HYPERLINK_REL_TYPE,
+            "Target": url,
+            "TargetMode": "External",
+        },
+    )
+    entries[rels_name] = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+    return rel_id
+
+
+def replace_paragraph_with_hyperlink(
+    paragraph: ET.Element,
+    prefix: str,
+    url: str,
+    relationship_id: str,
+) -> None:
+    """Replace a paragraph while preserving its style and making URL clickable."""
+    properties = paragraph.find("w:pPr", NS)
+    first_run = paragraph.find("w:r", NS)
+    run_properties = None
+    if first_run is not None:
+        existing = first_run.find("w:rPr", NS)
+        if existing is not None:
+            run_properties = deepcopy(existing)
+
+    for child in list(paragraph):
+        if child is not properties:
+            paragraph.remove(child)
+
+    prefix_run = ET.Element(w("r"))
+    if run_properties is not None:
+        prefix_run.append(deepcopy(run_properties))
+    prefix_text = ET.SubElement(prefix_run, w("t"))
+    prefix_text.set(f"{{{XML_NS}}}space", "preserve")
+    prefix_text.text = prefix
+    paragraph.append(prefix_run)
+
+    hyperlink = ET.SubElement(paragraph, w("hyperlink"))
+    hyperlink.set(f"{{{R_NS}}}id", relationship_id)
+    link_run = ET.SubElement(hyperlink, w("r"))
+    link_properties = deepcopy(run_properties) if run_properties is not None else ET.Element(w("rPr"))
+    existing_style = link_properties.find("w:rStyle", NS)
+    if existing_style is None:
+        existing_style = ET.SubElement(link_properties, w("rStyle"))
+    existing_style.set(w("val"), "Hyperlink")
+    link_run.append(link_properties)
+    link_text = ET.SubElement(link_run, w("t"))
+    link_text.text = url
+
+    punctuation_run = ET.SubElement(paragraph, w("r"))
+    if run_properties is not None:
+        punctuation_run.append(deepcopy(run_properties))
+    punctuation = ET.SubElement(punctuation_run, w("t"))
+    punctuation.text = "."
 
 
 def normalize_explicit_fonts(entries: dict[str, bytes]) -> None:
@@ -150,14 +237,17 @@ def build(
             raise RuntimeError(f"Missing title-page field: {label}") from exc
         replace_paragraph_text(paragraphs[index + 1], value)
 
+    repository_relationship_id = add_external_hyperlink_relationship(entries, repository_url)
     for paragraph in paragraphs:
         text = paragraph_text(paragraph).strip()
         if "github.com/vickjoeobi/RoCBF-Net" in text:
-            replace_paragraph_text(
+            replace_paragraph_with_hyperlink(
                 paragraph,
                 "The source code, simulation scripts, benchmark results, plotting scripts, "
-                "derived plant-historian metrics, and anonymized controller-export excerpts "
-                f"are available at {repository_url}.",
+                "derived plant-historian metrics, and bounded controller-export excerpts "
+                "are available at ",
+                repository_url,
+                repository_relationship_id,
             )
         elif text.startswith("Raw plant historian and controller-log records contain"):
             replace_paragraph_text(

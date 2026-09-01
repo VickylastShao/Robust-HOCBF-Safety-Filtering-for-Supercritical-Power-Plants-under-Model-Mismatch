@@ -15,9 +15,9 @@
 | `revision_submission/manuscript_mc_revised_highlighted.docx` | Current editable revised main manuscript for ScholarOne upload |
 | `revision_submission/manuscript_mc_revised_clean.docx` | Current unmarked internal reference copy |
 | `revision_submission/manuscript_mc_revised_highlighted.pdf` | Visual-review export of the editable revised manuscript |
-| `manuscript_mc.pdf` | LaTeX-rendered source comparison PDF |
+| `manuscript_mc.pdf` | Current DOCX-first author-review PDF generated from the active LaTeX source |
 | `manuscript_mc_supplementary.tex` | Supplemental material containing factual supporting results and proofs |
-| `manuscript_mc_supplementary.pdf` | Compiled supplemental material |
+| `manuscript_mc_supplementary.pdf` | Current DOCX-first supplemental-material PDF |
 | `cover_letter_mc.tex` | Cover letter for M&C editor |
 | `cover_letter_mc.pdf` | Compiled cover letter |
 | `sections_mc/*.tex` | 5 paper sections (intro, related_work, methodology, experimental, conclusion) |
@@ -63,6 +63,9 @@ Word submission export:
 ```bash
 cd ..
 bash scripts/build_mc_docx_pdf.sh
+
+# Point-by-point response
+PANDOC_BIN=/path/to/pandoc bash scripts/build_revision_response_docx.sh
 ```
 
 The local portal downloads are the immutable submitted baseline for revision comparison. The build pipeline writes revised outputs under `paper/revision_submission/`; do not replace the local baseline files.
@@ -92,7 +95,7 @@ This produces `paper/manuscript_mc_from_docx_searchable.pdf` from the generated 
 - 2026-07-06: Restored the 1950-window production cohort statistic with a retained aggregate summary and kept it separate from the native 5 s matched pair and controller-log evidence.
 - 2026-08-16: Measurement and Control issued a major-revision decision for manuscript MAC-26-0207.
 - 2026-08-30: Retained the portal-downloaded submitted DOCX baseline, decision records, current M&C sources, production evidence, and major-revision audits; removed obsolete journal-target branches and stale pre-decision working material.
-- 2026-08-31: Aligned the benchmark GP with the field vector $[p_m,h_m,N_e]$, rebuilt the certificate-aligned drift-only evidence chain, and generated the current revision package under `revision_submission/`.
+- 2026-08-31: Aligned the benchmark GP with the field vector $[p_m,h_m,N_e]$, rebuilt the drift-only primary-validation evidence chain, and generated the current revision package under `revision_submission/`.
 
 ## DO NOT
 - Do not create `paper_cn/`, `paper_v2/`, `paper_old/`, etc. All revisions edit `paper/` in place.

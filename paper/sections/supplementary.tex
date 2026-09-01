@@ -30,7 +30,7 @@ The four rejected $\epsilon_\kappa=0.02$ candidates occur at the initial step of
 \section{Robustness-Factor Tune/Test Separation}
 \label{sec:supp_kappa}
 
-Tune seeds 0--2 each contain 50 episodes of 500 controller samples. Thus, each $\epsilon_\kappa$ setting contains 15{,}000 tune samples. The predeclared selector is the smallest setting for which both pooled and maximum-per-seed violation rates are below 1\% and both pooled and maximum-per-seed QP-rejection rates are below 0.5\%.
+Tune seeds 0--2 each contain 10 episodes of 500 controller samples. Thus, each $\epsilon_\kappa$ setting contains 15{,}000 tune samples. The predeclared selector is the smallest setting for which both pooled and maximum-per-seed violation rates are below 1\% and both pooled and maximum-per-seed QP-rejection rates are below 0.5\%.
 
 \begin{table}[htbp]
     \centering
@@ -216,7 +216,7 @@ All 43 MW04 recovery records have \texttt{FB\_RSN=weak\_authority\_constraint\_d
 
 The plant value $\epsilon_\kappa=0.1$ is fixed after training-block replay and passes the one-pass time-isolated validation gate without retuning; it is not copied from the benchmark S3 selection. Record-level plant replay remains a restricted enterprise asset and is not inferred from the high-load controller exports. The original PID gains, output limits, anti-windup, sliding-pressure curve, coordinated-control logic, and fuel/feedwater/turbine-valve base loops are unchanged; RoCBF-SF is added downstream with enable, bypass, heartbeat, command-quality, and DCS-selection logic. The outage also includes instrument calibration, actuator inspection, combustion-equipment maintenance, and heat-surface cleaning, so the historian before/after comparison is observational. The controller exports separately establish that the proposed filter executed after restart.
 
-The public reproducibility package contains source code, simulation results, derived historian metrics, bounded anonymized controller-export excerpts, field maps, and source/public hashes. Complete raw historian and original controller exports are enterprise assets. Qualified researchers may request restricted access from the corresponding author, subject to data-owner approval and the applicable data-use conditions.
+The public reproducibility package contains source code, simulation results, derived historian metrics, bounded controller-export excerpts, field maps, and source/public hashes. Complete raw historian and original controller exports are enterprise assets. Qualified researchers may request restricted access from the corresponding author, subject to data-owner approval and the applicable data-use conditions.
 
 \section{Computation and Sampled-Data Boundary}
 \label{sec:supp_computation}

@@ -17,7 +17,12 @@ W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 DC_NS = "http://purl.org/dc/elements/1.1/"
 CP_NS = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
-NS = {"w": W_NS, "m": M_NS, "dc": DC_NS, "cp": CP_NS}
+R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+PKG_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
+HYPERLINK_REL_TYPE = (
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+)
+NS = {"w": W_NS, "m": M_NS, "dc": DC_NS, "cp": CP_NS, "r": R_NS}
 FORBIDDEN = (
     "Unit2",
     "XT2",
@@ -165,6 +170,20 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
                 errors.append(f"{path.name}: missing or stale title-page value {phrase!r}")
         if "github.com/vickjoeobi/RoCBF-Net" in text:
             errors.append(f"{path.name}: contains the obsolete repository URL")
+        rels = ET.fromstring(xml_entries["word/_rels/document.xml.rels"])
+        hyperlink_ids = {
+            relationship.get("Id")
+            for relationship in rels.findall(f"{{{PKG_REL_NS}}}Relationship")
+            if relationship.get("Type") == HYPERLINK_REL_TYPE
+            and relationship.get("Target") == expected_url
+            and relationship.get("TargetMode") == "External"
+        }
+        document_hyperlink_ids = {
+            hyperlink.get(f"{{{R_NS}}}id")
+            for hyperlink in document.findall(".//w:hyperlink", NS)
+        }
+        if not hyperlink_ids.intersection(document_hyperlink_ids):
+            errors.append(f"{path.name}: repository URL is not an external DOCX hyperlink")
 
     return {
         "yellow_runs": len(yellow),
@@ -181,6 +200,20 @@ def check_pdf(path: Path, errors: list[str]) -> int:
             errors.append(f"{path.name}: forbidden public identity string {value!r}")
     if PRIVATE_IPV4.search(text):
         errors.append(f"{path.name}: contains a private-network IPv4 address")
+    if path.name == "Title_Page_revised.pdf":
+        expected_url = (
+            "https://github.com/VickylastShao/"
+            "Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch"
+        )
+        urls: set[str] = set()
+        for page in reader.pages:
+            for annotation_ref in page.get("/Annots", []):
+                annotation = annotation_ref.get_object()
+                action = annotation.get("/A")
+                if action is not None and action.get("/URI"):
+                    urls.add(str(action.get("/URI")))
+        if expected_url not in urls:
+            errors.append(f"{path.name}: repository URL is not a clickable PDF URI")
     return len(reader.pages)
 
 

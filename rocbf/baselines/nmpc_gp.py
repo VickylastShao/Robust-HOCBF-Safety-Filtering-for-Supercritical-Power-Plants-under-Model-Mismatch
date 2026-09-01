@@ -34,8 +34,9 @@ class NMPCGPController(NMPCController):
     (Δf(x)), whereas the EMA only tracks the average residual.
 
     The GP is treated as fixed (no online updates) during evaluation,
-    mirroring the "fixed GP" RoCBF-Net configuration that holds the
-    formal PAC-Bayes guarantee.
+    mirroring the fixed-GP configuration used by the benchmark. Fixing the
+    GP bounds online complexity; it does not by itself establish a formal
+    residual-confidence event.
 
     Parameters
     ----------

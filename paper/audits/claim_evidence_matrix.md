@@ -4,7 +4,7 @@ Date: 2026-08-31
 
 ## Evidence Boundary
 
-The current simulation evidence uses the certificate-aligned fifth-order benchmark with a fixed input matrix ($\Delta g=0$). Its GP input is $[p_m,h_m,N_e]^\top$ and its three targets are nominal-model residual rates. The full five-state predictor and proposed fuel, feedwater, and turbine-valve commands are not GP-kernel inputs. The earlier root-level `results/phase5/` matrix is retained for traceability but is not a numerical source for the revision.
+The current simulation evidence uses a drift-only fifth-order benchmark with a fixed input matrix ($\Delta g=0$). Its GP input is $[p_m,h_m,N_e]^\top$ and its three targets are nominal-model residual rates. The full five-state predictor and proposed fuel, feedwater, and turbine-valve commands are not GP-kernel inputs. The finite benchmark aligns with the theorem's input-matrix assumption but does not independently prove the uniform residual event or derivative bounds. The earlier root-level `results/phase5/` matrix is retained for traceability but is not a numerical source for the revision.
 
 Plant-controller exports directly support time stamps, operating modes, QP/recovery status, logged margins, saturation flags, and timing. GP lifecycle, DCS permission, Kubernetes lease, and fallback-state-machine details are deployment configuration specifications, not per-record controller-export fields.
 
@@ -12,9 +12,9 @@ Plant-controller exports directly support time stamps, operating modes, QP/recov
 
 | Claim | Manuscript location | Current evidence | Status |
 |---|---|---|---|
-| The formal endpoint remains conditional on $\epsilon_\kappa=1$, the GP-UCB event, compositional residual bound, $\Delta g=0$, and full-row robust-QP feasibility. | Section 3.4; Conclusion | Theorem 1 and proof; `sections_mc/methodology.tex` | Formal conditional result |
+| The formal endpoint remains conditional on $\epsilon_\kappa=1$, an independently valid simultaneous residual event, valid derivative bounds, $\Delta g=0$, and full-row robust-QP feasibility. | Section 3.4; Conclusion | Theorem 1 and proof; `sections_mc/methodology.tex` | Formal conditional result; the commissioning multiplier alone is not proof |
 | No-GP HOCBF records 10,756 violations in 15,000 mismatch samples; GP mean correction reduces this count to 36. | Abstract; Section 4.2; Conclusion | `results/phase5_qpax_x64_primary_a_20260831/` | Stored primary aggregation |
-| The tune rule selects $\epsilon_\kappa=0.02$ before confirmation; the primary sweep records 0/17,500 observed violations. | Sections 4.3--4.4; Supplemental Material | `results/phase5_commissioning_kappa_tune_20260831/selection_summary.json`; `results/phase5_primary_kappa002_20260831/` | Stored tune/test evidence |
+| The tune rule selects $\epsilon_\kappa=0.02$ before confirmation; the scenario-wise primary row uses 0.02 in S3 and 0 elsewhere and records 0/17,500 observed violations. | Sections 4.2--4.4; Supplemental Material | `results/phase5_commissioning_kappa_tune_20260831/selection_summary.json`; `results/phase5_primary_kappa002_20260831/` | Stored tune/test evidence |
 | The fixed selected setting has 66/50,000 violations and 72/50,000 QP rejections on held-out seeds. | Sections 4.3--4.4; Supplemental Material | `selection_summary.json` | Stored held-out evidence; not a zero-probability claim |
 | Full-margin operation can lose feasibility under actuator limits. | Section 4.2; Supplemental Material | Primary S3 endpoint records in `results/phase5_qpax_x64_primary_a_20260831/` | Stored mechanism diagnostic |
 | Constrained NMPC is an effective reference with 35/17,500 violations and no solver failure in the implemented test. | Section 4.2; Supplemental Material | `results/phase5_drift_only_nmpc_x64_20260831/` | Stored reference result |

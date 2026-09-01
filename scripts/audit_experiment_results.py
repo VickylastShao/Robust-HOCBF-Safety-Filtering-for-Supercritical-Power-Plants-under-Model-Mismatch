@@ -8,14 +8,16 @@ method/condition/seed combination:
 
 This script derives the expected inventory from the phase YAML config,
 compares it to root-level result files only, and reports missing or extra
-files. Nested JSON files are treated as auxiliary analyses and are counted
-separately without affecting the main inventory.
+files. Root-level JSON files that do not use the run-result ``*_seedN.json``
+schema, together with nested JSON files, are treated as auxiliary analyses and
+are validated and counted separately without affecting the main inventory.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +28,8 @@ DEFAULT_PHASES = {
     4: ("configs/phase4.yaml", "results/phase4"),
     5: ("configs/phase5.yaml", "results/phase5"),
 }
+
+RUN_RESULT_NAME = re.compile(r".+_.+_seed\d+\.json$")
 
 
 def _seed_values(raw_seeds: Any) -> list[int]:
@@ -84,9 +88,13 @@ def audit_phase(config_path: Path, results_dir: Path) -> dict[str, Any]:
     )
 
     missing = sorted(expected_set - root_json_set)
-    extra = sorted(root_json_set - expected_set)
+    extra_candidates = sorted(root_json_set - expected_set)
+    extra = [name for name in extra_candidates if RUN_RESULT_NAME.fullmatch(name)]
+    auxiliary_root = [name for name in extra_candidates if name not in extra]
     matched = sorted(expected_set & root_json_set)
-    invalid = _invalid_json_files([results_dir / name for name in matched])
+    invalid = _invalid_json_files(
+        [results_dir / name for name in matched + auxiliary_root]
+    )
 
     ok = not missing and not extra and not invalid
     return {
@@ -99,10 +107,12 @@ def audit_phase(config_path: Path, results_dir: Path) -> dict[str, Any]:
         "matched_count": len(matched),
         "missing_count": len(missing),
         "extra_root_json_count": len(extra),
+        "auxiliary_root_json_count": len(auxiliary_root),
         "nested_json_count": nested_json_count,
         "invalid_json_count": len(invalid),
         "missing": missing,
         "extra_root_json": extra,
+        "auxiliary_root_json": auxiliary_root,
         "invalid_json": invalid,
     }
 
@@ -115,7 +125,7 @@ def main() -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="Exit nonzero if the root-level main experiment inventory is incomplete.",
+        help="Exit nonzero if the main run inventory is incomplete, unexpected, or invalid.",
     )
     args = parser.parse_args()
 

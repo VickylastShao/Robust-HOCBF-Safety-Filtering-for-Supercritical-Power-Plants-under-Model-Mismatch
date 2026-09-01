@@ -245,7 +245,8 @@ class GPResidual:
         # Compute maximum information gain γ_N per-dimension and take max.
         # γ_N = 0.5 * ln det(I + σ_n^{-2} K)
         #     = 0.5 * (ln det(K + σ_n^2 I) - N * ln σ_n^2)
-        # Using the max across dimensions is conservative for the PAC-Bayes bound.
+        # The implementation uses the maximum information-gain estimate across
+        # modeled outputs in its fixed commissioning multiplier.
         gamma_N_values = []
         for j in range(n_dims):
             ls_j, sv_j, nv_j = self._hyperparams[j]
@@ -423,20 +424,60 @@ class GPResidual:
     @staticmethod
     def compute_beta(n_dims: int, N: int, delta: float = 0.01,
                      gamma_N: float = 0.0):
-        """PAC-Bayes β calibration: β = √(2(γ_N + 1 + ln(n/δ))).
+        """Return the fixed commissioning uncertainty multiplier.
 
-        Standard form from Srinivas et al. (2010) and Chowdhury &
-        Gopalan (2017), where γ_N is the maximum information gain
-        computed from the GP kernel matrix at training time.
+        The implemented rule is
+        ``sqrt(2 * (gamma_N + 1 + log(n_outputs / delta)))``.  It is
+        retained for numerical compatibility with the commissioned
+        experiments and controller configuration.  By itself, this rule is
+        not an RKHS confidence theorem: a certificate also needs a residual
+        RKHS-norm bound and a sub-Gaussian noise scale.  Use
+        :meth:`compute_rkhs_confidence_beta` when those quantities are
+        available and the formal concentration assumptions are intended.
 
-        For backward compatibility, gamma_N defaults to 0.0, which
-        recovers the simplified form β = √(2(1 + ln(n/δ))).
-
-        Returns a JAX scalar (not Python float) so it works inside jax.jit.
+        ``n_dims`` is the number of modeled GP outputs, not the full state
+        dimension.  A JAX scalar is returned so the value remains JIT-safe.
         """
         if N == 0:
             return jnp.inf
         return jnp.sqrt(2.0 * (gamma_N + 1.0 + jnp.log(float(n_dims) / delta)))
+
+    @staticmethod
+    def compute_rkhs_confidence_beta(
+            n_outputs: int,
+            N: int,
+            *,
+            delta: float = 0.01,
+            gamma_N: float = 0.0,
+            rkhs_norm_bound: float,
+            noise_subgaussian_scale: float):
+        """Return an RKHS-form simultaneous confidence multiplier.
+
+        This implements the sufficient form
+        ``B + R * sqrt(2 * (gamma_N + 1 + log(n_outputs / delta)))``,
+        where ``B`` bounds each residual component's RKHS norm and ``R`` is
+        the sub-Gaussian observation-noise scale.  The logarithmic output
+        factor applies a union bound over the modeled residual components.
+
+        Supplying numerical values does not verify the assumptions; callers
+        remain responsible for establishing valid ``B`` and ``R`` bounds on
+        the operating set.
+        """
+        if n_outputs <= 0:
+            raise ValueError("n_outputs must be positive")
+        if not 0.0 < delta < 1.0:
+            raise ValueError("delta must lie in (0, 1)")
+        if gamma_N < 0.0:
+            raise ValueError("gamma_N must be non-negative")
+        if rkhs_norm_bound < 0.0:
+            raise ValueError("rkhs_norm_bound must be non-negative")
+        if noise_subgaussian_scale < 0.0:
+            raise ValueError("noise_subgaussian_scale must be non-negative")
+        if N == 0:
+            return jnp.inf
+        concentration = jnp.sqrt(
+            2.0 * (gamma_N + 1.0 + jnp.log(float(n_outputs) / delta)))
+        return rkhs_norm_bound + noise_subgaussian_scale * concentration
 
     @property
     def n_training_points(self) -> int:

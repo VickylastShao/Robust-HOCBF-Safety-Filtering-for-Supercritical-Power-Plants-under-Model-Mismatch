@@ -3,7 +3,7 @@
 
 \subsection{Safety-Filter Workflow and Implementation Settings}
 
-Online operation has three steps: evaluate the GP residual model, build HOCBF rows with the correct relative degrees, and solve one QP to project the proposed deviation command. Offline commissioning supplies the residual data, GP coverage checks, and scalar margin factor $\epsilon_\kappa$. The theorem formalizes the conservative endpoint. Section~\ref{sec:exp} then evaluates how much of that margin should be applied under each mismatch regime.
+Online operation has three steps: evaluate the GP residual model, build HOCBF rows with the correct relative degrees, and solve one QP to project the proposed deviation command. Offline commissioning supplies the residual data, GP coverage checks, and scalar margin factor $\epsilon_\kappa$. The theorem states the conditions under which the full-margin endpoint yields continuous-time forward invariance. Section~\ref{sec:exp} then evaluates how much of that margin should be applied under each mismatch regime.
 
 Figure~\ref{fig:architecture} summarizes the overlay architecture. The upstream controller produces a deviation command $v_{\mathrm{prop}}$ around the LQR-stabilized equilibrium controller, and the safety filter returns the nearest admissible command $v^*$. The total actuator command is
 \begin{equation}
@@ -71,7 +71,7 @@ Both the benchmark and plant implementations use the measured-output vector
 Three independent GPs model the corresponding one-step nominal-model residual rates. The benchmark target is $(x_{k+1,J_{\mathrm{GP}}}-\hat{x}^{\mathrm{nom}}_{k+1|k,J_{\mathrm{GP}}})/T_s$, where $J_{\mathrm{GP}}=\{p_m,h_m,N_e\}$. The full nominal predictor uses all five states and all three control deviations; fuel, feedwater, and turbine-valve commands are therefore represented in the nominal prediction but are not direct kernel inputs.
 
 \paragraph{Operating-point interpretation.}
-RoCBF-SF denotes the complete safety-filter design in Fig.~\ref{fig:architecture}: correct-relative-degree HOCBF rows, GP residual mean correction, compositional uncertainty propagation, QP projection, and tunable $\epsilon_\kappa$. The upstream controller may be classical or learned; the experiments evaluate the downstream filter contribution rather than the upstream controller. Experimental rows labelled GP-HOCBF and RoCBF-SF are fixed operating points or ablations. Thus, $\epsilon_\kappa=0$ tests mean correction alone, $\epsilon_\kappa=1$ tests the full worst-case margin, and Section~\ref{sec:kappa} selects and evaluates the calibrated benchmark operating point.
+RoCBF-SF denotes the complete safety-filter design in Fig.~\ref{fig:architecture}: correct-relative-degree HOCBF rows, GP residual mean correction, compositional uncertainty propagation, QP projection, and tunable $\epsilon_\kappa$. The upstream controller may be classical or learned; the experiments evaluate the downstream filter contribution rather than the upstream controller. Experimental rows labelled GP-HOCBF and RoCBF-SF are fixed operating points or ablations. Thus, $\epsilon_\kappa=0$ tests mean correction alone, $\epsilon_\kappa=1$ tests the full implemented margin, and Section~\ref{sec:kappa} selects and evaluates the calibrated benchmark operating point.
 
 \subsection{Mismatch Model and HOCBF Constraints}
 
@@ -108,12 +108,13 @@ Figure~\ref{fig:architecture} provides the system map for the rest of the paper.
 
 \subsection{GP Residual Correction and Compositional Margin}
 
-Each modeled component of $\Deltaf_j$, $j\in J_{\mathrm{GP}}$, is represented by an independent GP with a Mat\'{e}rn-5/2 kernel. Kernel distances use the frozen training transform $\widetilde{x}_i=(x_i-\mu_{x_i}^{\mathrm{train}})/s_{x_i}^{\mathrm{train}}$; the standard-deviation floor is $10^{-6}$ of the corresponding engineering range. Residual targets are standardized separately for each output. The same frozen transforms are used for training, validation, and inference. Given $N$ training points, the posterior provides mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The GP-UCB bound gives:
+Each modeled component of $\Deltaf_j$, $j\in J_{\mathrm{GP}}$, is represented by an independent GP with a Mat\'{e}rn-5/2 kernel. Kernel distances use the frozen training transform $\widetilde{x}_i=(x_i-\mu_{x_i}^{\mathrm{train}})/s_{x_i}^{\mathrm{train}}$; the standard-deviation floor is $10^{-6}$ of the corresponding engineering range. Residual targets are standardized separately for each output. The same frozen transforms are used for training, validation, and inference. Given $N$ training points, the posterior provides mean $\mu_{\mathrm{GP},j}(x)$ and variance $\sigma_{\mathrm{GP},j}^2(x)$. The formal analysis conditions on the simultaneous residual event
 \begin{equation}
-    |\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \sigma_{\mathrm{GP},j}(x), \quad \text{w.p.} \geq 1-\delta/n
-    \label{eq:gp_bound}
+    |\Deltaf_j(x) - \mu_{\mathrm{GP},j}(x)| \leq \beta \sigma_{\mathrm{GP},j}(x),
+    \quad j\in J_{\mathrm{GP}},\ x\in\calX_{\mathrm{op}},
+\label{eq:gp_bound}
 \end{equation}
-with $\beta = \sqrt{2(\gamma_N + 1 + \ln(n/\delta))}$ and maximum information gain $\gamma_N$~\cite{srinivas2010gp}.
+with joint probability at least $1-\delta$. A standard RKHS sufficient multiplier includes both a residual RKHS-norm bound $B_\Delta$ and a sub-Gaussian noise scale $R$, for example $\beta_{\mathrm{RKHS}}=B_\Delta+R\sqrt{2(\gamma_N+1+\ln(q/\delta))}$ for $q=|J_{\mathrm{GP}}|$ modeled outputs~\cite{chowdhury2017kernelized}. The numerical studies and deployed configuration instead retain the fixed commissioning multiplier $\beta_{\mathrm{comm}}=\sqrt{2(\gamma_N+1+\ln(q/\delta))}$. This engineering scaling rule defines the reported posterior envelope but does not, by itself, establish Eq.~\eqref{eq:gp_bound}; Theorem~\ref{thm:1} applies only when that event is independently valid.
 
 We define the mean-corrected drift $\fhat = f_0 + \muGP$ and posterior residual $\Delta \hat{f} = \Deltaf - \muGP$. The induced perturbation is propagated level by level through the HOCBF chain rather than attached only to the final constraint row.
 
@@ -135,7 +136,7 @@ The compositional margin is constructed as:
     \sigmatotal(x) &= \sigma_m(x)+\sum_{j=1}^{m-1}c_j\sigma_j(x)+\sigma_{\mathrm{ctrl}}(x). \label{eq:st}
 \end{align}
 \end{subequations}
-The three margin relations above define the quantity scaled by $\epsilon_\kappa$ in the online QP. Here, $\|L_{\fhat}\|_{\mathrm{op}}$ denotes a uniform upper bound on $\|\partial \fhat/\partial x\|_2$ over $\calX_{\mathrm{op}}$, not only the equilibrium value. The implemented cross term is $\sigma_{\mathrm{cross}}^{(i)}(x)=\beta\|\nabla\hat{\psi}_{i-1}^0(x)\|_2\|\sigmaGP(x)\|_2$, which upper-bounds $|L_{\Delta\hat f}\delta_{i-1}|$ on $\calX_{\mathrm{op}}$ using the RKHS derivative-bound argument in Lemma~S1. The control-coupling term is
+The three margin relations above define the quantity scaled by $\epsilon_\kappa$ in the online QP. For the formal result, $\|L_{\fhat}\|_{\mathrm{op}}$ is a uniform operating-set bound and $\sigma_{\mathrm{cross}}^{(i)}$ must bound $|L_{\Delta\hat f}\delta_{i-1}|$; Lemma~S1 gives a sufficient derivative-bound construction. The numerical implementation uses the nominal stabilized drift in the uncertainty recursion and the commissioning proxy $\sigma_{\mathrm{cross,comm}}^{(i)}(x)=\beta_{\mathrm{comm}}\|\nabla\hat{\psi}_{i-1}^0(x)\|_2\|\sigmaGP(x)\|_2$. In the linear stabilized benchmark, the nominal drift-Jacobian norm is global. For a nonlinear deployment, an equilibrium Jacobian is only a local engineering estimate. Neither the proxy cross term nor a local Jacobian estimate is automatically a certificate bound; Assumption~\ref{ass:residual_bound} states the additional dominance condition required by Theorem~\ref{thm:1}. The control-coupling term is
 \begin{equation}
     \sigma_{\mathrm{ctrl}}(x)=\beta\sum_j\left|\frac{\partial(L_gL_{\fhat}^{m-1}h)}{\partial x_j}\right|\sigmaGPj{j}(x)u_{\max},
     \label{eq:sigma_ctrl_main}
@@ -151,12 +152,12 @@ The state remains in a compact operating set $\calX_{\mathrm{op}}\subset\calX$, 
 
 \begin{assumption}[Drift-residual GP event]
 \label{ass:gp_event}
-The input matrix is exact ($\Delta g=0$). Each modeled component of $\Delta f$ on $J_{\mathrm{GP}}=\{p_m,h_m,N_e\}$ lies in the RKHS class required by the GP-UCB bound, and the fixed commissioning data give the simultaneous event $|\Deltaf_j(x)-\mu_{\mathrm{GP},j}(x)|\leq\beta\sigma_{\mathrm{GP},j}(x)$ for all $x\in\calX_{\mathrm{op}}$ and all modeled components with probability at least $1-\delta$. Residuals in the unmodeled $r_B$ and $\tau_f$ rows are zero in the certificate-aligned benchmark or are otherwise covered by Assumption~\ref{ass:residual_bound}.
+The input matrix is exact ($\Delta g=0$). For the $q=3$ modeled residual outputs $J_{\mathrm{GP}}=\{p_m,h_m,N_e\}$, Eq.~\eqref{eq:gp_bound} holds simultaneously over $\calX_{\mathrm{op}}$ with probability at least $1-\delta$. This event may be established from valid RKHS and noise bounds or another justified uniform-error result; the commissioning multiplier $\beta_{\mathrm{comm}}$ alone is not such a proof. Residuals in the unmodeled $r_B$ and $\tau_f$ rows are zero in the drift-only benchmark or are otherwise covered by Assumption~\ref{ass:residual_bound}.
 \end{assumption}
 
 \begin{assumption}[Compositional residual bound]
 \label{ass:residual_bound}
-The derivative constants used in Lemma~S1 are finite on $\calX_{\mathrm{op}}$, and the margin definitions in Section~3.3, together with Eq.~\eqref{eq:sigma_ctrl_main}, satisfy $|\Delta_{\psi}(x,v)|\leq\sigmatotal(x)$ for every active HOCBF row and every admissible $v\in\mathcal{V}$.
+The derivative constants used in Lemma~S1 are finite on $\calX_{\mathrm{op}}$, the operator-norm and cross-term quantities are valid upper bounds rather than local proxies, and the margin definitions in Section~3.3, together with Eq.~\eqref{eq:sigma_ctrl_main}, satisfy $|\Delta_{\psi}(x,v)|\leq\sigmatotal(x)$ for every active HOCBF row and every admissible $v\in\mathcal{V}$.
 \end{assumption}
 
 \begin{assumption}[Robust-QP feasibility]
@@ -170,19 +171,19 @@ Let $\Delta_{\psi}(x,v)=\psi_m^{\mathrm{true}}(x,v)-\hat{\psi}_m^0(x,v)$ denote 
 \end{theorem}
 
 \noindent\textit{Proof.}
-The complete proof is given in the Supplemental Material. It conditions on the simultaneous GP-UCB event, bounds each HOCBF-chain residual by induction, uses Assumption~\ref{ass:residual_bound} to obtain $|\Delta_\psi(x,v)|\leq\sigmatotal(x)$, and then applies the HOCBF forward-invariance result to the tightened QP. The certificate is attached to $\epsilon_\kappa=1$ and robust-QP feasibility.
+The complete proof is given in the Supplemental Material. It conditions on the simultaneous residual event, applies the derivative-bound construction in Lemma~S1, invokes Assumption~\ref{ass:residual_bound} to obtain $|\Delta_\psi(x,v)|\leq\sigmatotal(x)$, and then applies the HOCBF forward-invariance result to the tightened QP. The certificate is attached to $\epsilon_\kappa=1$, independently valid residual and derivative bounds, and robust-QP feasibility.
 
-Theorem~\ref{thm:1} is a conditional worst-case statement. The margin itself does not imply feasibility; feasibility depends on safe-set geometry, actuator limits, and $\calU$. The online factor $\epsilon_\kappa$ therefore has a dual interpretation: it recovers the formal bound at $\epsilon_\kappa=1$ and acts as a commissioning parameter when smaller values are selected from replay and operating-envelope diagnostics.
+Theorem~\ref{thm:1} is a conditional worst-case statement. The margin itself does not imply feasibility; feasibility depends on safe-set geometry, actuator limits, and $\calU$. The online factor $\epsilon_\kappa$ therefore has a dual interpretation: at $\epsilon_\kappa=1$ it applies the complete implemented margin and recovers the formal bound only when Assumptions~\ref{ass:gp_event}--\ref{ass:qp_feasible} are established; smaller values are commissioning settings selected from replay and operating-envelope diagnostics.
 
 The robustness scaling factor $\epsilon_\kappa$ controls the safety-margin/control-authority trade-off:
 
 \begin{itemize}
     \item $\epsilon_\kappa = 0$: The QP enforces $A_0(x)v \leq b_0(x)$, i.e., the nominal HOCBF constraint with GP mean correction only. No robustness margin is applied beyond the mean correction itself.
-    \item $\epsilon_\kappa = 1$: The QP enforces the full compositional margin $\sigmatotal(x)$, recovering the worst-case certificate of Theorem~\ref{thm:1}.
+    \item $\epsilon_\kappa = 1$: The QP enforces the full implemented compositional margin $\sigmatotal(x)$. It recovers the worst-case certificate only when the residual event, derivative bounds, $\Delta g=0$, and full-row QP feasibility required by Theorem~\ref{thm:1} all hold.
     \item $0 < \epsilon_\kappa < 1$: The QP enforces a fraction of the compositional margin, trading theoretical coverage for reduced QP conservatism.
 \end{itemize}
 
-The full probabilistic certificate is attached only to $\epsilon_\kappa=1$ under Theorem~\ref{thm:1}. Values $0 \leq \epsilon_\kappa < 1$ are calibrated operating points evaluated by finite-sample violation, QP intervention, infeasibility, and deployment-envelope diagnostics. Section~\ref{sec:exp} tests whether the worst-case endpoint is useful in the actuator-limited benchmark and how the preferred value changes with mismatch structure.
+The conditional probabilistic certificate is available only at $\epsilon_\kappa=1$ when every assumption of Theorem~\ref{thm:1} is established; setting $\epsilon_\kappa=1$ alone is insufficient. Values $0 \leq \epsilon_\kappa < 1$ are calibrated operating points evaluated by finite-sample violation, QP intervention, infeasibility, and deployment-envelope diagnostics. Section~\ref{sec:exp} evaluates the full implemented-margin endpoint in the actuator-limited benchmark and how the preferred value changes with mismatch structure.
 
 The GP posterior includes a regularization floor $\sigma_{\mathrm{floor}}=10^{-4}$. Under constant perturbations, $\sigmaGP$ and $\sigmatotal(x)$ are nearly uniform, so the margin is floor-driven. Under S3 state-dependent coupling, $\sigmaGP$ becomes heterogeneous and $\sigmatotal(x)$ is data-driven. This distinction explains why additive perturbations can use $\epsilon_\kappa=0$ in the tested regime: GP mean correction supplies the effective adjustment, while the floor-driven margin mainly adds QP conservatism.
 

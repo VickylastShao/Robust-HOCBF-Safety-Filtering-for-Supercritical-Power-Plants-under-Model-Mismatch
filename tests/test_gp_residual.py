@@ -2,6 +2,7 @@
 import jax
 import jax.numpy as jnp
 import numpy as np
+import pytest
 
 
 def test_matern52_kernel_symmetry():
@@ -146,7 +147,7 @@ def test_gp_uncertainty_decreases():
 
 
 def test_gp_beta_computation():
-    """β = √(2(γ_N + 1 + ln(n/δ))) for PAC-Bayes calibration."""
+    """The commissioning multiplier remains numerically backward compatible."""
     from rocbf.gp.gp_residual import GPResidual
 
     n, delta = 2, 0.01
@@ -164,6 +165,38 @@ def test_gp_beta_computation():
 
     # N=0 should return inf
     assert GPResidual.compute_beta(n, 0, delta) == float('inf')
+
+
+def test_rkhs_confidence_beta_includes_norm_and_noise_terms():
+    """The formal RKHS form must retain both B and R."""
+    from rocbf.gp.gp_residual import GPResidual
+
+    q, delta, gamma_N = 3, 0.01, 10.0
+    B, R = 2.5, 0.4
+    beta = GPResidual.compute_rkhs_confidence_beta(
+        q,
+        500,
+        delta=delta,
+        gamma_N=gamma_N,
+        rkhs_norm_bound=B,
+        noise_subgaussian_scale=R,
+    )
+    concentration = float(
+        jnp.sqrt(2.0 * (gamma_N + 1.0 + jnp.log(float(q) / delta))))
+    np.testing.assert_allclose(beta, B + R * concentration, atol=1e-5)
+
+
+def test_rkhs_confidence_beta_rejects_invalid_assumptions():
+    """Invalid certificate parameters fail instead of being silently clipped."""
+    from rocbf.gp.gp_residual import GPResidual
+
+    with pytest.raises(ValueError, match="rkhs_norm_bound"):
+        GPResidual.compute_rkhs_confidence_beta(
+            3,
+            500,
+            rkhs_norm_bound=-1.0,
+            noise_subgaussian_scale=1.0,
+        )
 
 
 def test_uncertain_dynamics():

@@ -1,10 +1,11 @@
 """GP calibration diagnostics for reviewer response.
 
-Computes empirical coverage of βσ_GP intervals on held-out validation data
+Computes empirical coverage of beta_comm*sigma_GP intervals on held-out validation data
 for all six scenario-specific GPs. Generates LaTeX table for Supplementary Material.
 
 Key metric: fraction of held-out residual errors that fall within the
-GP-UCB confidence interval |Δf̂_j| ≤ β σ_GP,j.
+commissioning interval |Δf̂_j| ≤ beta_comm sigma_GP,j. This is an
+empirical coverage diagnostic, not a separately proved GP-UCB confidence set.
 
 Usage:
     conda activate jax_gpu
@@ -38,7 +39,7 @@ DIM_NAMES = ['p_m (pressure)', 'h_m (enthalpy)', 'N_e (power)']
 
 
 def compute_beta(gamma_N, n_dims=3, delta=0.01):
-    """GP-UCB β factor from Srinivas et al. (2010)."""
+    """Fixed commissioning multiplier used by the historical diagnostic."""
     return float(jnp.sqrt(2 * (gamma_N + 1 + jnp.log(n_dims / delta))))
 
 

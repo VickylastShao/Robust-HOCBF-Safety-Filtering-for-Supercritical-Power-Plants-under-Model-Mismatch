@@ -324,7 +324,7 @@ class TestBackwardCompatibility:
 
 class TestEpsilonShrinking:
     """GP predictive variance should decrease with more data; epsilon may not
-    always shrink due to PAC-Bayes beta growth, but sigma_gp must shrink."""
+    always shrink because beta_comm grows with gamma_N, but sigma_gp must shrink."""
 
     def test_sigma_gp_shrinks_with_more_data_m3(self, h_fn, dynamics):
         """Incrementally adding GP data reduces predictive variance at test point."""

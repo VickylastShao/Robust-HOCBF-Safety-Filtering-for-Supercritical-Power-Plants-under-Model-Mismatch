@@ -54,8 +54,8 @@ def test_epsilon_positive():
 def test_epsilon_decreases_with_data():
     """More GP data → smaller σ_GP(x); ε(x) = β·σ_GP where β includes γ_N.
 
-    With the standard PAC-Bayes β = √(2(γ_N + 1 + ln(n/δ))), γ_N grows
-    with N, so ε is not guaranteed to decrease monotonically. We verify
+    With the fixed commissioning multiplier β_comm = √(2(γ_N + 1 + ln(n/δ))),
+    γ_N grows with N, so ε is not guaranteed to decrease monotonically. We verify
     that both values are positive and finite, and that the GP posterior
     variance σ_GP decreases (the core uncertainty reduction mechanism).
     """

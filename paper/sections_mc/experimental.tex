@@ -5,7 +5,7 @@ The experiments evaluate RoCBF-SF as a real-time safety layer in an industrial D
 
 \subsection{Boiler-Turbine Benchmark and Filter Comparisons}
 
-The benchmark is a fifth-order nonlinear model of the boiler-turbine coordinated control loop of an ultra-supercritical power unit with state $x = [r_B, p_m, h_m, N_e, \tau_f]^\top$ and three control inputs. The enforced limits are pressure ($m=2$, 13--24\,MPa), separator enthalpy ($m=1$, 2670--2830\,kJ/kg), and generator active-power tracking around the dispatch target ($m=1$, $N_{\mathrm{ref}}\pm50$\,MW). Table~\ref{tab:safety} is the primary validation corresponding to Theorem~\ref{thm:1}: the rollout plant and the filter use the same fixed input matrix, so mismatch enters through drift residuals and $\Delta g=0$.
+The benchmark is a fifth-order nonlinear model of the boiler-turbine coordinated control loop of an ultra-supercritical power unit with state $x = [r_B, p_m, h_m, N_e, \tau_f]^\top$ and three control inputs. The enforced limits are pressure ($m=2$, 13--24\,MPa), separator enthalpy ($m=1$, 2670--2830\,kJ/kg), and generator active-power tracking around the dispatch target ($m=1$, $N_{\mathrm{ref}}\pm50$\,MW). Table~\ref{tab:safety} tests the $\Delta g=0$ structural scope of Theorem~\ref{thm:1}: the rollout plant and the filter use the same fixed input matrix, so mismatch enters through drift residuals. The finite rollouts do not by themselves verify the theorem's uniform residual and derivative-bound assumptions.
 
 Six perturbation scenarios model heat-absorption loss (S1), feedwater-induced pressure disturbance (S2), coupled state-dependent drift (S3), nonlinear fouling (S4), valve-related process drift (S5), and fuel-quality variation (S6). S5 is represented as equivalent state drift rather than as an input-gain fault, so the $\Delta g=0$ condition is maintained. S5 and S6 also perturb the extended power/fuel-delay dynamics of the fifth-order model.
 
@@ -40,17 +40,17 @@ where a sample is counted once if any enforced pressure, separator-enthalpy, or 
         NMPC ($N{=}5$) & 0.00 & 0.20 & 0.20 & 0.40 & 0.20 & 0.20 & 0.20 \\
         GP-HOCBF mean-only ($\epsilon_\kappa{=}0$) & 0.00 & 0.00 & 0.00 & 1.44 & 0.00 & 0.00 & 0.00 \\
         RoCBF-SF commissioned ($\epsilon_\kappa{=}0.02$ in S3; 0 otherwise) & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 & 0.00 \\
-        Full-margin endpoint ($\epsilon_\kappa{=}1.0$) & 0.00 & 0.00 & 0.00 & 16.76 & 0.48 & 0.00 & 0.00 \\
+        Full implemented-margin endpoint ($\epsilon_\kappa{=}1.0$) & 0.00 & 0.00 & 0.00 & 16.76 & 0.48 & 0.00 & 0.00 \\
         \bottomrule
     \end{tabular}
     }
 \end{table}
 
-Table~\ref{tab:safety} reports the certificate-aligned $\Delta g=0$ validation. The unfiltered proposal violates 10{,}756 of 15{,}000 perturbation samples. Correct relative degree removes all 112 nominal violations but does not compensate drift mismatch: no-GP HOCBF retains the same 10{,}756 perturbation-sample violations. GP mean correction reduces this count to 36/15{,}000, all in S3. Applying the independently selected $\epsilon_\kappa=0.02$ in S3 gives 0/17{,}500 observed violations across the nominal and six mismatch conditions. NMPC is also effective, with 35/17{,}500 violations and no solver failure, but does not eliminate the short boundary transients in the six mismatch cases.
+Table~\ref{tab:safety} reports the drift-only $\Delta g=0$ validation. The unfiltered proposal violates 10{,}756 of 15{,}000 perturbation samples. Correct relative degree removes all 112 nominal violations but does not compensate drift mismatch: no-GP HOCBF retains the same 10{,}756 perturbation-sample violations. GP mean correction reduces this count to 36/15{,}000, all in S3. The scenario-wise commissioned row applies the independently selected $\epsilon_\kappa=0.02$ in S3 and 0 otherwise, giving 0/17{,}500 observed violations across the nominal and six mismatch conditions. NMPC is also effective, with 35/17{,}500 violations and no solver failure, but does not eliminate the short boundary transients in the six mismatch cases.
 
-The full-margin row shows why $\epsilon_\kappa$ must be commissioned rather than set mechanically to its largest value. The endpoint remains safe in nominal, S1, S2, S5, and S6, but it produces 419 S3 violations and 12 S4 violations when the actuator-bounded robust QP loses feasibility. This does not contradict Theorem~\ref{thm:1}, which requires feasibility of the original robust QP at every certified step.
+The full implemented-margin row shows why $\epsilon_\kappa$ must be commissioned rather than set mechanically to its largest value. The endpoint remains safe in nominal, S1, S2, S5, and S6, but it produces 419 S3 violations and 12 S4 violations when the actuator-bounded robust QP loses feasibility. This does not contradict Theorem~\ref{thm:1}, which requires both full-row feasibility and independently valid residual and derivative bounds.
 
-Table~\ref{tab:qp_endpoint_diagnostic} makes that feasibility mechanism explicit for S3. The revised experiment records every QP attempt, rejected candidate, fallback, intervention, and normalized residual. The commissioned row has four rejected initial-step QPs but no ensuing state-limit violation; the full-margin endpoint rejects 628 of 2500 QPs and reverts to the upstream command in those cycles.
+Table~\ref{tab:qp_endpoint_diagnostic} makes that feasibility mechanism explicit for S3. The revised experiment records every QP attempt, rejected candidate, fallback, intervention, and normalized residual. The commissioned row has four rejected initial-step QPs but no ensuing state-limit violation; the full implemented-margin endpoint rejects 628 of 2500 QPs and reverts to the upstream command in those cycles.
 
 \begin{table}[htbp]
     \centering
@@ -65,7 +65,7 @@ Table~\ref{tab:qp_endpoint_diagnostic} makes that feasibility mechanism explicit
         HOCBF, no GP & 1682/2500 (67.28\%) & 0/2500 & 0/2500 & 4.48\% \\
         GP-HOCBF mean-only & 36/2500 (1.44\%) & 0/2500 & 0/2500 & 67.08\% \\
         RoCBF-SF, $\epsilon_\kappa=0.02$ & 0/2500 & 4/2500 & 4/2500 & 67.12\% \\
-        Full-margin endpoint & 419/2500 (16.76\%) & 628/2500 & 628/2500 & 51.12\% \\
+        Full implemented-margin endpoint & 419/2500 (16.76\%) & 628/2500 & 628/2500 & 51.12\% \\
         \bottomrule
     \end{tabular}
     }
@@ -76,7 +76,7 @@ The results indicate a mechanism hierarchy: correct HOCBF structure handles nomi
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/Figure_6_process_response.pdf}
-    \caption{Closed-loop mechanism for representative seed~3 under the certificate-aligned S3 drift perturbation. \textbf{(a,b)} Enthalpy safety margin and normalized QP correction over the 45--135\,s interval containing the onset and largest excursion. The shaded region marks violation of the lower enthalpy constraint. \textbf{(c)} Full 300\,s event record. \textbf{(d)} Full-rollout minimum enthalpy margin and sample-level violation rate; the symmetric-log horizontal scale resolves the two near-zero margins while retaining the large no-GP excursion. Lines in (a,b) are interpolated on a 0.1\,s display grid only for visual continuity; open markers are the native 1\,s controller samples, and all statistics use native samples and the $10^{-2}$ counting tolerance defined in Eq.~\eqref{eq:sample_violation_rate}.}
+    \caption{Closed-loop mechanism for representative seed~3 under the drift-only S3 perturbation. \textbf{(a,b)} Enthalpy safety margin and normalized QP correction over the 45--135\,s interval containing the onset and largest excursion. The shaded region marks violation of the lower enthalpy constraint. \textbf{(c)} Full 300\,s event record. \textbf{(d)} Full-rollout minimum enthalpy margin and sample-level violation rate; the symmetric-log horizontal scale resolves the two near-zero margins while retaining the large no-GP excursion. Lines in (a,b) are interpolated on a 0.1\,s display grid only for visual continuity; open markers are the native 1\,s controller samples, and all statistics use native samples and the $10^{-2}$ counting tolerance defined in Eq.~\eqref{eq:sample_violation_rate}.}
     \label{fig:process_response}
 \end{figure}
 
@@ -87,11 +87,11 @@ Figure~\ref{fig:process_response} shows the enthalpy bottleneck directly in a re
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figures/Figure_8_model_mismatch.pdf}
-    \caption{Direct model-mismatch diagnosis under the certificate-aligned S3 drift perturbation. \textbf{(a)} Nominal and true one-step enthalpy-margin responses from identical state-input pairs. \textbf{(b,c)} Pressure and enthalpy residual rates compared with the scenario-specific GP posterior mean and GP-UCB envelope ($\mu_{\mathrm{GP}}\pm\beta\sigma_{\mathrm{GP}}$, $\beta=12.967$, $N=500$). \textbf{(d)} Posterior residual error normalized by the GP-UCB bound; values below one lie inside the modeled envelope.}
+    \caption{Direct model-mismatch diagnosis under the drift-only S3 perturbation. \textbf{(a)} Nominal and true one-step enthalpy-margin responses from identical state-input pairs. \textbf{(b,c)} Pressure and enthalpy residual rates compared with the scenario-specific GP posterior mean and commissioning envelope ($\mu_{\mathrm{GP}}\pm\beta_{\mathrm{comm}}\sigma_{\mathrm{GP}}$, $\beta_{\mathrm{comm}}=12.967$, $N=500$). \textbf{(d)} Posterior residual error normalized by that implemented envelope; values below one lie inside the plotted envelope, not a separately established uniform GP confidence set.}
     \label{fig:model_mismatch}
 \end{figure}
 
-Figure~\ref{fig:model_mismatch} makes the model mismatch explicit. For the same state and zero-deviation input, the nominal model predicts a next-step enthalpy margin of 28.0\,kJ/kg, whereas the S3 plant drops to $-12.0$\,kJ/kg. The pressure and enthalpy panels show that this discrepancy is structured and learnable: the GP posterior mean tracks the realized drift residual, and the remaining error stays inside the GP-UCB envelope in this diagnostic. The filter therefore corrects a measured residual structure before applying the commissioned margin.
+Figure~\ref{fig:model_mismatch} makes the model mismatch explicit. For the same state and zero-deviation input, the nominal model predicts a next-step enthalpy margin of 28.0\,kJ/kg, whereas the S3 plant drops to $-12.0$\,kJ/kg. The pressure and enthalpy panels show that this discrepancy is structured and learnable: the GP posterior mean tracks the realized drift residual, and the remaining error stays inside the implemented commissioning envelope in this diagnostic. The filter therefore corrects a measured residual structure before applying the commissioned margin.
 
 \begin{figure}[htbp]
     \centering

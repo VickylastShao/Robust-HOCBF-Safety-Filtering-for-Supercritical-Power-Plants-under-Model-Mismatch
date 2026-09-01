@@ -3,7 +3,7 @@
 The closed-loop signal mechanism is shown in Figure_6_process_response. This
 figure deliberately avoids repeating the same trajectory evidence; it uses the
 seed-level S3 kappa sweep to show why a small positive margin is the calibrated
-operating point and why the full theoretical margin is not used as a default.
+operating point and why the full implemented margin is not used as a default.
 
 Run on a GPU host for trajectory generation. Re-running locally without JAX is
 supported after the trajectory JSON has been generated.

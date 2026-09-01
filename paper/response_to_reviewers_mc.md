@@ -17,7 +17,7 @@ We thank the Editor and Reviewers for the detailed assessment. The revision subs
 
 **Comment.** The reviews recognize the manuscript as a technically strong and practically relevant contribution. However, substantial issues remain regarding the distinction between theoretical safety guarantees and empirically calibrated margins. The validation methodology also requires stronger support, including clearer separation of empirical evidence from formal guarantees. In addition, the commissioning procedure, GP training and computational scalability, feasibility handling, and comparison with NMPC should be described more concretely.
 
-**Response.** Theorem 1 is now explicitly limited to `epsilon_kappa = 1`, the simultaneous GP-UCB event, the compositional residual bound, `Delta g = 0`, and full-row robust-QP feasibility. Benchmark and plant values below one are described only as finite-sample commissioning operating points. The revised method section specifies the GP input/target semantics, frozen standardization, field data split, fixed 500-point dictionary, OOD monitors, and fallback state machine. The experimental section now includes NMPC in the primary table, a separate QP-rejection/fallback table, tune/test calibration, GP data-quality sensitivity, and high-load plant-controller evidence. The Supplemental Material provides count-level data, computational complexity, and controller-supervisor details.
+**Response.** Theorem 1 is now explicitly limited to `epsilon_kappa = 1`, an independently valid simultaneous residual event, a valid compositional derivative bound, `Delta g = 0`, and full-row robust-QP feasibility. The revised text also distinguishes the implemented commissioning multiplier from an RKHS confidence multiplier containing the required residual-norm and noise-scale terms; the implemented multiplier does not establish the theorem assumptions by itself. Benchmark and plant values below one are described only as finite-sample commissioning operating points. The revised method section specifies the GP input/target semantics, frozen standardization, field data split, fixed 500-point dictionary, OOD monitors, and fallback state machine. The experimental section now includes NMPC in the primary table, a separate QP-rejection/fallback table, tune/test calibration, GP data-quality sensitivity, and high-load plant-controller evidence. The Supplemental Material provides count-level data, computational complexity, and controller-supervisor details.
 
 **Location in the revised manuscript.** Sections 3.1--3.4; Sections 4.1--4.6; Tables 1--5; Figures 4, 5, and 8; Supplemental Sections S1--S6.
 
@@ -35,7 +35,7 @@ We thank the Editor and Reviewers for the detailed assessment. The revision subs
 
 **Comment.** Figures 2--7 are critical for demonstrating the method's performance but currently lack descriptive clarity. Improve the figure legends by clearly stating what each figure illustrates, specifying units, and explaining all axes and symbols.
 
-**Response.** The central figures have been regenerated. Figure 4 now separates tune and held-out calibration data. Figure 2 uses native 1 s markers, identifies the interpolated display grid, gives physical margin units, and retains a full-rollout event strip. Figure 3 defines the residual-rate units, GP-UCB envelope, beta value, and normalized residual ratio. Figure 5 defines training-set size, injected corruption, held-out NRMSE, interval coverage, violation rate, and QP-rejection rate. Figures 6 and 7 identify historian sampling intervals, physical units, matching metrics, and the interpretation boundary of the plant data. All captions identify the data source and statistical denominator where applicable.
+**Response.** The central figures have been regenerated. Figure 4 now separates tune and held-out calibration data. Figure 2 uses native 1 s markers, identifies the interpolated display grid, gives physical margin units, and retains a full-rollout event strip. Figure 3 defines the residual-rate units, the implemented commissioning envelope, its multiplier, and the normalized residual ratio without presenting that plotted envelope as a separately proved uniform confidence set. Figure 5 defines training-set size, injected corruption, held-out NRMSE, interval coverage, violation rate, and QP-rejection rate. Figures 6 and 7 identify historian sampling intervals, physical units, matching metrics, and the interpretation boundary of the plant data. All captions identify the data source and statistical denominator where applicable.
 
 **Location in the revised manuscript.** Figures 2--7 and their captions in Sections 4.2--4.5.
 
@@ -43,7 +43,7 @@ We thank the Editor and Reviewers for the detailed assessment. The revision subs
 
 **Comment.** The referenced Table 2 appears in Section 4.1 but is not visible or included in the current version. Ensure that all tables are present, properly labelled, and self-explanatory.
 
-**Response.** Table 2 is restored in the revised editable manuscript and is self-contained. It reports the nominal case and six mismatch conditions for the fixed proposal, no-GP HOCBF, NMPC, GP mean correction, commissioned RoCBF-SF, and the full-margin endpoint. Table 3 separately reports count-level S3 QP rejection, fallback, and intervention.
+**Response.** Table 2 is restored in the revised editable manuscript and is self-contained. It reports the nominal case and six mismatch conditions for the fixed proposal, no-GP HOCBF, NMPC, GP mean correction, commissioned RoCBF-SF, and the full implemented-margin endpoint. Table 3 separately reports count-level S3 QP rejection, fallback, and intervention.
 
 **Location in the revised manuscript.** Section 4.2, Tables 2 and 3.
 
@@ -119,7 +119,7 @@ We thank the Editor and Reviewers for the detailed assessment. The revision subs
 
 **Comment.** The abstract's zero-violation result is finite-sample evidence rather than a statistical guarantee. The Wilson bound is not sufficiently contextualized, and empirical calibration of `epsilon_kappa` may invalidate the formal certificate. Separate empirical validation from theoretical guarantees, state that the calibrated value has no formal probabilistic guarantee, and present zero violations only as observed in the tested rollouts.
 
-**Response.** The abstract, results, and conclusion now use count-level language and explicitly distinguish the primary sweep from the held-out test. The revised manuscript reports 0/17,500 only as an observed primary result. The held-out calibration test records a nonzero 66/50,000 violation count. Wilson limits are described as descriptive Bernoulli-reference values because controller samples are serially correlated. No finite-sample result is presented as proof of zero violation probability.
+**Response.** The abstract, results, and conclusion now use count-level language and explicitly distinguish the primary sweep from the held-out test. The revised manuscript reports 0/17,500 only for the scenario-wise commissioned primary row, which uses `epsilon_kappa = 0.02` in S3 and 0 in the other six conditions. The held-out S3 test records a nonzero 66/50,000 violation count. Wilson limits are described as descriptive Bernoulli-reference values because controller samples are serially correlated. No finite-sample result is presented as proof of zero violation probability.
 
 **Location in the revised manuscript.** Abstract; Sections 4.1--4.3; Tables 2 and 3; Figure 4; Section 5; Supplemental Sections S1 and S2.
 
@@ -127,7 +127,7 @@ We thank the Editor and Reviewers for the detailed assessment. The revision subs
 
 **Comment.** Clarify whether the deployed `epsilon_kappa = 0.1` system is certified or calibrated. If it is calibrated, the paper should not invoke Theorem 1 for that deployed operating point. Consider distinguishing a certified full-margin mode from a calibrated partial-margin mode with different safety arguments.
 
-**Response.** This distinction is now explicit throughout. Theorem 1 applies only to the full-margin endpoint under all stated assumptions. Benchmark 0.02 and field 0.1 are calibrated operating points supported by empirical safety and feasibility diagnostics; they are not called certified. The manuscript presents three operating cases: the full-margin theoretical endpoint, partial-margin calibrated operation, and mean-correction-only operation. The theorem is not invoked for the field value or guarded reduced-QP cycles.
+**Response.** This distinction is now explicit throughout. Theorem 1 applies at `epsilon_kappa = 1` only when the simultaneous residual event, compositional derivative bounds, `Delta g = 0`, and full-row QP feasibility are independently established. The numerical `epsilon_kappa = 1` row is therefore called the full implemented-margin endpoint rather than being treated as automatically certified. Benchmark 0.02 and field 0.1 are calibrated operating points supported by empirical safety and feasibility diagnostics; they are not called certified. The method section now gives the standard RKHS-form multiplier with explicit residual-norm and noise-scale terms and separately identifies the fixed multiplier used in the experiments and deployment as an engineering commissioning rule. The theorem is not invoked for the field value, the finite-rollout calibration results, or guarded reduced-QP cycles.
 
 **Location in the revised manuscript.** Section 3.4; Table 2 caption; Sections 4.2, 4.3, 4.5, and 4.6; Section 5.
 
@@ -145,7 +145,7 @@ Three new confirmed controller exports extend execution evidence to 480.7--629.7
 
 **Comment.** Theorem 1 assumes an exact input matrix (`Delta g = 0`), but the previous stress tests used pressure-scaled control effectiveness. Either extend the theory to `Delta g != 0` or state clearly that such tests are outside the certificate.
 
-**Response.** The primary validation has been rerun with a fixed input matrix for both the plant and filter, and all mismatch enters through drift residuals. The former pressure-scaled control-effectiveness table, captions, and associated main-text conclusions have been removed. S5 is implemented as a drift-equivalent process perturbation in the certificate-aligned benchmark. The paper does not claim an actuator-gain-uncertainty certificate; this extension is listed as future work.
+**Response.** The primary validation has been rerun with a fixed input matrix for both the plant and filter, and all mismatch enters through drift residuals. The former pressure-scaled control-effectiveness table, captions, and associated main-text conclusions have been removed. S5 is implemented as a drift-equivalent process perturbation in the $\Delta g=0$ benchmark. This aligns the experiment with the theorem's input-matrix assumption, while the revised manuscript avoids claiming that finite rollouts verify its separate uniform residual and derivative-bound assumptions. The paper does not claim an actuator-gain-uncertainty certificate; this extension is listed as future work.
 
 **Location in the revised manuscript.** Sections 3.2 and 3.4; Sections 4.1 and 4.2, Table 2; Section 5.
 
@@ -193,7 +193,7 @@ Three new confirmed controller exports extend execution evidence to 480.7--629.7
 
 **Comment.** The manuscript treats actuator limits as box constraints but does not sufficiently analyse their implications for QP feasibility.
 
-**Response.** The revised QP diagnostics record every attempt, rejection, fallback, and intervention. In S3, the full-margin endpoint rejects 628/2500 QPs and records 419 violations, directly linking excessive tightening to actuator-limited infeasibility. The field section separately reports the guarded pressure-low-row recovery and explicitly excludes recovered cycles from the full-row certificate. Actuator box and rate rows are never removable.
+**Response.** The revised QP diagnostics record every attempt, rejection, fallback, and intervention. In S3, the full implemented-margin endpoint rejects 628/2500 QPs and records 419 violations, directly linking excessive tightening to actuator-limited infeasibility. The field section separately reports the guarded pressure-low-row recovery and explicitly excludes recovered cycles from the full-row certificate. Actuator box and rate rows are never removable.
 
 **Location in the revised manuscript.** Sections 3.1 and 3.4; Section 4.2, Table 3; Section 4.5, Figure 8 and Table 4; Supplemental Sections S1, S4, and S5.
 

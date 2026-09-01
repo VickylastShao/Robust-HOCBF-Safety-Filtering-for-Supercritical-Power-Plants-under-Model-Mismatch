@@ -31,6 +31,6 @@ All artwork files are 600 dpi RGB LZW TIFFs in `revision_submission/figures_for_
 
 ## Evidence Boundary
 
-The revision uses the certificate-aligned drift-only benchmark and the current major-revision result inventories documented in `../ARTIFACT_MANIFEST.md`. Confirmed original plant-controller exports support the reported controller status, margins, saturation flags, and timing summaries. Deployment supervisor and DCS/Kubernetes details are configuration specifications, not individual export fields.
+The revision uses the drift-only primary benchmark and the current major-revision result inventories documented in `../ARTIFACT_MANIFEST.md`. Confirmed original plant-controller exports support the reported controller status, margins, saturation flags, and timing summaries. Deployment supervisor and DCS/Kubernetes details are configuration specifications, not individual export fields.
 
 Do not upload internal audits, raw enterprise data, old `results/phase5/` development outputs, LaTeX build intermediates, or the unmarked internal DOCX as substitutes for the files above.

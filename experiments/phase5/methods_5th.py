@@ -498,7 +498,7 @@ def train_ppo_gp_hocbf_5th(config, dynamics, constraint, key, gp=None):
 
 
 def train_ppo_rhocbf_5th(config, dynamics, constraint, key, gp=None):
-    """Method 7: PPO + Robust HOCBF (full theoretical bound, ε_κ=1.0, fixed GP).
+    """Method 7: PPO + Robust HOCBF (full implemented margin, ε_κ=1.0, fixed GP).
 
     Uses scenario-specific GP with MC=True and compositional ε(x).
     The GP is fixed after pretraining (no online adaptation).

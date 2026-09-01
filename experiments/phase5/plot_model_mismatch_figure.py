@@ -106,7 +106,7 @@ def _print_data_audit(data: dict, display_steps: int) -> None:
     for key in ("p_m", "h_m"):
         c = coverage[key]
         print(
-            f"  {key} GP-UCB coverage: {c['coverage_pct']:.1f}% "
+            f"  {key} commissioning-envelope coverage: {c['coverage_pct']:.1f}% "
             f"(max ratio={c['max_ratio']:.3f}, mean ratio={c['mean_ratio']:.3f})"
         )
     print(f"  display window: 0-{display_steps} s")
@@ -231,7 +231,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
             color=color_gp,
             alpha=0.18,
             linewidth=0,
-            label=r"GP mean $\pm\,\beta\sigma$",
+            label=r"GP mean $\pm\,\beta_{\mathrm{comm}}\sigma$",
         )
         ax.plot(
             t_action[mask],
@@ -307,7 +307,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         color="0.15",
         linestyle=":",
         linewidth=0.7,
-        label="GP-UCB bound",
+        label="Commissioning envelope",
     )
     ax_d.plot(
         t_action[action_mask],
@@ -315,7 +315,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         color=OKABE_ITO["blue"],
         linestyle=(0, (4, 2)),
         linewidth=0.9,
-        label=r"Pressure residual / bound",
+        label=r"Pressure residual / envelope",
     )
     ax_d.plot(
         t_action[action_mask],
@@ -323,7 +323,7 @@ def plot_figure(data: dict, display_steps: int = DEFAULT_DISPLAY_STEPS) -> Path:
         color=OKABE_ITO["green"],
         linestyle="-",
         linewidth=0.9,
-        label=r"Enthalpy residual / bound",
+        label=r"Enthalpy residual / envelope",
     )
     ax_d.set_xlim(0, display_steps)
     ax_d.set_yscale("log")

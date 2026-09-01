@@ -15,8 +15,8 @@ Pipeline:
 
 This is the simplified Hewing-2020 cautious MPC variant: GP provides
 mean correction only, no σ_GP propagation through the prediction horizon.
-The fixed GP mirrors RoCBF-Net's fixed-GP configuration and preserves
-the PAC-Bayes guarantee scope.
+The fixed GP mirrors the benchmark's fixed-GP configuration and keeps online
+inference cost bounded; it does not by itself establish a formal confidence event.
 
 Usage:
     PYTHONPATH=. python experiments/phase5/timevarying_nmpc_gp.py \\

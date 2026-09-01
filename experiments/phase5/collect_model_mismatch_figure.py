@@ -4,7 +4,7 @@ The resulting JSON supports a Nature-style multi-panel figure showing:
 1. nominal one-step prediction vs. true S3 plant response under identical
    states and inputs;
 2. actual residuals against the scenario-specific GP posterior;
-3. GP-UCB normalized residual coverage.
+3. residual error normalized by the implemented commissioning envelope.
 
 Run this script on a GPU host because it imports JAX and builds the GP.
 The plotting script can run locally after the JSON is generated.
