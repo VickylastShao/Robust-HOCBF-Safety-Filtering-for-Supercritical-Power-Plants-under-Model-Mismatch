@@ -414,8 +414,9 @@ def plot_snapshot(
     if stats:
         draw_range_panel(ax_load, stats, "load", frame["load_mw"], "Load range (MW)")
         draw_range_panel(ax_pressure, stats, "pressure", frame["main_pressure_mpa"], "Pressure range (MPa)")
-        ax_load.set_title("Two-hour historian-context windows")
-        ax_pressure.tick_params(labelleft=False)
+        ax_load.set_title("Load ranges across context windows")
+        ax_pressure.set_title("Pressure ranges across context windows")
+        ax_pressure.tick_params(labelleft=True)
         ax_load.legend(loc="lower right", frameon=False, fontsize=7)
     else:
         ax_load.axis("off")

@@ -119,7 +119,7 @@ We thank the Editor and Reviewers for the detailed assessment. The revision subs
 
 **Comment.** The abstract's zero-violation result is finite-sample evidence rather than a statistical guarantee. The Wilson bound is not sufficiently contextualized, and empirical calibration of `epsilon_kappa` may invalidate the formal certificate. Separate empirical validation from theoretical guarantees, state that the calibrated value has no formal probabilistic guarantee, and present zero violations only as observed in the tested rollouts.
 
-**Response.** The abstract, results, and conclusion now use count-level language and explicitly distinguish the primary sweep from the held-out test. The revised manuscript reports 0/17,500 only for the scenario-wise commissioned primary row, which uses `epsilon_kappa = 0.02` in S3 and 0 in the other six conditions. The held-out S3 test records a nonzero 66/50,000 violation count. Wilson limits are described as descriptive Bernoulli-reference values because controller samples are serially correlated. No finite-sample result is presented as proof of zero violation probability.
+**Response.** The abstract, results, and conclusion now use count-level language and explicitly distinguish the primary sweep from the held-out test. The revised manuscript reports 0/17,500 only for the scenario-wise commissioned primary row, which uses `epsilon_kappa = 0.02` in S3 and 0 in the other six conditions. Each condition represents a separate offline commissioning regime with its own frozen scenario-specific GP; the row does not switch `epsilon_kappa` by observing the true scenario online. The held-out S3 test records a nonzero 66/50,000 violation count. Wilson limits are described as descriptive Bernoulli-reference values because controller samples are serially correlated. No finite-sample result is presented as proof of zero violation probability.
 
 **Location in the revised manuscript.** Abstract; Sections 4.1--4.3; Tables 2 and 3; Figure 4; Section 5; Supplemental Sections S1 and S2.
 
@@ -177,7 +177,7 @@ Three new confirmed controller exports extend execution evidence to 480.7--629.7
 
 **Comment.** Clarify the identity/one/ell notation, define the deviation-input set, correct equation numbering, and split the dense former Figure 10 or provide a guided interpretation.
 
-**Response.** The physical command `u`, deviation command `v`, proposed command `v_prop`, accepted command `v*`, and deviation-input box `V` are now defined together. Identity/one/ell ambiguities and equation references were checked, and the compositional margin is presented as a numbered subequation block. The former dense plant presentation is now separated into Figure 7 for the matched historian response and Figure 8 for high-load controller execution and recovery, with a guided interpretation in the text.
+**Response.** The physical command `u`, deviation command `v`, proposed command `v_prop`, accepted command `v*`, and deviation-input box `V` are now defined together. Identity/one/ell ambiguities and equation references were checked, and the compositional margin is presented as a numbered equation block. The former dense plant presentation is now separated into Figure 7 for the matched historian response and Figure 8 for high-load controller execution and recovery, with a guided interpretation in the text.
 
 **Location in the revised manuscript.** Sections 3.1--3.3; Section 4.5, Figures 7 and 8.
 

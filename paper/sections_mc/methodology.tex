@@ -3,7 +3,7 @@
 
 \subsection{Safety-Filter Workflow and Implementation Settings}
 
-Online operation has three steps: evaluate the GP residual model, build HOCBF rows with the correct relative degrees, and solve one QP to project the proposed deviation command. Offline commissioning supplies the residual data, GP coverage checks, and scalar margin factor $\epsilon_\kappa$. The theorem states the conditions under which the full-margin endpoint yields continuous-time forward invariance. Section~\ref{sec:exp} then evaluates how much of that margin should be applied under each mismatch regime.
+Online operation has three steps: evaluate the GP residual model, build HOCBF rows with the correct relative degrees, and solve one QP to project the proposed deviation command. Offline commissioning supplies the residual data, GP coverage checks, and scalar margin factor $\epsilon_\kappa$. The theorem states the conditions under which the full implemented-margin endpoint yields continuous-time forward invariance. Section~\ref{sec:exp} then evaluates how much of that margin should be applied under each mismatch regime.
 
 Figure~\ref{fig:architecture} summarizes the overlay architecture. The upstream controller produces a deviation command $v_{\mathrm{prop}}$ around the LQR-stabilized equilibrium controller, and the safety filter returns the nearest admissible command $v^*$. The total actuator command is
 \begin{equation}
@@ -22,6 +22,7 @@ Table~\ref{tab:implementation_settings} lists the measurement, constraint, GP, Q
     \caption{Measurement/control variables and implementation settings used by the RoCBF-SF safety filter in the fifth-order CCS benchmark and plant implementation.}
     \label{tab:implementation_settings}
     \small
+    \renewcommand{\arraystretch}{0.98}
     \begin{tabular}{>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.43\textwidth}}
         \toprule
         Item & Setting & Role in the filter \\

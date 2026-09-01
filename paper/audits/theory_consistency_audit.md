@@ -37,7 +37,7 @@ Patch applied:
 
 - Do not claim unconditional safety.
 - Do not claim `epsilon_kappa=1` is practically best.
-- Do not call RoCBF-Net with online GP the uniformly best controller; the paper's claim is the tunable architecture and deployment envelope.
+- Do not call RoCBF-SF the uniformly best controller; the paper's claim is the tunable safety-filter architecture and its commissioning envelope.
 - Keep NMPC framed as the implemented SLSQP-based benchmark, not as all industrial NMPC.
 - Keep `Delta g = 0` visible as a limitation.
 

@@ -27,7 +27,7 @@ where a sample is counted once if any enforced pressure, separator-enthalpy, or 
 
 \begin{table}[htbp]
     \centering
-    \caption{Primary $\Delta g=0$ validation: sample-level constraint violation rate (\%) at controller instants under a fixed upstream deviation proposal, computed by Eq.~\eqref{eq:sample_violation_rate} with a raw-margin numerical tolerance of $10^{-2}$. Each cell aggregates five 500-sample rollouts, i.e., 2500 controller samples. The full-margin row tests the conservative $\epsilon_\kappa=1.0$ endpoint under actuator limits; it is not the recommended commissioned operating point.}
+    \caption{Primary $\Delta g=0$ validation: sample-level constraint violation rate (\%) at controller instants under a fixed upstream deviation proposal, computed by Eq.~\eqref{eq:sample_violation_rate} with a raw-margin numerical tolerance of $10^{-2}$. Each cell aggregates five 500-sample rollouts, i.e., 2500 controller samples. The full implemented-margin row tests the conservative $\epsilon_\kappa=1.0$ endpoint under actuator limits; it is not the recommended commissioned operating point.}
     \label{tab:safety}
     \small
     \resizebox{0.98\textwidth}{!}{%
@@ -46,7 +46,7 @@ where a sample is counted once if any enforced pressure, separator-enthalpy, or 
     }
 \end{table}
 
-Table~\ref{tab:safety} reports the drift-only $\Delta g=0$ validation. The unfiltered proposal violates 10{,}756 of 15{,}000 perturbation samples. Correct relative degree removes all 112 nominal violations but does not compensate drift mismatch: no-GP HOCBF retains the same 10{,}756 perturbation-sample violations. GP mean correction reduces this count to 36/15{,}000, all in S3. The scenario-wise commissioned row applies the independently selected $\epsilon_\kappa=0.02$ in S3 and 0 otherwise, giving 0/17{,}500 observed violations across the nominal and six mismatch conditions. NMPC is also effective, with 35/17{,}500 violations and no solver failure, but does not eliminate the short boundary transients in the six mismatch cases.
+Table~\ref{tab:safety} reports the drift-only $\Delta g=0$ validation. The unfiltered proposal violates 10{,}756 of 15{,}000 perturbation samples. Correct relative degree removes all 112 nominal violations but does not compensate drift mismatch: no-GP HOCBF retains the same 10{,}756 perturbation-sample violations. GP mean correction reduces this count to 36/15{,}000, all in S3. The scenario-wise commissioned row applies the independently selected $\epsilon_\kappa=0.02$ in S3 and 0 otherwise, giving 0/17{,}500 observed violations across the nominal and six mismatch conditions. Each condition is a separate offline commissioning regime with its own frozen scenario-specific GP; this row compares commissioned operating points across prescribed residual regimes rather than switching $\epsilon_\kappa$ by observing the true scenario online. NMPC is also effective, with 35/17{,}500 violations and no solver failure, but does not eliminate the short boundary transients in the six mismatch cases.
 
 The full implemented-margin row shows why $\epsilon_\kappa$ must be commissioned rather than set mechanically to its largest value. The endpoint remains safe in nominal, S1, S2, S5, and S6, but it produces 419 S3 violations and 12 S4 violations when the actuator-bounded robust QP loses feasibility. This does not contradict Theorem~\ref{thm:1}, which requires both full-row feasibility and independently valid residual and derivative bounds.
 
