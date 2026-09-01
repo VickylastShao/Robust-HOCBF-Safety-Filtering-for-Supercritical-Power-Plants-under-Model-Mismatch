@@ -28,4 +28,6 @@ python3 "$ROOT/scripts/postprocess_mc_docx.py" "$OUTPUT" \
   --template "$REFERENCE_DOC" \
   --mode response
 
+python3 "$ROOT/scripts/clean_docx_metadata.py" "$OUTPUT"
+
 echo "Wrote $OUTPUT"

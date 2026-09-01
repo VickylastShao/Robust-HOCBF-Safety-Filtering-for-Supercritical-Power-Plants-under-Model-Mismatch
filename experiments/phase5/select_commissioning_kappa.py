@@ -107,6 +107,19 @@ def main() -> None:
         attempts = sum(item["qp_attempt_count"] for item in closed)
         seed_violation_rates = [item["violation_count"] / item["total_samples"] for item in closed]
         seed_rejection_rates = [item["qp_infeasible_count"] / item["qp_attempt_count"] for item in closed]
+        per_seed = []
+        for source, item in sorted(
+                zip(test_payloads, closed), key=lambda pair: int(pair[0]["seed"])):
+            per_seed.append({
+                "seed": int(source["seed"]),
+                "violation_count": int(item["violation_count"]),
+                "total_samples": int(item["total_samples"]),
+                "violation_rate": item["violation_count"] / item["total_samples"],
+                "qp_rejected_count": int(item["qp_infeasible_count"]),
+                "qp_attempts": int(item["qp_attempt_count"]),
+                "qp_rejection_rate": (
+                    item["qp_infeasible_count"] / item["qp_attempt_count"]),
+            })
         payload["holdout_test"] = {
             "epsilon_kappa": selected["epsilon_kappa"],
             "seeds": sorted(int(item["seed"]) for item in test_payloads),
@@ -118,6 +131,7 @@ def main() -> None:
             "qp_attempts": int(attempts),
             "qp_rejection_rate": rejected / attempts,
             "maximum_seed_qp_rejection_rate": max(seed_rejection_rates),
+            "per_seed": per_seed,
             "passes_fixed_gates": (
                 violations / samples < args.max_violation_rate
                 and max(seed_violation_rates) < args.max_violation_rate

@@ -140,7 +140,9 @@ def plot(summary: dict, output: Path) -> None:
     )
     ax_tune.set_xlabel(r"Robustness factor $\epsilon_\kappa$")
     ax_tune.set_ylabel("Controller-sample rate (%)")
-    ax_tune.set_title("Tune seeds 0--2 (15,000 samples per setting)", pad=3)
+    tune_samples = int(rows[0]["total_samples"])
+    ax_tune.set_title(
+        f"Tune seeds 0--2 ({tune_samples:,} samples per setting)", pad=3)
     ax_tune.set_xlim(-0.25, len(kappa) - 0.75)
     ax_tune.set_ylim(0.0, max(18.0, 1.08 * max(max_violation.max(), max_rejection.max())))
     ax_tune.set_xticks(tune_x)
@@ -149,9 +151,16 @@ def plot(summary: dict, output: Path) -> None:
     ax_tune.legend(loc="upper left", frameon=False, ncol=1, handlelength=2.2)
     panel_label(ax_tune, "a")
 
-    seed_labels = ["Seed 3", "Seed 4", "Pooled"]
-    seed_violation = [0.168, 0.096, 100.0 * holdout["violation_rate"]]
-    seed_rejection = [0.136, 0.152, 100.0 * holdout["qp_rejection_rate"]]
+    per_seed = holdout.get("per_seed")
+    if not per_seed:
+        raise ValueError("Holdout summary must include per_seed results")
+    seed_labels = [f"Seed {item['seed']}" for item in per_seed] + ["Pooled"]
+    seed_violation = [
+        100.0 * item["violation_rate"] for item in per_seed
+    ] + [100.0 * holdout["violation_rate"]]
+    seed_rejection = [
+        100.0 * item["qp_rejection_rate"] for item in per_seed
+    ] + [100.0 * holdout["qp_rejection_rate"]]
     x = np.arange(len(seed_labels), dtype=float)
     width = 0.34
     ax_test.axhspan(0.0, 0.5, color="#E8F3EE", alpha=0.85, linewidth=0)
@@ -186,7 +195,8 @@ def plot(summary: dict, output: Path) -> None:
     ax_test.set_xticklabels(seed_labels)
     ax_test.set_ylabel("Controller-sample rate (%)")
     ax_test.set_title(
-        rf"Held-out test at fixed $\epsilon_\kappa={selected:.2f}$ (50,000 samples)",
+        (rf"Held-out test at fixed $\epsilon_\kappa={selected:g}$ "
+         f"({int(holdout['total_samples']):,} samples)"),
         pad=3,
     )
     ax_test.set_ylim(0.0, 1.1)

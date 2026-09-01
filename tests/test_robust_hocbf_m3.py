@@ -311,8 +311,12 @@ class TestBackwardCompatibility:
         grad_psi1 = jax.grad(rhocbf._psi_fns_nominal[1])(x)
         sigma_2_direct = _sigma_direct_and_cross(beta, grad_psi1, sigma_gp)
         sigma_2 = sigma_2_direct + (rhocbf.op_norm_estimate + rhocbf.k_gains[0]) * sigma_1
-        grad_LgLf = jax.grad(lambda x_: (jax.grad(rhocbf._lie_f_nominal[1])(x_) @ dyn.g(x_)).sum())(x)
-        sigma_ctrl = beta * jnp.sum(jnp.abs(grad_LgLf) * sigma_gp) * rhocbf.u_max
+        coupling_jacobian = jax.jacfwd(
+            lambda x_: jax.grad(rhocbf._lie_f_nominal[1])(x_) @ dyn.g(x_)
+        )(x)
+        sensitivity_by_state = jnp.linalg.norm(coupling_jacobian, axis=0)
+        sigma_ctrl = (beta * jnp.sum(sensitivity_by_state * sigma_gp)
+                      * rhocbf.control_norm_bound)
         expected = sigma_2 + sigma_1 + sigma_ctrl
 
         np.testing.assert_allclose(

@@ -13,6 +13,7 @@ Key differences from 3rd-order methods.py:
 """
 import sys
 import time
+import math
 import jax
 import jax.numpy as jnp
 import flax.nnx as nnx
@@ -40,6 +41,8 @@ SCENARIO_LABELS = ["Nominal", "S1:Heat", "S2:Pressure", "S3:Coupled", "S4:Nonlin
 
 NX = 5          # State dimension for 5th-order model
 N_GP_DIMS = 3   # GP models residuals on constrained outputs (p_m, h_m, N_e)
+DEVIATION_COMPONENT_BOUND = 5.0
+DEVIATION_L2_NORM_BOUND = math.sqrt(3.0) * DEVIATION_COMPONENT_BOUND
 
 
 def _make_ccs_env_5th(load_ratio, scenario=None):
@@ -88,12 +91,16 @@ def _make_hocbf_5th(dynamics, constraint, u0,
 
 def _make_robust_hocbf_5th(dynamics, constraint, gp, u0, epsilon_kappa=1.0,
                             k_pressure=(0.5, 0.5), k_enthalpy=(1.0,), k_power=(1.0,),
-                            u_max=100.0, use_mean_correction=False, epsilon_floor=0.0,
+                            u_max=DEVIATION_L2_NORM_BOUND,
+                            use_mean_correction=False, epsilon_floor=0.0,
                             use_phi_scaled_g=False):
     """Create RobustHOCBF with 6 constraints.
 
     Parameters
     ----------
+    u_max : float
+        Euclidean-norm bound on the deviation input used by the HOCBF.  The
+        name is retained for compatibility with the generic RobustHOCBF API.
     use_phi_scaled_g : bool
         If True, use g_phi_scaled (state-dependent, matches Φ-scaled rollout).
         If False, use g_linear (constant, matches linear rollout).

@@ -17,12 +17,20 @@ W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
 DC_NS = "http://purl.org/dc/elements/1.1/"
 CP_NS = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+DCTERMS_NS = "http://purl.org/dc/terms/"
 R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PKG_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
 HYPERLINK_REL_TYPE = (
     "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
 )
-NS = {"w": W_NS, "m": M_NS, "dc": DC_NS, "cp": CP_NS, "r": R_NS}
+NS = {
+    "w": W_NS,
+    "m": M_NS,
+    "dc": DC_NS,
+    "cp": CP_NS,
+    "dcterms": DCTERMS_NS,
+    "r": R_NS,
+}
 FORBIDDEN = (
     "Unit2",
     "XT2",
@@ -62,11 +70,15 @@ def paragraph_text(paragraph: ET.Element) -> str:
 
 def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
     with ZipFile(path) as package:
+        package_names = set(package.namelist())
         xml_entries = {
             name: package.read(name)
             for name in package.namelist()
             if name.endswith(".xml") or name.endswith(".rels")
         }
+    for forbidden_part in ("docProps/app.xml", "docProps/custom.xml"):
+        if forbidden_part in package_names:
+            errors.append(f"{path.name}: contains forbidden metadata part {forbidden_part}")
     package_text = "\n".join(
         data.decode("utf-8", errors="ignore") for data in xml_entries.values()
     )
@@ -95,6 +107,27 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
         node = core.find(xpath, NS)
         if node is not None and (node.text or "").strip():
             errors.append(f"{path.name}: nonempty {label} metadata")
+    for xpath, label in (
+        ("dcterms:created", "created"),
+        ("dcterms:modified", "modified"),
+    ):
+        if core.find(xpath, NS) is not None:
+            errors.append(f"{path.name}: contains {label} timestamp metadata")
+
+    rsid_count = 0
+    for name, data in xml_entries.items():
+        if not name.startswith("word/") or not name.endswith(".xml"):
+            continue
+        root = ET.fromstring(data)
+        for element in root.iter():
+            rsid_count += sum(
+                attribute.startswith(f"{{{W_NS}}}rsid")
+                for attribute in element.attrib
+            )
+            if element.tag in {w("rsids"), w("rsidRoot")}:
+                rsid_count += 1
+    if rsid_count:
+        errors.append(f"{path.name}: contains {rsid_count} Word rsid records")
 
     document = ET.fromstring(xml_entries["word/document.xml"])
     explicit_fonts: set[str] = set()

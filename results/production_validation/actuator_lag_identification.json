@@ -1,0 +1,100 @@
+{
+  "analysis": "actuator_lag_identification_for_augmented_ccs_benchmark",
+  "included_windows": [
+    "MW05",
+    "MW06"
+  ],
+  "exclusion": "MW04 is excluded because its fuel path includes saturation and the benchmark constants are fixed from two routine full-QP windows.",
+  "sources": [
+    {
+      "window": "MW05",
+      "path": "results\\production_validation\\controller_exports_public\\MW05_CONTROLLER_EXPORT_5S.csv",
+      "sha256": "0a49e70dd2bd0a3295d8c0ec582f2d9a2e71edcf4b5c008959546e3863af54e3"
+    },
+    {
+      "window": "MW06",
+      "path": "results\\production_validation\\controller_exports_public\\MW06_CONTROLLER_EXPORT_5S.csv",
+      "sha256": "92377148258d56c3d5dd7123bad10788723cf59d675ebabbef2c65bd7c4c7496"
+    }
+  ],
+  "fits": [
+    {
+      "channel": "feedwater",
+      "rows": 1440,
+      "export_interval_s": 5.0,
+      "arx_equation": "feedback[k+1] = a*feedback[k] + b*command[k] + c",
+      "a": 0.7199925550942664,
+      "b": 0.28516227958071194,
+      "c": -2.4910916863464454,
+      "time_constant_s": 15.220032640385412,
+      "steady_state_gain": 1.0184096343463787,
+      "rmse": 1.1006890825322786,
+      "r_squared": 0.9971666254404333,
+      "saturated_samples": 0,
+      "window": "MW05"
+    },
+    {
+      "channel": "turbine_valve",
+      "rows": 1440,
+      "export_interval_s": 5.0,
+      "arx_equation": "feedback[k+1] = a*feedback[k] + b*command[k] + c",
+      "a": 0.42894125544642675,
+      "b": 0.5684778661509416,
+      "c": 0.23553000609148722,
+      "time_constant_s": 5.907126016081423,
+      "steady_state_gain": 0.9954805378128843,
+      "rmse": 0.14297642394753238,
+      "r_squared": 0.9964074096488101,
+      "saturated_samples": 0,
+      "window": "MW05"
+    },
+    {
+      "channel": "feedwater",
+      "rows": 1440,
+      "export_interval_s": 5.0,
+      "arx_equation": "feedback[k+1] = a*feedback[k] + b*command[k] + c",
+      "a": 0.7147983832443165,
+      "b": 0.2849898915779203,
+      "c": 0.09947852508761829,
+      "time_constant_s": 14.891821747515216,
+      "steady_state_gain": 0.9992576298123005,
+      "rmse": 1.106716253289126,
+      "r_squared": 0.9986808833186978,
+      "saturated_samples": 0,
+      "window": "MW06"
+    },
+    {
+      "channel": "turbine_valve",
+      "rows": 1440,
+      "export_interval_s": 5.0,
+      "arx_equation": "feedback[k+1] = a*feedback[k] + b*command[k] + c",
+      "a": 0.4597380243675207,
+      "b": 0.5387746373624087,
+      "c": 0.13282385188109141,
+      "time_constant_s": 6.434191073303434,
+      "steady_state_gain": 0.9972470054581771,
+      "rmse": 0.1578614048033386,
+      "r_squared": 0.9980393871681291,
+      "saturated_samples": 0,
+      "window": "MW06"
+    }
+  ],
+  "selected_parameters": {
+    "feedwater": {
+      "window_estimates_s": [
+        15.220032640385412,
+        14.891821747515216
+      ],
+      "median_s": 15.055927193950314,
+      "benchmark_value_s": 15.0
+    },
+    "turbine_valve": {
+      "window_estimates_s": [
+        5.907126016081423,
+        6.434191073303434
+      ],
+      "median_s": 6.1706585446924285,
+      "benchmark_value_s": 6.0
+    }
+  }
+}

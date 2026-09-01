@@ -11,6 +11,7 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 from zipfile import ZIP_DEFLATED, ZipFile
 
+from clean_docx_metadata import clean_docx
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
@@ -298,6 +299,7 @@ def main() -> None:
         args.output,
         args.repository_url,
     )
+    clean_docx(args.output)
     print(
         f"Wrote {args.output} "
         f"(words={counts[0]}, figures={counts[1]}, tables={counts[2]})"

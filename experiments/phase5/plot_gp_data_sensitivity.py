@@ -49,20 +49,28 @@ def aggregate(records: list[dict]) -> dict[tuple[int, float], dict]:
                  for row in rows]
         coverage = [float(np.mean(row["prediction"]["predictive_interval_95_coverage"]))
                     for row in rows]
-        closed_loop = {}
-        for mode in ("epsilon_kappa_0", "commissioned"):
-            violations = sum(row["closed_loop"][mode]["violation_count"] for row in rows)
-            samples = sum(row["closed_loop"][mode]["total_samples"] for row in rows)
-            rejected = sum(row["closed_loop"][mode]["qp_infeasible_count"] for row in rows)
-            attempts = sum(row["closed_loop"][mode]["qp_attempt_count"] for row in rows)
-            closed_loop[mode] = {
-                "violation_count": int(violations),
-                "total_samples": int(samples),
-                "violation_rate": float(violations / samples),
-                "rejected_count": int(rejected),
-                "attempts": int(attempts),
-                "rejected_rate": float(rejected / attempts),
-            }
+        mode = "selected_operating_point"
+        violations = sum(row["closed_loop"][mode]["violation_count"] for row in rows)
+        samples = sum(row["closed_loop"][mode]["total_samples"] for row in rows)
+        rejected = sum(row["closed_loop"][mode]["qp_infeasible_count"] for row in rows)
+        attempts = sum(row["closed_loop"][mode]["qp_attempt_count"] for row in rows)
+        fallbacks = sum(row["closed_loop"][mode]["qp_fallback_count"] for row in rows)
+        interventions = sum(
+            row["closed_loop"][mode]["qp_intervention_rate"]
+            * row["closed_loop"][mode]["total_samples"]
+            for row in rows
+        )
+        closed_loop = {
+            "violation_count": int(violations),
+            "total_samples": int(samples),
+            "violation_rate": float(violations / samples),
+            "rejected_count": int(rejected),
+            "attempts": int(attempts),
+            "rejected_rate": float(rejected / attempts),
+            "fallback_count": int(fallbacks),
+            "fallback_rate": float(fallbacks / attempts),
+            "intervention_rate": float(interventions / samples),
+        }
         summary[key] = {
             "seeds": sorted(int(row["seed"]) for row in rows),
             "nrmse_mean": float(np.mean(nrmse)),
@@ -114,21 +122,17 @@ def plot(summary: dict[tuple[int, float], dict], pdf: Path,
     ax_coverage.set_xticks(sample_sizes)
     panel_label(ax_coverage, "b")
 
-    width = 0.34
     positions = np.arange(len(sample_sizes))
-    k0_viol = [100 * summary[(n, 0.0)]["closed_loop"]["epsilon_kappa_0"]["violation_rate"]
-               for n in sample_sizes]
-    k01_viol = [100 * summary[(n, 0.0)]["closed_loop"]["commissioned"]["violation_rate"]
-                for n in sample_sizes]
-    k01_reject = [100 * summary[(n, 0.0)]["closed_loop"]["commissioned"]["rejected_rate"]
-                  for n in sample_sizes]
-    ax_clean.bar(positions - width / 2, k0_viol, width, color=BLUE,
-                 label=r"$\epsilon_\kappa=0$: violation")
-    ax_clean.bar(positions + width / 2, k01_viol, width, color=GREEN,
-                 label=rf"$\epsilon_\kappa={commissioned_kappa:g}$: violation")
-    ax_clean.scatter(positions + width / 2, k01_reject, marker="x", s=35,
-                     color=ORANGE,
-                     label=rf"$\epsilon_\kappa={commissioned_kappa:g}$: QP rejected")
+    selected_viol = [100 * summary[(n, 0.0)]["closed_loop"]["violation_rate"]
+                     for n in sample_sizes]
+    selected_intervention = [
+        100 * summary[(n, 0.0)]["closed_loop"]["intervention_rate"]
+        for n in sample_sizes
+    ]
+    ax_clean.plot(positions, selected_viol, marker="o", color=GREEN,
+                  label="Constraint violation")
+    ax_clean.plot(positions, selected_intervention, marker="x", color=ORANGE,
+                  label="QP intervention")
     ax_clean.set_xticks(positions, [str(n) for n in sample_sizes])
     ax_clean.set(xlabel="Clean GP training transitions", ylabel="Rate across 2500 samples (%)",
                  title="Closed-loop clean-data sensitivity")
@@ -136,14 +140,14 @@ def plot(summary: dict[tuple[int, float], dict], pdf: Path,
     panel_label(ax_clean, "c")
 
     matrix = np.array([
-        [100 * summary[(n, q)]["closed_loop"]["commissioned"]["rejected_rate"]
+        [100 * summary[(n, q)]["closed_loop"]["rejected_rate"]
          for n in sample_sizes]
         for q in (0.05, 0.10)
     ])
     im = ax_corrupt.imshow(matrix, cmap="OrRd", vmin=0, vmax=100, aspect="auto")
     for row, quality in enumerate((0.05, 0.10)):
         for col, n in enumerate(sample_sizes):
-            outcome = summary[(n, quality)]["closed_loop"]["commissioned"]
+            outcome = summary[(n, quality)]["closed_loop"]
             ax_corrupt.text(col, row,
                             f"V {100*outcome['violation_rate']:.1f}%\nR {100*outcome['rejected_rate']:.1f}%",
                             ha="center", va="center", fontsize=8.0,

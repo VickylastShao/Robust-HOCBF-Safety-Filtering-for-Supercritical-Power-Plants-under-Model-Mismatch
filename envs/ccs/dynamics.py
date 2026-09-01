@@ -571,8 +571,8 @@ _CCS5_SCENARIOS = {
     # In supercritical boilers, heat absorption loss (fouling, ash deposits) reduces
     # both the enthalpy of the working fluid AND the steam generation rate, causing
     # pressure to drop. The 3rd-order model had implicit coupling through r_B;
-    # the 5th-order model decouples via τ_f, so both dimensions must be perturbed
-    # explicitly to reproduce the pressure violation (m=2) that requires ε(x).
+    # the 5th-order model decouples via τ_f, so both dimensions are perturbed
+    # explicitly in this drift-only stress case.
     "heat_absorption": lambda x, x0: jnp.array([0.0, -5.0, -50.0, 0.0, 0.0]),
     # S2: Feedwater pump cycling → sustained low flow causes pressure + enthalpy drop
     # Physical: feedwater pump cycling causes sustained low flow, reducing both
@@ -588,10 +588,9 @@ _CCS5_SCENARIOS = {
     # a self-reinforcing instability that LQR cannot fully compensate.
     # At equilibrium: Δf_p = -3.0, Δf_h = -40.0 (starts the drift).
     # As state deviates: feedback amplifies the perturbation (destabilizing).
-    # S3 variants: γ scales the state-dependent feedback gain.
-    # γ=0.5 (weak): GP partially tracks; some seeds safe at κ=0.
-    # γ=1.0 (medium, default): GP alone insufficient; κ>0 required.
-    # γ=2.0 (strong): GP heavily biased; larger κ (0.3-0.5) essential.
+    # S3 variants scale the state-dependent feedback gain. Their closed-loop
+    # outcomes depend on the benchmark, GP fit, and input authority and are not
+    # encoded as assumptions in the scenario definition.
     "coupled_weak": lambda x, x0: jnp.array([
         0.0, 0.15 * (x[1] - x0[1]) - 3.0, 0.075 * (x[2] - x0[2]) - 40.0, 0.0, 0.0]),
     "coupled": lambda x, x0: jnp.array([
@@ -609,15 +608,15 @@ _CCS5_SCENARIOS = {
     # Δf_h=-45 provides baseline enthalpy perturbation.
     "nonlinear": lambda x, x0: jnp.array([
         0.0, -0.05 * (x[1] - x0[1]) ** 2 - 3.0, -45.0, 0.0, 0.0]),
-    # S5: Valve degradation → reduced steam flow affects pressure, enthalpy, AND power
-    # Physical: turbine valve degradation reduces steam extraction, lowering pressure,
-    # enthalpy, and power output. The N_e perturbation (-20) tests the m=1 power
-    # constraint (unique to 5th-order model, absent in 3rd-order).
+    # S5: Valve-associated drift-equivalent stress on pressure, enthalpy, and power.
+    # This is additive drift and does not alter the input matrix. In the
+    # actuator-augmented benchmark, all reported barriers remain command-level
+    # relative degree two.
     "valve_degradation": lambda x, x0: jnp.array([0.0, -4.0, -45.0, -20.0, 0.0]),
-    # S6: Fuel quality variation → reduced heat release and power drop
+    # S6: Fuel quality variation → reduced heat release and power drop.
     # Lower calorific value reduces steam generation (pressure), heat transfer
-    # (enthalpy), and power output (N_e). The N_e perturbation (-15) tests the
-    # m=1 power constraint (unique to 5th-order model).
+    # (enthalpy), and power output (N_e). In the actuator-augmented benchmark,
+    # this remains an additive drift perturbation under Delta g = 0.
     # Δf_h=-50 ensures enthalpy CBF activates (reduces h_low b from ~53 to ~3).
     # Note: Δf_τ is set to 0 (not -3) because τ_f perturbation causes LQR
     # over-compensation: LQR aggressively increases u_B/v_fw to stabilize τ_f,
@@ -1240,6 +1239,252 @@ class UncertainUSCCSDynamics5th(USCCSDynamics5th):
             x_curr = self._clip_state(x_next)
 
         return x_curr
+
+
+class USCCSDynamics7th:
+    """Actuator-augmented USC coordinated-control benchmark.
+
+    The public fifth-order model treats feedwater flow and turbine-valve
+    position as direct control inputs.  Their nonzero entries in the pressure,
+    enthalpy, and power state equations make those barriers relative degree
+    one.  This actuator-augmented model instead distinguishes controller
+    commands from measured actuator states:
+
+        x = [r_B, p_m, h_m, N_e, tau_f, D_fw, u_t]
+        u = [u_B_cmd, D_fw_cmd, u_t_cmd]
+
+    The feedwater and valve time constants are fixed from the two unsaturated
+    public controller-export windows (MW05 and MW06): 15 s and 6 s,
+    respectively.  The existing 30 s fuel-transport state is retained.  With
+    these actuator dynamics, the command input does not appear in the first
+    derivative of any reported barrier, while it appears in the second.
+    """
+
+    T_G = 8.0
+    T_DELAY = 30.0
+    T_FW_ACT = 15.0
+    T_TV_ACT = 6.0
+
+    def __init__(self, dt: float = 1.0, u_bounds=None,
+                 load_ratio: float = 1.0):
+        self.dt = dt
+        self.nx = 7
+        self.nu = 3
+        self.delay_order = 0
+        self.nx_aug = 7
+        self.u_bounds = (
+            [(40.0, 100.0), (350.0, 800.0), (0.0, 100.0)]
+            if u_bounds is None else u_bounds
+        )
+        self.du_bounds = [10.0, 40.0, 1.0]
+        self.command_scale = jnp.asarray(self.du_bounds)
+        self.x_bounds = [
+            (20.0, 130.0),
+            (8.0, 35.0),
+            (2400.0, 3100.0),
+            (400.0, 1200.0),
+            (20.0, 130.0),
+            self.u_bounds[1],
+            self.u_bounds[2],
+        ]
+        self._load_ratio = load_ratio
+        x0, u0 = self.equilibrium(load_ratio)
+        self._x0 = x0
+        self._u0 = u0
+        self._d0 = self._compute_bias(x0, u0)
+        self._K, self._A_d, self._B_d = self._compute_lqr_stabilization(
+            x0, u0, dt)
+
+    fluid_property = staticmethod(USCCSDynamics5th.fluid_property)
+
+    def _power_command(self, p_m: jnp.ndarray,
+                       valve_position: jnp.ndarray) -> jnp.ndarray:
+        return 0.00055 * (valve_position / 100.0) * self.fluid_property(p_m)
+
+    def f(self, x: jnp.ndarray) -> jnp.ndarray:
+        r_B, p_m, h_m, N_e, tau_f, D_fw, u_t = x
+        fp = self.fluid_property(p_m)
+        denom = 1.31 * h_m - 1205.0
+        g_p_tv = fp * (500.0 - 1.31 * h_m) / (1060000.0 * denom)
+        g_h_tv = fp * (3000.0 - 1.31 * h_m) / (59830.0 * denom)
+        return jnp.array([
+            -0.0056 * r_B,
+            fp * 0.0157 * tau_f / 1.031
+            + 0.000665 * fp * D_fw + g_p_tv * u_t,
+            fp * 0.278 * tau_f / 1.031
+            - 0.03 * fp * D_fw + g_h_tv * u_t,
+            (self._power_command(p_m, u_t) - N_e) / self.T_G,
+            -tau_f / self.T_DELAY,
+            -D_fw / self.T_FW_ACT,
+            -u_t / self.T_TV_ACT,
+        ])
+
+    def g(self, x: jnp.ndarray) -> jnp.ndarray:
+        del x
+        return jnp.array([
+            [0.0056, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+            [1.0 / self.T_DELAY, 0.0, 0.0],
+            [0.0, 1.0 / self.T_FW_ACT, 0.0],
+            [0.0, 0.0, 1.0 / self.T_TV_ACT],
+        ])
+
+    def f_nominal(self, x: jnp.ndarray) -> jnp.ndarray:
+        return self.f(x) + self._d0
+
+    def f_closed_loop(self, x: jnp.ndarray) -> jnp.ndarray:
+        return self.f_nominal(x) + self.g(x) @ self._u0
+
+    def output(self, x: jnp.ndarray,
+               u: jnp.ndarray | None = None) -> jnp.ndarray:
+        del u
+        p_m = x[1]
+        p_st = p_m - 0.13 * p_m ** 0.882
+        return jnp.array([p_st, x[2], x[3]])
+
+    def equilibrium(self, load_ratio: float = 1.0):
+        base = USCCSDynamics5th(dt=self.dt, u_bounds=self.u_bounds,
+                                load_ratio=load_ratio)
+        x5, u0 = base.equilibrium(load_ratio)
+        return jnp.concatenate([x5, u0[1:]]), u0
+
+    def _compute_bias(self, x0, u0):
+        return -(self.f(x0) + self.g(x0) @ u0)
+
+    def _compute_lqr_stabilization(self, x0, u0, dt):
+        A = np.array(jax.jacfwd(self.f_closed_loop)(x0))
+        B = np.array(self.g(x0))
+        Q_lqr = np.diag([1.0, 1.0, 0.001, 1.0, 0.1, 0.01, 0.1])
+        R_lqr = np.diag([0.01, 0.01, 0.01])
+        try:
+            P = solve_continuous_are(A, B, Q_lqr, R_lqr)
+            K = np.linalg.solve(R_lqr, B.T @ P)
+        except np.linalg.LinAlgError:
+            K = np.zeros((3, 7))
+        A_stab = A - B @ K
+        self._A_cl = jnp.asarray(A_stab)
+        self._B_cont = jnp.asarray(B)
+        A_d = expm(A_stab * dt)
+        n, m = 7, 3
+        # Exact zero-order-hold discretization. The lower-right block remains
+        # zero; an identity there would exponentiate the held input.
+        M = np.zeros((n + m, n + m))
+        M[:n, :n] = A_stab
+        M[:n, n:] = B
+        B_d = expm(M * dt)[:n, n:]
+        return jnp.asarray(K), jnp.asarray(A_d), jnp.asarray(B_d)
+
+    def f_stabilized(self, x):
+        u_base = self._u0 + self._K @ (self._x0 - x)
+        return self.f_nominal(x) + self.g(x) @ u_base
+
+    def f_linear_stabilized(self, x):
+        """Sample-matched surrogate drift used by HOCBF and Euler rollout."""
+        return ((self._A_d - jnp.eye(7)) / self.dt
+                @ (x[:7] - self._x0))
+
+    def g_linear(self, x):
+        del x
+        return (self._B_d * self.command_scale[None, :]) / self.dt
+
+    def f_continuous_linear_stabilized(self, x):
+        """Continuous LQR generator retained for diagnostic comparison only."""
+        return self._A_cl @ (x[:7] - self._x0)
+
+    def g_continuous(self, x):
+        """Continuous-time command matrix; preserves actuator relative degree."""
+        del x
+        return self._B_cont * self.command_scale[None, :]
+
+    def compute_total_control(self, x, v):
+        physical_deviation = self.command_scale * v
+        u_total = self._u0 + self._K @ (self._x0 - x) + physical_deviation
+        return jnp.array([
+            jnp.clip(u_total[i], *self.u_bounds[i]) for i in range(3)
+        ])
+
+    def _clip_state(self, x):
+        return jnp.array([
+            jnp.clip(x[i], *self.x_bounds[i]) for i in range(7)
+        ])
+
+    def step_stabilized(self, x, v):
+        dx_next = (self._A_d @ (x[:7] - self._x0)
+                   + self.B_euler_normalized @ v)
+        return self._clip_state(self._x0 + dx_next)
+
+    def step(self, x, u):
+        u = jnp.array([jnp.clip(u[i], *self.u_bounds[i]) for i in range(3)])
+        dt = self.dt
+        rhs = lambda state: self.f_nominal(state) + self.g(state) @ u
+        k1 = rhs(self._clip_state(x))
+        k2 = rhs(self._clip_state(x + 0.5 * dt * k1))
+        k3 = rhs(self._clip_state(x + 0.5 * dt * k2))
+        k4 = rhs(self._clip_state(x + dt * k3))
+        return self._clip_state(x + dt * (k1 + 2*k2 + 2*k3 + k4) / 6.0)
+
+    @property
+    def x0(self):
+        return self._x0
+
+    @property
+    def u0(self):
+        return self._u0
+
+    @property
+    def d0(self):
+        return self._d0
+
+    @property
+    def K(self):
+        return self._K
+
+    @property
+    def A_d(self):
+        return self._A_d
+
+    @property
+    def B_d(self):
+        return self._B_d
+
+    @property
+    def B_zoh_normalized(self):
+        """Exact ZOH command matrix for the normalized deviation input."""
+        return self._B_d * self.command_scale[None, :]
+
+    @property
+    def B_euler_normalized(self):
+        """Command matrix of the sample-matched forward-Euler surrogate."""
+        return self.dt * self.g_continuous(self._x0)
+
+
+class UncertainUSCCSDynamics7th(USCCSDynamics7th):
+    """Actuator-augmented benchmark with additive drift mismatch."""
+
+    def __init__(self, dt: float = 1.0, u_bounds=None,
+                 load_ratio: float = 1.0,
+                 uncertainty_scenario: str | None = None,
+                 scenario_scale: float = 1.0):
+        super().__init__(dt=dt, u_bounds=u_bounds, load_ratio=load_ratio)
+        if scenario_scale < 0.0:
+            raise ValueError("scenario_scale must be nonnegative")
+        self.uncertainty_scenario = uncertainty_scenario
+        self.scenario_scale = float(scenario_scale)
+        self._delta_f_fn = _CCS5_SCENARIOS.get(uncertainty_scenario)
+
+    def delta_f(self, x):
+        if self._delta_f_fn is None:
+            return jnp.zeros(7)
+        core = self._delta_f_fn(x[:5], self._x0[:5])
+        return self.scenario_scale * jnp.concatenate([core, jnp.zeros(2)])
+
+    def step_stabilized(self, x, v):
+        dx_next = (self._A_d @ (x[:7] - self._x0)
+                   + self.B_euler_normalized @ v)
+        dx_next = dx_next + self.dt * self.delta_f(x)
+        return self._clip_state(self._x0 + dx_next)
 
 
 class UncertainUSCCSDynamics(USCCSDynamics):

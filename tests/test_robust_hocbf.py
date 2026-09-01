@@ -171,6 +171,35 @@ def test_gp_residual_scattered_to_configured_state_rows():
         corrected_drift[jnp.array([1, 2, 3])], [1.0, 2.0, 3.0], atol=1e-5)
 
 
+def test_control_coupling_bound_does_not_cancel_across_inputs():
+    """Opposite input sensitivities must contribute through their row norm."""
+    from rocbf.cbf.robust_hocbf import RobustHOCBF
+    from rocbf.gp.gp_residual import GPResidual
+
+    X = jnp.array([[-1.0], [0.0], [1.0]])
+    Y = jnp.zeros((3, 1))
+    gp = GPResidual(n_dims=1, sigma_floor=1e-4)
+    gp.fit(X, Y, n_optim_iters=3)
+    hocbf = RobustHOCBF(
+        h_fn=lambda x: 0.5 * x[0] ** 2,
+        f_fn=lambda x: jnp.zeros(1),
+        g_fn=lambda x: jnp.array([[1.0, -1.0]]),
+        relative_degree=1,
+        k_gains=[1.0],
+        gp_residual=gp,
+        u_max=1.0,
+    )
+    x = jnp.array([0.2])
+    _, sigma_gp = hocbf._gp_prediction_in_state(x)
+    beta = GPResidual.compute_beta(
+        gp.n_dims, gp.n_training_points, gamma_N=gp.gamma_N)
+
+    sigma_ctrl = hocbf._control_coupling_sigma(
+        x, hocbf.h_fn, sigma_gp, beta)
+    expected = beta * jnp.sqrt(2.0) * sigma_gp[0]
+    np.testing.assert_allclose(sigma_ctrl, expected, rtol=1e-6)
+
+
 def test_epsilon_oracle_bound():
     """ε(x) is of same order as oracle ε* for known Δf."""
     hocbf, env, gp, nominal_env, constraint = _make_robust_hocbf(n_gp_points=100)

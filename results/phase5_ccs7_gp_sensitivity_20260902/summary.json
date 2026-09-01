@@ -1,0 +1,218 @@
+{
+  "n100_q0.00": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.0008982121434785489,
+    "nrmse_sd": 0.00012189523132597294,
+    "coverage_mean": 1.0,
+    "coverage_sd": 0.0,
+    "closed_loop": {
+      "violation_count": 0,
+      "total_samples": 2500,
+      "violation_rate": 0.0,
+      "rejected_count": 0,
+      "attempts": 2500,
+      "rejected_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_rate": 0.0,
+      "intervention_rate": 0.418
+    }
+  },
+  "n100_q0.05": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.5429120673270904,
+    "nrmse_sd": 0.07432862773425374,
+    "coverage_mean": 0.9603333333333334,
+    "coverage_sd": 0.01710750322714182,
+    "closed_loop": {
+      "violation_count": 506,
+      "total_samples": 2500,
+      "violation_rate": 0.2024,
+      "rejected_count": 169,
+      "attempts": 2500,
+      "rejected_rate": 0.0676,
+      "fallback_count": 169,
+      "fallback_rate": 0.0676,
+      "intervention_rate": 0.24
+    }
+  },
+  "n100_q0.10": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.6656808569455762,
+    "nrmse_sd": 0.07604302190649567,
+    "coverage_mean": 0.9636666666666667,
+    "coverage_sd": 0.010666666666666692,
+    "closed_loop": {
+      "violation_count": 378,
+      "total_samples": 2500,
+      "violation_rate": 0.1512,
+      "rejected_count": 215,
+      "attempts": 2500,
+      "rejected_rate": 0.086,
+      "fallback_count": 215,
+      "fallback_rate": 0.086,
+      "intervention_rate": 0.2716
+    }
+  },
+  "n250_q0.00": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.0005476312914014325,
+    "nrmse_sd": 0.00010797611387732966,
+    "coverage_mean": 1.0,
+    "coverage_sd": 0.0,
+    "closed_loop": {
+      "violation_count": 0,
+      "total_samples": 2500,
+      "violation_rate": 0.0,
+      "rejected_count": 0,
+      "attempts": 2500,
+      "rejected_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_rate": 0.0,
+      "intervention_rate": 0.4176
+    }
+  },
+  "n250_q0.05": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.4196457603542452,
+    "nrmse_sd": 0.03373176925812968,
+    "coverage_mean": 0.9713333333333333,
+    "coverage_sd": 0.005906681715556472,
+    "closed_loop": {
+      "violation_count": 144,
+      "total_samples": 2500,
+      "violation_rate": 0.0576,
+      "rejected_count": 101,
+      "attempts": 2500,
+      "rejected_rate": 0.0404,
+      "fallback_count": 101,
+      "fallback_rate": 0.0404,
+      "intervention_rate": 0.3712
+    }
+  },
+  "n250_q0.10": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.44662397558567923,
+    "nrmse_sd": 0.0950659864810969,
+    "coverage_mean": 0.9703333333333333,
+    "coverage_sd": 0.01279756921363494,
+    "closed_loop": {
+      "violation_count": 329,
+      "total_samples": 2500,
+      "violation_rate": 0.1316,
+      "rejected_count": 147,
+      "attempts": 2500,
+      "rejected_rate": 0.0588,
+      "fallback_count": 147,
+      "fallback_rate": 0.0588,
+      "intervention_rate": 0.332
+    }
+  },
+  "n500_q0.00": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.00045715896783616645,
+    "nrmse_sd": 0.0001075417605833089,
+    "coverage_mean": 1.0,
+    "coverage_sd": 0.0,
+    "closed_loop": {
+      "violation_count": 0,
+      "total_samples": 2500,
+      "violation_rate": 0.0,
+      "rejected_count": 0,
+      "attempts": 2500,
+      "rejected_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_rate": 0.0,
+      "intervention_rate": 0.4176
+    }
+  },
+  "n500_q0.05": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.06085492525650373,
+    "nrmse_sd": 0.03592975088201835,
+    "coverage_mean": 0.999,
+    "coverage_sd": 0.0013333333333333142,
+    "closed_loop": {
+      "violation_count": 0,
+      "total_samples": 2500,
+      "violation_rate": 0.0,
+      "rejected_count": 0,
+      "attempts": 2500,
+      "rejected_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_rate": 0.0,
+      "intervention_rate": 0.4192
+    }
+  },
+  "n500_q0.10": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nrmse_mean": 0.08745070446409914,
+    "nrmse_sd": 0.04457448805059503,
+    "coverage_mean": 0.998,
+    "coverage_sd": 0.0032317865716108758,
+    "closed_loop": {
+      "violation_count": 0,
+      "total_samples": 2500,
+      "violation_rate": 0.0,
+      "rejected_count": 0,
+      "attempts": 2500,
+      "rejected_rate": 0.0,
+      "fallback_count": 0,
+      "fallback_rate": 0.0,
+      "intervention_rate": 0.4132
+    }
+  }
+}

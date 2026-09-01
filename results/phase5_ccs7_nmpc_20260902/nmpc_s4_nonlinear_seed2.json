@@ -1,0 +1,117 @@
+{
+  "method": "nmpc",
+  "method_label": "NMPC reference",
+  "condition": "s4_nonlinear",
+  "condition_label": "S4:Nonlinear",
+  "seed": 2,
+  "rollout_mode": "drift_only_delta_g0",
+  "benchmark_model": "seven_state_actuator_augmented_ccs",
+  "state_order": 7,
+  "barrier_relative_degrees": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "actuator_time_constants_s": {
+    "feedwater": 15.0,
+    "turbine_valve": 6.0
+  },
+  "input_matrix_assumption": "delta_g_equals_zero",
+  "load_ratio": 0.66,
+  "power_target_mw": 660.0,
+  "scenario_scale": 0.4,
+  "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+  "initial_state_set": "intersection_of_h_ge_1_and_true_drift_psi1_ge_0",
+  "initialization_oracle_used_by_controller": false,
+  "deviation_component_bound": 1.0,
+  "deviation_coordinates": "normalized_command_deviation",
+  "physical_command_scale": [
+    10.0,
+    40.0,
+    1.0
+  ],
+  "deviation_l2_norm_bound": 1.7320508075688772,
+  "robust_margin_control_bound_semantics": "sup_v_in_V_l2_norm",
+  "violation_tolerance_raw_margin": 0.01,
+  "n_episodes": 10,
+  "n_steps": 500,
+  "n_pretrain": 0,
+  "violation_rate": [
+    0.0,
+    0.0
+  ],
+  "cbf_violation_rate": [
+    0.0,
+    0.0
+  ],
+  "violation_count": 0,
+  "total_samples": 5000,
+  "cumulative_reward": [
+    -3614.746466387631,
+    64.8320678057569
+  ],
+  "control_cost": [
+    998.4092084707412,
+    0.04119414466300172
+  ],
+  "min_barrier_value": [
+    0.6560834276483509,
+    0.06994268064002562
+  ],
+  "online_time_ms": [
+    16.376920018997044,
+    2.1377713488820342
+  ],
+  "qp_intervention_rate": 0.0,
+  "qp_attempt_count": 5000,
+  "qp_infeasible_count": 0,
+  "qp_infeasible_rate": 0.0,
+  "qp_fallback_count": 0,
+  "qp_fallback_rate": 0.0,
+  "max_normalized_qp_residual": 0.0,
+  "weak_authority_row_drop_enabled": false,
+  "qp_backend": "scipy_slsqp_nmpc",
+  "jax_precision": "float64",
+  "qpax_algorithm": "implicit_pdip",
+  "qpax_solver_tolerance": 1e-06,
+  "qpax_max_iterations": 100,
+  "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+  "nmpc_configuration": {
+    "prediction_horizon": 5,
+    "output_weights": [
+      1.0,
+      0.001,
+      0.01
+    ],
+    "input_weights": [
+      0.01,
+      0.01,
+      0.01
+    ],
+    "disturbance_estimator_gain": 0.5,
+    "slsqp_maxiter": 50,
+    "slsqp_ftol": 0.0001,
+    "warm_start": true
+  },
+  "epsilon_kappa": null,
+  "per_constraint_type": {
+    "pressure": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 5000
+    },
+    "enthalpy": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 5000
+    },
+    "power": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 5000
+    }
+  }
+}

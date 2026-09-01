@@ -92,7 +92,7 @@ This produces `paper/manuscript_mc_from_docx_searchable.pdf` from the generated 
 - 2026-07-04: Reordered the M&C result narrative so model mismatch, state-dependent margin, calibration, production historian, and controller-log evidence appear in a single evidence chain
 - 2026-07-04: Revised the production-evidence wording from single-window consistency to screened load-matched plant validation, confirmed logged enthalpy/feedwater-action fields in the controller-log evidence, moved main-proof detail to the supplement, and added three recent M&C references
 - 2026-07-04: Added controller-log execution-status strip, moved process-control metrics next to the S3 commissioning diagnostic, and compacted the stage-gated deployment table
-- 2026-07-06: Restored the 1950-window production cohort statistic with a retained aggregate summary and kept it separate from the native 5 s matched pair and controller-log evidence.
+- 2026-09-02: Recomputed the matched-window cohort from source queries with explicit one-to-one pairing, retained pair-level derivatives and hashes, and replaced the superseded aggregate claim throughout the revision package.
 - 2026-08-16: Measurement and Control issued a major-revision decision for manuscript MAC-26-0207.
 - 2026-08-30: Retained the portal-downloaded submitted DOCX baseline, decision records, current M&C sources, production evidence, and major-revision audits; removed obsolete journal-target branches and stale pre-decision working material.
 - 2026-08-31: Aligned the benchmark GP with the field vector $[p_m,h_m,N_e]$, rebuilt the drift-only primary-validation evidence chain, and generated the current revision package under `revision_submission/`.

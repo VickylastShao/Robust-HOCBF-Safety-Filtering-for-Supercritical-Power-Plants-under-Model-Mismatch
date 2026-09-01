@@ -14,11 +14,12 @@ Let $\delta_i = \psi_i - \hat{\psi}_i^0$ with $\delta_0 \equiv 0$. On the simult
 
 \begin{proof}
 By Cauchy--Schwarz,
-\[
+\begin{equation}
 |L_{\Delta\hat f}\delta_{i-1}|
 =|\nabla_x\delta_{i-1}^{\top}\Delta\hat f|
 \leq\|\nabla_x\delta_{i-1}\|_2\|\Delta\hat f\|_2.
-\]
+\label{eq:cauchy_schwarz_app}
+\end{equation}
 The simultaneous residual event gives $\|\Delta\hat f(x)\|_2\leq\beta\|\sigmaGP(x)\|_2$ over the modeled outputs, which yields Eq.~\eqref{eq:G_delta_cross_app}. Smoothness on a compact operating set ensures that finite global derivative bounds exist when the required derivatives are bounded, but it does not identify them with $\|\nabla\hat\psi_{i-1}^0\|_2$.
 \end{proof}
 
@@ -45,7 +46,7 @@ The implementation proxy is not substituted for $G_\delta^{(i-1)}$ in this proof
 
 The coupling coefficient gap is bounded by:
 \begin{equation}
-    \sigma_{\mathrm{ctrl}}(x) = \beta \sum_{j} \left|\frac{\partial (L_g L_{\fhat}^{m-1} h)}{\partial x_j}\right| \sigmaGPj{j}(x) \cdot u_{\max}
+    \sigma_{\mathrm{ctrl}}(x) = \beta v_{\max} \sum_{j} \left\|\frac{\partial (L_{g_v} L_{\fhat}^{m-1} h)}{\partial x_j}\right\|_2 \sigmaGPj{j}(x)
     \label{eq:sigma_ctrl_app}
 \end{equation}
-where $u_{\max} = \sup_{u \in \calU} \|u\|$. This term is evaluated separately for each barrier row and included in that row's total margin; Theorem~1 does not assume a fixed ratio between $\sigma_{\mathrm{ctrl}}$ and $\sigmatotal$.
+where $g_v=g_0S_u$ and $v_{\max}=\sup_{v\in[-1,1]^3}\|v\|_2=\sqrt{3}$. This term is evaluated separately for each barrier row and included in that row's total margin; Theorem~1 does not assume a fixed ratio between $\sigma_{\mathrm{ctrl}}$ and $\sigmatotal$.

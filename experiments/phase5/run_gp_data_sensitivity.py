@@ -1,4 +1,4 @@
-"""GP residual-data quantity and quality sensitivity on the fifth-order CCS.
+"""GP residual-data quantity and quality sensitivity on the augmented CCS.
 
 The experiment uses independent S3 collection rollouts for the training pool
 and held-out validation set. Training subsets are nested deterministic
@@ -12,18 +12,24 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import sys
 import time
 from pathlib import Path
 
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(_PROJECT_ROOT))
+os.environ.setdefault("XLA_PYTHON_CLIENT_PREALLOCATE", "false")
+os.environ.setdefault("XLA_PYTHON_CLIENT_MEM_FRACTION", "0.35")
 import jax
 jax.config.update("jax_enable_x64", True)
 import jax.numpy as jnp
 import numpy as np
 
-from envs.ccs.dynamics import UncertainUSCCSDynamics5th
-from experiments.phase5.common_5th import (
+from envs.ccs.dynamics import UncertainUSCCSDynamics7th
+from experiments.phase5.common_7th import (
     GP_INPUT_RANGES,
-    collect_gp_data_5th,
+    collect_gp_data_7th,
 )
 from experiments.phase5.run_drift_only_fixed_proposal import evaluate
 from rocbf.gp.gp_residual import GPResidual
@@ -112,7 +118,9 @@ def main():
     parser.add_argument("--validation-size", type=int, default=200)
     parser.add_argument("--n-episodes", type=int, default=1)
     parser.add_argument("--n-steps", type=int, default=500)
-    parser.add_argument("--calibrated-kappa", type=float, default=0.02)
+    parser.add_argument("--load-ratio", type=float, default=0.66)
+    parser.add_argument("--scenario-scale", type=float, default=0.35)
+    parser.add_argument("--calibrated-kappa", type=float, required=True)
     parser.add_argument(
         "--results-dir",
         default="results/phase5_gp_data_sensitivity_20260831")
@@ -125,12 +133,16 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for seed in args.seeds:
-        env = UncertainUSCCSDynamics5th(
-            dt=1.0, load_ratio=1.0, uncertainty_scenario="coupled")
-        X_pool, Y_pool = collect_gp_data_5th(
-            env, args.pool_size, jax.random.key(seed * 1000 + 101))
-        X_validation, Y_validation = collect_gp_data_5th(
-            env, args.validation_size, jax.random.key(seed * 1000 + 909))
+        env = UncertainUSCCSDynamics7th(
+            dt=1.0, load_ratio=args.load_ratio,
+            uncertainty_scenario="coupled",
+            scenario_scale=args.scenario_scale)
+        X_pool, Y_pool = collect_gp_data_7th(
+            env, args.pool_size, jax.random.key(seed * 1000 + 101),
+            load_ratio=args.load_ratio)
+        X_validation, Y_validation = collect_gp_data_7th(
+            env, args.validation_size, jax.random.key(seed * 1000 + 909),
+            load_ratio=args.load_ratio)
         X_pool = np.asarray(X_pool)
         Y_pool = np.asarray(Y_pool)
         X_validation = np.asarray(X_validation)
@@ -152,15 +164,12 @@ def main():
                     seed=seed * 10000 + sample_size * 10 + int(contamination * 100))
                 gp, prediction = fit_and_score(
                     X_train, Y_train, X_validation, Y_validation)
-                mean_only = evaluate(
-                    "rocbf_mean", "s3_coupled", seed,
-                    args.n_episodes, args.n_steps, sample_size, 1e-2,
-                    gp=gp, epsilon_kappa_override=0.0, qp_backend="qpax")
-                calibrated = evaluate(
+                selected = evaluate(
                     "rocbf_mean", "s3_coupled", seed,
                     args.n_episodes, args.n_steps, sample_size, 1e-2,
                     gp=gp, epsilon_kappa_override=args.calibrated_kappa,
-                    qp_backend="qpax")
+                    qp_backend="qpax", load_ratio=args.load_ratio,
+                    scenario_scale=args.scenario_scale)
                 result = {
                     "experiment": "controlled_gp_data_quantity_quality_sensitivity",
                     "scenario": "s3_coupled",
@@ -172,20 +181,21 @@ def main():
                     "contamination_definition": "signed_3_training_target_sd_offsets",
                     "gp_input_output": "[p_m,h_m,N_e] residual rates",
                     "commissioned_epsilon_kappa": args.calibrated_kappa,
+                    "load_ratio": args.load_ratio,
+                    "scenario_scale": args.scenario_scale,
                     "jax_precision": "float64",
                     "prediction": prediction,
                     "closed_loop": {
-                        "epsilon_kappa_0": mean_only,
-                        "commissioned": calibrated,
+                        "selected_operating_point": selected,
                     },
                 }
                 with path.open("w") as handle:
                     json.dump(result, handle, indent=2)
                 print(
                     f"{tag}: nrmse={np.mean(prediction['nrmse_by_validation_sd']):.3f}, "
-                    f"viol(k=0)={mean_only['violation_rate'][0] * 100:.3f}%, "
                     f"viol(k={args.calibrated_kappa:g})="
-                    f"{calibrated['violation_rate'][0] * 100:.3f}%",
+                    f"{selected['violation_rate'][0] * 100:.3f}%, "
+                    f"rejected={selected['qp_infeasible_rate'] * 100:.3f}%",
                     flush=True,
                 )
 

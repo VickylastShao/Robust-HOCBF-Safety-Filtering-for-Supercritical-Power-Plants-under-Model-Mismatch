@@ -34,7 +34,11 @@ class RobustHOCBF(HOCBF):
     h_fn, g_fn, relative_degree, k_gains : same as HOCBF
     f_fn : nominal drift f₀
     gp_residual : GPResidual instance (fitted)
-    u_max : float, maximum control magnitude for σ_ctrl computation
+    u_max : float
+        Euclidean-norm bound on the control variable used by this HOCBF when
+        computing ``sigma_ctrl``.  For a deviation-form HOCBF this must bound
+        the deviation input ``v``, not the reconstructed physical command.
+        The historical parameter name is retained for API compatibility.
     op_norm_estimate : float, bound or engineering estimate of the nominal
         drift Jacobian norm.  A formal operating-set certificate requires a
         valid uniform bound.  If None and x0 is provided, the code computes a
@@ -79,7 +83,11 @@ class RobustHOCBF(HOCBF):
                  gp_state_indices=None):
         self.f_nominal = f_fn
         self.gp_residual = gp_residual
-        self.u_max = u_max
+        self.control_norm_bound = float(u_max)
+        if self.control_norm_bound < 0.0:
+            raise ValueError("control norm bound must be non-negative")
+        # Backwards-compatible alias for older experiment code.
+        self.u_max = self.control_norm_bound
 
         # Use a supplied operating-set bound or compute a local estimate.
         if op_norm_estimate is not None:
@@ -201,6 +209,22 @@ class RobustHOCBF(HOCBF):
 
         return sigmas
 
+    def _control_coupling_sigma(
+            self, x: jnp.ndarray, lie_fn, sigma_gp: jnp.ndarray,
+            beta: jnp.ndarray) -> jnp.ndarray:
+        """Bound uncertainty in the control-coupling row without cancellation.
+
+        ``L_g lie_fn`` is a row vector with one component per control input.
+        The sensitivity for state coordinate ``j`` is therefore the Euclidean
+        norm of that row's derivative, not the absolute derivative of the sum
+        of its components.
+        """
+        coupling_fn = lambda x_: jax.grad(lie_fn)(x_) @ self.g_fn(x_)
+        coupling_jacobian = jax.jacfwd(coupling_fn)(x)
+        sensitivity_by_state = jnp.linalg.norm(coupling_jacobian, axis=0)
+        return (beta * jnp.sum(sensitivity_by_state * sigma_gp)
+                * self.control_norm_bound)
+
     def compute_epsilon(self, x: jnp.ndarray) -> jnp.ndarray:
         """Compute compositional robustness margin ε(x) = σ_total(x).
 
@@ -214,7 +238,8 @@ class RobustHOCBF(HOCBF):
           σ_direct_i = β Σ_j |∂ψ_{i-1}/∂x_j| σ_GP,j
           σ_cross_i = β ‖∇ψ_{i-1}‖₂ ‖σ_GP‖₂
           σ_i = σ_direct_i + σ_cross_i + (‖L_f̂‖_op + k_{i-1})·σ_{i-1}
-          σ_ctrl = β Σ_j |∂L_g L_f^{m-1}h/∂x_j| σ_GP,j · u_max
+          σ_ctrl = β Σ_j ‖∂(L_g L_f^{m-1}h)/∂x_j‖₂ σ_GP,j
+                   · control_norm_bound
           σ_total = σ_m + Σ_{j=1}^{m-1} c_j·σ_j + σ_ctrl
           where c_j = Π_{i=j+1}^{m-1} (‖L_f̂‖_op + k_i) are the chain coupling weights
 
@@ -244,8 +269,8 @@ class RobustHOCBF(HOCBF):
 
         if m == 1:
             # Control coupling: σ_ctrl for m=1
-            grad_Lgh = jax.grad(lambda x_: (jax.grad(self.h_fn)(x_) @ self.g_fn(x_)).sum())(x)
-            sigma_ctrl = beta * jnp.sum(jnp.abs(grad_Lgh) * sigma_gp) * self.u_max
+            sigma_ctrl = self._control_coupling_sigma(
+                x, self.h_fn, sigma_gp, beta)
             sigma_total = sigma_1 + sigma_ctrl
             if self.epsilon_floor > 0:
                 sigma_total = jnp.maximum(sigma_total, self.epsilon_floor)
@@ -269,8 +294,8 @@ class RobustHOCBF(HOCBF):
 
         # Control coupling: σ_ctrl(x)  [eq 12]
         # Use nominal Lie derivative to avoid μ_GP gradient amplification
-        grad_LgLf = jax.grad(lambda x_: (jax.grad(self._lie_f_nominal[m - 1])(x_) @ self.g_fn(x_)).sum())(x)
-        sigma_ctrl = beta * jnp.sum(jnp.abs(grad_LgLf) * sigma_gp) * self.u_max
+        sigma_ctrl = self._control_coupling_sigma(
+            x, self._lie_f_nominal[m - 1], sigma_gp, beta)
 
         # Total: σ_total = σ_m + Σ_{j=1}^{m-1} c_j·σ_j + σ_ctrl  [eq:st]
         # where c_j = Π_{i=j+1}^{m-1} (‖L_f̂‖_op + k_i) are the chain coupling weights.
@@ -349,7 +374,7 @@ class RobustHOCBF(HOCBF):
 
         # Coupling: Δf effect on L_g L_f h
         grad_Lf_h = jax.grad(self._lie_f[1])(x)
-        delta_ctrl = jnp.dot(grad_Lf_h, df) * self.u_max
+        delta_ctrl = jnp.dot(grad_Lf_h, df) * self.control_norm_bound
 
         epsilon_oracle = jnp.abs(delta_2_actual) + k[1] * jnp.abs(delta_1_actual) + jnp.abs(delta_ctrl)
 

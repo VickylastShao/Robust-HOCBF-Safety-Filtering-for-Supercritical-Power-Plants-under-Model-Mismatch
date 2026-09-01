@@ -1,0 +1,157 @@
+{
+  "experiment": "commissioning_kappa_selection",
+  "selection_scope": "tune_seeds_only",
+  "rule": "smallest epsilon_kappa passing aggregate and per-seed gates",
+  "gates": {
+    "violation_rate_strictly_below": 0.01,
+    "qp_rejection_rate_strictly_below": 0.005
+  },
+  "selected_epsilon_kappa": 0.0,
+  "rows": [
+    {
+      "epsilon_kappa": 0.0,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 0,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0,
+      "maximum_seed_qp_rejection_rate": 0.0,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.01,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 0,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0,
+      "maximum_seed_qp_rejection_rate": 0.0,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.02,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 0,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0,
+      "maximum_seed_qp_rejection_rate": 0.0,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.05,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 0,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0,
+      "maximum_seed_qp_rejection_rate": 0.0,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.1,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 0,
+      "total_samples": 15000,
+      "violation_rate": 0.0,
+      "descriptive_wilson_95_upper": 0.00025603168570111404,
+      "maximum_seed_violation_rate": 0.0,
+      "qp_rejected_count": 13,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.0008666666666666666,
+      "maximum_seed_qp_rejection_rate": 0.0012,
+      "passes": true
+    },
+    {
+      "epsilon_kappa": 0.2,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 4849,
+      "total_samples": 15000,
+      "violation_rate": 0.32326666666666665,
+      "descriptive_wilson_95_upper": 0.33079609287052736,
+      "maximum_seed_violation_rate": 0.3754,
+      "qp_rejected_count": 11220,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.748,
+      "maximum_seed_qp_rejection_rate": 0.8766,
+      "passes": false
+    },
+    {
+      "epsilon_kappa": 0.5,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 5663,
+      "total_samples": 15000,
+      "violation_rate": 0.37753333333333333,
+      "descriptive_wilson_95_upper": 0.3853215514316111,
+      "maximum_seed_violation_rate": 0.4014,
+      "qp_rejected_count": 14972,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 0.9981333333333333,
+      "maximum_seed_qp_rejection_rate": 0.9988,
+      "passes": false
+    },
+    {
+      "epsilon_kappa": 1.0,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "violation_count": 5648,
+      "total_samples": 15000,
+      "violation_rate": 0.37653333333333333,
+      "descriptive_wilson_95_upper": 0.38431774866528223,
+      "maximum_seed_violation_rate": 0.4,
+      "qp_rejected_count": 15000,
+      "qp_attempts": 15000,
+      "qp_rejection_rate": 1.0,
+      "maximum_seed_qp_rejection_rate": 1.0,
+      "passes": false
+    }
+  ],
+  "statistical_boundary": "Wilson values are descriptive Bernoulli-reference bounds; serially correlated controller samples are not independent trials."
+}

@@ -42,7 +42,10 @@ class HOCBF:
         self.g_fn = g_fn
         self.m = relative_degree
         self.k_gains = k_gains
-        self.u0 = u0  # equilibrium input for closed-loop formulation
+        # Retained as metadata for backward compatibility. Coordinate changes
+        # are not performed inside HOCBF; callers must supply f_fn, g_fn, and
+        # the QP action in one consistent coordinate system.
+        self.u0 = u0
         assert len(k_gains) == relative_degree, \
             f"Need {relative_degree} class-K gains for relative degree " \
             f"{relative_degree}, got {len(k_gains)}"
@@ -122,9 +125,10 @@ class HOCBF:
         Uses the psi-chain formulation:
           b(x) = L_f psi_{m-1} + k_m * psi_{m-1}
 
-        When u0 is provided (closed-loop formulation with f_cl = f + g*u0),
-        the constraint A*v <= b is on deviation control v = u - u0.
-        The caller must adjust: v_rl = u_rl - u0, u_safe = u0 + v_safe.
+        ``u0`` is compatibility metadata and does not transform these rows.
+        A deviation-coordinate formulation must therefore be supplied through
+        ``f_fn`` and ``g_fn``, and this method then returns rows for that same
+        deviation input.
         """
         m = self.m
         # A = -L_g L_f^{m-1} h  (row vector)

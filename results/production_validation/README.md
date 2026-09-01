@@ -8,8 +8,13 @@ development packages.
 ## Canonical Evidence Layers
 
 1. **Matched-window cohort screening**
-   - `matched_window_cohort_summary_20260706.json`
-   - 1950 retained loaded two-hour windows; aggregate historian context only.
+   - `cohort_recomputed_20260902/matched_window_cohort_recomputed.json`
+   - `cohort_recomputed_20260902/matched_window_pairs.csv`
+   - 512 one-to-one matched two-hour window pairs obtained from 14,675
+     pre-retrofit and 517 post-retrofit loaded candidates.
+   - windows advance every 30 minutes and overlap; cohort estimates and the
+     post-day cluster bootstrap are descriptive rather than independent-sample
+     causal inference.
 2. **Native 5 s pre/post historian pair**
    - `figure10_production_retrofit_metrics.json`
    - supports the plotted pressure-response comparison and its exact counts.

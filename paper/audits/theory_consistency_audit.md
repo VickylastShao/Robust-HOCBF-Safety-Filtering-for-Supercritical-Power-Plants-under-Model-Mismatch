@@ -1,6 +1,6 @@
 # M&C Theory Consistency Audit
 
-Date: 2026-06-30
+Date: 2026-09-02
 
 ## Formal Scope
 
@@ -8,10 +8,10 @@ The formal guarantee in Theorem 1 is a continuous-time, high-probability forward
 
 - Exact input matrix: `Delta g = 0`.
 - The simultaneous residual event is independently valid over the operating set; the implemented commissioning multiplier alone does not establish it.
-- Fixed calibrated GP posterior on fixed training data.
-- Known relative degree for each constraint.
-- Perturbation is sufficiently small and Lipschitz in the required sense.
-- The robust QP is feasible.
+- Fixed GP posterior on fixed training data.
+- Constant relative degree two for all six command-level constraints on the operating set.
+- Local Lipschitz and differentiability conditions sufficient for the HOCBF recursion and a unique Caratheodory solution.
+- Full-row robust-QP feasibility and a locally Lipschitz feedback selection.
 - `epsilon_kappa = 1`, valid operating-set derivative bounds, and a compositional margin that upper-bounds the perturbation entering the HOCBF inequality.
 
 ## Resolved Issue
@@ -32,6 +32,8 @@ Patch applied:
 | Discrete-time rollout | No formal sampled-data theorem claimed | Inter-sample behavior empirically checked | Aligned |
 | GP calibration | Independent simultaneous residual event required | Held-out diagnostics evaluate the commissioning envelope but do not prove a uniform event | Aligned |
 | QP infeasibility | Certificate does not apply if infeasible | Used as diagnostic/fallback trigger | Aligned |
+| Command model | Seven-state actuator-augmented surrogate with fixed input matrix | HOCBF and rollout use the same $A_s=(A_d-I)/T_s$ and $B_s=B S_u$ matrices | Aligned |
+| Control-coupling margin | Row-vector sensitivity is bounded by a per-state Euclidean norm | Implementation uses the Jacobian of the complete $L_gL_f^{m-1}h$ row, avoiding component cancellation | Aligned |
 
 ## Reviewer-Sensitive Points
 
@@ -43,4 +45,4 @@ Patch applied:
 
 ## Current Status
 
-The main M&C theory narrative is internally consistent after the closeout patch. The remaining risk is not theoretical contradiction but empirical scope: the deployment envelope is demonstrated on simulated 5th-order CCS dynamics and should not be overgeneralized beyond that benchmark.
+The main M&C theory narrative now uses an actuator-augmented seven-state CCS benchmark. The six reported barriers have command-level relative degree two. Numerical rollouts evaluate controller-instant behavior of the sample-matched forward-Euler surrogate; they do not establish inter-sample forward invariance. The remaining limitation is empirical scope, not a five-state/relative-degree contradiction.

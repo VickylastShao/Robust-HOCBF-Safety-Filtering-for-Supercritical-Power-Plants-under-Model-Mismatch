@@ -1,0 +1,151 @@
+{
+  "experiment": "controlled_gp_data_quantity_quality_sensitivity",
+  "scenario": "s3_coupled",
+  "seed": 4,
+  "training_pool_size": 1000,
+  "validation_size": 200,
+  "training_sample_size": 250,
+  "contamination_fraction": 0.1,
+  "contamination_definition": "signed_3_training_target_sd_offsets",
+  "gp_input_output": "[p_m,h_m,N_e] residual rates",
+  "commissioned_epsilon_kappa": 0.0,
+  "load_ratio": 0.66,
+  "scenario_scale": 0.35,
+  "jax_precision": "float64",
+  "prediction": {
+    "fit_time_s": 7.297534003853798,
+    "rmse_physical": [
+      0.05326049425533115,
+      0.036207386784097254,
+      1.2202100810992704e-07
+    ],
+    "nrmse_by_validation_sd": [
+      0.9022324263368579,
+      0.6604518304548734,
+      0.12202100810992705
+    ],
+    "predictive_interval_95_coverage": [
+      0.93,
+      0.935,
+      1.0
+    ],
+    "mean_posterior_std": [
+      0.05381840671300945,
+      0.04975915814661898,
+      0.010000000002079838
+    ],
+    "input_mean": [
+      14.466190611719139,
+      2733.900767906685,
+      659.1352377582754
+    ],
+    "input_std": [
+      0.4964289742237534,
+      0.9346083511449372,
+      0.10452087646211607
+    ]
+  },
+  "closed_loop": {
+    "selected_operating_point": {
+      "method": "rocbf_mean",
+      "method_label": "RoCBF-SF mean-only",
+      "condition": "s3_coupled",
+      "condition_label": "S3:Coupled",
+      "seed": 4,
+      "rollout_mode": "drift_only_delta_g0",
+      "benchmark_model": "seven_state_actuator_augmented_ccs",
+      "state_order": 7,
+      "barrier_relative_degrees": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "actuator_time_constants_s": {
+        "feedwater": 15.0,
+        "turbine_valve": 6.0
+      },
+      "input_matrix_assumption": "delta_g_equals_zero",
+      "load_ratio": 0.66,
+      "power_target_mw": 660.0,
+      "scenario_scale": 0.35,
+      "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+      "initial_state_set": "intersection_of_h_ge_1_and_true_drift_psi1_ge_0",
+      "initialization_oracle_used_by_controller": false,
+      "deviation_component_bound": 1.0,
+      "deviation_coordinates": "normalized_command_deviation",
+      "physical_command_scale": [
+        10.0,
+        40.0,
+        1.0
+      ],
+      "deviation_l2_norm_bound": 1.7320508075688772,
+      "robust_margin_control_bound_semantics": "sup_v_in_V_l2_norm",
+      "violation_tolerance_raw_margin": 0.01,
+      "n_episodes": 1,
+      "n_steps": 500,
+      "n_pretrain": 250,
+      "violation_rate": [
+        0.148,
+        0.0
+      ],
+      "cbf_violation_rate": [
+        0.148,
+        0.0
+      ],
+      "violation_count": 74,
+      "total_samples": 500,
+      "cumulative_reward": [
+        -5965.1111131080725,
+        0.0
+      ],
+      "control_cost": [
+        110.79954203274872,
+        0.0
+      ],
+      "min_barrier_value": [
+        -0.1681628633122063,
+        0.0
+      ],
+      "online_time_ms": [
+        6.405892674811184,
+        3.695292913113752
+      ],
+      "qp_intervention_rate": 0.288,
+      "qp_attempt_count": 500,
+      "qp_infeasible_count": 32,
+      "qp_infeasible_rate": 0.064,
+      "qp_fallback_count": 32,
+      "qp_fallback_rate": 0.064,
+      "max_normalized_qp_residual": 50.020805225417035,
+      "weak_authority_row_drop_enabled": false,
+      "qp_backend": "qpax",
+      "jax_precision": "float64",
+      "qpax_algorithm": "implicit_pdip",
+      "qpax_solver_tolerance": 1e-06,
+      "qpax_max_iterations": 100,
+      "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+      "nmpc_configuration": null,
+      "epsilon_kappa": 0.0,
+      "per_constraint_type": {
+        "pressure": {
+          "violation_rate": 0.148,
+          "violation_count": 74,
+          "total_steps": 500
+        },
+        "enthalpy": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        },
+        "power": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        }
+      }
+    }
+  }
+}

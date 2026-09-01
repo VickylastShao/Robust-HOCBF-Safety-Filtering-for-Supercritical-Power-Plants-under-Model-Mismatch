@@ -24,7 +24,7 @@ Revision due date: 15 September 2026
 
 ## Verification Record
 
-- The package was regenerated from the current LaTeX and point-by-point response sources on 1 September 2026.
+- The package was regenerated from the current LaTeX and point-by-point response sources on 2 September 2026.
 - The revised title page is generated from the submitted layout by `scripts/build_revision_title_page.py`; its manuscript counts are computed from the clean revised DOCX and current LaTeX source.
 - Main and supplementary LaTeX sources compile to `latex_build/` without unresolved references or citations.
 - The Word manuscripts are produced by `scripts/build_mc_docx.sh`, then postprocessed for the M&C layout and metadata-cleaned.

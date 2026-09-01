@@ -4,14 +4,20 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import sys
 from pathlib import Path
 
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(_PROJECT_ROOT))
+os.environ.setdefault("XLA_PYTHON_CLIENT_PREALLOCATE", "false")
+os.environ.setdefault("XLA_PYTHON_CLIENT_MEM_FRACTION", "0.35")
 import jax
 jax.config.update("jax_enable_x64", True)
 import numpy as np
 
-from envs.ccs.dynamics import UncertainUSCCSDynamics5th
-from experiments.phase5.common_5th import collect_gp_data_5th
+from envs.ccs.dynamics import UncertainUSCCSDynamics7th
+from experiments.phase5.common_7th import collect_gp_data_7th
 from experiments.phase5.run_drift_only_fixed_proposal import evaluate
 from experiments.phase5.run_gp_data_sensitivity import (
     farthest_point_order,
@@ -33,6 +39,8 @@ def main():
     parser.add_argument("--validation-size", type=int, default=200)
     parser.add_argument("--n-episodes", type=int, default=10)
     parser.add_argument("--n-steps", type=int, default=500)
+    parser.add_argument("--load-ratio", type=float, default=0.66)
+    parser.add_argument("--scenario-scale", type=float, default=0.35)
     parser.add_argument("--results-dir", required=True)
     args = parser.parse_args()
 
@@ -44,12 +52,16 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
 
     for seed in args.seeds:
-        env = UncertainUSCCSDynamics5th(
-            dt=1.0, load_ratio=1.0, uncertainty_scenario="coupled")
-        X_pool, Y_pool = collect_gp_data_5th(
-            env, args.pool_size, jax.random.key(seed * 1000 + 101))
-        X_validation, Y_validation = collect_gp_data_5th(
-            env, args.validation_size, jax.random.key(seed * 1000 + 909))
+        env = UncertainUSCCSDynamics7th(
+            dt=1.0, load_ratio=args.load_ratio,
+            uncertainty_scenario="coupled",
+            scenario_scale=args.scenario_scale)
+        X_pool, Y_pool = collect_gp_data_7th(
+            env, args.pool_size, jax.random.key(seed * 1000 + 101),
+            load_ratio=args.load_ratio)
+        X_validation, Y_validation = collect_gp_data_7th(
+            env, args.validation_size, jax.random.key(seed * 1000 + 909),
+            load_ratio=args.load_ratio)
         X_pool = np.asarray(X_pool)
         Y_pool = np.asarray(Y_pool)
         selected = farthest_point_order(X_pool, args.sample_size)
@@ -66,7 +78,9 @@ def main():
             result = evaluate(
                 "rocbf_mean", "s3_coupled", seed,
                 args.n_episodes, args.n_steps, args.sample_size, 1e-2,
-                gp=gp, epsilon_kappa_override=kappa, qp_backend="qpax")
+                gp=gp, epsilon_kappa_override=kappa, qp_backend="qpax",
+                load_ratio=args.load_ratio,
+                scenario_scale=args.scenario_scale)
             payload = {
                 "experiment": "commissioning_kappa_tune_test",
                 "stage": args.stage,
@@ -75,6 +89,8 @@ def main():
                 "training_pool_size": args.pool_size,
                 "training_sample_size": args.sample_size,
                 "validation_size": args.validation_size,
+                "load_ratio": args.load_ratio,
+                "scenario_scale": args.scenario_scale,
                 "selection": "deterministic_farthest_point_in_frozen_z_space",
                 "prediction": prediction,
                 "closed_loop": result,

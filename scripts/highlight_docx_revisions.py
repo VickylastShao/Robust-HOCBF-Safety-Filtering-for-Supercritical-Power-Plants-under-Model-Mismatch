@@ -17,6 +17,7 @@ from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 from xml.etree import ElementTree as ET
 
+from clean_docx_metadata import clean_docx
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M_NS = "http://schemas.openxmlformats.org/officeDocument/2006/math"
@@ -137,6 +138,7 @@ def main() -> None:
         args.output.unlink()
     shutil.copyfile(args.revised, args.output)
     applied = build_highlighted(args.original, args.output, args.output, args.highlight)
+    clean_docx(args.output)
     print(f"Highlighted {applied} changed paragraphs in {args.output}")
 
 

@@ -22,11 +22,12 @@ ROOT = Path(__file__).resolve().parents[2]
 RESULTS_DIR = ROOT / "results" / "phase5"
 OUT_JSON = RESULTS_DIR / "process_response_trajectories.json"
 
-LOAD_RATIO = 1.0
+LOAD_RATIO = 0.66
+SCENARIO_SCALE = 0.35
 DT_SEC = 1.0
 TOTAL_TIME_SEC = 300.0
 N_STEPS = int(round(TOTAL_TIME_SEC / DT_SEC))
-V_MAX = 5.0
+V_MAX = 1.0
 INTERVENTION_THRESHOLD = 0.01
 H_LOW = 2670.0
 VIOLATION_TOL = 1e-2
@@ -41,26 +42,34 @@ class MethodSpec:
     use_gp: bool
 
 
-METHODS = [
-    MethodSpec(
-        key="hocbf",
-        label="HOCBF (no GP)",
-        epsilon_kappa=None,
-        use_gp=False,
-    ),
-    MethodSpec(
-        key="gp_k0",
-        label="GP-HOCBF (epsilon_kappa=0)",
-        epsilon_kappa=0.0,
-        use_gp=True,
-    ),
-    MethodSpec(
-        key="gp_k01",
-        label="RoCBF-SF calibrated (epsilon_kappa=0.02)",
-        epsilon_kappa=0.02,
-        use_gp=True,
-    ),
-]
+def _method_specs(calibrated_kappa: float) -> list[MethodSpec]:
+    comparator_kappa = 1.0 if calibrated_kappa == 0.0 else 0.0
+    comparator_label = (
+        "Full-margin endpoint (epsilon_kappa=1)"
+        if comparator_kappa == 1.0
+        else "GP mean endpoint (epsilon_kappa=0)"
+    )
+    return [
+        MethodSpec(
+            key="hocbf",
+            label="HOCBF (no GP)",
+            epsilon_kappa=None,
+            use_gp=False,
+        ),
+        MethodSpec(
+            key="gp_comparator",
+            label=comparator_label,
+            epsilon_kappa=comparator_kappa,
+            use_gp=True,
+        ),
+        MethodSpec(
+            key="gp_selected",
+            label=("RoCBF-SF tune-selected "
+                   f"(epsilon_kappa={calibrated_kappa:g})"),
+            epsilon_kappa=calibrated_kappa,
+            use_gp=True,
+        ),
+    ]
 
 
 def _configure_runtime() -> None:
@@ -124,6 +133,10 @@ def _summarize_rollout(record: dict, n_steps: int) -> dict[str, float | int | di
                 float(min(record["enthalpy_margin_kj_kg"])),
                 float(max(record["enthalpy_margin_kj_kg"])),
             ],
+            "pressure_low_margin_mpa": [
+                float(min(record["pressure_low_margin_mpa"])),
+                float(max(record["pressure_low_margin_mpa"])),
+            ],
         },
     }
     first = np.flatnonzero(violations)
@@ -139,70 +152,63 @@ def _time_grid(n_steps: int, dt_sec: float, *, include_endpoint: bool) -> list[f
     return [round(i * dt_sec, 10) for i in range(n)]
 
 
-def _build_filters(dt_sec: float, gp_seed: int):
+def _build_filters(
+    dt_sec: float,
+    gp_seed: int,
+    method_specs: list[MethodSpec],
+):
     import jax
     jax.config.update("jax_enable_x64", True)
 
-    from envs.ccs.constraints import CCSConstraints5th
-    from envs.ccs.dynamics import USCCSDynamics5th
-    from experiments.phase5.methods_5th import (
-        _make_hocbf_5th,
-        _make_robust_hocbf_5th,
-        _pretrain_gp_5th,
+    from envs.ccs.constraints import CCSConstraints7th
+    from envs.ccs.dynamics import USCCSDynamics7th
+    from experiments.phase5.methods_7th import (
+        DEVIATION_L2_NORM_BOUND,
+        _make_hocbf_7th,
+        _make_robust_hocbf_7th,
+        _pretrain_gp_7th,
     )
 
-    dynamics = USCCSDynamics5th(dt=dt_sec, load_ratio=LOAD_RATIO)
+    dynamics = USCCSDynamics7th(dt=dt_sec, load_ratio=LOAD_RATIO)
     x0, u0 = dynamics.equilibrium(LOAD_RATIO)
-    constraint = CCSConstraints5th(
+    constraint = CCSConstraints7th(
         p_bounds=(13.0, 24.0),
         h_bounds=(H_LOW, H_HIGH),
         power_deviation=50.0,
-        power_target=1000.0,
+        power_target=660.0,
     )
 
     print("Building nominal HOCBF filter...", flush=True)
-    hocbf = _make_hocbf_5th(
-        dynamics,
-        constraint,
-        u0,
-        use_phi_scaled_g=False,
-    )
+    hocbf = _make_hocbf_7th(dynamics, constraint, u0)
 
     print("Pretraining scenario-specific GP for S3 coupled (N=500)...", flush=True)
-    gp = _pretrain_gp_5th(
+    gp = _pretrain_gp_7th(
         LOAD_RATIO,
         n_pretrain=500,
         key=jax.random.key(gp_seed),
         scenario="coupled",
         scenario_specific=True,
         dt_sec=dt_sec,
+        scenario_scale=SCENARIO_SCALE,
     )
 
-    print("Building GP-HOCBF filters for epsilon_kappa=0 and 0.1...", flush=True)
-    gp_k0 = _make_robust_hocbf_5th(
-        dynamics,
-        constraint,
-        gp,
-        u0,
-        use_mean_correction=True,
-        epsilon_kappa=0.0,
-        use_phi_scaled_g=False,
-    )
-    gp_k01 = _make_robust_hocbf_5th(
-        dynamics,
-        constraint,
-        gp,
-        u0,
-        use_mean_correction=True,
-        epsilon_kappa=0.02,
-        use_phi_scaled_g=False,
-    )
-
-    filters = {
-        "hocbf": hocbf,
-        "gp_k0": gp_k0,
-        "gp_k01": gp_k01,
-    }
+    filters = {"hocbf": hocbf}
+    for spec in method_specs:
+        if not spec.use_gp:
+            continue
+        print(
+            f"Building {spec.key} for epsilon_kappa={spec.epsilon_kappa:g}...",
+            flush=True,
+        )
+        filters[spec.key] = _make_robust_hocbf_7th(
+            dynamics,
+            constraint,
+            gp,
+            u0,
+            epsilon_kappa=float(spec.epsilon_kappa),
+            control_norm_bound=DEVIATION_L2_NORM_BOUND,
+            use_mean_correction=True,
+        )
     for key, filt in filters.items():
         filt._qp_matrices_jit = jax.jit(filt.qp_matrices)
         print(f"  JIT-ready: {key}", flush=True)
@@ -244,23 +250,28 @@ def _rollout_method(
     import jax
     import jax.numpy as jnp
 
-    from envs.ccs.dynamics import UncertainUSCCSDynamics5th
+    from envs.ccs.dynamics import UncertainUSCCSDynamics7th
+    from experiments.phase5.methods_7th import _make_oracle_initialization_hocbf_7th
     from experiments.phase5.run_drift_only_fixed_proposal import sample_initial_state
     from rocbf.qp.diff_qp import DifferentiableQP
 
-    env = UncertainUSCCSDynamics5th(
+    env = UncertainUSCCSDynamics7th(
         dt=dt_sec,
         load_ratio=LOAD_RATIO,
         uncertainty_scenario="coupled",
+        scenario_scale=SCENARIO_SCALE,
     )
     qp = DifferentiableQP(v_max=v_max, scale_constraints=True)
     checked_qp = jax.jit(
         lambda v_prop, A, b: qp.solve_checked_jax(
             v_prop, A, b, fallback_v=v_prop, feasibility_tol=1e-6))
-    x0, _ = nominal_dynamics.equilibrium(LOAD_RATIO)
+    x0, u0 = nominal_dynamics.equilibrium(LOAD_RATIO)
+    initialization_layer = _make_oracle_initialization_hocbf_7th(
+        env, constraint, u0)
     key = jax.random.key(rollout_seed)
     key, init_key = jax.random.split(key)
-    x, key = sample_initial_state(nominal_dynamics, constraint, init_key)
+    x, key = sample_initial_state(
+        env, constraint, init_key, admissibility_layer=initialization_layer)
 
     outputs0 = env.output(x)
     record = {
@@ -273,6 +284,8 @@ def _rollout_method(
             "h_m": [float(x[2])],
             "N_e": [float(x[3])],
             "tau_f": [float(x[4])],
+            "D_fw": [float(x[5])],
+            "u_t": [float(x[6])],
         },
         "outputs": {
             "pressure_mpa": [float(outputs0[0])],
@@ -280,6 +293,7 @@ def _rollout_method(
             "power_mw": [float(outputs0[2])],
         },
         "enthalpy_margin_kj_kg": [float(outputs0[1] - H_LOW)],
+        "pressure_low_margin_mpa": [float(outputs0[0] - 13.0)],
         "v_ref": [],
         "v_safe": [],
         "v_correction": [],
@@ -333,10 +347,13 @@ def _rollout_method(
         record["state"]["h_m"].append(float(next_x[2]))
         record["state"]["N_e"].append(float(next_x[3]))
         record["state"]["tau_f"].append(float(next_x[4]))
+        record["state"]["D_fw"].append(float(next_x[5]))
+        record["state"]["u_t"].append(float(next_x[6]))
         record["outputs"]["pressure_mpa"].append(float(outputs[0]))
         record["outputs"]["enthalpy_kj_kg"].append(float(outputs[1]))
         record["outputs"]["power_mw"].append(float(outputs[2]))
         record["enthalpy_margin_kj_kg"].append(float(outputs[1] - H_LOW))
+        record["pressure_low_margin_mpa"].append(float(outputs[0] - 13.0))
 
         x = next_x
         if (step + 1) % 100 == 0:
@@ -360,6 +377,7 @@ def collect(
     reference: str = "zero",
     v_max: float = V_MAX,
     rollout_seed: int = 1,
+    calibrated_kappa: float = 0.0,
     force: bool = False,
 ) -> dict:
     if OUT_JSON.exists() and not force:
@@ -368,10 +386,14 @@ def collect(
 
     _configure_runtime()
     gp_seed = rollout_seed * 1000 + 17
-    nominal_dynamics, constraint, filters = _build_filters(dt_sec, gp_seed)
+    if not 0.0 <= calibrated_kappa <= 1.0:
+        raise ValueError("calibrated_kappa must lie in [0, 1]")
+    method_specs = _method_specs(calibrated_kappa)
+    nominal_dynamics, constraint, filters = _build_filters(
+        dt_sec, gp_seed, method_specs)
 
     methods = {}
-    for spec in METHODS:
+    for spec in method_specs:
         print(f"Rolling out {spec.label}...", flush=True)
         methods[spec.key] = _rollout_method(
             method_key=spec.key,
@@ -393,6 +415,9 @@ def collect(
             "scenario": "S3: Coupled state-dependent perturbation",
             "uncertainty_scenario": "coupled",
             "load_ratio": LOAD_RATIO,
+            "scenario_scale": SCENARIO_SCALE,
+            "benchmark_model": "seven_state_actuator_augmented_ccs",
+            "barrier_relative_degrees": [2, 2, 2, 2, 2, 2],
             "n_steps": n_steps,
             "dt_sec": dt_sec,
             "rollout_mode": "drift_only_delta_g0",
@@ -412,7 +437,7 @@ def collect(
             "bounds": {
                 "pressure_mpa": [13.0, 24.0],
                 "enthalpy_kj_kg": [H_LOW, H_HIGH],
-                "power_mw": [950.0, 1050.0],
+                "power_mw": [610.0, 710.0],
             },
             "methods": [
                 {
@@ -421,7 +446,7 @@ def collect(
                     "epsilon_kappa": spec.epsilon_kappa,
                     "use_gp": spec.use_gp,
                 }
-                for spec in METHODS
+                for spec in method_specs
             ],
         },
         "methods": methods,
@@ -447,6 +472,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--v-max", type=float, default=V_MAX)
     parser.add_argument("--rollout-seed", type=int, default=1)
     parser.add_argument(
+        "--calibrated-kappa",
+        type=float,
+        required=True,
+        help="Tune-selected benchmark epsilon_kappa written into the figure data.",
+    )
+    parser.add_argument(
         "--force",
         action="store_true",
         help="Regenerate JSON even when it already exists.",
@@ -462,6 +493,7 @@ def main() -> None:
         reference=args.reference,
         v_max=args.v_max,
         rollout_seed=args.rollout_seed,
+        calibrated_kappa=args.calibrated_kappa,
         force=args.force,
     )
 

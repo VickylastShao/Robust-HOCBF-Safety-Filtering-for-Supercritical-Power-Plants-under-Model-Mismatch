@@ -14,7 +14,14 @@ _REGISTERED = False
 
 def _candidate_fonts() -> list[Path]:
     env_font = os.environ.get("TIMES_NEW_ROMAN_FONT")
+    env_font_dir = os.environ.get("TIMES_NEW_ROMAN_FONT_DIR")
     candidates = [Path(env_font)] if env_font else []
+    if env_font_dir:
+        font_dir = Path(env_font_dir)
+        candidates.extend(
+            font_dir / filename
+            for filename in ("times.ttf", "timesbd.ttf", "timesi.ttf", "timesbi.ttf")
+        )
     candidates.extend(
         [
             Path("/mnt/c/Windows/Fonts/times.ttf"),

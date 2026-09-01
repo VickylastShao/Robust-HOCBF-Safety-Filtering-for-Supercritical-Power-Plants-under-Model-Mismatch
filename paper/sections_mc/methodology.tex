@@ -3,23 +3,24 @@
 
 \subsection{Safety-Filter Workflow and Implementation Settings}
 
-Online operation has three steps: evaluate the GP residual model, build HOCBF rows with the correct relative degrees, and solve one QP to project the proposed deviation command. Offline commissioning supplies the residual data, GP coverage checks, and scalar margin factor $\epsilon_\kappa$. The theorem states the conditions under which the full implemented-margin endpoint yields continuous-time forward invariance. Section~\ref{sec:exp} then evaluates how much of that margin should be applied under each mismatch regime.
+Online operation has three steps: evaluate the GP residual model, build the command-level relative-degree-two HOCBF rows, and solve one QP to project the proposed deviation command. Offline commissioning supplies the residual data, GP coverage checks, and scalar margin factor $\epsilon_\kappa$. The theorem states the conditions under which the full implemented-margin endpoint yields continuous-time forward invariance. Section~\ref{sec:exp} then evaluates how much of that margin should be applied under each mismatch regime.
 
-Figure~\ref{fig:architecture} summarizes the overlay architecture. The upstream controller produces a deviation command $v_{\mathrm{prop}}$ around the LQR-stabilized equilibrium controller, and the safety filter returns the nearest admissible command $v^*$. The total actuator command is
+Figure~\ref{fig:architecture} summarizes the overlay architecture. The upstream controller produces a deviation command $v_{\mathrm{prop}}$ around the LQR-stabilized equilibrium controller, and the safety filter returns the nearest admissible command $v^*$. The normalized deviation command satisfies $v\in\mathcal{V}=[-1,1]^3$. With the physical per-cycle command scales $S_u=\operatorname{diag}(10,40,1)$, the total actuator command is
 \begin{equation}
-    u_k = u_0 + K(x_0-x_k) + v_k^* ,
+    u_k = u_0 + K(x_0-x_k) + S_u v_k^* ,
     \label{eq:deviation_control}
 \end{equation}
-where $u=[u_B,D_{fw},u_t]^\top$ denotes coal feed, feedwater flow, and turbine-valve opening. The HOCBF and QP are formulated in the deviation-input space. With $\xi=x-x_0$ and $A_K=A-BK$, the stabilized deviation model used to build the HOCBF rows is
+where $u=[u_B,D_{fw},u_t]^\top$ denotes coal-feed, feedwater-flow, and turbine-valve commands. The HOCBF and QP are formulated in normalized deviation coordinates. Let $A_d=\exp[(A-BK)T_s]$, $A_s=(A_d-I)/T_s$, and $B_s=BS_u$. The sample-matched affine surrogate used to build the benchmark HOCBF rows is
 \begin{equation}
-    \dot{\xi}=A_K\xi+Bv+\Delta f_\xi(\xi).
+    \dot{\xi}=A_s\xi+B_sv+\Delta f_\xi(\xi).
     \label{eq:stabilized_deviation_model}
 \end{equation}
+Its forward-Euler update is $\xi_{k+1}=A_d\xi_k+T_sB_sv_k+T_s\Delta f_\xi(\xi_k)$, which is the controller-instant transition used in the numerical rollouts. This construction preserves the continuous command-level relative degree induced by the actuator states. It is a benchmark surrogate rather than a sampled-data safety certificate.
 Table~\ref{tab:implementation_settings} lists the measurement, constraint, GP, QP, fallback, and runtime settings used in the benchmark and plant implementation.
 
 \begin{table}[htbp]
     \centering
-    \caption{Measurement/control variables and implementation settings used by the RoCBF-SF safety filter in the fifth-order CCS benchmark and plant implementation.}
+    \caption{Variables and implementation settings used by the RoCBF-SF safety filter in the actuator-augmented CCS benchmark and plant implementation.}
     \label{tab:implementation_settings}
     \small
     \renewcommand{\arraystretch}{0.98}
@@ -27,12 +28,12 @@ Table~\ref{tab:implementation_settings} lists the measurement, constraint, GP, Q
         \toprule
         Item & Setting & Role in the filter \\
         \midrule
-        Benchmark state & State vector $x=[r_B,p_m,h_m,N_e,\tau_f]^\top$ & Five-state nominal predictor used to construct the benchmark dynamics and HOCBF rows. \\
-        GP input/output & $x_k^{\mathrm{GP}}=[p_{m,k},h_{m,k},N_{e,k}]^\top$ and three residual rates & Measured constrained outputs used by both benchmark and plant GPs; all five states and three proposed controls remain inputs to the nominal one-step predictor. \\
-        Manipulated inputs & Input vector $u=[u_B,D_{fw},u_t]^\top$ & Coal feed, feedwater flow, and turbine valve opening; QP optimizes the deviation command $v$. \\
-        Pressure limit & Range 13--24\,MPa; relative degree $m=2$ & High-order pressure CBF with two $\psi$-levels. \\
-        Enthalpy limit & Range 2670--2830\,kJ/kg; relative degree $m=1$ & Active heat-absorption safety constraint. \\
-        Power tracking band & Band $N_{\mathrm{ref}}\pm50$\,MW; relative degree $m=1$ & Load-following and turbine-output safety constraint around the active dispatch target. \\
+        Benchmark state & $x=[r_B,p_m,h_m,N_e,\tau_f,D_{fw},u_t]^\top$ & Five process states from the reference model plus measured feedwater and valve actuator states. \\
+        GP input/output & $x_k^{\mathrm{GP}}=[p_{m,k},h_{m,k},N_{e,k}]^\top$ and three residual rates & Constrained outputs used by the residual GPs; all seven states and three proposed commands remain inputs to the nominal one-step predictor. \\
+        Manipulated inputs & $u=[u_B,D_{fw},u_t]^\top$; $S_u=\operatorname{diag}(10,40,1)$ & Physical commands are reconstructed from normalized $v\in[-1,1]^3$. \\
+        Main-steam pressure limit & $p_{\mathrm{st}}(x)\in[13,24]$\,MPa; relative degree $m=2$ & High-order pressure CBF with two $\psi$-levels. \\
+        Enthalpy limit & Range 2670--2830\,kJ/kg; relative degree $m=2$ & Actuator-augmented heat-absorption safety constraint. \\
+        Power tracking band & Band $N_{\mathrm{ref}}\pm50$\,MW; relative degree $m=2$ & Actuator-augmented generator-output constraint around the dispatch target. \\
         Sampling and hold & Controller period $T_s=1$\,s; zero-order hold & Online QP solved once per controller cycle; plant-validation exports use 5\,s record spacing. \\
         GP calibration & Three 500-point Mat\'{e}rn-5/2 residual GPs with frozen input/output standardization & Learns pressure, enthalpy, and power residual-rate means and posterior uncertainties; 200 time-isolated points are retained for validation. \\
         QP implementation & qpax, row scaling, box/rate constraints, $10^{-6}$ feasibility tolerance & Projects $v_{\mathrm{prop}}$ to the nearest admissible $v^*$ and rejects non-converged or infeasible candidates. \\
@@ -49,7 +50,7 @@ At each sampling instant, RoCBF-SF performs the following operations:
 \begin{enumerate}[label=\textbf{Step \arabic*:},leftmargin=*]
     \item Read $x_k$ and the proposed deviation action $v_{\mathrm{prop},k}$.
     \item Evaluate $\mu_{\mathrm{GP}}(x_k)$ and $\sigma_{\mathrm{GP}}(x_k)$.
-    \item Build mean-corrected HOCBF constraints with the correct relative degree.
+    \item Build the mean-corrected command-level relative-degree-two HOCBF constraints.
     \item Propagate GP uncertainty through the $\psi$-chain to compute $\sigmatotal(x_k)$.
     \item Solve the real-time QP
     \begin{equation}
@@ -58,18 +59,18 @@ At each sampling instant, RoCBF-SF performs the following operations:
         \label{eq:online_qp}
     \end{equation}
     where $\mathcal{V}$ is the deviation-input box induced by actuator limits. Row scaling is applied before the numerical solve and does not change the feasible set.
-    \item Apply $u_k=u_0+K(x_0-x_k)+v_k^*$ and log intervention, feasibility, and margin diagnostics.
+    \item Apply $u_k=u_0+K(x_0-x_k)+S_uv_k^*$ and log intervention, feasibility, and margin diagnostics.
 \end{enumerate}
 
 \paragraph{Notation summary.}
-The benchmark state is $x=[r_B,p_m,h_m,N_e,\tau_f]^\top$, and $\xi=x-x_0$ is the deviation state. The physical actuator command is $u$, while $v$ is the deviation input optimized by the safety filter. The upstream controller proposes $v_{\mathrm{prop},k}$, the QP returns $v_k^*$, and Eq.~\eqref{eq:deviation_control} maps $v_k^*$ back to the physical actuator command. The GP-mean-corrected HOCBF rows are written as $A(x)v\leq b(x)$ in deviation-input form; $A_0(x)v\leq b_0(x)$ is reserved for the no-GP nominal-model ablation. The term $\sigmatotal(x)$ is the compositional GP-HOCBF margin, and $\epsilon_\kappa$ is the commissioning factor multiplying that margin.
+The benchmark state is $x=[r_B,p_m,h_m,N_e,\tau_f,D_{fw},u_t]^\top$, and $\xi=x-x_0$ is the deviation state. The physical command is $u$, while $v$ is the normalized command deviation optimized by the safety filter. The upstream controller proposes $v_{\mathrm{prop},k}$, the QP returns $v_k^*$, and Eq.~\eqref{eq:deviation_control} maps $v_k^*$ back to the physical command. The GP-mean-corrected HOCBF rows are written as $A(x)v\leq b(x)$; $A_0(x)v\leq b_0(x)$ is reserved for the no-GP nominal-model ablation. The term $\sigmatotal(x)$ is the compositional GP-HOCBF margin, and $\epsilon_\kappa$ is the commissioning factor multiplying that margin.
 
 Both the benchmark and plant implementations use the measured-output vector
 \begin{equation}
     x_k^{\mathrm{GP}}=[p_{m,k},h_{m,k},N_{e,k}]^\top .
     \label{eq:gp_input_vector}
 \end{equation}
-Three independent GPs model the corresponding one-step nominal-model residual rates. The benchmark target is $(x_{k+1,J_{\mathrm{GP}}}-\hat{x}^{\mathrm{nom}}_{k+1|k,J_{\mathrm{GP}}})/T_s$, where $J_{\mathrm{GP}}=\{p_m,h_m,N_e\}$. The full nominal predictor uses all five states and all three control deviations; fuel, feedwater, and turbine-valve commands are therefore represented in the nominal prediction but are not direct kernel inputs.
+Three independent GPs model the corresponding one-step nominal-model residual rates. The benchmark target is $(x_{k+1,J_{\mathrm{GP}}}-\hat{x}^{\mathrm{nom}}_{k+1|k,J_{\mathrm{GP}}})/T_s$, where $J_{\mathrm{GP}}=\{p_m,h_m,N_e\}$. The full nominal predictor uses all seven states and all three command deviations; commands are therefore represented in the nominal prediction but are not direct kernel inputs.
 
 \paragraph{Operating-point interpretation.}
 RoCBF-SF denotes the complete safety-filter design in Fig.~\ref{fig:architecture}: correct-relative-degree HOCBF rows, GP residual mean correction, compositional uncertainty propagation, QP projection, and tunable $\epsilon_\kappa$. The upstream controller may be classical or learned; the experiments evaluate the downstream filter contribution rather than the upstream controller. Experimental rows labelled GP-HOCBF and RoCBF-SF are fixed operating points or ablations. Thus, $\epsilon_\kappa=0$ tests mean correction alone, $\epsilon_\kappa=1$ tests the full implemented margin, and Section~\ref{sec:kappa} selects and evaluates the calibrated benchmark operating point.
@@ -83,13 +84,13 @@ Consider a control-affine system with model mismatch:
 \end{equation}
 where $\Deltaf$ represents unmodeled dynamics, parameter drift, and external disturbances. The formal certificate assumes a known input matrix ($\Delta g=0$), so the GP learns drift residuals rather than uniform actuator-gain uncertainty.
 
-The six scalar safety barriers used in the benchmark are
+The benchmark pressure output is $p_{\mathrm{st}}(x)=p_m-0.13p_m^{0.882}$. The six scalar safety barriers are
 \begin{align}
-    h_{p,L}(x)&=p_m-13,\quad h_{p,U}(x)=24-p_m, \nonumber\\
+    h_{p,L}(x)&=p_{\mathrm{st}}(x)-13,\quad h_{p,U}(x)=24-p_{\mathrm{st}}(x), \nonumber\\
     h_{h,L}(x)&=h_m-2670,\quad h_{h,U}(x)=2830-h_m, \label{eq:barriers}\\
     h_{N,L}(x)&=N_e-(N_{\mathrm{ref}}-50),\quad h_{N,U}(x)=N_{\mathrm{ref}}+50-N_e. \nonumber
 \end{align}
-Pressure barriers use relative degree two, while separator-enthalpy and power barriers use relative degree one.
+The five process states of the reference model are augmented with first-order feedwater and turbine-valve states, identified as 15 and 6\,s from two unsaturated controller-export windows; the existing 30\,s fuel-transport state is retained. With controller commands as inputs, all six barriers have relative degree two. This removes the direct-command artifact that would otherwise make separator enthalpy and power relative degree one.
 
 For a constraint $h(x) \geq 0$ with relative degree $m$, the HOCBF $\psi$-chain is:
 \begin{equation}
@@ -104,12 +105,12 @@ For the six barriers indexed by $c$, with relative degree $m_c$, define the recu
     \calC=\bigcap_{c=1}^{6}\bigcap_{i=0}^{m_c-1}\mathcal{C}_{c,i}.
     \label{eq:hocbf_safe_set}
 \end{equation}
-With linear $\alpha_i(r)=k_i r$, substituting Eq.~\eqref{eq:deviation_control} into the stabilized model gives a top-level affine row. For the GP-mean-corrected drift $\fhat=f_0+\muGP$, this row is defined by $\hat{\psi}_{c,m_c}^0(x,v)=b_c(x)-A_c(x)v$ and is stacked as $A(x)v\leq b(x)$. Applying the same construction to $f_0$ without GP correction gives $A_0(x)v\leq b_0(x)$, which is used only for the no-GP ablation. This convention preserves the bookkeeping between pressure ($m=2$) and enthalpy/power ($m=1$) constraints while keeping the QP decision variable equal to $v$.
+With linear $\alpha_i(r)=k_i r$, substituting Eq.~\eqref{eq:deviation_control} into the stabilized model gives a top-level affine row. For the GP-mean-corrected drift $\fhat=f_0+\muGP$, this row is defined by $\hat{\psi}_{c,m_c}^0(x,v)=b_c(x)-A_c(x)v$ and is stacked as $A(x)v\leq b(x)$. Applying the same construction to $f_0$ without GP correction gives $A_0(x)v\leq b_0(x)$, which is used only for the no-GP ablation. This convention keeps all six command-level relative-degree-two rows and the normalized QP decision variable $v$ in the same coordinates.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.00\textwidth]{figures/Figure_1.pdf}
-    \caption{RoCBF-SF safety-filtering architecture. The upstream controller (LQR, MPC, PID, or learned policy) proposes a deviation command $v_{\mathrm{prop}}$. The filter evaluates that command against current plant measurements and the GP residual model, then projects it to the nearest QP-admissible deviation command $v^*$ under the selected margin through $A(x)v \leq b(x)-\epsilon_\kappa\sigmatotal(x)$. The physical actuator command is then reconstructed by Eq.~\eqref{eq:deviation_control}.}
+    \caption{RoCBF-SF safety-filtering architecture. The upstream controller (LQR, MPC, PID, or learned policy) proposes a normalized deviation command $v_{\mathrm{prop}}$. The filter evaluates that command against current plant measurements and the GP residual model, then projects it to the nearest QP-admissible deviation command $v^*$ under $A(x)v \leq b(x)-\epsilon_\kappa\sigmatotal(x)$. The physical command is reconstructed with $S_u$ by Eq.~\eqref{eq:deviation_control}.}
     \label{fig:architecture}
 \end{figure}
 
@@ -147,21 +148,21 @@ The compositional margin is constructed as:
 \end{subequations}
 The three margin relations above define the quantity scaled by $\epsilon_\kappa$ in the online QP. For the formal result, $\|L_{\fhat}\|_{\mathrm{op}}$ is a uniform operating-set bound and $\sigma_{\mathrm{cross}}^{(i)}$ must bound $|L_{\Delta\hat f}\delta_{i-1}|$; Lemma~S1 gives a sufficient derivative-bound construction. The numerical implementation uses the nominal stabilized drift in the uncertainty recursion and the commissioning proxy $\sigma_{\mathrm{cross,comm}}^{(i)}(x)=\beta_{\mathrm{comm}}\|\nabla\hat{\psi}_{i-1}^0(x)\|_2\|\sigmaGP(x)\|_2$. In the linear stabilized benchmark, the nominal drift-Jacobian norm is global. For a nonlinear deployment, an equilibrium Jacobian is only a local engineering estimate. Neither the proxy cross term nor a local Jacobian estimate is automatically a certificate bound; Assumption~\ref{ass:residual_bound} states the additional dominance condition required by Theorem~\ref{thm:1}. The control-coupling term is
 \begin{equation}
-    \sigma_{\mathrm{ctrl}}(x)=\beta\sum_j\left|\frac{\partial(L_gL_{\fhat}^{m-1}h)}{\partial x_j}\right|\sigmaGPj{j}(x)u_{\max},
+    \sigma_{\mathrm{ctrl}}(x)=\beta v_{\max}\sum_j\left\|\frac{\partial(L_{g_v}L_{\fhat}^{m-1}h)}{\partial x_j}\right\|_2\sigmaGPj{j}(x),
     \label{eq:sigma_ctrl_main}
 \end{equation}
-where $u_{\max}=\sup_{u\in\calU}\|u\|$. The chain weights are $c_j=\prod_{\ell=j+1}^{m-1}(\|L_{\fhat}\|_{\mathrm{op}}+k_\ell)$, with the empty product equal to one; thus $c_1=1$ for the pressure barriers with $m=2$. The resulting mean-corrected HOCBF constraint is $A(x)v \leq b(x)-\epsilonKappa\sigmatotal(x)$.
+where $g_v=g_0S_u$ and $v_{\max}=\sup_{v\in\mathcal V}\|v\|_2=\sqrt{3}$. The chain weights are $c_j=\prod_{\ell=j+1}^{m-1}(\|L_{\fhat}\|_{\mathrm{op}}+k_\ell)$, with the empty product equal to one; hence $c_1=1$ for each implemented $m=2$ barrier. The resulting mean-corrected HOCBF constraint is $A(x)v \leq b(x)-\epsilonKappa\sigmatotal(x)$.
 
 \subsection{Commissioning Factor and Implementation Boundary}
 
 \begin{assumption}[Operating set and relative degree]
 \label{ass:operating_set}
-The state remains in a compact operating set $\calX_{\mathrm{op}}\subset\calX$, the barriers in Eq.~\eqref{eq:barriers} are continuously differentiable to the required HOCBF order, and their relative degrees are known on $\calX_{\mathrm{op}}$.
+The state remains in a compact operating set $\calX_{\mathrm{op}}\subset\calX$. The true and mean-corrected drifts, input vector fields, GP posterior functions, and barrier functions are locally Lipschitz and continuously differentiable to the order required by the HOCBF recursion. Relative degree is constant on $\calX_{\mathrm{op}}$. The full-row QP has a unique solution whose feedback selection is locally Lipschitz on the certified set, so the closed-loop differential equation admits a unique Carath\'{e}odory solution.
 \end{assumption}
 
 \begin{assumption}[Drift-residual GP event]
 \label{ass:gp_event}
-The input matrix is exact ($\Delta g=0$). For the $q=3$ modeled residual outputs $J_{\mathrm{GP}}=\{p_m,h_m,N_e\}$, Eq.~\eqref{eq:gp_bound} holds simultaneously over $\calX_{\mathrm{op}}$ with probability at least $1-\delta$. This event may be established from valid RKHS and noise bounds or another justified uniform-error result; the commissioning multiplier $\beta_{\mathrm{comm}}$ alone is not such a proof. Residuals in the unmodeled $r_B$ and $\tau_f$ rows are zero in the drift-only benchmark or are otherwise covered by Assumption~\ref{ass:residual_bound}.
+The input matrix is exact ($\Delta g=0$). For the $q=3$ modeled residual outputs $J_{\mathrm{GP}}=\{p_m,h_m,N_e\}$, Eq.~\eqref{eq:gp_bound} holds simultaneously over $\calX_{\mathrm{op}}$ with probability at least $1-\delta$. This event may be established from valid RKHS and noise bounds or another justified uniform-error result; the commissioning multiplier $\beta_{\mathrm{comm}}$ alone is not such a proof. Residuals in the unmodeled $r_B$, $\tau_f$, $D_{fw}$, and $u_t$ rows are zero in the drift-only benchmark or are otherwise covered by Assumption~\ref{ass:residual_bound}.
 \end{assumption}
 
 \begin{assumption}[Compositional residual bound]

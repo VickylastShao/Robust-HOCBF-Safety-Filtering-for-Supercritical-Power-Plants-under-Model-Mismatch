@@ -1,0 +1,195 @@
+{
+  "analysis": "one_to_one_load_matched_two_hour_historian_windows",
+  "timezone": "Asia/Shanghai",
+  "sampling_interval_s": 300,
+  "window_samples": 24,
+  "window_duration_min": 120,
+  "window_step_min": 30,
+  "loaded_gate": "all 24 load samples in [195,700] MW",
+  "matching": {
+    "optimizer": "scipy.optimize.linear_sum_assignment",
+    "without_replacement": true,
+    "calipers": {
+      "load_mean_diff_mw": 10.0,
+      "load_profile_rmse_mw": 30.0,
+      "load_range_diff_mw": 40.0,
+      "fuel_per_load_diff": 0.08
+    }
+  },
+  "source": {
+    "pre_files": [
+      {
+        "basename": "202401.json",
+        "sha256": "a7216d5d13e4ea94e86336dfe584106efabff908f009586f588a8b45729811b4"
+      },
+      {
+        "basename": "202402.json",
+        "sha256": "0d04c7fb8f4e66e737c803946395274ee913015305536b7bb144c5b633ba1e0e"
+      },
+      {
+        "basename": "202403.json",
+        "sha256": "2bda3b7d6106cae39b289753f9f05978ef003778b08c3898089f201911ea2ba4"
+      },
+      {
+        "basename": "202404.json",
+        "sha256": "560c931341e44edb8f3818a50ba81ad896de58df2c87a676aa724845f155f967"
+      },
+      {
+        "basename": "202405.json",
+        "sha256": "cbe15ee59b52f83541a03bf7ec892267377dee220e949ca8324b0aeafe779ade"
+      },
+      {
+        "basename": "202406.json",
+        "sha256": "b9a6515861d037276f3cd45892224be884033d22128a135a527d236522ef8239"
+      },
+      {
+        "basename": "202407.json",
+        "sha256": "4f84b7af2604bba2f13296374ec10076624002e67d83703f304e50773e306625"
+      },
+      {
+        "basename": "202408.json",
+        "sha256": "a3d07abceb00bef116b18814320a0ff617399e68645948b7b21d727615eb232d"
+      },
+      {
+        "basename": "202409.json",
+        "sha256": "d32164473a3bde0bd2b382c5d550f5e2603a3eedf7dc5f7803f079046bc18454"
+      },
+      {
+        "basename": "202410.json",
+        "sha256": "0ebb6249efe77ea5990531d774a33266c126320b7b8b4ab19e04d7e3613aa044"
+      },
+      {
+        "basename": "202411.json",
+        "sha256": "e77eefb141ef6bbbfeda149f86bd8d0070f1c85366b320816f0c23e921e0e320"
+      },
+      {
+        "basename": "202412.json",
+        "sha256": "ceae17291db0b2ac8574f49eb4cc98ead3b8578921fb34436d03a063370415db"
+      },
+      {
+        "basename": "202501.json",
+        "sha256": "5e85f3a3263869eed350f2218b6d4b40d093babbb4f73e7885336a468c2e5fa0"
+      },
+      {
+        "basename": "202502.json",
+        "sha256": "e7e8d4f1683abe2011b3db018635af531e89e5d4d0a57f76de425da6ab313372"
+      },
+      {
+        "basename": "202503.json",
+        "sha256": "bc70b17d2cc0d0c89a8d92a664494602df0dca03457ee3016f321fc0c8c80d5a"
+      },
+      {
+        "basename": "202504.json",
+        "sha256": "28d07d4484fcc4d08c26baa9d566355a874e3c90b0a713f05b367ed3c2214d0b"
+      },
+      {
+        "basename": "202505.json",
+        "sha256": "4ea15a424da8aab0203b2bc24fc48ef0199ccda072c7b4fcc47a3e5697e596d9"
+      },
+      {
+        "basename": "202506.json",
+        "sha256": "994c7491671180d795088266a7ce0ac5016237daffc4e8b766637f4d51e29915"
+      },
+      {
+        "basename": "202507.json",
+        "sha256": "324383b56fa6c3865c05c1477a8ccd419de0459f6ba83cdaacccaf06dd743f72"
+      },
+      {
+        "basename": "202508.json",
+        "sha256": "1b6ff9c8a6477c7d08a5ef4ad16c9ed77bab3b23db39c962c6ab417c743b78b4"
+      },
+      {
+        "basename": "202509.json",
+        "sha256": "9e3ad45eea4400c5c5e94ff5c232e3dffd2855c4115f306290ea569880563fb2"
+      },
+      {
+        "basename": "202510.json",
+        "sha256": "6838bcfce7fd28aa458150a5acfe782813ccbbb878d3b50b839d4bb5014b8e3b"
+      },
+      {
+        "basename": "202511.json",
+        "sha256": "1b06a703c8c4885b247527e201782805533fc6d379516dc1ce92619a32d8fa0d"
+      },
+      {
+        "basename": "202512.json",
+        "sha256": "d108469804d200680d89b10a65fb458030864ada78f0f2a4521a8abf0d31b395"
+      }
+    ],
+    "post_file": {
+      "basename": "rocbf_cohort_post_300s.json",
+      "sha256": "8b3247bb5759cbc6c4a1eb4f4c8c66b8691ba8c5bdccd5917c287cab45b94c7b"
+    },
+    "raw_files_public": false
+  },
+  "counts": {
+    "pre_samples": 210528,
+    "post_samples": 3168,
+    "pre_loaded_candidate_windows": 14675,
+    "post_loaded_candidate_windows": 517,
+    "matched_pairs": 512,
+    "unique_pre_days": 193,
+    "unique_post_days": 11
+  },
+  "match_quality": {
+    "load_mean_diff_mw": {
+      "median": 1.3215945833333507,
+      "p95": 5.07210185416664,
+      "max": 8.689101666666659
+    },
+    "load_profile_rmse_mw": {
+      "median": 15.367907821993928,
+      "p95": 26.63910409643638,
+      "max": 29.69724751887173
+    },
+    "load_range_diff_mw": {
+      "median": 5.23984999999999,
+      "p95": 21.276667499999952,
+      "max": 30.459059999999965
+    },
+    "fuel_per_load_diff": {
+      "median": 0.011504363105794224,
+      "p95": 0.03714552794452802,
+      "max": 0.06953847344933628
+    }
+  },
+  "metrics": {
+    "pressure_residual_std_mpa": {
+      "pre_median": 0.5225786771363228,
+      "post_median": 0.50205714724669,
+      "reduction_fraction": 0.039269742122064,
+      "pair_fraction_improved": 0.552734375,
+      "median_paired_improvement_mpa": 0.024079834593303928,
+      "bootstrap": {
+        "cluster": "post_day_local",
+        "cluster_count": 11,
+        "replicates": 10000,
+        "seed": 20260902,
+        "interval_type": "descriptive_post_day_cluster_bootstrap",
+        "ci95": [
+          -0.12986911975191812,
+          0.1465476328205737
+        ]
+      }
+    },
+    "pressure_residual_abs_p95_mpa": {
+      "pre_median": 1.0821194000000007,
+      "post_median": 1.0854136624999993,
+      "reduction_fraction": -0.0030442689595977417,
+      "pair_fraction_improved": 0.591796875,
+      "median_paired_improvement_mpa": 0.0850945000000018,
+      "bootstrap": {
+        "cluster": "post_day_local",
+        "cluster_count": 11,
+        "replicates": 10000,
+        "seed": 20260902,
+        "interval_type": "descriptive_post_day_cluster_bootstrap",
+        "ci95": [
+          -0.09369079858332516,
+          0.13148228216260846
+        ]
+      }
+    }
+  },
+  "dependence_note": "Two-hour windows advance every 30 minutes and therefore overlap. The cohort metrics and post-day cluster bootstrap are descriptive; matched pairs are not treated as independent randomized units.",
+  "derived_pairs_sha256": "27488a57d55e7c4b51e0589bd351ae980e6a721852061e66b1a193d78ede62c2"
+}

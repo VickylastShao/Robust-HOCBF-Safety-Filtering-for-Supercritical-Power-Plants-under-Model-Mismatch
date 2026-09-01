@@ -202,3 +202,22 @@ class CCSConstraints5th:
         """Check if any constraint is violated (h < 0)."""
         vals = self.check_all(x)
         return any(v < 0 for v in vals.values())
+
+
+class CCSConstraints7th(CCSConstraints5th):
+    """Constraints for the actuator-augmented seven-state benchmark.
+
+    Controller commands first drive the fuel-transport, feedwater-actuator,
+    and turbine-valve states.  Consequently all six reported output barriers
+    have relative degree two with respect to the command input.
+    """
+
+    def get_hocbf_constraints(self):
+        return [
+            (self.h_pressure_high, 2),
+            (self.h_pressure_low, 2),
+            (self.h_enthalpy_high, 2),
+            (self.h_enthalpy_low, 2),
+            (self.h_power_high, 2),
+            (self.h_power_low, 2),
+        ]

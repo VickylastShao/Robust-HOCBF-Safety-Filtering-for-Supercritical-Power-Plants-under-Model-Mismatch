@@ -285,4 +285,6 @@ python3 "$ROOT/scripts/postprocess_mc_docx.py" "$OUT" \
   --source-tex "$SOURCE" \
   --mode "$DOCX_MODE"
 
+python3 "$ROOT/scripts/clean_docx_metadata.py" "$OUT"
+
 echo "Wrote $OUT"

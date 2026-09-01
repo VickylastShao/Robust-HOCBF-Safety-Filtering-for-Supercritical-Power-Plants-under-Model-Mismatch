@@ -951,6 +951,26 @@ def ensure_tcpr(tc: ET.Element) -> ET.Element:
     return tcpr
 
 
+def ensure_trpr(tr: ET.Element) -> ET.Element:
+    trpr = tr.find("w:trPr", NS)
+    if trpr is None:
+        trpr = ET.Element(w("trPr"))
+        tr.insert(0, trpr)
+    return trpr
+
+
+def prevent_row_split(tr: ET.Element) -> None:
+    trpr = ensure_trpr(tr)
+    if trpr.find("w:cantSplit", NS) is None:
+        trpr.append(ET.Element(w("cantSplit")))
+
+
+def mark_header_row(tr: ET.Element) -> None:
+    trpr = ensure_trpr(tr)
+    if trpr.find("w:tblHeader", NS) is None:
+        trpr.append(ET.Element(w("tblHeader")))
+
+
 def is_equation_table(tbl: ET.Element) -> bool:
     description = tbl.find("w:tblPr/w:tblDescription", NS)
     return description is not None and description.get(wattr("val")) == "EquationNumbering"
@@ -968,45 +988,41 @@ ARTICLE_TABLE_WIDTHS: dict[int, list[str]] = {
     # Total width is 8500 DXA, matching the equation table and A4 text block.
     1: ["2200", "2200", "4100"],
     2: ["2800", "815", "815", "815", "815", "815", "815", "810"],
-    3: ["2150", "1800", "950", "1450", "1300", "850"],
-    4: ["1800", "1675", "1675", "1675", "1675"],
-    5: ["1600", "850", "2000", "1400", "2650"],
-    6: ["850", "1200", "1050", "1100", "1250", "820", "1030", "1200"],
-    7: ["1050", "1750", "3200", "2500"],
+    3: ["2800", "1600", "1400", "1400", "1300"],
+    4: ["600", "1450", "900", "1050", "1050", "1000", "1550", "900"],
+    5: ["1200", "1700", "3400", "2200"],
 }
 
 
 ARTICLE_TABLE_LEFT_COLUMNS: dict[int, set[int]] = {
     1: {0, 1, 2},
     2: {0},
-    3: {0, 1, 3},
-    4: {0},
-    5: {2, 4},
-    6: {0, 1, 7},
-    7: {0, 1, 2, 3},
+    3: {0},
+    4: {0, 1, 6},
+    5: {0, 1, 2, 3},
 }
 
 
 SUPPLEMENT_TABLE_WIDTHS: dict[int, list[str]] = {
     # Supplemental tables use the same 8500 DXA text block but different columns.
-    1: ["1850", "1300", "520", "780", "950", "1200", "1000", "900"],
-    2: ["2200", "1500", "4800"],
-    3: ["900", "2150", "1650", "1750", "2050"],
-    4: ["1700", "1360", "1360", "1360", "1360", "1360"],
-    5: ["1850", "1330", "1330", "1330", "1330", "1330"],
-    6: ["1750", "1750", "1750", "1650", "1600"],
-    7: ["2400", "2100", "2300", "1700"],
+    1: ["3300", "1750", "1750", "1700"],
+    2: ["850", "1650", "1300", "1800", "1400", "1500"],
+    3: ["3100", "2700", "2700"],
+    4: ["650", "1100", "1100", "1250", "1550", "1450", "1400"],
+    5: ["1900", "2800", "3800"],
+    6: ["2500", "1800", "1800", "2400"],
+    7: ["650", "1250", "1100", "1100", "1150", "1900", "1350"],
 }
 
 
 SUPPLEMENT_TABLE_LEFT_COLUMNS: dict[int, set[int]] = {
-    1: {0, 1},
-    2: {0, 1, 2},
-    3: {0, 1},
-    4: {0},
-    5: {0},
+    1: {0},
+    2: set(),
+    3: set(),
+    4: set(),
+    5: {0, 1, 2},
     6: {0},
-    7: {0},
+    7: {0, 5},
 }
 
 
@@ -1148,6 +1164,9 @@ def format_tables_booktabs(body: ET.Element, mode: str = "main") -> None:
 
         rows = tbl.findall("w:tr", NS)
         for row_idx, tr in enumerate(rows):
+            prevent_row_split(tr)
+            if row_idx == 0:
+                mark_header_row(tr)
             for tc in tr.findall("w:tc", NS):
                 tcpr = ensure_tcpr(tc)
                 tc_borders = tcpr.find("w:tcBorders", NS)

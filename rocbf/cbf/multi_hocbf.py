@@ -90,7 +90,7 @@ class MultiConstraintRobustHOCBF:
                     k_gains=list(hocbf.k_gains),
                     gp_residual=hocbf.gp_residual,
                     epsilon_constant=eps_val,
-                    u_max=hocbf.u_max,
+                    u_max=hocbf.control_norm_bound,
                     op_norm_estimate=hocbf.op_norm_estimate,
                     u0=hocbf.u0,
                     epsilon_kappa=hocbf.epsilon_kappa,

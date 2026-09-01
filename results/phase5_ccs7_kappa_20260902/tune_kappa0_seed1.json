@@ -1,0 +1,146 @@
+{
+  "experiment": "commissioning_kappa_tune_test",
+  "stage": "tune",
+  "seed": 1,
+  "epsilon_kappa": 0.0,
+  "training_pool_size": 1000,
+  "training_sample_size": 500,
+  "validation_size": 200,
+  "load_ratio": 0.66,
+  "scenario_scale": 0.35,
+  "selection": "deterministic_farthest_point_in_frozen_z_space",
+  "prediction": {
+    "fit_time_s": 7.582404587417841,
+    "rmse_physical": [
+      4.6677122954064194e-05,
+      1.8895993600450866e-05,
+      0.0
+    ],
+    "nrmse_by_validation_sd": [
+      0.0007803306846386901,
+      0.0003446779593148542,
+      0.0
+    ],
+    "predictive_interval_95_coverage": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean_posterior_std": [
+      0.010003160822886386,
+      0.010002373682417263,
+      0.01000000000000088
+    ],
+    "input_mean": [
+      14.474781414526618,
+      2733.8688917713816,
+      659.133541786093
+    ],
+    "input_std": [
+      0.37025050676143495,
+      0.6616370170221308,
+      0.07946865034200815
+    ]
+  },
+  "closed_loop": {
+    "method": "rocbf_mean",
+    "method_label": "RoCBF-SF mean-only",
+    "condition": "s3_coupled",
+    "condition_label": "S3:Coupled",
+    "seed": 1,
+    "rollout_mode": "drift_only_delta_g0",
+    "benchmark_model": "seven_state_actuator_augmented_ccs",
+    "state_order": 7,
+    "barrier_relative_degrees": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "actuator_time_constants_s": {
+      "feedwater": 15.0,
+      "turbine_valve": 6.0
+    },
+    "input_matrix_assumption": "delta_g_equals_zero",
+    "load_ratio": 0.66,
+    "power_target_mw": 660.0,
+    "scenario_scale": 0.35,
+    "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+    "initial_state_set": "intersection_of_h_ge_1_and_true_drift_psi1_ge_0",
+    "initialization_oracle_used_by_controller": false,
+    "deviation_component_bound": 1.0,
+    "deviation_coordinates": "normalized_command_deviation",
+    "physical_command_scale": [
+      10.0,
+      40.0,
+      1.0
+    ],
+    "deviation_l2_norm_bound": 1.7320508075688772,
+    "robust_margin_control_bound_semantics": "sup_v_in_V_l2_norm",
+    "violation_tolerance_raw_margin": 0.01,
+    "n_episodes": 10,
+    "n_steps": 500,
+    "n_pretrain": 500,
+    "violation_rate": [
+      0.0,
+      0.0
+    ],
+    "cbf_violation_rate": [
+      0.0,
+      0.0
+    ],
+    "violation_count": 0,
+    "total_samples": 5000,
+    "cumulative_reward": [
+      -6028.215464881713,
+      49.91706720085103
+    ],
+    "control_cost": [
+      93.18748136478948,
+      8.227302075662042
+    ],
+    "min_barrier_value": [
+      -1.9407996884801547e-05,
+      2.362331313161356e-05
+    ],
+    "online_time_ms": [
+      5.9990278267301616,
+      1.3159647637483889
+    ],
+    "qp_intervention_rate": 0.407,
+    "qp_attempt_count": 5000,
+    "qp_infeasible_count": 0,
+    "qp_infeasible_rate": 0.0,
+    "qp_fallback_count": 0,
+    "qp_fallback_rate": 0.0,
+    "max_normalized_qp_residual": 0.0,
+    "weak_authority_row_drop_enabled": false,
+    "qp_backend": "qpax",
+    "jax_precision": "float64",
+    "qpax_algorithm": "implicit_pdip",
+    "qpax_solver_tolerance": 1e-06,
+    "qpax_max_iterations": 100,
+    "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+    "nmpc_configuration": null,
+    "epsilon_kappa": 0.0,
+    "per_constraint_type": {
+      "pressure": {
+        "violation_rate": 0.0,
+        "violation_count": 0,
+        "total_steps": 5000
+      },
+      "enthalpy": {
+        "violation_rate": 0.0,
+        "violation_count": 0,
+        "total_steps": 5000
+      },
+      "power": {
+        "violation_rate": 0.0,
+        "violation_count": 0,
+        "total_steps": 5000
+      }
+    }
+  }
+}

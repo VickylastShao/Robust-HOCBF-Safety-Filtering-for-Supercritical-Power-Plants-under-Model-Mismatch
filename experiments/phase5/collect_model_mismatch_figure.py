@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parents[2]
 RESULTS_DIR = ROOT / "results" / "phase5"
 OUT_JSON = RESULTS_DIR / "model_mismatch_diagnostic.json"
 
-LOAD_RATIO = 1.0
+LOAD_RATIO = 0.66
+SCENARIO_SCALE = 0.35
 N_STEPS = 300
 H_LOW = 2670.0
 H_HIGH = 2830.0
@@ -76,33 +77,35 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
     import jax.numpy as jnp
     import numpy as np
 
-    from envs.ccs.constraints import CCSConstraints5th
-    from envs.ccs.dynamics import UncertainUSCCSDynamics5th, USCCSDynamics5th
-    from experiments.phase5.common_5th import GP_STATE_IDX
-    from experiments.phase5.methods_5th import _pretrain_gp_5th
+    from envs.ccs.constraints import CCSConstraints7th
+    from envs.ccs.dynamics import UncertainUSCCSDynamics7th, USCCSDynamics7th
+    from experiments.phase5.common_7th import GP_STATE_INDICES
+    from experiments.phase5.methods_7th import _pretrain_gp_7th
     from rocbf.gp.gp_residual import GPResidual
 
     t0 = time.perf_counter()
-    nominal = USCCSDynamics5th(load_ratio=LOAD_RATIO)
-    true_env = UncertainUSCCSDynamics5th(
+    nominal = USCCSDynamics7th(load_ratio=LOAD_RATIO)
+    true_env = UncertainUSCCSDynamics7th(
         load_ratio=LOAD_RATIO,
         uncertainty_scenario="coupled",
+        scenario_scale=SCENARIO_SCALE,
     )
-    constraint = CCSConstraints5th(
+    constraint = CCSConstraints7th(
         p_bounds=(13.0, 24.0),
         h_bounds=(H_LOW, H_HIGH),
         power_deviation=50.0,
-        power_target=1000.0,
+        power_target=660.0,
     )
     x0, _ = nominal.equilibrium(LOAD_RATIO)
 
     print("Pretraining scenario-specific S3 GP for mismatch diagnostic...", flush=True)
-    gp = _pretrain_gp_5th(
+    gp = _pretrain_gp_7th(
         LOAD_RATIO,
         n_pretrain=GP_PRETRAIN_POINTS,
         key=jax.random.key(GP_SEED),
         scenario="coupled",
         scenario_specific=True,
+        scenario_scale=SCENARIO_SCALE,
     )
     beta = float(
         GPResidual.compute_beta(
@@ -119,6 +122,8 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
             "h_m": [float(x0[2])],
             "N_e": [float(x0[3])],
             "tau_f": [float(x0[4])],
+            "D_fw": [float(x0[5])],
+            "u_t": [float(x0[6])],
         },
         "outputs_true": {
             "pressure_mpa": [float(true_env.output(x0)[0])],
@@ -180,10 +185,11 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
         y_nom = nominal.output(x_nom_next)
         y_true = true_env.output(x_true_next)
         residual_realized = (
-            x_true_next[GP_STATE_IDX] - x_nom_next[GP_STATE_IDX]
+            x_true_next[jnp.asarray(GP_STATE_INDICES)]
+            - x_nom_next[jnp.asarray(GP_STATE_INDICES)]
         ) / nominal.dt
-        delta_f = true_env.delta_f(x)[GP_STATE_IDX]
-        mu, sigma = gp.predict(x[GP_STATE_IDX])
+        delta_f = true_env.delta_f(x)[jnp.asarray(GP_STATE_INDICES)]
+        mu, sigma = gp.predict(x[jnp.asarray(GP_STATE_INDICES)])
         bound = beta * sigma
         normalized_error = jnp.abs(residual_realized - mu) / jnp.maximum(bound, 1e-12)
 
@@ -210,6 +216,8 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
         record["state"]["h_m"].append(float(x[2]))
         record["state"]["N_e"].append(float(x[3]))
         record["state"]["tau_f"].append(float(x[4]))
+        record["state"]["D_fw"].append(float(x[5]))
+        record["state"]["u_t"].append(float(x[6]))
         outputs = true_env.output(x)
         record["outputs_true"]["pressure_mpa"].append(float(outputs[0]))
         record["outputs_true"]["enthalpy_kj_kg"].append(float(outputs[1]))
@@ -250,6 +258,9 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
             "input_matrix_assumption": "delta_g_equals_zero",
             "gp_state_vector": "[p_m,h_m,N_e] residual rates",
             "load_ratio": LOAD_RATIO,
+            "scenario_scale": SCENARIO_SCALE,
+            "benchmark_model": "seven_state_actuator_augmented_ccs",
+            "barrier_relative_degrees": [2, 2, 2, 2, 2, 2],
             "n_steps": n_steps,
             "dt_sec": float(nominal.dt),
             "time_state_s": list(range(n_steps + 1)),
@@ -262,7 +273,7 @@ def collect(*, n_steps: int = N_STEPS, force: bool = False) -> dict:
             "bounds": {
                 "pressure_mpa": [13.0, 24.0],
                 "enthalpy_kj_kg": [H_LOW, H_HIGH],
-                "power_mw": [950.0, 1050.0],
+                "power_mw": [610.0, 710.0],
             },
             "coverage": coverage,
             "enthalpy_violation_pct": float(100.0 * violations.mean()),

@@ -10,22 +10,21 @@ All benchmark violation rates are evaluated at the native 1\,s controller instan
 
 \begin{table}[htbp]
     \centering
-    \caption{Count-level S3 diagnostics for the primary $\Delta g=0$ validation. Each row aggregates five 500-sample rollouts. A rejected QP is non-converged, non-finite, or has maximum normalized primal residual above $10^{-6}$.}
+    \caption{Count-level S3 diagnostics for the primary $\Delta g=0$ validation. Each row aggregates 50 independent 500-sample rollouts. A rejected QP is non-converged, non-finite, or has maximum normalized primal residual above $10^{-6}$.}
     \label{tab:S_primary_s3}
     \small
     \begin{tabular}{>{\raggedright\arraybackslash}p{0.34\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}}
         \toprule
         Method & Violating samples & QP rejected & QP intervention \\
         \midrule
-        HOCBF, no GP & 1682/2500 & 0/2500 & 4.48\% \\
-        GP-HOCBF, $\epsilon_\kappa=0$ & 36/2500 & 0/2500 & 67.08\% \\
-        RoCBF-SF, $\epsilon_\kappa=0.02$ & 0/2500 & 4/2500 & 67.12\% \\
-        Full implemented-margin endpoint, $\epsilon_\kappa=1$ & 419/2500 & 628/2500 & 51.12\% \\
+        HOCBF, no GP & 9798/25{,}000 & 0/25{,}000 & 0.00\% \\
+        RoCBF-SF tune-selected, $\epsilon_\kappa=0$ & 0/25{,}000 & 0/25{,}000 & 41.32\% \\
+        Full implemented-margin endpoint, $\epsilon_\kappa=1$ & 9798/25{,}000 & 25{,}000/25{,}000 & 0.00\% \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The four rejected $\epsilon_\kappa=0.02$ candidates occur at the initial step of four seeds; the live upstream proposal is used on those cycles, and no subsequent state-limit violation is observed. At $\epsilon_\kappa=1$, 628 rejected QPs coincide with the actuator-limited loss of full-row feasibility. This endpoint does not satisfy the robust-QP-feasibility assumption of Theorem~1.
+The tune-selected $\epsilon_\kappa=0$ row has no rejected QP in S3. The full implemented-margin row rejects every S3 QP, reverts to the upstream proposal, and consequently reproduces the no-GP violation count. This endpoint does not satisfy the robust-QP-feasibility assumption of Theorem~1.
 
 \section{Robustness-Factor Tune/Test Separation}
 \label{sec:supp_kappa}
@@ -41,18 +40,19 @@ Tune seeds 0--2 each contain 10 episodes of 500 controller samples. Thus, each $
         \toprule
         $\epsilon_\kappa$ & Violation count (rate) & Max. seed violation & QP rejection count (rate) & Max. seed rejection & Pass \\
         \midrule
-        0 & 412 (2.747) & 8.240 & 0 (0.000) & 0.000 & No \\
-        0.02 & 19 (0.127) & 0.380 & 20 (0.133) & 0.160 & Yes \\
-        0.05 & 0 (0.000) & 0.000 & 26 (0.173) & 0.200 & Yes \\
-        0.10 & 0 (0.000) & 0.000 & 27 (0.180) & 0.200 & Yes \\
-        0.20 & 0 (0.000) & 0.000 & 92 (0.613) & 1.460 & No \\
-        0.50 & 204 (1.360) & 3.580 & 439 (2.927) & 5.900 & No \\
-        1.00 & 1047 (6.980) & 11.080 & 1792 (11.947) & 17.220 & No \\
+        0 & 0 (0.000) & 0.000 & 0 (0.000) & 0.000 & Yes \\
+        0.01 & 0 (0.000) & 0.000 & 0 (0.000) & 0.000 & Yes \\
+        0.02 & 0 (0.000) & 0.000 & 0 (0.000) & 0.000 & Yes \\
+        0.05 & 0 (0.000) & 0.000 & 0 (0.000) & 0.000 & Yes \\
+        0.10 & 0 (0.000) & 0.000 & 13 (0.087) & 0.120 & Yes \\
+        0.20 & 4849 (32.327) & 37.540 & 11220 (74.800) & 87.660 & No \\
+        0.50 & 5663 (37.753) & 40.140 & 14972 (99.813) & 99.880 & No \\
+        1.00 & 5648 (37.653) & 40.000 & 15000 (100.000) & 100.000 & No \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The selector fixes $\epsilon_\kappa=0.02$ before evaluating seeds 3--4. Each held-out seed contains 25{,}000 samples. Seed 3 records 42 violations and 34 rejected QPs; seed 4 records 24 violations and 38 rejected QPs. The pooled rates are therefore 66/50{,}000 (0.132\%) and 72/50{,}000 (0.144\%), respectively. No holdout result is used to change $\epsilon_\kappa$.
+The selector fixes $\epsilon_\kappa=0$ before evaluating seeds 3--4. Each held-out seed contains 25{,}000 samples. Both seeds record zero violating samples and zero rejected QPs, giving pooled counts of 0/50{,}000 for both diagnostics. The descriptive 95\% Wilson upper reference for 0/15{,}000 tune-set violations is 0.0256\%; serial correlation prevents interpreting this value as an independent-trial confidence bound. No holdout result is used to change $\epsilon_\kappa$, and zero observed events are not presented as zero event probability.
 
 \section{GP Residual Definition and Commissioning Data}
 \label{sec:supp_gp_data}
@@ -62,7 +62,7 @@ The benchmark and deployed GP use the same three-dimensional kernel input,
     x_k^{\mathrm{GP}}=[p_{m,k},h_{m,k},N_{e,k}]^\top .
     \label{eq:S_gp_input}
 \end{equation}
-The nominal predictor uses the complete five-state vector and all three proposed control commands. The three learning targets are residual rates,
+The nominal predictor uses the complete seven-state vector $[r_B,p_m,h_m,N_e,\tau_f,D_{fw},u_t]^\top$ and all three proposed control commands. The three learning targets are residual rates,
 \begin{equation}
     y_{j,k+1}^{\mathrm{GP}}=
     \frac{x_{j,k+1}-\hat{x}^{\mathrm{nom}}_{j,k+1|k}}{T_s},
@@ -105,24 +105,24 @@ The controlled sensitivity experiment uses five independent seeds. Each of the n
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{>{\centering\arraybackslash}p{0.09\textwidth}>{\centering\arraybackslash}p{0.12\textwidth}>{\centering\arraybackslash}p{0.13\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}>{\centering\arraybackslash}p{0.14\textwidth}}
         \toprule
-        $N$ & Target corruption & Held-out NRMSE & 95\% interval coverage & Violation, $\epsilon_\kappa=0$ & Violation, $\epsilon_\kappa=0.02$ & QP rejection, $\epsilon_\kappa=0.02$ \\
+        $N$ & Target corruption & Held-out NRMSE & 95\% interval coverage & Violation, $\epsilon_\kappa=0$ & QP rejection, $\epsilon_\kappa=0$ & QP intervention \\
         \midrule
-        100 & 0\% & 0.00184 & 100.00\% & 7.60\% & 0.00\% & 0.16\% \\
-        250 & 0\% & 0.00208 & 100.00\% & 7.92\% & 0.00\% & 0.16\% \\
-        500 & 0\% & 0.00243 & 100.00\% & 6.96\% & 0.00\% & 0.16\% \\
+        100 & 0\% & 0.00090 & 100.00\% & 0.00\% & 0.00\% & 41.80\% \\
+        250 & 0\% & 0.00055 & 100.00\% & 0.00\% & 0.00\% & 41.76\% \\
+        500 & 0\% & 0.00046 & 100.00\% & 0.00\% & 0.00\% & 41.76\% \\
         \midrule
-        100 & 5\% & 0.43547 & 96.87\% & 1.08\% & 64.96\% & 95.64\% \\
-        250 & 5\% & 0.37980 & 95.37\% & 1.32\% & 66.28\% & 98.64\% \\
-        500 & 5\% & 0.25700 & 97.33\% & 1.12\% & 66.88\% & 99.44\% \\
-        100 & 10\% & 0.49337 & 97.63\% & 1.28\% & 66.48\% & 98.76\% \\
-        250 & 10\% & 0.49015 & 95.10\% & 1.04\% & 67.00\% & 99.36\% \\
-        500 & 10\% & 0.42205 & 96.80\% & 0.68\% & 67.20\% & 99.88\% \\
+        100 & 5\% & 0.54291 & 96.03\% & 20.24\% & 6.76\% & 24.00\% \\
+        250 & 5\% & 0.41965 & 97.13\% & 5.76\% & 4.04\% & 37.12\% \\
+        500 & 5\% & 0.06085 & 99.90\% & 0.00\% & 0.00\% & 41.92\% \\
+        100 & 10\% & 0.66568 & 96.37\% & 15.12\% & 8.60\% & 27.16\% \\
+        250 & 10\% & 0.44662 & 97.03\% & 13.16\% & 5.88\% & 33.20\% \\
+        500 & 10\% & 0.08745 & 99.80\% & 0.00\% & 0.00\% & 41.32\% \\
         \bottomrule
     \end{tabular}
     }
 \end{table}
 
-The corrupted fits are deliberately evaluated without the pre-enable data-quality gate to expose the failure mode. Their inflated uncertainty tightens the QP until most candidates are rejected; the controller then uses the upstream proposal, producing the 64.96--67.20\% violation rates in Table~\ref{tab:S_gp_sensitivity}. In deployment, the held-out residual and QP-feasibility checks reject these models before they receive write authority.
+The corrupted fits are deliberately evaluated without the pre-enable data-quality gate. The 100- and 250-point dictionaries show increased violations and QP rejection, while the 500-point dictionary retains zero observed violations and no rejection under both bounded fault-injection levels. The comparison therefore tests the joint effects of dictionary coverage and target quality; it does not imply that every corrupted fit fails or that the 500-point model is robust to arbitrary bad data. In deployment, held-out residual, coverage, and QP-feasibility checks are all required before a model receives write authority.
 
 \section{Coverage Monitoring and Fallback State Machine}
 \label{sec:supp_fallback}
@@ -176,7 +176,7 @@ Moderate coverage loss follows
 \end{equation}
 Invalid measurements or communication, non-finite/model-load faults, nominal-QP or actuator-constraint infeasibility, a direct physical-bound exceedance, pressure-low physical margin below 2.0\,MPa, or a QP/task timeout bypasses the bounded degraded stage immediately. The nominal-HOCBF interval has no GP coverage claim.
 
-An initially infeasible QP permits one reduced-QP retry only for the whitelisted \texttt{pressure\_low} row. Let $v=S_u\tilde v$, $\tilde G_i=G_iS_u$, and $a_i=\|\tilde G_i\|_2$. Row removal requires
+An initially infeasible QP permits one reduced-QP retry only for the whitelisted \texttt{pressure\_low} row. Let the physical command deviation be $d_u=S_uv$, with normalized $v\in[-1,1]^3$, transformed row $\tilde G_i=G_iS_u$, and authority measure $a_i=\|\tilde G_i\|_2$. Row removal requires
 \begin{equation}
     i=\texttt{pressure\_low},\quad
     a_i<0.01,\quad h_i<-10^{-6},\quad
@@ -196,9 +196,34 @@ The public production-evidence index separates historian context from controller
 
 The confirmed controller/historian mappings used in the revision are $NE\leftrightarrow\texttt{20CQTP\_MW}$, $PM\leftrightarrow\texttt{DCS2\_20HAG10CP101}$, and $HM\leftrightarrow\texttt{DCS2\_SEPARATOUT\_ENTH}$. The independent tag \texttt{DCS2\_MAIN\_PRESS} is main-steam pressure. The exported \texttt{PST\_HI} value is a main-steam-pressure replay bound, not the separator-pressure upper limit.
 
+The cohort analysis uses 300\,s historian records from 2024--2025 and 25~June--5~July~2026. Two-hour windows contain 24 consecutive records and advance every 30\,min. All 24 load samples must lie in 195--700\,MW; pressure, pressure setpoint, and fuel flow must be finite, pressure channels must lie in 5--35\,MPa, and fuel flow must be positive. One-to-one matching without replacement minimizes a standardized sum of squared differences in mean load, 24-point load-profile RMSE, load range, and mean fuel/load ratio. The respective calipers are 10, 30, and 40\,MW and 0.08. The complete derived pair table and hashes of the 24 monthly pre-retrofit query files and the post-retrofit query file are included in the reproducibility package.
+
 \begin{table}[htbp]
     \centering
-    \caption{High-load controller-export evidence. Direct margins are minima over all 1440 records in each window. ``None'' denotes no fallback or saturation event.}
+    \caption{Recomputed load-matched historian cohort. Windows overlap because they advance every 30\,min; the post-day cluster-bootstrap intervals are therefore descriptive and are not randomized-treatment confidence intervals.}
+    \label{tab:S_historian_cohort}
+    \small
+    \begin{tabular}{>{\raggedright\arraybackslash}p{0.34\textwidth}>{\centering\arraybackslash}p{0.18\textwidth}>{\centering\arraybackslash}p{0.18\textwidth}>{\centering\arraybackslash}p{0.20\textwidth}}
+        \toprule
+        Quantity & Pre-retrofit & Post-retrofit & Difference or interval \\
+        \midrule
+        Loaded candidate windows & 14,675 & 517 & 512 one-to-one pairs \\
+        Unique calendar days in pairs & 193 & 11 & -- \\
+        Pressure-residual standard deviation, median (MPa) & 0.523 & 0.502 & 3.93\% reduction \\
+        Absolute pressure-residual p95, median (MPa) & 1.082 & 1.085 & 0.30\% increase \\
+        Pair fraction with lower standard deviation & \multicolumn{2}{c}{--} & 55.27\% \\
+        Pair fraction with lower absolute-error p95 & \multicolumn{2}{c}{--} & 59.18\% \\
+        Post-day cluster bootstrap, standard-deviation reduction & \multicolumn{2}{c}{10,000 resamples} & 95\% interval $[-13.0,14.7]\%$ \\
+        Post-day cluster bootstrap, p95 reduction & \multicolumn{2}{c}{10,000 resamples} & 95\% interval $[-9.4,13.1]\%$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Median pair-quality diagnostics are 1.32\,MW mean-load difference, 15.37\,MW load-profile RMSE, 5.24\,MW load-range difference, and 0.0115 fuel/load difference. The broad cluster-bootstrap intervals show that the cohort supports operating-context consistency but not a precise population effect estimate. The native 5\,s pair in the main article provides the higher-resolution response diagnostic; the controller exports separately establish online filter execution.
+
+\begin{table}[htbp]
+    \centering
+    \caption{High-load controller-export evidence. Direct margins are minima over all 1440 records in each window. ``None'' in the status column denotes no reduced-QP recovery and no saturation flag.}
     \label{tab:S_high_load}
     \scriptsize
     \resizebox{\textwidth}{!}{%
@@ -223,6 +248,8 @@ The public reproducibility package contains source code, simulation results, der
 \section{Computation and Sampled-Data Boundary}
 \label{sec:supp_computation}
 
-The NMPC reference uses a warm-started SLSQP solve with horizon $N=5$, output weights $\mathrm{diag}(1,0.001,0.01)$, input weights $\mathrm{diag}(0.01,0.01,0.01)$, deviation-input bounds $[-10,10]^3$, six prediction constraints, additive disturbance correction with gain 0.5, \texttt{maxiter}$=50$, and \texttt{ftol}$=10^{-4}$. All 17{,}500 solves converge and pass the $10^{-6}$ prediction-residual check. Mean per-step solve time ranges from 3.50\,ms in the nominal case to 31.99\,ms in the tested perturbation scenarios. These values describe the implemented reference rather than an optimized industrial MPC package.
+The NMPC reference uses a warm-started SLSQP solve with horizon $N=5$, output weights $\mathrm{diag}(1,0.001,0.01)$, input weights $\mathrm{diag}(0.01,0.01,0.01)$, normalized deviation-input bounds $[-1,1]^3$, six prediction constraints, additive disturbance correction with gain 0.5, \texttt{maxiter}$=50$, and \texttt{ftol}$=10^{-4}$. Its convergence, residual, and computation-time statistics are regenerated with the actuator-augmented benchmark and reported from that frozen result set. These values describe the implemented reference rather than an optimized industrial MPC package.
+
+Across the seven confirmatory conditions, pooled research-pipeline time per controller update ranges from 3.19 to 6.71\,ms for the tune-selected RoCBF-SF row and from 3.75 to 20.82\,ms for NMPC. NMPC records no solver failure and 0/175{,}000 observed state-limit violations in this implementation. These benchmark wall-clock measurements are distinct from the deployed-CPU evidence: the confirmed controller exports report a maximum QP time of 6.234\,ms and a maximum total task time of 28.665\,ms against the 1000\,ms task deadline.
 
 The theorem is continuous-time. The controller applies zero-order hold with $T_s=1$\,s because 1\,s is the deployed coordinated-control task period; the safety filter therefore evaluates each upstream command update before the command-selection stage. This implementation choice does not assign a 1\,s time constant to the slower boiler thermal dynamics. The field exports retain one record every 5\,s, so their spacing is a logging interval rather than the internal control period. Field task timing establishes computational fit within the 1\,s period but does not establish inter-sample forward invariance. Theorem~1 therefore is not presented as a sampled-data certificate; deriving such a certificate is retained as future work.

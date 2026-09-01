@@ -1,0 +1,100 @@
+{
+  "method": "fixed_proposal",
+  "method_label": "Unfiltered fixed upstream proposal",
+  "condition": "s3_coupled",
+  "condition_label": "S3:Coupled",
+  "seed": 0,
+  "rollout_mode": "drift_only_delta_g0",
+  "benchmark_model": "seven_state_actuator_augmented_ccs",
+  "state_order": 7,
+  "barrier_relative_degrees": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "actuator_time_constants_s": {
+    "feedwater": 15.0,
+    "turbine_valve": 6.0
+  },
+  "input_matrix_assumption": "delta_g_equals_zero",
+  "load_ratio": 0.66,
+  "power_target_mw": 660.0,
+  "scenario_scale": 0.35,
+  "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+  "initial_state_set": "intersection_of_h_ge_1_and_true_drift_psi1_ge_0",
+  "initialization_oracle_used_by_controller": false,
+  "deviation_component_bound": 1.0,
+  "deviation_coordinates": "normalized_command_deviation",
+  "physical_command_scale": [
+    10.0,
+    40.0,
+    1.0
+  ],
+  "deviation_l2_norm_bound": 1.7320508075688772,
+  "robust_margin_control_bound_semantics": "sup_v_in_V_l2_norm",
+  "violation_tolerance_raw_margin": 0.01,
+  "n_episodes": 10,
+  "n_steps": 500,
+  "n_pretrain": 500,
+  "violation_rate": [
+    0.3438,
+    0.10592997687151641
+  ],
+  "cbf_violation_rate": [
+    0.3438,
+    0.10592997687151641
+  ],
+  "violation_count": 1719,
+  "total_samples": 5000,
+  "cumulative_reward": [
+    -6226.235423179047,
+    121.80060857079495
+  ],
+  "control_cost": [
+    81.47226480788868,
+    1.0026868393738242
+  ],
+  "min_barrier_value": [
+    -0.39536556703912495,
+    0.09703898574567787
+  ],
+  "online_time_ms": [
+    0.0,
+    0.0
+  ],
+  "qp_intervention_rate": 0.0,
+  "qp_attempt_count": 0,
+  "qp_infeasible_count": 0,
+  "qp_infeasible_rate": 0.0,
+  "qp_fallback_count": 0,
+  "qp_fallback_rate": 0.0,
+  "max_normalized_qp_residual": 0.0,
+  "weak_authority_row_drop_enabled": false,
+  "qp_backend": "qpax",
+  "jax_precision": "float64",
+  "qpax_algorithm": "implicit_pdip",
+  "qpax_solver_tolerance": 1e-06,
+  "qpax_max_iterations": 100,
+  "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+  "epsilon_kappa": null,
+  "per_constraint_type": {
+    "pressure": {
+      "violation_rate": 0.3438,
+      "violation_count": 1719,
+      "total_steps": 5000
+    },
+    "enthalpy": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 5000
+    },
+    "power": {
+      "violation_rate": 0.0,
+      "violation_count": 0,
+      "total_steps": 5000
+    }
+  }
+}

@@ -6,7 +6,7 @@ The project implements a Gaussian-process-corrected high-order control barrier f
 
 ## Repository Status
 
-This repository is organized as a submission artifact. It contains the source code, simulation scripts, plotting scripts, LaTeX manuscript source, and JSON results needed to audit and regenerate the paper figures and tables. Bounded, de-identified production-evidence summaries are included; full proprietary plant historian records and controller exports are not publicly released. No human data or third-party operational dataset is used.
+This repository is organized as a submission artifact. It contains the source code, simulation scripts, plotting scripts, LaTeX manuscript source, and JSON results needed to audit and regenerate the paper figures and tables. Bounded production-evidence derivatives and field-normalized excerpts are included; full proprietary plant historian records and controller exports are not publicly released. No human data or third-party operational dataset is used.
 
 Run the static artifact check first:
 
@@ -24,7 +24,7 @@ That command validates the expected code, figure, paper, and result inventory wi
 | `envs/` | Safe-navigation, triple-integrator, and CCS boiler-turbine environments |
 | `configs/` | YAML experiment configurations |
 | `experiments/phase5/` | Current M&C experiment, analysis, and figure-generation scripts |
-| `results/phase5_qpax_x64_primary_a_20260831/`, `results/phase5_primary_kappa002_20260831/`, `results/phase5_drift_only_nmpc_x64_20260831/` | Current major-revision, certificate-aligned simulation results |
+| `results/phase5_ccs7_confirmatory_20260902/`, `results/phase5_ccs7_kappa_20260902/`, `results/phase5_ccs7_nmpc_20260902/`, `results/phase5_ccs7_gp_sensitivity_20260902/` | Current seven-state, certificate-aligned major-revision results |
 | `results/phase5/` | Historical development outputs retained for traceability; not the current revision evidence base |
 | `paper/` | M&C LaTeX source, Word/PDF manuscript exports, figures, bibliography, and submission metadata |
 | `scripts/check_repro_artifacts.py` | Lightweight reproducibility inventory check |
@@ -56,23 +56,27 @@ The artifact check should complete in seconds on CPU. Unit tests require the Pyt
 
 ## Reproducing Paper Outputs
 
-Use the current major-revision JSON outputs for ordinary paper regeneration. The primary benchmark fixes the input matrix ($\Delta g=0$), uses the GP vector `[p_m, h_m, N_e]`, and learns residual rates for those measured constrained outputs.
+Use the current major-revision JSON outputs for ordinary paper regeneration. The actuator-augmented seven-state benchmark fixes the input matrix ($\Delta g=0$), makes all six command-level barriers relative degree two, uses the GP vector `[p_m, h_m, N_e]`, and learns residual rates for those constrained outputs.
 
 ```bash
 python experiments/phase5/plot_process_response_figure.py
 python experiments/phase5/plot_model_mismatch_figure.py --display-steps 10
-python experiments/phase5/plot_commissioning_kappa_validation.py
+python experiments/phase5/plot_commissioning_kappa_validation.py \
+  --input results/phase5_ccs7_kappa_20260902/selection_summary.json
 python experiments/phase5/plot_gp_data_sensitivity.py \
-  --results-dir results/phase5_gp_data_sensitivity_k002_20260831 \
-  --summary results/phase5_gp_data_sensitivity_k002_20260831/summary.json
+  --results-dir results/phase5_ccs7_gp_sensitivity_20260902 \
+  --summary results/phase5_ccs7_gp_sensitivity_20260902/summary.json
 ```
 
 The complete simulation sweep is substantially more expensive than plotting from stored results:
 
 ```bash
-python experiments/phase5/run_experiment_5th.py \
-  --config configs/phase5_drift_only.yaml \
-  --methods fixed_proposal hocbf_no_gp rocbf_mean rocbf_full rocbf_calibrated
+python experiments/phase5/run_drift_only_fixed_proposal.py \
+  --methods fixed_proposal hocbf_no_gp rocbf_mean rocbf_full \
+  --conditions nominal s1_heat s2_pressure s3_coupled \
+               s4_nonlinear s5_valve s6_fuel \
+  --seeds 0 1 2 3 4 --n-episodes 10 --n-steps 500 \
+  --results-dir results/phase5_ccs7_confirmatory_20260902
 ```
 
 See `REPRODUCIBILITY.md` for the staged reproduction plan and expected artifacts.

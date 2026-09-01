@@ -1,0 +1,151 @@
+{
+  "experiment": "controlled_gp_data_quantity_quality_sensitivity",
+  "scenario": "s3_coupled",
+  "seed": 2,
+  "training_pool_size": 1000,
+  "validation_size": 200,
+  "training_sample_size": 250,
+  "contamination_fraction": 0.05,
+  "contamination_definition": "signed_3_training_target_sd_offsets",
+  "gp_input_output": "[p_m,h_m,N_e] residual rates",
+  "commissioned_epsilon_kappa": 0.0,
+  "load_ratio": 0.66,
+  "scenario_scale": 0.35,
+  "jax_precision": "float64",
+  "prediction": {
+    "fit_time_s": 8.500498353969306,
+    "rmse_physical": [
+      0.042600819156764815,
+      0.020020874750120973,
+      6.390198829999502e-08
+    ],
+    "nrmse_by_validation_sd": [
+      0.7208141044589903,
+      0.36519810360055494,
+      0.06390198829999502
+    ],
+    "predictive_interval_95_coverage": [
+      0.945,
+      0.97,
+      1.0
+    ],
+    "mean_posterior_std": [
+      0.035888706489582194,
+      0.036858493802920035,
+      0.010000000000430222
+    ],
+    "input_mean": [
+      14.47271287923566,
+      2733.900883253013,
+      659.1407998406935
+    ],
+    "input_std": [
+      0.4936413564434473,
+      0.9346009664609104,
+      0.1092471300465133
+    ]
+  },
+  "closed_loop": {
+    "selected_operating_point": {
+      "method": "rocbf_mean",
+      "method_label": "RoCBF-SF mean-only",
+      "condition": "s3_coupled",
+      "condition_label": "S3:Coupled",
+      "seed": 2,
+      "rollout_mode": "drift_only_delta_g0",
+      "benchmark_model": "seven_state_actuator_augmented_ccs",
+      "state_order": 7,
+      "barrier_relative_degrees": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "actuator_time_constants_s": {
+        "feedwater": 15.0,
+        "turbine_valve": 6.0
+      },
+      "input_matrix_assumption": "delta_g_equals_zero",
+      "load_ratio": 0.66,
+      "power_target_mw": 660.0,
+      "scenario_scale": 0.35,
+      "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+      "initial_state_set": "intersection_of_h_ge_1_and_true_drift_psi1_ge_0",
+      "initialization_oracle_used_by_controller": false,
+      "deviation_component_bound": 1.0,
+      "deviation_coordinates": "normalized_command_deviation",
+      "physical_command_scale": [
+        10.0,
+        40.0,
+        1.0
+      ],
+      "deviation_l2_norm_bound": 1.7320508075688772,
+      "robust_margin_control_bound_semantics": "sup_v_in_V_l2_norm",
+      "violation_tolerance_raw_margin": 0.01,
+      "n_episodes": 1,
+      "n_steps": 500,
+      "n_pretrain": 250,
+      "violation_rate": [
+        0.056,
+        0.0
+      ],
+      "cbf_violation_rate": [
+        0.056,
+        0.0
+      ],
+      "violation_count": 28,
+      "total_samples": 500,
+      "cumulative_reward": [
+        -6002.7848318761735,
+        0.0
+      ],
+      "control_cost": [
+        94.02703128324256,
+        0.0
+      ],
+      "min_barrier_value": [
+        -0.1788296395256559,
+        0.0
+      ],
+      "online_time_ms": [
+        8.085861555300653,
+        4.78311764325289
+      ],
+      "qp_intervention_rate": 0.3,
+      "qp_attempt_count": 500,
+      "qp_infeasible_count": 33,
+      "qp_infeasible_rate": 0.066,
+      "qp_fallback_count": 33,
+      "qp_fallback_rate": 0.066,
+      "max_normalized_qp_residual": 48.71118663823242,
+      "weak_authority_row_drop_enabled": false,
+      "qp_backend": "qpax",
+      "jax_precision": "float64",
+      "qpax_algorithm": "implicit_pdip",
+      "qpax_solver_tolerance": 1e-06,
+      "qpax_max_iterations": 100,
+      "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+      "nmpc_configuration": null,
+      "epsilon_kappa": 0.0,
+      "per_constraint_type": {
+        "pressure": {
+          "violation_rate": 0.056,
+          "violation_count": 28,
+          "total_steps": 500
+        },
+        "enthalpy": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        },
+        "power": {
+          "violation_rate": 0.0,
+          "violation_count": 0,
+          "total_steps": 500
+        }
+      }
+    }
+  }
+}

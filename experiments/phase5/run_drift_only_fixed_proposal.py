@@ -21,6 +21,8 @@ from pathlib import Path
 
 _PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, _PROJECT_ROOT)
+os.environ.setdefault("XLA_PYTHON_CLIENT_PREALLOCATE", "false")
+os.environ.setdefault("XLA_PYTHON_CLIENT_MEM_FRACTION", "0.35")
 
 import jax
 jax.config.update("jax_enable_x64", True)
@@ -28,13 +30,17 @@ import jax.numpy as jnp
 import numpy as np
 
 from rocbf.qp.diff_qp import DifferentiableQP
-from envs.ccs.dynamics import USCCSDynamics5th, UncertainUSCCSDynamics5th
-from experiments.phase5.methods_5th import (
-    _make_ccs_env_5th,
-    _make_hocbf_5th,
-    _make_robust_hocbf_5th,
-    _pretrain_gp_5th,
+from envs.ccs.dynamics import USCCSDynamics7th, UncertainUSCCSDynamics7th
+from experiments.phase5.methods_7th import (
+    DEVIATION_COMPONENT_BOUND,
+    DEVIATION_L2_NORM_BOUND,
+    _make_ccs_env_7th,
+    _make_hocbf_7th,
+    _make_oracle_initialization_hocbf_7th,
+    _make_robust_hocbf_7th,
+    _pretrain_gp_7th,
 )
+from rocbf.baselines.nmpc_7th import NMPCController7th
 
 
 CONDITION_SCENARIO_MAP = {
@@ -63,6 +69,22 @@ CONDITION_LABELS = {
     "s6_fuel": "S6:Fuel",
 }
 
+# Fixed before the confirmatory multi-seed run. Each scale is the smallest
+# screened value that caused nonzero 500-s unfiltered violations while keeping
+# the equilibrium inside the true HOCBF extended set.
+SCENARIO_SCALE_MAP = {
+    "nominal": 0.0,
+    "s1_heat": 0.30,
+    "s2_pressure": 0.24,
+    "s3_coupled": 0.35,
+    "s3_weak": 0.35,
+    "s3_midstrong": 0.35,
+    "s3_strong": 0.35,
+    "s4_nonlinear": 0.40,
+    "s5_valve": 0.35,
+    "s6_fuel": 0.50,
+}
+
 PRIMARY_CONDITIONS = (
     "nominal", "s1_heat", "s2_pressure", "s3_coupled",
     "s4_nonlinear", "s5_valve", "s6_fuel",
@@ -70,6 +92,7 @@ PRIMARY_CONDITIONS = (
 
 METHOD_LABELS = {
     "fixed_proposal": "Unfiltered fixed upstream proposal",
+    "nmpc": "NMPC reference",
     "hocbf_no_gp": "HOCBF, no GP",
     "rocbf_mean": "RoCBF-SF mean-only",
     "rocbf_calibrated": "RoCBF-SF calibrated",
@@ -94,42 +117,46 @@ def _convert(obj):
 def proposal_action(t: int, episode: int, seed: int, key) -> jnp.ndarray:
     """Bounded deterministic proposal plus small seeded excitation.
 
-    The ranges match the GP data-collection action range used elsewhere in
-    Phase 5: fuel [-2,2], feedwater [-5,5], valve [-1,1].
+    The QP variable is normalized by the per-cycle physical command scales
+    [10 kg/s, 40 kg/s, 1%], so every component lies in [-1, 1].
     """
     phase = 0.37 * seed + 0.11 * episode
     base = jnp.array([
-        1.15 * math.sin(0.045 * t + phase),
-        3.20 * math.sin(0.032 * t + 0.7 + 0.5 * phase),
+        0.115 * math.sin(0.045 * t + phase),
+        0.080 * math.sin(0.032 * t + 0.7 + 0.5 * phase),
         0.55 * math.sin(0.061 * t + 1.3 + 0.25 * phase),
     ])
-    noise = jnp.array([0.12, 0.35, 0.06]) * jax.random.normal(key, (3,))
-    return jnp.clip(base + noise, jnp.array([-2.0, -5.0, -1.0]), jnp.array([2.0, 5.0, 1.0]))
+    noise = jnp.array([0.012, 0.009, 0.06]) * jax.random.normal(key, (3,))
+    return jnp.clip(base + noise, -1.0, 1.0)
 
 
-def sample_initial_state(dynamics, constraint, key):
-    """Sample a safe initial condition near the operating point."""
+def sample_initial_state(dynamics, constraint, key, admissibility_layer=None):
+    """Sample an initial state in the physical and HOCBF extended safe sets."""
     x0, _ = dynamics.equilibrium(dynamics._load_ratio)
-    scale = jnp.array([2.5, 0.35, 7.0, 4.0, 0.4])
-    for i in range(100):
+    scale = jnp.array([1.0, 0.12, 2.5, 1.5, 0.15, 1.0, 0.08])
+    for _ in range(500):
         key, sub = jax.random.split(key)
-        x = x0 + scale * jax.random.normal(sub, (5,))
+        x = x0 + scale * jax.random.normal(sub, (7,))
         vals = constraint.check_all(x)
-        if min(vals.values()) > 1.0:
+        physical_safe = min(vals.values()) > 1.0
+        extended_safe = True
+        if admissibility_layer is not None:
+            rows = getattr(
+                admissibility_layer, "hocbf_list",
+                getattr(admissibility_layer, "robust_hocbf_list", ()))
+            extended_safe = all(
+                float(row.psi(x, 1)) >= 0.0 for row in rows)
+        if physical_safe and extended_safe:
             return x, key
     return x0, key
 
 
 def make_safety_layer(
         method, dynamics, constraint, u0, gp, epsilon_kappa_override=None):
-    if method == "fixed_proposal":
+    if method in ("fixed_proposal", "nmpc"):
         return None
     if method == "hocbf_no_gp":
-        return _make_hocbf_5th(
-            dynamics, constraint, u0,
-            k_pressure=(0.5, 0.5), k_enthalpy=(1.0,), k_power=(1.0,),
-            use_phi_scaled_g=False,
-        )
+        return _make_hocbf_7th(dynamics, constraint, u0)
     if epsilon_kappa_override is not None:
         epsilon_kappa = float(epsilon_kappa_override)
     elif method == "rocbf_mean":
@@ -140,32 +167,49 @@ def make_safety_layer(
         epsilon_kappa = 1.0
     else:
         raise ValueError(f"Unknown method: {method}")
-    return _make_robust_hocbf_5th(
+    return _make_robust_hocbf_7th(
         dynamics, constraint, gp, u0,
         epsilon_kappa=epsilon_kappa,
-        k_pressure=(0.5, 0.5), k_enthalpy=(1.0,), k_power=(1.0,),
-        u_max=100.0, use_mean_correction=True, epsilon_floor=0.0,
-        use_phi_scaled_g=False,
+        control_norm_bound=DEVIATION_L2_NORM_BOUND,
+        use_mean_correction=True, epsilon_floor=0.0,
     )
 
 
 def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
              violation_tol, gp=None, epsilon_kappa_override=None,
-             qp_backend="qpax"):
+             qp_backend="qpax", load_ratio=0.66, scenario_scale=None):
     scenario = CONDITION_SCENARIO_MAP[condition]
-    dynamics, constraint = _make_ccs_env_5th(1.0, scenario)
-    x0, u0 = dynamics.equilibrium(1.0)
+    resolved_scale = (
+        SCENARIO_SCALE_MAP[condition]
+        if scenario_scale is None else float(scenario_scale)
+    )
+    dynamics, constraint = _make_ccs_env_7th(
+        load_ratio, scenario, scenario_scale=resolved_scale)
+    x0, u0 = dynamics.equilibrium(load_ratio)
 
     if method.startswith("rocbf_") and gp is None:
-        gp = _pretrain_gp_5th(
-            1.0, n_pretrain=n_pretrain, key=jax.random.key(seed * 1000 + 17),
+        gp = _pretrain_gp_7th(
+            load_ratio, n_pretrain=n_pretrain,
+            key=jax.random.key(seed * 1000 + 17),
             sigma_floor=1e-4, scenario=scenario, scenario_specific=True,
+            scenario_scale=resolved_scale,
         )
 
     safety_layer = make_safety_layer(
         method, dynamics, constraint, u0, gp,
         epsilon_kappa_override=epsilon_kappa_override)
-    qp = DifferentiableQP(v_max=5.0)
+    nmpc = (
+        NMPCController7th(
+            dynamics, constraint, horizon=5,
+            Q=np.diag([1.0, 0.001, 0.01]),
+            R=np.diag([0.01, 0.01, 0.01]),
+            alpha=0.5, v_max=DEVIATION_COMPONENT_BOUND,
+        )
+        if method == "nmpc" else None
+    )
+    initialization_layer = _make_oracle_initialization_hocbf_7th(
+        dynamics, constraint, u0)
+    qp = DifferentiableQP(v_max=DEVIATION_COMPONENT_BOUND)
     jit_qp_fn = None
     if safety_layer is not None:
         jit_qp_fn = jax.jit(safety_layer.qp_matrices)
@@ -201,8 +245,12 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
     y0 = dynamics.output(x0)
 
     for ep in range(n_episodes):
+        if nmpc is not None:
+            nmpc.reset()
         key, init_key = jax.random.split(key)
-        x, key = sample_initial_state(dynamics, constraint, init_key)
+        x, key = sample_initial_state(
+            dynamics, constraint, init_key,
+            admissibility_layer=initialization_layer)
         violations = 0
         cbf_violations = 0
         reward_sum = 0.0
@@ -213,7 +261,16 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
             key, action_key = jax.random.split(key)
             v_prop = proposal_action(t, ep, seed, action_key)
 
-            if safety_layer is None:
+            if nmpc is not None:
+                v_safe = nmpc.compute_action(x, y_ref=y0)
+                online_times.append(nmpc.last_solve_time_ms)
+                total_qp_attempts += 1
+                max_qp_residual = max(
+                    max_qp_residual, nmpc.last_constraint_residual)
+                if not nmpc.last_success:
+                    total_qp_infeasible += 1
+                    total_qp_fallbacks += 1
+            elif safety_layer is None:
                 v_safe = v_prop
             else:
                 t0 = time.perf_counter()
@@ -246,7 +303,9 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
                     total_qp_infeasible += 1
                 if qp_info["fallback_used"]:
                     total_qp_fallbacks += 1
-                v_safe = jnp.clip(v_safe, -5.0, 5.0)
+                v_safe = jnp.clip(
+                    v_safe, -DEVIATION_COMPONENT_BOUND,
+                    DEVIATION_COMPONENT_BOUND)
                 online_times.append((time.perf_counter() - t0) * 1000.0)
                 if bool(jnp.any(jnp.abs(v_safe - v_prop) > 1e-3)):
                     total_qp_interventions += 1
@@ -304,8 +363,25 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
         "condition_label": CONDITION_LABELS[condition],
         "seed": seed,
         "rollout_mode": "drift_only_delta_g0",
+        "benchmark_model": "seven_state_actuator_augmented_ccs",
+        "state_order": 7,
+        "barrier_relative_degrees": [2, 2, 2, 2, 2, 2],
+        "actuator_time_constants_s": {
+            "feedwater": USCCSDynamics7th.T_FW_ACT,
+            "turbine_valve": USCCSDynamics7th.T_TV_ACT,
+        },
         "input_matrix_assumption": "delta_g_equals_zero",
+        "load_ratio": load_ratio,
+        "power_target_mw": load_ratio * 1000.0,
+        "scenario_scale": resolved_scale,
         "proposal_source": "fixed_bounded_sinusoidal_deviation_v1",
+        "initial_state_set": "intersection_of_h_ge_1_and_true_drift_psi1_ge_0",
+        "initialization_oracle_used_by_controller": False,
+        "deviation_component_bound": DEVIATION_COMPONENT_BOUND,
+        "deviation_coordinates": "normalized_command_deviation",
+        "physical_command_scale": [10.0, 40.0, 1.0],
+        "deviation_l2_norm_bound": DEVIATION_L2_NORM_BOUND,
+        "robust_margin_control_bound_semantics": "sup_v_in_V_l2_norm",
         "violation_tolerance_raw_margin": violation_tol,
         "n_episodes": n_episodes,
         "n_steps": n_steps,
@@ -326,12 +402,24 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
         "qp_fallback_rate": total_qp_fallbacks / max(total_qp_attempts, 1),
         "max_normalized_qp_residual": max_qp_residual,
         "weak_authority_row_drop_enabled": False,
-        "qp_backend": qp_backend,
+        "qp_backend": "scipy_slsqp_nmpc" if method == "nmpc" else qp_backend,
         "jax_precision": "float64",
         "qpax_algorithm": "implicit_pdip" if qp_backend == "qpax" else None,
         "qpax_solver_tolerance": 1e-6 if qp_backend == "qpax" else None,
         "qpax_max_iterations": 100 if qp_backend == "qpax" else None,
         "qp_acceptance_rule": "converged_finite_scaled_residual_le_1e-6",
+        "nmpc_configuration": (
+            {
+                "prediction_horizon": 5,
+                "output_weights": [1.0, 0.001, 0.01],
+                "input_weights": [0.01, 0.01, 0.01],
+                "disturbance_estimator_gain": 0.5,
+                "slsqp_maxiter": 50,
+                "slsqp_ftol": 1e-4,
+                "warm_start": True,
+            }
+            if method == "nmpc" else None
+        ),
         "epsilon_kappa": (
             float(epsilon_kappa_override)
             if epsilon_kappa_override is not None
@@ -371,6 +459,12 @@ def main():
         help="Raw barrier tolerance for counting numerical violations.",
     )
     parser.add_argument("--qp-backend", choices=["qpax", "scipy"], default="qpax")
+    parser.add_argument("--load-ratio", type=float, default=0.66)
+    parser.add_argument(
+        "--scenario-scale", type=float, default=None,
+        help=("Optional nonnegative global override. By default, use the "
+              "predeclared per-condition structural-gate scale."),
+    )
     parser.add_argument(
         "--epsilon-kappa",
         type=float,
@@ -384,6 +478,10 @@ def main():
     count = 0
     for condition in args.conditions:
         for seed in args.seeds:
+            resolved_scale = (
+                SCENARIO_SCALE_MAP[condition]
+                if args.scenario_scale is None else args.scenario_scale
+            )
             pending = [
                 method for method in args.methods
                 if not (
@@ -393,13 +491,14 @@ def main():
             ]
             shared_gp = None
             if any(method.startswith("rocbf_") for method in pending):
-                shared_gp = _pretrain_gp_5th(
-                    1.0,
+                shared_gp = _pretrain_gp_7th(
+                    args.load_ratio,
                     n_pretrain=args.n_pretrain,
                     key=jax.random.key(seed * 1000 + 17),
                     sigma_floor=1e-4,
                     scenario=CONDITION_SCENARIO_MAP[condition],
                     scenario_specific=True,
+                    scenario_scale=resolved_scale,
                 )
             for method in args.methods:
                 count += 1
@@ -413,6 +512,8 @@ def main():
                     args.n_pretrain, args.violation_tol, gp=shared_gp,
                     epsilon_kappa_override=args.epsilon_kappa,
                     qp_backend=args.qp_backend,
+                    load_ratio=args.load_ratio,
+                    scenario_scale=resolved_scale,
                 )
                 save_result(result, args.results_dir)
                 print(
