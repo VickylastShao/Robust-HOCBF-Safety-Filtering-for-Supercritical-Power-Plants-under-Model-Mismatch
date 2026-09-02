@@ -751,6 +751,22 @@ def normalize_heading_paragraphs(body: ET.Element) -> None:
         replace_paragraph_children_with_runs(p, [make_run(normalized, size=20)])
 
 
+def prefix_supplementary_section_numbers(body: ET.Element) -> None:
+    """Preserve the LaTeX S-prefix in Pandoc's independently numbered DOCX headings."""
+    for p in body.findall("w:p", NS):
+        text = para_text(p).strip()
+        if not text or not is_heading_paragraph(p, text):
+            continue
+        prefixed = re.sub(
+            r"^(\d+(?:\.\d+)*)(?:\s+|(?=[A-Za-z]))",
+            r"S\1 ",
+            text,
+        )
+        if prefixed == text:
+            continue
+        replace_paragraph_children_with_runs(p, [make_run(prefixed, size=20)])
+
+
 def is_blank_paragraph(p: ET.Element) -> bool:
     return (
         p.tag == w("p")
@@ -989,7 +1005,9 @@ ARTICLE_TABLE_WIDTHS: dict[int, list[str]] = {
     1: ["2200", "2200", "4100"],
     2: ["2800", "815", "815", "815", "815", "815", "815", "810"],
     3: ["2800", "1600", "1400", "1400", "1300"],
-    4: ["600", "1450", "900", "1050", "1050", "1000", "1550", "900"],
+    # Keep the short identifier and load-range columns wide enough to avoid
+    # splitting "Window" and the final decimal digit in the Word/PDF layout.
+    4: ["800", "1350", "1100", "950", "950", "950", "1450", "950"],
     5: ["1200", "1700", "3400", "2200"],
 }
 
@@ -1942,6 +1960,8 @@ def process(
         replace_unresolved_crossrefs(doc_root, paper_dir, source_tex, mode)
         replace_front_matter(body, mode)
         insert_template_spacers(body)
+        if mode == "supplementary":
+            prefix_supplementary_section_numbers(body)
         normalize_heading_paragraphs(body)
         format_document(body, mode)
         remove_heading_adjacent_blank_paragraphs(body)

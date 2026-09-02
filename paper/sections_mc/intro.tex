@@ -34,7 +34,7 @@ We introduce RoCBF-SF, a commissioning-calibrated GP-HOCBF safety filter for ult
 
     \item \textbf{Commissioning-calibrated robustness factor.} The scalar factor $\epsilon_\kappa$ interpolates between mean-corrected operation and the full implemented uncertainty margin, with diagnostics for selecting this factor under additive and state-dependent mismatch.
 
-    \item \textbf{Simulation and production-data validation.} The approach is validated on an actuator-augmented boiler-turbine benchmark and bounded production historian records and controller-log exports from a 660\,MW ultra-supercritical unit, including violation, intervention, feasibility, latency, and post-retrofit execution diagnostics.
+    \item \textbf{Simulation validation and measured-operation evidence.} The approach is evaluated on an actuator-augmented boiler-turbine benchmark, while bounded production historian records and controller-log exports from a 660\,MW ultra-supercritical unit provide response, execution, feasibility, and latency evidence under measured operation.
 \end{enumerate}
 
 The validation is organized around this applied process-control logic. Controlled simulations first isolate the model-mismatch mechanism and show when GP mean correction and $\epsilon_\kappa$ calibration are needed. Plant historian records then compare pre- and post-retrofit response under matched load movement, and controller-log exports verify the online execution path across repeated post-retrofit windows. Together, these evidence sources connect the formal safety-filter mechanism to plant measurements while keeping the upstream controller outside the proposed method.

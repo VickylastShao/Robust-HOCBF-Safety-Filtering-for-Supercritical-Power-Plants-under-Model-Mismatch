@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import re
+from difflib import SequenceMatcher
 from pathlib import Path
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
@@ -186,9 +187,28 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
             "45 seeded fit-and-evaluation runs",
             "135 scalar GP fits",
             "original low-to-mid-load records are retained only as historian operating context",
+            "broad low-to-high-load operating evidence rather than complete full-range performance validation",
+            "rejects 149,800/150,000 QPs",
+            "65,134/150,000 violating samples",
         ):
             if phrase not in text:
                 errors.append(f"{path.name}: missing revised response phrase {phrase!r}")
+
+    if path.name == "manuscript_mc_supplementary_revised.docx":
+        text = "\n".join(
+            paragraph_text(paragraph) for paragraph in document.findall(".//w:p", NS)
+        )
+        for section_number in range(1, 8):
+            if re.search(rf"^S{section_number}(?:\.|\s)", text, flags=re.MULTILINE) is None:
+                errors.append(
+                    f"{path.name}: supplemental section S{section_number} heading is missing"
+                )
+        for table_number in range(1, 8):
+            phrase = f"Table S{table_number}"
+            if text.count(phrase) < 2:
+                errors.append(
+                    f"{path.name}: {phrase} is not explicitly cited outside its caption"
+                )
 
     if path.name == "Title_Page_revised.docx":
         text = "\n".join(
@@ -262,6 +282,65 @@ def check_tiff(path: Path, errors: list[str]) -> tuple[int, int]:
         return image.size
 
 
+def check_revision_highlight_coverage(package_dir: Path, errors: list[str]) -> None:
+    baseline = package_dir.parent.parent / "manuscript_mc.docx"
+    clean = package_dir / "manuscript_mc_revised_clean.docx"
+    highlighted = package_dir / "manuscript_mc_revised_highlighted.docx"
+    if not baseline.is_file():
+        return
+
+    def paragraphs(path: Path) -> list[ET.Element]:
+        with ZipFile(path) as package:
+            root = ET.fromstring(package.read("word/document.xml"))
+        return list(root.iter(w("p")))
+
+    baseline_paragraphs = paragraphs(baseline)
+    clean_paragraphs = paragraphs(clean)
+    highlighted_paragraphs = paragraphs(highlighted)
+    baseline_text = [paragraph_text(paragraph) for paragraph in baseline_paragraphs]
+    clean_text = [paragraph_text(paragraph) for paragraph in clean_paragraphs]
+    highlighted_text = [paragraph_text(paragraph) for paragraph in highlighted_paragraphs]
+    if clean_text != highlighted_text:
+        errors.append("Highlighted manuscript content differs from the clean revised manuscript")
+        return
+
+    changed: set[int] = set()
+    matcher = SequenceMatcher(a=baseline_text, b=clean_text, autojunk=False)
+    for tag, _, _, revised_start, revised_end in matcher.get_opcodes():
+        if tag != "equal":
+            changed.update(range(revised_start, revised_end))
+    references_start = next(
+        (index for index, text in enumerate(clean_text) if text.strip().lower() == "references"),
+        len(clean_text),
+    )
+
+    missing: list[int] = []
+    unexpected: list[int] = []
+    for index, paragraph in enumerate(highlighted_paragraphs):
+        runs = paragraph.findall(".//w:r", NS) + paragraph.findall(".//m:r", NS)
+        yellow = [
+            run
+            for run in runs
+            if run.find("w:rPr/w:highlight", NS) is not None
+            and run.find("w:rPr/w:highlight", NS).get(w("val")) == "yellow"
+        ]
+        expected = index in changed and bool(clean_text[index]) and index < references_start
+        if expected and (not runs or len(yellow) != len(runs)):
+            missing.append(index)
+        if not expected and yellow:
+            unexpected.append(index)
+    if missing:
+        errors.append(
+            "Highlighted manuscript has incomplete yellow coverage in revised paragraphs "
+            + ", ".join(map(str, missing[:10]))
+        )
+    if unexpected:
+        errors.append(
+            "Highlighted manuscript has yellow formatting outside revised paragraphs "
+            + ", ".join(map(str, unexpected[:10]))
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--package-dir", type=Path, required=True)
@@ -273,6 +352,7 @@ def main() -> int:
         path = args.package_dir / filename
         stats = check_docx(path, errors)
         print(f"  {filename}: {stats}")
+    check_revision_highlight_coverage(args.package_dir, errors)
 
     print("PDF")
     for filename in PDF_FILES:

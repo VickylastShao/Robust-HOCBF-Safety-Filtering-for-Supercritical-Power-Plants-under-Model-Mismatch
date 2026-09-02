@@ -6,7 +6,7 @@
 \section{Native-Sample Safety and QP Diagnostics}
 \label{sec:supp_safety}
 
-All benchmark violation rates are evaluated at the native 1\,s controller instants. A controller sample is counted once when any enforced pressure, separator-enthalpy, or power barrier satisfies $\min_j h_j(x_k)<-10^{-2}$ in raw barrier units. The tolerance excludes numerical boundary roundoff; the unrounded minimum barrier is retained separately. Episode-level event probabilities are not combined with these sample rates.
+All benchmark violation rates are evaluated at the native 1\,s controller instants. A controller sample is counted once when any enforced pressure, separator-enthalpy, or power barrier satisfies $\min_j h_j(x_k)<-10^{-2}$ in raw barrier units. The tolerance excludes numerical boundary roundoff; the unrounded minimum barrier is retained separately. Episode-level event probabilities are not combined with these sample rates. Table~\ref{tab:S_primary_s3} reports the corresponding count-level S3 diagnostics.
 
 \begin{table}[htbp]
     \centering
@@ -29,7 +29,7 @@ The tune-selected $\epsilon_\kappa=0$ row has no rejected QP in S3. The full imp
 \section{Robustness-Factor Tune/Test Separation}
 \label{sec:supp_kappa}
 
-Tune seeds 0--2 each contain 10 episodes of 500 controller samples. Thus, each $\epsilon_\kappa$ setting contains 15{,}000 tune samples. The predeclared selector is the smallest setting for which both pooled and maximum-per-seed violation rates are below 1\% and both pooled and maximum-per-seed QP-rejection rates are below 0.5\%.
+Tune seeds 0--2 each contain 10 episodes of 500 controller samples. Thus, each $\epsilon_\kappa$ setting contains 15{,}000 tune samples. The predeclared selector is the smallest setting for which both pooled and maximum-per-seed violation rates are below 1\% and both pooled and maximum-per-seed QP-rejection rates are below 0.5\%. Table~\ref{tab:S_kappa_tune} gives the complete candidate-level selection data.
 
 \begin{table}[htbp]
     \centering
@@ -71,7 +71,7 @@ The nominal predictor uses the complete seven-state vector $[r_B,p_m,h_m,N_e,\ta
 \end{equation}
 Kernel distances use the frozen training transform $(x_i-\mu_i^{\mathrm{train}})/s_i^{\mathrm{train}}$, and each residual target is standardized by its training mean and standard deviation. The transforms are not updated online.
 
-The plant commissioning record contains approximately 14 days of 1\,Hz historian and commissioning data (about 1.21 million state transitions). Stops, manual operation, communication faults, stale measurements, interlock action, missing values, and identified bad points are removed, leaving approximately 250{,}000 candidate transitions. Days 1--10 form the training candidate pool; day 11 is a 24\,h isolation gap; and days 12--14 form the independent validation pool. Normalization parameters and kernel hyperparameters use only days 1--10.
+The plant commissioning record contains approximately 14 days of 1\,Hz historian and commissioning data (about 1.21 million state transitions). Stops, manual operation, communication faults, stale measurements, interlock action, missing values, and identified bad points are removed, leaving approximately 250{,}000 candidate transitions. Days 1--10 form the training candidate pool; day 11 is a 24\,h isolation gap; and days 12--14 form the independent validation pool. Normalization parameters and kernel hyperparameters use only days 1--10. Table~\ref{tab:S_gp_strata} specifies the fixed load-stratum quotas used for coverage selection.
 
 \begin{table}[htbp]
     \centering
@@ -95,7 +95,7 @@ The plant commissioning record contains approximately 14 days of 1\,Hz historian
 
 Three independent exact Mat\'{e}rn-5/2 GPs are trained and frozen after offline replay. The deployed dictionary remains at $N=500$; online sample growth is zero. Models are reviewed quarterly and after major maintenance or a material coal-source change. The current and previous stable versions are retained for rollback. Exact-GP storage is $\mathcal{O}(qN^2)$ and offline retraining is $\mathcal{O}(qN^3)$ for $q=3$ outputs. Three float32 Cholesky factors occupy approximately 3\,MB; training arrays, coefficients, and kernel parameters occupy approximately 10--20\,MB. The deployed JAX process has a larger runtime resident set (approximately 0.5--2\,GB), but this does not grow with online operation because the dictionary is frozen.
 
-The controlled sensitivity experiment uses five independent seeds. Each of the nine dictionary-size--corruption settings therefore comprises five seeded fit-and-evaluation runs (45 runs in total). Each run fits three scalar-output GPs, one for each component of $[p_m,h_m,N_e]$, giving 135 scalar GP fits. It then evaluates 200 held-out transitions and one 500-sample S3 closed-loop rollout. Corruption replaces 5\% or 10\% of selected training targets by signed three-training-standard-deviation offsets; it does not represent a measured plant bad-point rate.
+The controlled sensitivity experiment uses five independent seeds. Each of the nine dictionary-size--corruption settings therefore comprises five seeded fit-and-evaluation runs (45 runs in total). Each run fits three scalar-output GPs, one for each component of $[p_m,h_m,N_e]$, giving 135 scalar GP fits. It then evaluates 200 held-out transitions and one 500-sample S3 closed-loop rollout. Corruption replaces 5\% or 10\% of selected training targets by signed three-training-standard-deviation offsets; it does not represent a measured plant bad-point rate. Table~\ref{tab:S_gp_sensitivity} reports the held-out and closed-loop sensitivity results.
 
 \begin{table}[htbp]
     \centering
@@ -138,7 +138,7 @@ The online input-coverage statistic and standardized innovation are
     r_{j,k+1}=\frac{x_{j,k+1}-\hat{x}^{\mathrm{nom}}_{j,k+1|k}}{T_s}.
     \label{eq:S_innovation}
 \end{align}
-Here $r_{j,k+1}$, $\mu_j$, $\sigma_j$, and $\sigma_{n,j}$ all have residual-rate units. Because the deployed sampling period is $T_s=1$\,s, this notation correction does not change the reported numerical thresholds.
+Here $r_{j,k+1}$, $\mu_j$, $\sigma_j$, and $\sigma_{n,j}$ all have residual-rate units. Because the deployed sampling period is $T_s=1$\,s, this notation correction does not change the reported numerical thresholds. Table~\ref{tab:S_coverage_thresholds} lists the monitor triggers and associated supervisory actions.
 
 \begin{table}[htbp]
     \centering
@@ -196,7 +196,7 @@ The public production-evidence index separates historian context from controller
 
 The confirmed controller/historian mappings used in the revision are $NE\leftrightarrow\texttt{20CQTP\_MW}$, $PM\leftrightarrow\texttt{DCS2\_20HAG10CP101}$, and $HM\leftrightarrow\texttt{DCS2\_SEPARATOUT\_ENTH}$. The independent tag \texttt{DCS2\_MAIN\_PRESS} is main-steam pressure. The exported \texttt{PST\_HI} value is a main-steam-pressure replay bound, not the separator-pressure upper limit.
 
-The cohort analysis uses 300\,s historian records from 2024--2025 and 25~June--5~July~2026. Two-hour windows contain 24 consecutive records and advance every 30\,min. All 24 load samples must lie in 195--700\,MW; pressure, pressure setpoint, and fuel flow must be finite, pressure channels must lie in 5--35\,MPa, and fuel flow must be positive. One-to-one matching without replacement minimizes a standardized sum of squared differences in mean load, 24-point load-profile RMSE, load range, and mean fuel/load ratio. The respective calipers are 10, 30, and 40\,MW and 0.08. The complete derived pair table and hashes of the 24 monthly pre-retrofit query files and the post-retrofit query file are included in the reproducibility package.
+The cohort analysis uses 300\,s historian records from 2024--2025 and 25~June--5~July~2026. Two-hour windows contain 24 consecutive records and advance every 30\,min. All 24 load samples must lie in 195--700\,MW; pressure, pressure setpoint, and fuel flow must be finite, pressure channels must lie in 5--35\,MPa, and fuel flow must be positive. One-to-one matching without replacement minimizes a standardized sum of squared differences in mean load, 24-point load-profile RMSE, load range, and mean fuel/load ratio. The respective calipers are 10, 30, and 40\,MW and 0.08. The complete derived pair table and hashes of the 24 monthly pre-retrofit query files and the post-retrofit query file are included in the reproducibility package. Table~\ref{tab:S_historian_cohort} summarizes the recomputed matched cohort and its descriptive intervals.
 
 \begin{table}[htbp]
     \centering
@@ -219,7 +219,7 @@ The cohort analysis uses 300\,s historian records from 2024--2025 and 25~June--5
     \end{tabular}
 \end{table}
 
-Median pair-quality diagnostics are 1.32\,MW mean-load difference, 15.37\,MW load-profile RMSE, 5.24\,MW load-range difference, and 0.0115 fuel/load difference. The broad cluster-bootstrap intervals show that the cohort supports operating-context consistency but not a precise population effect estimate. The native 5\,s pair in the main article provides the higher-resolution response diagnostic; the controller exports separately establish online filter execution.
+Median pair-quality diagnostics are 1.32\,MW mean-load difference, 15.37\,MW load-profile RMSE, 5.24\,MW load-range difference, and 0.0115 fuel/load difference. The broad cluster-bootstrap intervals in Table~\ref{tab:S_historian_cohort} show that the cohort supports operating-context consistency but not a precise population effect estimate. The native 5\,s pair in the main article provides the higher-resolution response diagnostic; the controller exports separately establish online filter execution. Table~\ref{tab:S_high_load} then summarizes the separate high-load controller-export evidence.
 
 \begin{table}[htbp]
     \centering
