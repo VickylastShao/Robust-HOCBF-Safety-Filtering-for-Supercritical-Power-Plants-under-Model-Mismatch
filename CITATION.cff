@@ -14,7 +14,7 @@ authors:
   - family-names: Zhou
     given-names: Jie
 date-released: "2026-09-02"
-version: "mc-major-revision-2026-09-02-resubmission-v2"
+version: "mc-major-revision-2026-09-02-resubmission-v3"
 license: MIT
 repository-code: "https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch"
 keywords:

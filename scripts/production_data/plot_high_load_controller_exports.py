@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from scripts.mc_figure_style import apply_times_new_roman_style
+from scripts.mc_figure_style import apply_times_new_roman_style, normalize_svg_whitespace
 
 
 BLUE = "#0072B2"
@@ -139,7 +139,7 @@ def plot(windows: dict[str, pd.DataFrame], output_pdf: Path,
         ax_load.plot(frame["elapsed_min"], frame["load_mw"], lw=1.05,
                      color=WINDOW_COLORS[name], label=name)
     ax_load.axhspan(462, 660, color="#eeeeee", zorder=-2)
-    ax_load.text(118, 645, "70-100% nameplate band", ha="right", va="top",
+    ax_load.text(118, 645, "70–100% nameplate band", ha="right", va="top",
                  fontsize=7.4, color=GREY)
     ax_load.set(xlim=(0, 120), xlabel="Elapsed time (min)", ylabel="Active power (MW)",
                 title="High-load operating coverage")
@@ -224,6 +224,7 @@ def plot(windows: dict[str, pd.DataFrame], output_pdf: Path,
     fig.savefig(output_pdf, bbox_inches="tight")
     fig.savefig(output_png, dpi=600, bbox_inches="tight")
     fig.savefig(output_svg, bbox_inches="tight")
+    normalize_svg_whitespace(output_svg)
     plt.close(fig)
 
 

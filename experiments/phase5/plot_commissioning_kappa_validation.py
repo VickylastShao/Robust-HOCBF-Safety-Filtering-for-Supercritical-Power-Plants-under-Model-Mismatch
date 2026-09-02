@@ -19,7 +19,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from scripts.mc_figure_style import apply_times_new_roman_style
+from scripts.mc_figure_style import apply_times_new_roman_style, normalize_svg_whitespace
 
 
 DEFAULT_INPUT = (
@@ -142,7 +142,7 @@ def plot(summary: dict, output: Path) -> None:
     ax_tune.set_ylabel("Controller-sample rate (%)")
     tune_samples = int(rows[0]["total_samples"])
     ax_tune.set_title(
-        f"Tune seeds 0-2 ({tune_samples:,} samples per setting)", pad=3)
+        f"Tune seeds 0–2 ({tune_samples:,} samples per setting)", pad=3)
     ax_tune.set_xlim(-0.25, len(kappa) - 0.75)
     ax_tune.set_ylim(0.0, max(18.0, 1.08 * max(max_violation.max(), max_rejection.max())))
     ax_tune.set_xticks(tune_x)
@@ -216,7 +216,9 @@ def plot(summary: dict, output: Path) -> None:
 
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output.with_suffix(".pdf"))
-    fig.savefig(output.with_suffix(".svg"))
+    svg_path = output.with_suffix(".svg")
+    fig.savefig(svg_path)
+    normalize_svg_whitespace(svg_path)
     fig.savefig(output.with_suffix(".png"), dpi=600)
     plt.close(fig)
 

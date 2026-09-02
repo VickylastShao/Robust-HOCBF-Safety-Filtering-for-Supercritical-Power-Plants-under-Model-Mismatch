@@ -25,7 +25,7 @@ Revision due date: 15 September 2026
 ## Verification Record
 
 - The package was regenerated from the current LaTeX and point-by-point response sources on 2 September 2026.
-- The matching public artifact is identified by immutable tag `mc-major-revision-2026-09-02-resubmission-v2`.
+- The matching public artifact is identified by immutable tag `mc-major-revision-2026-09-02-resubmission-v3`.
 - The revised title page is generated from the submitted layout by `scripts/build_revision_title_page.py`; its manuscript counts are computed from the clean revised DOCX and current LaTeX source.
 - The Word manuscripts are produced from the current LaTeX sources by `scripts/build_mc_docx.sh`, then postprocessed for the M&C layout and metadata-cleaned.
 - The submission PDFs were regenerated from the final DOCX files through Microsoft Word. A TeX engine was unavailable in the current build environment, so this revision record does not claim a fresh LaTeX-to-PDF compilation.

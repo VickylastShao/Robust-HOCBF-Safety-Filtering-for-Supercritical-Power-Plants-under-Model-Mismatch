@@ -128,6 +128,16 @@ def set_keep_lines(p: ET.Element) -> None:
         ppr.append(ET.Element(w("keepLines")))
 
 
+def set_widow_control(p: ET.Element) -> None:
+    """Prevent a single body line from being stranded at a page boundary."""
+    ppr = ensure_ppr(p)
+    widow = ppr.find("w:widowControl", NS)
+    if widow is None:
+        widow = ET.Element(w("widowControl"))
+        ppr.append(widow)
+    widow.attrib.pop(wattr("val"), None)
+
+
 def remove_pstyle(p: ET.Element) -> None:
     ppr = p.find("w:pPr", NS)
     if ppr is None:
@@ -501,21 +511,28 @@ def format_document(body: ET.Element, mode: str = "main") -> None:
             continue
         if text == "Abstract":
             apply_format(p, size=24, jc="left", bold=True, italic=True, strip_style=True)
+            set_keep_next(p)
             continue
         if text.startswith("Keywords:"):
             apply_format(p, size=20, jc="left", bold=True, strip_style=True)
+            set_widow_control(p)
             continue
         if is_heading1_paragraph(p, text):
             apply_format(p, size=24, jc="left", bold=True, italic=True, color="000000", strip_style=True)
             remove_paragraph_indent(p)
             set_spacing(p, before="0", after="0")
+            set_keep_next(p)
+            set_keep_lines(p)
             continue
         if is_heading2_paragraph(p, text):
             apply_format(p, size=20, jc="left", bold=True, italic=True, color="000000", strip_style=True)
             remove_paragraph_indent(p)
             set_spacing(p, before="0", after="0")
+            set_keep_next(p)
+            set_keep_lines(p)
             continue
         apply_format(p, size=20, jc="left")
+        set_widow_control(p)
 
 
 def format_cover_letter_document(body: ET.Element) -> None:
@@ -580,32 +597,39 @@ def format_response_document(body: ET.Element) -> None:
         if not text:
             apply_format(p, size=20, jc="left")
             clear_paragraph_indent(p)
-            set_spacing(p, before="0", after="60")
+            set_spacing(p, before="0", after="30")
             continue
         if text == "Response to the Editor and Reviewers":
             apply_format(
                 p, size=30, jc="center", bold=True, color="000000", strip_style=True
             )
             clear_paragraph_indent(p)
-            set_spacing(p, before="0", after="120")
+            set_spacing(p, before="0", after="100")
+            set_keep_next(p)
+            set_keep_lines(p)
             continue
         if text.startswith("Response to "):
             apply_format(
                 p, size=24, jc="left", bold=True, color="000000", strip_style=True
             )
             clear_paragraph_indent(p)
-            set_spacing(p, before="120", after="50")
+            set_spacing(p, before="100", after="40")
+            set_keep_next(p)
+            set_keep_lines(p)
             continue
         if re.match(r"^Comment \d+:", text):
             apply_format(
                 p, size=20, jc="left", bold=True, color="000000", strip_style=True
             )
             clear_paragraph_indent(p)
-            set_spacing(p, before="80", after="20")
+            set_spacing(p, before="70", after="20")
+            set_keep_next(p)
+            set_keep_lines(p)
             continue
         apply_format(p, size=20, jc="left", bold=False, color="000000")
         clear_paragraph_indent(p)
-        set_spacing(p, before="0", after="60")
+        set_spacing(p, before="0", after="40")
+        set_widow_control(p)
         for prefix in (
             "Manuscript ID:",
             "Title:",
@@ -839,6 +863,7 @@ def format_caption_paragraph(p: ET.Element) -> None:
     remove_ppr_children(p, ("pStyle", "numPr", "pBdr", "framePr", "tabs", "shd"))
     set_jc(p, "left")
     set_spacing(p, before="80", after="120")
+    set_keep_next(p)
     set_keep_lines(p)
     for r in p.findall(".//w:r", NS):
         set_run_format(r, size=20)

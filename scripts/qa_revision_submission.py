@@ -37,6 +37,13 @@ FORBIDDEN = (
     "XT2",
 )
 PRIVATE_IPV4 = re.compile(r"\b10\.(?:\d{1,3}\.){2}\d{1,3}\b")
+PROGRAMMATIC_TRACE_TOKENS = (
+    "ChatGPT",
+    "OpenAI",
+    "python-docx",
+    "pypandoc",
+    "LibreOffice",
+)
 DOCX_FILES = (
     "Title_Page_revised.docx",
     "manuscript_mc_revised_clean.docx",
@@ -80,6 +87,21 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
     for forbidden_part in ("docProps/app.xml", "docProps/custom.xml"):
         if forbidden_part in package_names:
             errors.append(f"{path.name}: contains forbidden metadata part {forbidden_part}")
+    forbidden_package_parts = sorted(
+        name
+        for name in package_names
+        if name.startswith("customXml/")
+        or "comments" in name.lower()
+        or name.startswith("docProps/thumbnail.")
+        or name.startswith("word/embeddings/")
+        or name.startswith("customUI/")
+        or name.lower().endswith("vbaproject.bin")
+    )
+    if forbidden_package_parts:
+        errors.append(
+            f"{path.name}: contains unnecessary review/custom package parts "
+            + ", ".join(forbidden_package_parts)
+        )
     package_text = "\n".join(
         data.decode("utf-8", errors="ignore") for data in xml_entries.values()
     )
@@ -102,6 +124,9 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
         errors.append(f"{path.name}: contains a private-network IPv4 address")
     if "\u00a0" in package_text or "\u3000" in package_text:
         errors.append(f"{path.name}: contains nonstandard spacing characters")
+    for token in PROGRAMMATIC_TRACE_TOKENS:
+        if token.lower() in package_text.lower():
+            errors.append(f"{path.name}: contains programmatic/editor trace {token!r}")
 
     core = ET.fromstring(xml_entries["docProps/core.xml"])
     for xpath, label in (("dc:creator", "creator"), ("cp:lastModifiedBy", "lastModifiedBy")):
@@ -131,6 +156,24 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
         errors.append(f"{path.name}: contains {rsid_count} Word rsid records")
 
     document = ET.fromstring(xml_entries["word/document.xml"])
+    revision_tags = {
+        "ins",
+        "del",
+        "moveFrom",
+        "moveTo",
+        "commentRangeStart",
+        "commentRangeEnd",
+        "commentReference",
+    }
+    revisions = [
+        element.tag.rsplit("}", 1)[-1]
+        for element in document.iter()
+        if element.tag.rsplit("}", 1)[-1] in revision_tags
+    ]
+    if revisions:
+        errors.append(
+            f"{path.name}: contains tracked-change/comment anchors {sorted(set(revisions))}"
+        )
     explicit_fonts: set[str] = set()
     for root_name in ("word/document.xml", "word/styles.xml", "word/numbering.xml"):
         if root_name not in xml_entries:
@@ -210,6 +253,8 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
         comments = re.findall(r"^Comment \d+:", text, flags=re.MULTILINE)
         if len(comments) != 23:
             errors.append(f"{path.name}: expected 23 reviewer comment headings, found {len(comments)}")
+        if "--" in text:
+            errors.append(f"{path.name}: contains LaTeX-style double hyphens in visible prose")
         for phrase in (
             "45 seeded fit-and-evaluation runs",
             "135 scalar GP fits",
@@ -307,6 +352,18 @@ def check_tiff(path: Path, errors: list[str]) -> tuple[int, int]:
         dpi = image.info.get("dpi", (0, 0))
         if min(dpi) < 599:
             errors.append(f"{path.name}: expected 600 dpi, got {dpi}")
+        for tag, label in (
+            (269, "DocumentName"),
+            (270, "ImageDescription"),
+            (305, "Software"),
+            (306, "DateTime"),
+            (315, "Artist"),
+            (316, "HostComputer"),
+            (33432, "Copyright"),
+        ):
+            value = image.tag_v2.get(tag)
+            if value not in (None, "", b""):
+                errors.append(f"{path.name}: contains TIFF {label} metadata")
         return image.size
 
 

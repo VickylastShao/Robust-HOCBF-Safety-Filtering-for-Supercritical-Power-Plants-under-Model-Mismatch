@@ -67,3 +67,14 @@ def apply_times_new_roman_style(base_size: float = 8.0) -> None:
             "axes.unicode_minus": False,
         }
     )
+
+
+def normalize_svg_whitespace(path: Path) -> None:
+    """Remove renderer-added line-end spaces without changing SVG content."""
+    text = path.read_text(encoding="utf-8")
+    trailing_newline = text.endswith("\n")
+    normalized = "\n".join(line.rstrip() for line in text.splitlines())
+    if trailing_newline:
+        normalized += "\n"
+    if normalized != text:
+        path.write_text(normalized, encoding="utf-8")

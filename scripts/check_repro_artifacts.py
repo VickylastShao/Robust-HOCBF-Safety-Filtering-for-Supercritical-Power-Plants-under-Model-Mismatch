@@ -397,7 +397,7 @@ def check_current_text_claims(errors: list[str]) -> None:
 
 
 def check_release_metadata(errors: list[str]) -> None:
-    expected_tag = "mc-major-revision-2026-09-02-resubmission-v2"
+    expected_tag = "mc-major-revision-2026-09-02-resubmission-v3"
     repro = (ROOT / ".repro-pack.yaml").read_text(encoding="utf-8")
     citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
     availability = (ROOT / "DATA_AVAILABILITY.md").read_text(encoding="utf-8")
