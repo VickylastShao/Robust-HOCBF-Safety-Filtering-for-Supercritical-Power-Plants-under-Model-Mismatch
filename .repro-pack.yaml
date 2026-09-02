@@ -1,24 +1,34 @@
 artifact:
-  name: rocbf-net-mc-submission
-  date: "2026-07-01"
-  manuscript: "A Tunable GP-HOCBF Safety Filter for Supercritical Boiler-Turbine Control under Model Mismatch"
+  name: rocbf-sf-mc-major-revision
+  date: "2026-09-02"
+  version: "mc-major-revision-2026-09-02-resubmission"
+  manuscript: "Commissioning-Calibrated GP-HOCBF Safety Filtering for Ultra-Supercritical Boiler-Turbine Control under Model Mismatch"
   target_journal: "Measurement and Control"
   public_repository: "https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch"
 
 checks:
   static_inventory: "python scripts/check_repro_artifacts.py"
   unit_tests: "pytest tests/ -q"
-  main_analysis: "python experiments/phase5/analyze_results_5th.py"
-  kappa_plot: "python experiments/phase5/plot_kappa_sweep.py"
-  process_response_plot: "python experiments/phase5/plot_process_response_figure.py --display-steps 10"
+  main_analysis: "python experiments/phase5/aggregate_ccs7_confirmatory.py --input-dir results/phase5_ccs7_confirmatory_20260902 --extra-dir results/phase5_ccs7_nmpc_20260902 --output-json results/phase5_ccs7_confirmatory_20260902/summary.json --output-csv results/phase5_ccs7_confirmatory_20260902/summary.csv"
+  kappa_selection: "python experiments/phase5/select_commissioning_kappa.py --tune-dir results/phase5_ccs7_kappa_20260902 --test-dirs results/phase5_ccs7_kappa_20260902 --output results/phase5_ccs7_kappa_20260902/selection_summary.json"
+  kappa_plot: "python experiments/phase5/plot_commissioning_kappa_validation.py --input results/phase5_ccs7_kappa_20260902/selection_summary.json"
+  process_response_plot: "python experiments/phase5/plot_process_response_figure.py"
   model_mismatch_plot: "python experiments/phase5/plot_model_mismatch_figure.py --display-steps 10"
 
 expected_results:
-  main_seed_files: 320
-  method_condition_combinations: 64
+  primary_seed_files: 140
+  primary_summary_files: 1
+  primary_method_condition_combinations: 28
+  nmpc_seed_files: 35
+  kappa_json_files: 28
+  gp_sensitivity_json_files: 46
+  primary_methods: [fixed_proposal, hocbf_no_gp, rocbf_mean, rocbf_full]
+  conditions: [nominal, s1_heat, s2_pressure, s3_coupled, s4_nonlinear, s5_valve, s6_fuel]
   seeds: [0, 1, 2, 3, 4]
 
 data_policy:
-  proprietary_plant_data: false
+  proprietary_plant_data: true
+  raw_plant_data_public: false
+  bounded_public_derivatives: true
   human_subject_data: false
   third_party_operational_data: false

@@ -176,6 +176,33 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
             ):
                 errors.append(f"{path.name}: Figure 7 revised formula is not fully yellow")
 
+    if path.name in {
+        "manuscript_mc_revised_clean.docx",
+        "manuscript_mc_revised_highlighted.docx",
+    }:
+        text = "\n".join(
+            paragraph_text(paragraph) for paragraph in document.findall(".//w:p", NS)
+        )
+        for heading in (
+            "Statements and Declarations",
+            "Ethical considerations",
+            "Consent to participate",
+            "Consent for publication",
+            "Declaration of conflicting interests",
+            "Funding",
+            "Data availability",
+            "Declaration of generative AI and AI-assisted technologies",
+        ):
+            if heading not in text:
+                errors.append(f"{path.name}: missing required declaration heading {heading!r}")
+        for phrase in (
+            "This study did not involve human participants",
+            "used Grammarly for English grammar checking",
+            "Complete raw plant records are proprietary enterprise assets",
+        ):
+            if phrase not in text:
+                errors.append(f"{path.name}: missing required declaration text {phrase!r}")
+
     if path.name == "response_to_reviewers_mc.docx":
         text = "\n".join(
             paragraph_text(paragraph) for paragraph in document.findall(".//w:p", NS)
@@ -187,6 +214,7 @@ def check_docx(path: Path, errors: list[str]) -> dict[str, int]:
             "45 seeded fit-and-evaluation runs",
             "135 scalar GP fits",
             "original low-to-mid-load records are retained only as historian operating context",
+            "current dispatch schedule rarely holds the unit at nameplate load",
             "broad low-to-high-load operating evidence rather than complete full-range performance validation",
             "rejects 149,800/150,000 QPs",
             "65,134/150,000 violating samples",

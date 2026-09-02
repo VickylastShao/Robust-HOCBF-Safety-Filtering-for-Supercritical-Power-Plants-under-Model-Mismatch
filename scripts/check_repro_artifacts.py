@@ -21,6 +21,7 @@ REQUIRED_PATHS = [
     "REPRODUCIBILITY.md",
     "ARTIFACT_MANIFEST.md",
     "CITATION.cff",
+    ".repro-pack.yaml",
     "LICENSE",
     ".gitattributes",
     "pyproject.toml",
@@ -380,6 +381,46 @@ def check_current_text_claims(errors: list[str]) -> None:
             if phrase in text:
                 errors.append(f"Stale claim {phrase!r} remains in {rel(path)}.")
 
+    manuscript = (ROOT / "paper/manuscript_mc.tex").read_text(encoding="utf-8")
+    for phrase in (
+        r"\section*{Statements and Declarations}",
+        r"\subsection*{Ethical considerations}",
+        r"\subsection*{Consent to participate}",
+        r"\subsection*{Consent for publication}",
+        r"\subsection*{Declaration of conflicting interests}",
+        r"\subsection*{Funding}",
+        r"\subsection*{Data availability}",
+        r"\subsection*{Declaration of generative AI and AI-assisted technologies}",
+    ):
+        if phrase not in manuscript:
+            errors.append(f"Required main-manuscript declaration is missing: {phrase}.")
+
+
+def check_release_metadata(errors: list[str]) -> None:
+    expected_tag = "mc-major-revision-2026-09-02-resubmission"
+    repro = (ROOT / ".repro-pack.yaml").read_text(encoding="utf-8")
+    citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    availability = (ROOT / "DATA_AVAILABILITY.md").read_text(encoding="utf-8")
+    required_repro = (
+        'date: "2026-09-02"',
+        f'version: "{expected_tag}"',
+        "primary_seed_files: 140",
+        "nmpc_seed_files: 35",
+        "kappa_json_files: 28",
+        "gp_sensitivity_json_files: 46",
+        "proprietary_plant_data: true",
+        "raw_plant_data_public: false",
+    )
+    for phrase in required_repro:
+        if phrase not in repro:
+            errors.append(f"Stale or missing .repro-pack.yaml value: {phrase}.")
+    if "A Tunable GP-HOCBF Safety Filter" in repro:
+        errors.append("The old manuscript title remains in .repro-pack.yaml.")
+    if f'version: "{expected_tag}"' not in citation:
+        errors.append("CITATION.cff does not identify the current revision tag.")
+    if expected_tag not in availability:
+        errors.append("DATA_AVAILABILITY.md does not identify the current revision tag.")
+
 
 def check_suspicious_files(errors: list[str]) -> None:
     hits: list[str] = []
@@ -400,6 +441,7 @@ def main() -> int:
     check_gp_semantics(errors)
     check_current_result_semantics(errors)
     check_current_text_claims(errors)
+    check_release_metadata(errors)
     check_suspicious_files(errors)
 
     print("RoCBF-SF major-revision reproducibility artifact check")

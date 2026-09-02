@@ -28,9 +28,11 @@ Revision due date: 15 September 2026
 - The revised title page is generated from the submitted layout by `scripts/build_revision_title_page.py`; its manuscript counts are computed from the clean revised DOCX and current LaTeX source.
 - Main and supplementary LaTeX sources compile to `latex_build/` without unresolved references or citations.
 - The Word manuscripts are produced by `scripts/build_mc_docx.sh`, then postprocessed for the M&C layout and metadata-cleaned.
+- The main manuscript contains the complete `Statements and Declarations` section required by the journal; author and affiliation details remain confined to the separate title page.
 - The response letter preserves all 23 reviewer comments plus the Associate Editor's request, and every response identifies a section, figure, table, or supplemental location for verification.
 - All figure upload files are RGB TIFFs rendered at 600 dpi and written with LZW compression.
 - MW01--MW03 are indexed only as low-to-mid-load historian context; they are not used for controller-internal QP claims. The confirmed MW04--MW06 controller exports support the reported timestamps, operating states, margins, saturation flags, and timing summaries.
+- The measured controller-export envelope reaches 629.7 MW (95.4% of the 660 MW nameplate rating). The manuscript and response explicitly avoid extrapolating this evidence to an unobserved 660 MW endpoint or calling it complete full-range validation.
 - Public controller excerpts replace only the unit and internal controller-version identifiers; all other fields are copied verbatim and linked to source/public SHA-256 records.
 - DOCX metadata fields `creator` and `lastModifiedBy` are empty, and public submission files contain no plant-specific unit name or internal controller-version string.
 - The 1 s implementation is reported as the deployed controller-task period; the 5 s controller-export interval and the absence of a sampled-data certificate are stated separately.
