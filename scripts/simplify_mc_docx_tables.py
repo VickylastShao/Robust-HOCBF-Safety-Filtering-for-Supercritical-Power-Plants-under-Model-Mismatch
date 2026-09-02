@@ -34,6 +34,10 @@ REPLACEMENTS = {
     r"\begin{tabular}{>{\raggedright\arraybackslash}p{0.28\textwidth}>{\centering\arraybackslash}p{0.20\textwidth}>{\centering\arraybackslash}p{0.20\textwidth}>{\centering\arraybackslash}p{0.16\textwidth}}": r"\begin{tabular}{lccc}",
 }
 
+COUNT_RATIO_RE = re.compile(
+    r"(?<![\w.\-])(\d+)\s*/\s*(\d+(?:\{,\}\d+)?)(?![\d.])"
+)
+
 
 def matching_brace(text: str, opening: int) -> int:
     """Return the closing brace paired with ``opening`` or ``-1``."""
@@ -88,6 +92,20 @@ def simplify_all_tabular_specs(text: str) -> str:
     return "".join(pieces)
 
 
+def expand_count_ratios(table: str) -> str:
+    """Spell out sample-count ratios without changing kernels or dates."""
+
+    def replacement(match: re.Match[str]) -> str:
+        numerator_text, denominator_text = match.groups()
+        numerator = int(numerator_text)
+        denominator = int(denominator_text.replace("{,}", ""))
+        if numerator != 0 and max(numerator, denominator) < 100:
+            return match.group(0)
+        return f"{numerator_text} of {denominator_text}"
+
+    return COUNT_RATIO_RE.sub(replacement, table)
+
+
 def process(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     updated = text
@@ -97,13 +115,9 @@ def process(path: Path) -> None:
     # Pandoc's LaTeX table reader can parse an unspaced count ratio such as
     # ``1682/2500`` as an incomplete math fragment and discard the numerator.
     # This DOCX-only simplification leaves the publication TeX untouched.
-    def expand_count_ratios(match: re.Match[str]) -> str:
-        table = match.group(0)
-        return re.sub(r"(?<![\d.])(\d+)\s*/\s*(\d+)(?![\d.])", r"\1 of \2", table)
-
     updated = re.sub(
         r"\\begin\{tabular\}.*?\\end\{tabular\}",
-        expand_count_ratios,
+        lambda match: expand_count_ratios(match.group(0)),
         updated,
         flags=re.DOTALL,
     )

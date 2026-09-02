@@ -16,11 +16,11 @@ where $u=[u_B,D_{fw},u_t]^\top$ denotes coal-feed, feedwater-flow, and turbine-v
     \label{eq:stabilized_deviation_model}
 \end{equation}
 Its forward-Euler update is $\xi_{k+1}=A_d\xi_k+T_sB_sv_k+T_s\Delta f_\xi(\xi_k)$, which is the controller-instant transition used in the numerical rollouts. This construction preserves the continuous command-level relative degree induced by the actuator states. It is a benchmark surrogate rather than a sampled-data safety certificate.
-Table~\ref{tab:implementation_settings} lists the measurement, constraint, GP, QP, fallback, and runtime settings used in the benchmark and plant implementation.
+Table~\ref{tab:implementation_settings} lists the benchmark constraint definitions alongside the principal GP, QP, fallback, and runtime settings. Field-specific direct bounds are reported with the plant-controller evidence in Section~\ref{sec:historian}.
 
 \begin{table}[htbp]
     \centering
-    \caption{Variables and implementation settings used by the RoCBF-SF safety filter in the actuator-augmented CCS benchmark and plant implementation.}
+    \caption{Benchmark constraint definitions and principal implementation settings used by the RoCBF-SF safety filter. Field-specific direct bounds are reported separately with the plant-controller evidence.}
     \label{tab:implementation_settings}
     \small
     \renewcommand{\arraystretch}{0.98}
@@ -31,9 +31,9 @@ Table~\ref{tab:implementation_settings} lists the measurement, constraint, GP, Q
         Benchmark state & $x=[r_B,p_m,h_m,N_e,\tau_f,D_{fw},u_t]^\top$ & Five process states from the reference model plus measured feedwater and valve actuator states. \\
         GP input/output & $x_k^{\mathrm{GP}}=[p_{m,k},h_{m,k},N_{e,k}]^\top$ and three residual rates & Constrained outputs used by the residual GPs; all seven states and three proposed commands remain inputs to the nominal one-step predictor. \\
         Manipulated inputs & $u=[u_B,D_{fw},u_t]^\top$; $S_u=\operatorname{diag}(10,40,1)$ & Physical commands are reconstructed from normalized $v\in[-1,1]^3$. \\
-        Main-steam pressure limit & $p_{\mathrm{st}}(x)\in[13,24]$\,MPa; relative degree $m=2$ & High-order pressure CBF with two $\psi$-levels. \\
-        Enthalpy limit & Range 2670--2830\,kJ/kg; relative degree $m=2$ & Actuator-augmented heat-absorption safety constraint. \\
-        Power tracking band & Band $N_{\mathrm{ref}}\pm50$\,MW; relative degree $m=2$ & Actuator-augmented generator-output constraint around the dispatch target. \\
+        Benchmark pressure constraint & $p_{\mathrm{st}}(x)\in[13,24]$\,MPa; relative degree $m=2$ & High-order pressure CBF with two $\psi$-levels. \\
+        Benchmark enthalpy constraint & Range 2670--2830\,kJ/kg; relative degree $m=2$ & Actuator-augmented heat-absorption safety constraint. \\
+        Benchmark power constraint & Band $N_{\mathrm{ref}}\pm50$\,MW; relative degree $m=2$ & Actuator-augmented generator-output constraint around the dispatch target. \\
         Sampling and hold & Controller period $T_s=1$\,s; zero-order hold & Online QP solved once per controller cycle; plant-validation exports use 5\,s record spacing. \\
         GP calibration & Three 500-point Mat\'{e}rn-5/2 residual GPs with frozen input/output standardization & Learns pressure, enthalpy, and power residual-rate means and posterior uncertainties; 200 time-isolated points are retained for validation. \\
         QP implementation & qpax, row scaling, box/rate constraints, $10^{-6}$ feasibility tolerance & Projects $v_{\mathrm{prop}}$ to the nearest admissible $v^*$ and rejects non-converged or infeasible candidates. \\
