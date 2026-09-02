@@ -8,7 +8,7 @@ Revision due date: 15 September 2026
 | ScholarOne purpose | File | Notes |
 |---|---|---|
 | Revised title page | `Title_Page_revised.docx` | Updated repository URL and current word/figure/table counts. |
-| Highlighted revised main manuscript | `manuscript_mc_revised_highlighted.docx` | Editable Word document. Revised text and equations are marked with Word yellow highlighting; the reference list is unmarked. |
+| Highlighted revised main manuscript | `manuscript_mc_revised_highlighted.docx` | Editable Word document. Added or rewritten sentences, locally changed terms/numbers, changed table cells, and complete changed equations are marked with Word yellow highlighting; moved unchanged text, automatic renumbering, and the reference list are unmarked. |
 | Supplementary material | `manuscript_mc_supplementary_revised.docx` | Updated factual supporting material and proofs. |
 | Response to Editor and Reviewers | `response_to_reviewers_mc.docx` | Point-by-point response. The same text can be pasted into the response field. |
 | Figure 1 | `figures_for_upload/Figure_1_architecture.tif` | 600 dpi LZW TIFF. |
@@ -25,9 +25,9 @@ Revision due date: 15 September 2026
 ## Verification Record
 
 - The package was regenerated from the current LaTeX and point-by-point response sources on 2 September 2026.
-- The matching public artifact is identified by immutable tag `mc-major-revision-2026-09-02-resubmission-v3`.
+- The matching public artifact is identified by immutable tag `mc-major-revision-2026-09-02-resubmission-v4`.
 - The revised title page is generated from the submitted layout by `scripts/build_revision_title_page.py`; its manuscript counts are computed from the clean revised DOCX and current LaTeX source.
-- The Word manuscripts are produced from the current LaTeX sources by `scripts/build_mc_docx.sh`, then postprocessed for the M&C layout and metadata-cleaned.
+- The Word manuscripts are produced from the current LaTeX sources by `scripts/build_mc_docx.sh`, then postprocessed for the M&C layout and metadata-cleaned. The upload manuscript is compared against the portal-downloaded original submission and highlighted at sentence/phrase, table-cell, and complete-equation granularity; `highlight_manifest.json` records the internal build statistics.
 - The submission PDFs were regenerated from the final DOCX files through Microsoft Word. A TeX engine was unavailable in the current build environment, so this revision record does not claim a fresh LaTeX-to-PDF compilation.
 - The main manuscript contains the complete `Statements and Declarations` section required by the journal; author and affiliation details remain confined to the separate title page.
 - The response letter preserves all 23 reviewer comments plus the Associate Editor's request, and every response identifies a section, figure, table, or supplemental location for verification.

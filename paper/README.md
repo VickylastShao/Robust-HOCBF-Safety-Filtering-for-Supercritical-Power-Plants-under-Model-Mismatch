@@ -12,7 +12,7 @@
 | File | Role |
 |---|---|
 | `manuscript_mc.tex` | Main manuscript (SAGE-compatible, `article` class, SageV.bst) |
-| `revision_submission/manuscript_mc_revised_highlighted.docx` | Current editable revised main manuscript for ScholarOne upload |
+| `revision_submission/manuscript_mc_revised_highlighted.docx` | Current editable revised main manuscript for ScholarOne upload, with precise sentence/phrase, changed-cell, and complete-equation highlighting |
 | `revision_submission/manuscript_mc_revised_clean.docx` | Current unmarked internal reference copy |
 | `revision_submission/manuscript_mc_revised_highlighted.pdf` | Visual-review export of the editable revised manuscript |
 | `manuscript_mc.pdf` | Current DOCX-first author-review PDF generated from the active LaTeX source |

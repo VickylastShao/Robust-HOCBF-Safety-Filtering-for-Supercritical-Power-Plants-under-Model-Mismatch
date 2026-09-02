@@ -1,0 +1,16 @@
+{
+  "body_paragraphs_added": 24,
+  "body_paragraphs_modified": 74,
+  "body_paragraphs_unchanged_or_moved": 59,
+  "display_equations_changed": 8,
+  "display_equations_unchanged_or_renumbered": 5,
+  "fully_highlighted_body_paragraphs": 46,
+  "highlighted_character_percent": 60.46,
+  "highlighted_characters": 44974,
+  "partially_highlighted_body_paragraphs": 52,
+  "strategy": "sentence-span, changed-cell, whole-changed-equation",
+  "table_cells_changed": 117,
+  "table_cells_unchanged": 45,
+  "visible_characters": 74385,
+  "yellow_runs": 2525
+}

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import argparse
 import re
-from difflib import SequenceMatcher
+from collections import Counter
 from pathlib import Path
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
@@ -374,56 +374,172 @@ def check_revision_highlight_coverage(package_dir: Path, errors: list[str]) -> N
     if not baseline.is_file():
         return
 
-    def paragraphs(path: Path) -> list[ET.Element]:
+    def document_root(path: Path) -> ET.Element:
         with ZipFile(path) as package:
-            root = ET.fromstring(package.read("word/document.xml"))
-        return list(root.iter(w("p")))
+            return ET.fromstring(package.read("word/document.xml"))
 
-    baseline_paragraphs = paragraphs(baseline)
-    clean_paragraphs = paragraphs(clean)
-    highlighted_paragraphs = paragraphs(highlighted)
-    baseline_text = [paragraph_text(paragraph) for paragraph in baseline_paragraphs]
-    clean_text = [paragraph_text(paragraph) for paragraph in clean_paragraphs]
-    highlighted_text = [paragraph_text(paragraph) for paragraph in highlighted_paragraphs]
-    if clean_text != highlighted_text:
+    def body_paragraphs(root: ET.Element) -> list[ET.Element]:
+        body = root.find("w:body", NS)
+        return body.findall("./w:p", NS) if body is not None else []
+
+    def yellow_runs(element: ET.Element) -> list[ET.Element]:
+        return [
+            run
+            for run in element.findall(".//w:r", NS) + element.findall(".//m:r", NS)
+            if run.find("w:rPr/w:highlight", NS) is not None
+            and run.find("w:rPr/w:highlight", NS).get(w("val")) == "yellow"
+        ]
+
+    def text_runs(element: ET.Element) -> list[ET.Element]:
+        return [
+            run
+            for run in element.findall(".//w:r", NS) + element.findall(".//m:r", NS)
+            if paragraph_text(run)
+        ]
+
+    def normalize(text: str) -> str:
+        return " ".join(text.split())
+
+    def semantic_key(text: str) -> str:
+        value = normalize(text)
+        caption = re.match(r"^(Figure|Table)\s+\d+\.?\s*(.*)$", value, re.IGNORECASE)
+        if caption:
+            return f"{caption.group(1).lower()}::{caption.group(2)}"
+        heading = re.match(r"^\d+(?:\.\d+)*\s+(.+)$", value)
+        if heading and len(value) <= 180:
+            return f"heading::{heading.group(1)}"
+        return value
+
+    def equation_tables(root: ET.Element) -> list[ET.Element]:
+        body = root.find("w:body", NS)
+        if body is None:
+            return []
+        result = []
+        for table in body.findall("./w:tbl", NS):
+            description = table.find("./w:tblPr/w:tblDescription", NS)
+            if (
+                description is not None
+                and description.get(w("val")) == "EquationNumbering"
+            ):
+                result.append(table)
+        return result
+
+    def equation_formula(table: ET.Element) -> str:
+        cells = table.findall("./w:tr/w:tc", NS)
+        return re.sub(r"\s+", "", paragraph_text(cells[0])) if cells else ""
+
+    baseline_root = document_root(baseline)
+    clean_root = document_root(clean)
+    highlighted_root = document_root(highlighted)
+    clean_visible = paragraph_text(clean_root)
+    highlighted_visible = paragraph_text(highlighted_root)
+    if clean_visible != highlighted_visible:
         errors.append("Highlighted manuscript content differs from the clean revised manuscript")
         return
 
-    changed: set[int] = set()
-    matcher = SequenceMatcher(a=baseline_text, b=clean_text, autojunk=False)
-    for tag, _, _, revised_start, revised_end in matcher.get_opcodes():
-        if tag != "equal":
-            changed.update(range(revised_start, revised_end))
+    baseline_paragraphs = body_paragraphs(baseline_root)
+    clean_paragraphs = body_paragraphs(clean_root)
+    highlighted_paragraphs = body_paragraphs(highlighted_root)
+    if len(clean_paragraphs) != len(highlighted_paragraphs):
+        errors.append("Highlighted manuscript has a different body-paragraph count")
+        return
+    clean_text = [paragraph_text(paragraph) for paragraph in clean_paragraphs]
     references_start = next(
         (index for index, text in enumerate(clean_text) if text.strip().lower() == "references"),
         len(clean_text),
     )
 
-    missing: list[int] = []
-    unexpected: list[int] = []
-    for index, paragraph in enumerate(highlighted_paragraphs):
-        runs = paragraph.findall(".//w:r", NS) + paragraph.findall(".//m:r", NS)
-        yellow = [
-            run
-            for run in runs
-            if run.find("w:rPr/w:highlight", NS) is not None
-            and run.find("w:rPr/w:highlight", NS).get(w("val")) == "yellow"
-        ]
-        expected = index in changed and bool(clean_text[index]) and index < references_start
-        if expected and (not runs or len(yellow) != len(runs)):
-            missing.append(index)
-        if not expected and yellow:
-            unexpected.append(index)
-    if missing:
+    reference_yellow = sum(
+        len(yellow_runs(paragraph))
+        for paragraph in highlighted_paragraphs[references_start:]
+    )
+    if reference_yellow:
         errors.append(
-            "Highlighted manuscript has incomplete yellow coverage in revised paragraphs "
-            + ", ".join(map(str, missing[:10]))
+            f"Highlighted manuscript has {reference_yellow} yellow runs in the reference list"
         )
-    if unexpected:
+
+    baseline_exact = Counter(
+        normalize(paragraph_text(paragraph))
+        for paragraph in baseline_paragraphs
+        if normalize(paragraph_text(paragraph))
+    )
+    baseline_semantic = Counter(
+        semantic_key(paragraph_text(paragraph))
+        for paragraph in baseline_paragraphs
+        if normalize(paragraph_text(paragraph))
+    )
+    unchanged_marked: list[int] = []
+    renumbered_marked: list[int] = []
+    full_paragraphs = 0
+    partial_paragraphs = 0
+    total_characters = 0
+    highlighted_characters = 0
+    for index, paragraph in enumerate(highlighted_paragraphs[:references_start]):
+        runs = text_runs(paragraph)
+        yellow = yellow_runs(paragraph)
+        total_characters += sum(len(paragraph_text(run)) for run in runs)
+        highlighted_characters += sum(len(paragraph_text(run)) for run in yellow)
+        if yellow and len(yellow) == len(runs):
+            full_paragraphs += 1
+        elif yellow:
+            partial_paragraphs += 1
+        value = normalize(paragraph_text(paragraph))
+        if value and baseline_exact[value] > 0:
+            baseline_exact[value] -= 1
+            if yellow:
+                unchanged_marked.append(index)
+            continue
+        key = semantic_key(value)
+        if value and key != value and baseline_semantic[key] > 0:
+            baseline_semantic[key] -= 1
+            if yellow:
+                renumbered_marked.append(index)
+    if unchanged_marked:
         errors.append(
-            "Highlighted manuscript has yellow formatting outside revised paragraphs "
-            + ", ".join(map(str, unexpected[:10]))
+            "Highlighted manuscript marks unchanged body paragraphs "
+            + ", ".join(map(str, unchanged_marked[:10]))
         )
+    if renumbered_marked:
+        errors.append(
+            "Highlighted manuscript marks moved/automatically renumbered headings or captions "
+            + ", ".join(map(str, renumbered_marked[:10]))
+        )
+    highlighted_percent = 100.0 * highlighted_characters / max(1, total_characters)
+    if not partial_paragraphs:
+        errors.append("Highlighted manuscript has no sentence/phrase-level partial highlights")
+    if highlighted_percent >= 70.0:
+        errors.append(
+            f"Highlighted manuscript still marks {highlighted_percent:.1f}% of body text"
+        )
+
+    old_formula_counts = Counter(
+        equation_formula(table) for table in equation_tables(baseline_root)
+    )
+    for index, table in enumerate(equation_tables(highlighted_root), start=1):
+        formula = equation_formula(table)
+        runs = text_runs(table)
+        marked = yellow_runs(table)
+        unchanged = bool(formula and old_formula_counts[formula])
+        if unchanged:
+            old_formula_counts[formula] -= 1
+            if marked:
+                errors.append(f"Display equation {index} is unchanged but highlighted")
+        elif not runs or len(marked) != len(runs):
+            errors.append(f"Changed display equation {index} is not fully highlighted")
+
+    body = highlighted_root.find("w:body", NS)
+    if body is not None:
+        for table_index, table in enumerate(body.findall("./w:tbl", NS), start=1):
+            description = table.find("./w:tblPr/w:tblDescription", NS)
+            if description is not None and description.get(w("val")) == "EquationNumbering":
+                continue
+            for cell_index, cell in enumerate(table.findall("./w:tr/w:tc", NS), start=1):
+                runs = text_runs(cell)
+                marked = yellow_runs(cell)
+                if marked and len(marked) != len(runs):
+                    errors.append(
+                        f"Data table {table_index} cell {cell_index} is only partly highlighted"
+                    )
 
 
 def main() -> int:

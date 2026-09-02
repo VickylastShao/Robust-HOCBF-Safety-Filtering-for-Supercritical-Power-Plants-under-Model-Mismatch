@@ -14,7 +14,7 @@ The current upload-ready files are listed in [`revision_submission/README.md`](r
 | Supplemental material | `revision_submission/manuscript_mc_supplementary_revised.docx` |
 | Response to Editor and Reviewers | `revision_submission/response_to_reviewers_mc.docx` |
 
-The clean revised manuscript is an internal comparison copy and is not the highlighted upload manuscript.
+The clean revised manuscript is an internal comparison copy and is not the highlighted upload manuscript. The upload manuscript marks only added or changed sentences/phrases, changed table cells, and complete changed equations; unchanged moved text, automatic renumbering, and references are left unmarked.
 
 ## Separate Figure Files
 

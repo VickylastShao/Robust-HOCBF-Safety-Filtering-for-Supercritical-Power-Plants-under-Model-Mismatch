@@ -5,6 +5,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PAPER_DIR="$ROOT/paper"
 SOURCE="$PAPER_DIR/manuscript_mc.tex"
 OUT="$PAPER_DIR/revision_submission/manuscript_mc_revised_clean.docx"
+REVISION_BASELINE="$ROOT/manuscript_mc.docx"
+HIGHLIGHTED_OUT="$PAPER_DIR/revision_submission/manuscript_mc_revised_highlighted.docx"
+HIGHLIGHT_REPORT="$PAPER_DIR/revision_submission/highlight_manifest.json"
 FIG_DPI="${DOCX_FIGURE_DPI:-600}"
 CSL="${DOCX_CSL:-$ROOT/scripts/pandoc/vancouver.csl}"
 REFERENCE_DOC="${DOCX_REFERENCE_DOC:-$ROOT/academic-paper-template.docx}"
@@ -288,3 +291,13 @@ python3 "$ROOT/scripts/postprocess_mc_docx.py" "$OUT" \
 python3 "$ROOT/scripts/clean_docx_metadata.py" "$OUT"
 
 echo "Wrote $OUT"
+
+if [[ "$DOCX_MODE" == "main" \
+  && "$(realpath -m "$OUT")" == "$(realpath -m "$PAPER_DIR/revision_submission/manuscript_mc_revised_clean.docx")" \
+  && -s "$REVISION_BASELINE" ]]; then
+  python3 "$ROOT/scripts/highlight_docx_revisions.py" \
+    --original "$REVISION_BASELINE" \
+    --revised "$OUT" \
+    --output "$HIGHLIGHTED_OUT" \
+    --report "$HIGHLIGHT_REPORT"
+fi
