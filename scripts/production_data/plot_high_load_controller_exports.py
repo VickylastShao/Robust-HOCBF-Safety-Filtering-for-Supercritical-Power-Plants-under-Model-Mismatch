@@ -115,6 +115,20 @@ def panel_label(ax: plt.Axes, label: str) -> None:
             fontweight="bold", ha="left", va="bottom")
 
 
+def contrast_text_color(rgba: tuple[float, float, float, float]) -> str:
+    """Choose black or white text from the rendered cell luminance."""
+    rgb = np.asarray(rgba[:3], dtype=float)
+    linear = np.where(
+        rgb <= 0.04045,
+        rgb / 12.92,
+        ((rgb + 0.055) / 1.055) ** 2.4,
+    )
+    luminance = float(np.dot(linear, [0.2126, 0.7152, 0.0722]))
+    black_contrast = (luminance + 0.05) / 0.05
+    white_contrast = 1.05 / (luminance + 0.05)
+    return "black" if black_contrast >= white_contrast else "white"
+
+
 def plot(windows: dict[str, pd.DataFrame], output_pdf: Path,
          output_png: Path, output_svg: Path) -> None:
     apply_times_new_roman_style(base_size=8.5)
@@ -139,11 +153,13 @@ def plot(windows: dict[str, pd.DataFrame], output_pdf: Path,
     raw = np.array([[windows[name][key].min() for key in margin_keys]
                     for name in windows], dtype=float)
     scaled = raw / np.maximum(raw.max(axis=0, keepdims=True), 1e-12)
-    image = ax_margin.imshow(scaled, cmap="YlGn", vmin=0, vmax=1, aspect="auto")
+    cmap = plt.get_cmap("YlGn")
+    image = ax_margin.imshow(scaled, cmap=cmap, vmin=0, vmax=1, aspect="auto")
     for row, name in enumerate(windows):
         for col in range(raw.shape[1]):
+            text_color = contrast_text_color(cmap(float(scaled[row, col])))
             ax_margin.text(col, row, f"{raw[row, col]:.3f}", ha="center", va="center",
-                           fontsize=8.0, color="black")
+                           fontsize=8.0, color=text_color, fontweight="bold")
     ax_margin.set_xticks(range(len(margin_names)), margin_names)
     ax_margin.set_yticks(range(len(windows)), list(windows))
     ax_margin.set_title("Minimum directly measured margins")
@@ -195,7 +211,8 @@ def plot(windows: dict[str, pd.DataFrame], output_pdf: Path,
     ax_runtime.tick_params(axis="x", labelsize=7.2)
     ax_runtime.set_ylabel("Execution time (ms, log scale)")
     ax_runtime.set_title("Controller timing on deployed CPU")
-    ax_runtime.legend(frameon=False, loc="upper left", fontsize=7.4)
+    ax_runtime.legend(frameon=True, facecolor="white", edgecolor="none",
+                      framealpha=0.88, loc="upper right", fontsize=7.4)
     panel_label(ax_runtime, "d")
 
     for ax in (ax_load, ax_recovery, ax_runtime):
@@ -238,7 +255,10 @@ def main() -> None:
         summaries.append(summarize(name, frame, path))
     plot(windows, args.output_pdf, args.output_png, args.output_svg)
     args.metrics.parent.mkdir(parents=True, exist_ok=True)
-    args.metrics.write_text(json.dumps({"windows": summaries}, indent=2), encoding="utf-8")
+    args.metrics.write_text(
+        json.dumps({"windows": summaries}, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

@@ -112,6 +112,13 @@ python experiments/phase5/plot_gp_data_sensitivity.py \
   --summary results/phase5_ccs7_gp_sensitivity_20260902/summary.json
 ```
 
+The committed result JSON files preserve the historical `min_barrier_value`
+field for provenance continuity. That field combines barriers with different
+native units and is not used in any manuscript violation count, table, or
+figure. Current reruns report separate pressure, enthalpy, and power minima in
+their native units; violation events are formed by the logical union of the
+per-constraint threshold tests.
+
 ## 7. Plant Evidence
 
 The public artifact contains derived cohort metrics, a separate native 5 s load-matched diagnostic pair, low/mid-load historian context, field-normalized high-load controller excerpts, field maps, and source/public hashes. The 512-pair cohort is a one-to-one assignment on 300 s records; the 5 s diagnostic pair is not treated as a member selected by that assignment. Full raw historian archives and original controller exports remain enterprise assets.

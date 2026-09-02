@@ -1,9 +1,8 @@
-"""Generate the S3 safety-factor calibration figure.
+"""Generate the superseded five-state S3 calibration diagnostic.
 
-The closed-loop signal mechanism is shown in Figure_6_process_response. This
-figure deliberately avoids repeating the same trajectory evidence; it uses the
-seed-level S3 kappa sweep to show why a small positive margin is the calibrated
-operating point and why the full implemented margin is not used as a default.
+This script is retained only to reproduce the pre-major-revision diagnostic.
+It writes to ``paper/figures/legacy`` and cannot overwrite the active
+seven-state tune/test calibration figure.
 
 Run on a GPU host for trajectory generation. Re-running locally without JAX is
 supported after the trajectory JSON has been generated.
@@ -533,15 +532,16 @@ def plot_figure(trajectories: dict, seed_rows: list[dict], summary_rows: list[di
     ax_barrier.grid(axis="y", color="0.88", linewidth=0.5)
     panel_label(ax_barrier, "b")
 
-    FIGURE_DIR.mkdir(parents=True, exist_ok=True)
-    base = FIGURE_DIR / "Figure_2"
+    legacy_dir = FIGURE_DIR / "legacy"
+    legacy_dir.mkdir(parents=True, exist_ok=True)
+    base = legacy_dir / "Figure_2_mechanism_legacy"
     fig.savefig(base.with_suffix(".pdf"))
     fig.savefig(base.with_suffix(".svg"))
     fig.savefig(base.with_suffix(".png"), dpi=300)
     plt.close(fig)
 
     with Image.open(base.with_suffix(".png")) as image:
-        image.convert("L").save(FIGURE_DIR / "Figure_2_grayscale.png")
+        image.convert("L").save(legacy_dir / "Figure_2_mechanism_legacy_grayscale.png")
     print(f"Saved {base.with_suffix('.pdf')}", flush=True)
 
 

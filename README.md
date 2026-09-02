@@ -68,6 +68,10 @@ python experiments/phase5/plot_gp_data_sensitivity.py \
   --summary results/phase5_ccs7_gp_sensitivity_20260902/summary.json
 ```
 
+`plot_commissioning_kappa_validation.py` is the only authoritative generator
+for `paper/figures/Figure_2.*`. Superseded five-state diagnostics write only to
+`paper/figures/legacy/` and cannot overwrite an active manuscript figure.
+
 The complete simulation sweep is substantially more expensive than plotting from stored results:
 
 ```bash

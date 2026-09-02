@@ -44,7 +44,7 @@ Use `REPRODUCIBILITY.md` for the staged workflow:
 The repository is synchronized to the public GitHub repository for the major revision. Immutable revision tag:
 
 ```bash
-mc-major-revision-2026-09-02-resubmission
+mc-major-revision-2026-09-02-resubmission-v2
 ```
 
 If a Zenodo DOI is minted later, update this file, `CITATION.cff`, and the manuscript Data availability statement with the DOI.

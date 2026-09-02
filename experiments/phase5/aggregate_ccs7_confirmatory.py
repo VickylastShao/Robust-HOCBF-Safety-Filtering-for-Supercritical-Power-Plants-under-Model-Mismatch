@@ -80,7 +80,7 @@ def main() -> None:
         )
         online_time_mean, online_time_sd = pooled_mean_sd(
             payloads, "online_time_ms")
-        rows.append({
+        row = {
             "method": method,
             "method_label": payloads[0]["method_label"],
             "condition": condition,
@@ -113,12 +113,23 @@ def main() -> None:
             "maximum_normalized_qp_residual": max(
                 item["max_normalized_qp_residual"] for item in payloads
             ),
-            "minimum_unrounded_barrier": min(
-                item["min_barrier_value"][0] for item in payloads
-            ),
             "relative_degrees": payloads[0]["barrier_relative_degrees"],
             "initial_state_set": payloads[0]["initial_state_set"],
-        })
+        }
+        for ctype, unit_suffix in (
+            ("pressure", "mpa"),
+            ("enthalpy", "kj_per_kg"),
+            ("power", "mw"),
+        ):
+            minima = [
+                item["minimum_barrier_by_type_native_units"][ctype][0]
+                for item in payloads
+                if ctype in item.get(
+                    "minimum_barrier_by_type_native_units", {})
+            ]
+            if minima:
+                row[f"minimum_{ctype}_barrier_{unit_suffix}"] = min(minima)
+        rows.append(row)
 
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
     args.output_csv.parent.mkdir(parents=True, exist_ok=True)

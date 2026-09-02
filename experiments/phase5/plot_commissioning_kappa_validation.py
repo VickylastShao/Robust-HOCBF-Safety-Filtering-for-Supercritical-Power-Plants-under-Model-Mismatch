@@ -25,7 +25,7 @@ from scripts.mc_figure_style import apply_times_new_roman_style
 DEFAULT_INPUT = (
     ROOT
     / "results"
-    / "phase5_commissioning_kappa_tune_20260831"
+    / "phase5_ccs7_kappa_20260902"
     / "selection_summary.json"
 )
 DEFAULT_OUTPUT = ROOT / "paper" / "figures" / "Figure_2"
@@ -142,7 +142,7 @@ def plot(summary: dict, output: Path) -> None:
     ax_tune.set_ylabel("Controller-sample rate (%)")
     tune_samples = int(rows[0]["total_samples"])
     ax_tune.set_title(
-        f"Tune seeds 0--2 ({tune_samples:,} samples per setting)", pad=3)
+        f"Tune seeds 0-2 ({tune_samples:,} samples per setting)", pad=3)
     ax_tune.set_xlim(-0.25, len(kappa) - 0.75)
     ax_tune.set_ylim(0.0, max(18.0, 1.08 * max(max_violation.max(), max_rejection.max())))
     ax_tune.set_xticks(tune_x)
@@ -204,7 +204,7 @@ def plot(summary: dict, output: Path) -> None:
     ax_test.legend(loc="upper right", frameon=False)
     ax_test.text(
         0.98,
-        0.44,
+        0.37,
         "No retuning after holdout",
         transform=ax_test.transAxes,
         color=GREY,

@@ -1,7 +1,10 @@
-"""Generate Figure 2: GP-HOCBF (κ=0) vs HOCBF (no GP) trajectory under S3.
-Phase 5 parameters: 5th-order CCS, N=500 GP pretraining, ε_κ=0.
+"""Regenerate the superseded five-state, Phi-scaled trajectory diagnostic.
+
+This script is retained for historical reproducibility only. It writes below
+``paper/figures/legacy`` and cannot overwrite any active manuscript figure.
 """
 import sys, os, warnings
+from pathlib import Path
 warnings.filterwarnings('ignore')
 sys.path.insert(0, '.')
 os.environ['XLA_PYTHON_CLIENT_PREALLOCATE'] = 'false'
@@ -115,7 +118,8 @@ axes[2].set_xlabel('Time step (s)', fontsize=10)
 axes[2].grid(True, alpha=0.2)
 
 plt.tight_layout()
-out_path = 'paper/figures/Figure_2.pdf'
+out_path = Path('paper/figures/legacy/Figure_2_phi_scaled_legacy.pdf')
+out_path.parent.mkdir(parents=True, exist_ok=True)
 fig.savefig(out_path, dpi=300, bbox_inches='tight')
 plt.close(fig)
 print(f'\nFigure 2 saved: {out_path}')

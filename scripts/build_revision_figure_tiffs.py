@@ -23,6 +23,19 @@ FIGURES = {
 }
 
 
+def subprocess_path(path: Path, executable: Path) -> str:
+    """Convert WSL paths for bundled Windows executables when needed."""
+    if executable.suffix.lower() != ".exe":
+        return str(path)
+    converted = subprocess.run(
+        ["wslpath", "-w", str(path)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return converted.stdout.strip()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
@@ -43,8 +56,8 @@ def main() -> None:
                     "-singlefile",
                     "-r",
                     "600",
-                    str(source),
-                    str(png_stem),
+                    subprocess_path(source, args.pdftoppm),
+                    subprocess_path(png_stem, args.pdftoppm),
                 ],
                 check=True,
             )

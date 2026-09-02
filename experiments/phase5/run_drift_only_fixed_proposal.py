@@ -226,12 +226,15 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
     ep_cbf_violation_rates = []
     ep_rewards = []
     ep_control_costs = []
-    ep_min_barriers = []
     online_times = []
+    constraint_types = ("pressure", "enthalpy", "power")
     per_type_counts = {
-        "pressure": {"count": 0, "steps": 0},
-        "enthalpy": {"count": 0, "steps": 0},
-        "power": {"count": 0, "steps": 0},
+        ctype: {"count": 0, "steps": 0}
+        for ctype in constraint_types
+    }
+    ep_min_barriers_by_type = {
+        ctype: []
+        for ctype in constraint_types
     }
     total_violations = 0
     total_samples = 0
@@ -255,7 +258,10 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
         cbf_violations = 0
         reward_sum = 0.0
         control_cost = 0.0
-        min_barrier = float("inf")
+        min_barrier_by_type = {
+            ctype: float("inf")
+            for ctype in constraint_types
+        }
 
         for t in range(n_steps):
             key, action_key = jax.random.split(key)
@@ -312,17 +318,43 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
 
             next_x = dynamics.step_stabilized(x, v_safe)
             vals = constraint.check_all(next_x)
-            sample_min = min(float(v) for v in vals.values())
-            min_barrier = min(min_barrier, sample_min)
-            violated = sample_min < -violation_tol
+            barrier_values = {name: float(value) for name, value in vals.items()}
+            rows_by_type = {
+                ctype: [
+                    value
+                    for name, value in barrier_values.items()
+                    if ctype in name
+                ]
+                for ctype in constraint_types
+            }
+            empty_types = [
+                ctype for ctype, values in rows_by_type.items() if not values
+            ]
+            if empty_types:
+                raise RuntimeError(
+                    f"Missing barrier rows for constraint types: {empty_types}")
+            violated_by_type = {}
+            for ctype, values in rows_by_type.items():
+                violated_by_type[ctype] = any(
+                    value < -violation_tol for value in values)
+                min_barrier_by_type[ctype] = min(
+                    min_barrier_by_type[ctype], min(values))
+            classified_rows = sum(
+                any(ctype in name for ctype in constraint_types)
+                for name in barrier_values
+            )
+            if classified_rows != len(barrier_values):
+                raise RuntimeError(
+                    f"Unclassified barrier names: {sorted(barrier_values)}")
+            violated = any(violated_by_type.values())
             if violated:
                 violations += 1
                 total_violations += 1
             if violated:
                 cbf_violations += 1
 
-            for ctype in ("pressure", "enthalpy", "power"):
-                if any(v < -violation_tol for k, v in vals.items() if ctype in k):
+            for ctype in constraint_types:
+                if violated_by_type[ctype]:
                     per_type_counts[ctype]["count"] += 1
                 per_type_counts[ctype]["steps"] += 1
 
@@ -342,7 +374,9 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
         ep_cbf_violation_rates.append(cbf_violations / n_steps)
         ep_rewards.append(reward_sum)
         ep_control_costs.append(control_cost)
-        ep_min_barriers.append(min_barrier)
+        for ctype in constraint_types:
+            ep_min_barriers_by_type[ctype].append(
+                min_barrier_by_type[ctype])
 
     def mean_std(values):
         arr = np.asarray(values, dtype=float)
@@ -383,6 +417,13 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
         "deviation_l2_norm_bound": DEVIATION_L2_NORM_BOUND,
         "robust_margin_control_bound_semantics": "sup_v_in_V_l2_norm",
         "violation_tolerance_raw_margin": violation_tol,
+        "violation_tolerance_native_units": {
+            "pressure_mpa": violation_tol,
+            "enthalpy_kj_per_kg": violation_tol,
+            "power_mw": violation_tol,
+        },
+        "violation_event_semantics": (
+            "any_barrier_below_its_per_constraint_native_unit_tolerance"),
         "n_episodes": n_episodes,
         "n_steps": n_steps,
         "n_pretrain": n_pretrain if gp is not None else 0,
@@ -392,7 +433,10 @@ def evaluate(method, condition, seed, n_episodes, n_steps, n_pretrain,
         "total_samples": total_samples,
         "cumulative_reward": mean_std(ep_rewards),
         "control_cost": mean_std(ep_control_costs),
-        "min_barrier_value": mean_std(ep_min_barriers),
+        "minimum_barrier_by_type_native_units": {
+            ctype: mean_std(values)
+            for ctype, values in ep_min_barriers_by_type.items()
+        },
         "online_time_ms": mean_std(online_times) if online_times else [0.0, 0.0],
         "qp_intervention_rate": total_qp_interventions / max(total_samples, 1),
         "qp_attempt_count": total_qp_attempts,
@@ -518,7 +562,8 @@ def main():
                 save_result(result, args.results_dir)
                 print(
                     f"  violation={result['violation_rate'][0] * 100:.3f}% "
-                    f"min_barrier={result['min_barrier_value'][0]:.3f} "
+                    "min_pressure="
+                    f"{result['minimum_barrier_by_type_native_units']['pressure'][0]:.3f} "
                     f"qp={result['qp_intervention_rate'] * 100:.2f}%",
                     flush=True,
                 )

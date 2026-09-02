@@ -221,10 +221,16 @@ def _print_data_audit(data: dict) -> None:
 
 
 def _violation_mask(method: dict) -> np.ndarray:
-    constraints = np.column_stack(
-        [np.asarray(values, dtype=float) for values in method["constraint_values"].values()]
-    )
-    return np.min(constraints, axis=1) < -VIOLATION_TOL
+    row_masks = [
+        np.asarray(values, dtype=float) < -VIOLATION_TOL
+        for values in method["constraint_values"].values()
+    ]
+    if not row_masks:
+        raise ValueError("constraint_values must contain at least one barrier row")
+    lengths = {mask.shape for mask in row_masks}
+    if len(lengths) != 1:
+        raise ValueError("all constraint-value rows must have the same shape")
+    return np.logical_or.reduce(row_masks)
 
 
 def _summary_with_common_tolerance(method: dict) -> dict:

@@ -397,7 +397,7 @@ def check_current_text_claims(errors: list[str]) -> None:
 
 
 def check_release_metadata(errors: list[str]) -> None:
-    expected_tag = "mc-major-revision-2026-09-02-resubmission"
+    expected_tag = "mc-major-revision-2026-09-02-resubmission-v2"
     repro = (ROOT / ".repro-pack.yaml").read_text(encoding="utf-8")
     citation = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
     availability = (ROOT / "DATA_AVAILABILITY.md").read_text(encoding="utf-8")
@@ -422,6 +422,29 @@ def check_release_metadata(errors: list[str]) -> None:
         errors.append("DATA_AVAILABILITY.md does not identify the current revision tag.")
 
 
+def check_figure_generation_contract(errors: list[str]) -> None:
+    current = (
+        ROOT / "experiments/phase5/plot_commissioning_kappa_validation.py"
+    ).read_text(encoding="utf-8")
+    if "phase5_ccs7_kappa_20260902" not in current:
+        errors.append("The active Figure 4 generator does not default to current results.")
+
+    active_output = "paper/figures/Figure_2.pdf"
+    for relative_path in (
+        "experiments/phase5/plot_figure2_mechanism.py",
+        "experiments/phase5/regenerate_figure2.py",
+    ):
+        source = (ROOT / relative_path).read_text(encoding="utf-8")
+        if active_output in source:
+            errors.append(
+                f"Superseded generator can overwrite the active Figure 4: {relative_path}."
+            )
+        if "figures/legacy" not in source and 'FIGURE_DIR / "legacy"' not in source:
+            errors.append(
+                f"Superseded Figure 4 generator lacks an isolated output: {relative_path}."
+            )
+
+
 def check_suspicious_files(errors: list[str]) -> None:
     hits: list[str] = []
     ignored_parts = {".git", ".venv", "__pycache__", ".pytest_cache", "tmp_pdf_render"}
@@ -442,6 +465,7 @@ def main() -> int:
     check_current_result_semantics(errors)
     check_current_text_claims(errors)
     check_release_metadata(errors)
+    check_figure_generation_contract(errors)
     check_suspicious_files(errors)
 
     print("RoCBF-SF major-revision reproducibility artifact check")

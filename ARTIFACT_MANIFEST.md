@@ -6,7 +6,7 @@ This manifest identifies the repository contents supporting the *Measurement and
 
 - Manuscript: **Commissioning-Calibrated GP-HOCBF Safety Filtering for Ultra-Supercritical Boiler-Turbine Control under Model Mismatch**
 - Artifact date: 2026-09-02
-- Immutable revision tag: `mc-major-revision-2026-09-02-resubmission`
+- Immutable revision tag: `mc-major-revision-2026-09-02-resubmission-v2`
 - Repository: <https://github.com/VickylastShao/Robust-HOCBF-Safety-Filtering-for-Supercritical-Power-Plants-under-Model-Mismatch>
 
 ## Current Source Code
